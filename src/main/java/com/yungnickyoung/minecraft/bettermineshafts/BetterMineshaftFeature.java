@@ -37,7 +37,7 @@ public class BetterMineshaftFeature extends MineshaftFeature {
         }
 
         public void initialize(ChunkGenerator<?> chunkGenerator, StructureManager structureManager, int x, int z, Biome biome) {
-            MineshaftFeatureConfig mineshaftFeatureConfig = chunkGenerator.getStructureConfig(biome, Feature.MINESHAFT);
+            MineshaftFeatureConfig mineshaftFeatureConfig = chunkGenerator.getStructureConfig(biome, BetterMineshafts.betterMineshaft);
             BetterMineshaftGenerator.MineshaftRoom mineshaftRoom = new BetterMineshaftGenerator.MineshaftRoom(0, this.random, (x << 4) + 2, (z << 4) + 2, mineshaftFeatureConfig.type);
             this.children.add(mineshaftRoom);
             mineshaftRoom.method_14918(mineshaftRoom, this.children, this.random);

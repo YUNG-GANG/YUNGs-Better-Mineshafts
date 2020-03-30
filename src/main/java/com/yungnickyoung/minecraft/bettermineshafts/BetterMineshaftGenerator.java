@@ -695,7 +695,7 @@ public class BetterMineshaftGenerator {
             switch(this.mineshaftType) {
                 case NORMAL:
                 default:
-                    return Blocks.LAPIS_BLOCK.getDefaultState();
+                    return Blocks.OAK_FENCE.getDefaultState();
                 case MESA:
                     return Blocks.DARK_OAK_FENCE.getDefaultState();
             }
