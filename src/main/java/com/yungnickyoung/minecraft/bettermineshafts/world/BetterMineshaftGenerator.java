@@ -1,4 +1,4 @@
-package com.yungnickyoung.minecraft.bettermineshafts;
+package com.yungnickyoung.minecraft.bettermineshafts.world;
 
 import com.google.common.collect.Lists;
 
@@ -56,7 +56,7 @@ public class BetterMineshaftGenerator {
         if (l > 8) {
             return null;
         } else if (Math.abs(i - structurePiece.getBoundingBox().minX) <= 80 && Math.abs(k - structurePiece.getBoundingBox().minZ) <= 80) {
-            MineshaftFeature.Type type = ((BetterMineshaftGenerator.MineshaftPart)structurePiece).mineshaftType;
+            MineshaftFeature.Type type = ((BetterMineshaftGenerator.MineshaftPart) structurePiece).mineshaftType;
             BetterMineshaftGenerator.MineshaftPart mineshaftPart = method_14712(list, random, i, j, k, direction, l + 1, type);
             if (mineshaftPart != null) {
                 list.add(mineshaftPart);
@@ -82,7 +82,7 @@ public class BetterMineshaftGenerator {
 
         public static BlockBox method_14720(List<StructurePiece> list, Random random, int i, int j, int k, Direction direction) {
             BlockBox blockBox = new BlockBox(i, j - 5, k, i, j + 3 - 1, k);
-            switch(direction) {
+            switch (direction) {
                 case NORTH:
                 default:
                     blockBox.maxX = i + 3 - 1;
@@ -108,7 +108,7 @@ public class BetterMineshaftGenerator {
             int i = this.method_14923();
             Direction direction = this.getFacing();
             if (direction != null) {
-                switch(direction) {
+                switch (direction) {
                     case NORTH:
                     default:
                         BetterMineshaftGenerator.method_14711(structurePiece, list, random, this.boundingBox.minX, this.boundingBox.minY, this.boundingBox.minZ - 1, Direction.NORTH, i);
@@ -133,7 +133,7 @@ public class BetterMineshaftGenerator {
                 this.fillWithOutline(world, box, 0, 5, 0, 2, 7, 1, AIR, AIR, false);
                 this.fillWithOutline(world, box, 0, 0, 7, 2, 2, 8, AIR, AIR, false);
 
-                for(int i = 0; i < 5; ++i) {
+                for (int i = 0; i < 5; ++i) {
                     this.fillWithOutline(world, box, 0, 5 - i - (i < 4 ? 1 : 0), 2 + i, 2, 7 - i, 2 + i, AIR, AIR, false);
                 }
 
@@ -171,7 +171,7 @@ public class BetterMineshaftGenerator {
                 blockBox.maxY += 4;
             }
 
-            switch(facing) {
+            switch (facing) {
                 case NORTH:
                 default:
                     blockBox.minX = i - 1;
@@ -199,7 +199,7 @@ public class BetterMineshaftGenerator {
 
         public void method_14918(StructurePiece structurePiece, List<StructurePiece> list, Random random) {
             int i = this.method_14923();
-            switch(this.direction) {
+            switch (this.direction) {
                 case NORTH:
                 default:
                     BetterMineshaftGenerator.method_14711(structurePiece, list, random, this.boundingBox.minX + 1, this.boundingBox.minY, this.boundingBox.minZ - 1, Direction.NORTH, i);
@@ -263,8 +263,8 @@ public class BetterMineshaftGenerator {
                 this.method_14716(world, box, this.boundingBox.maxX - 1, this.boundingBox.minY, this.boundingBox.minZ + 1, this.boundingBox.maxY);
                 this.method_14716(world, box, this.boundingBox.maxX - 1, this.boundingBox.minY, this.boundingBox.maxZ - 1, this.boundingBox.maxY);
 
-                for(int i = this.boundingBox.minX; i <= this.boundingBox.maxX; ++i) {
-                    for(int j = this.boundingBox.minZ; j <= this.boundingBox.maxZ; ++j) {
+                for (int i = this.boundingBox.minX; i <= this.boundingBox.maxX; ++i) {
+                    for (int j = this.boundingBox.minZ; j <= this.boundingBox.maxZ; ++j) {
                         if (this.getBlockAt(world, i, this.boundingBox.minY - 1, j, box).isAir() && this.isUnderSeaLevel(world, i, this.boundingBox.minY - 1, j, box)) {
                             this.addBlock(world, blockState, i, this.boundingBox.minY - 1, j, box);
                         }
@@ -323,9 +323,9 @@ public class BetterMineshaftGenerator {
             BlockBox blockBox = new BlockBox(i, j, k, i, j + 3 - 1, k);
 
             int l;
-            for(l = random.nextInt(3) + 2; l > 0; --l) {
+            for (l = random.nextInt(3) + 2; l > 0; --l) {
                 int m = l * 5;
-                switch(direction) {
+                switch (direction) {
                     case NORTH:
                     default:
                         blockBox.maxX = i + 3 - 1;
@@ -357,7 +357,7 @@ public class BetterMineshaftGenerator {
             int j = random.nextInt(4);
             Direction direction = this.getFacing();
             if (direction != null) {
-                switch(direction) {
+                switch (direction) {
                     case NORTH:
                     default:
                         if (j <= 1) {
@@ -401,7 +401,7 @@ public class BetterMineshaftGenerator {
                 int k;
                 int l;
                 if (direction != Direction.NORTH && direction != Direction.SOUTH) {
-                    for(k = this.boundingBox.minX + 3; k + 3 <= this.boundingBox.maxX; k += 5) {
+                    for (k = this.boundingBox.minX + 3; k + 3 <= this.boundingBox.maxX; k += 5) {
                         l = random.nextInt(5);
                         if (l == 0) {
                             BetterMineshaftGenerator.method_14711(structurePiece, list, random, k, this.boundingBox.minY, this.boundingBox.minZ - 1, Direction.NORTH, i + 1);
@@ -410,7 +410,7 @@ public class BetterMineshaftGenerator {
                         }
                     }
                 } else {
-                    for(k = this.boundingBox.minZ + 3; k + 3 <= this.boundingBox.maxZ; k += 5) {
+                    for (k = this.boundingBox.minZ + 3; k + 3 <= this.boundingBox.maxZ; k += 5) {
                         l = random.nextInt(5);
                         if (l == 0) {
                             BetterMineshaftGenerator.method_14711(structurePiece, list, random, this.boundingBox.minX - 1, this.boundingBox.minY, k, Direction.WEST, i + 1);
@@ -426,9 +426,9 @@ public class BetterMineshaftGenerator {
         protected boolean addChest(IWorld world, BlockBox boundingBox, Random random, int x, int y, int z, Identifier lootTableId) {
             BlockPos blockPos = new BlockPos(this.applyXTransform(x, z), this.applyYTransform(y), this.applyZTransform(x, z));
             if (boundingBox.contains(blockPos) && world.getBlockState(blockPos).isAir() && !world.getBlockState(blockPos.down()).isAir()) {
-                BlockState blockState = (BlockState)Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, random.nextBoolean() ? RailShape.NORTH_SOUTH : RailShape.EAST_WEST);
+                BlockState blockState = (BlockState) Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, random.nextBoolean() ? RailShape.NORTH_SOUTH : RailShape.EAST_WEST);
                 this.addBlock(world, blockState, x, y, z, boundingBox);
-                ChestMinecartEntity chestMinecartEntity = new ChestMinecartEntity(world.getWorld(), (double)((float)blockPos.getX() + 0.5F), (double)((float)blockPos.getY() + 0.5F), (double)((float)blockPos.getZ() + 0.5F));
+                ChestMinecartEntity chestMinecartEntity = new ChestMinecartEntity(world.getWorld(), (double) ((float) blockPos.getX() + 0.5F), (double) ((float) blockPos.getY() + 0.5F), (double) ((float) blockPos.getZ() + 0.5F));
                 chestMinecartEntity.setLootTable(lootTableId, random.nextLong());
                 world.spawnEntity(chestMinecartEntity);
                 return true;
@@ -451,7 +451,7 @@ public class BetterMineshaftGenerator {
 
                 int t;
                 int x;
-                for(t = 0; t < this.length; ++t) {
+                for (t = 0; t < this.length; ++t) {
                     x = 2 + t * 5;
                     this.method_14713(world, box, 0, 0, x, 2, 2, random);
                     this.method_14715(world, box, random, 0.1F, 0, 2, x - 1);
@@ -481,14 +481,14 @@ public class BetterMineshaftGenerator {
                             world.setBlockState(blockPos, Blocks.SPAWNER.getDefaultState(), 2);
                             BlockEntity blockEntity = world.getBlockEntity(blockPos);
                             if (blockEntity instanceof MobSpawnerBlockEntity) {
-                                ((MobSpawnerBlockEntity)blockEntity).getLogic().setEntityId(EntityType.CAVE_SPIDER);
+                                ((MobSpawnerBlockEntity) blockEntity).getLogic().setEntityId(EntityType.CAVE_SPIDER);
                             }
                         }
                     }
                 }
 
-                for(t = 0; t <= 2; ++t) {
-                    for(x = 0; x <= m; ++x) {
+                for (t = 0; t <= 2; ++t) {
+                    for (x = 0; x <= m; ++x) {
                         BlockState blockState2 = this.getBlockAt(world, t, -1, x, box);
                         if (blockState2.isAir() && this.isUnderSeaLevel(world, t, -1, x, box)) {
                             this.addBlock(world, blockState, t, -1, x, box);
@@ -499,7 +499,7 @@ public class BetterMineshaftGenerator {
                 if (this.hasRails) {
                     BlockState blockState3 = Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, RailShape.NORTH_SOUTH);
 
-                    for(x = 0; x <= m; ++x) {
+                    for (x = 0; x <= m; ++x) {
                         BlockState blockState4 = this.getBlockAt(world, 1, -1, x, box);
                         if (!blockState4.isAir() && blockState4.isFullOpaque(world, new BlockPos(this.applyXTransform(1, x), this.applyYTransform(-1), this.applyZTransform(1, x)))) {
                             float f = this.isUnderSeaLevel(world, 1, 0, x, box) ? 0.7F : 0.9F;
@@ -551,7 +551,7 @@ public class BetterMineshaftGenerator {
             super(StructurePieceType.MINESHAFT_ROOM, compoundTag);
             ListTag listTag = compoundTag.getList("Entrances", 11);
 
-            for(int i = 0; i < listTag.size(); ++i) {
+            for (int i = 0; i < listTag.size(); ++i) {
                 this.entrances.add(new BlockBox(listTag.getIntArray(i)));
             }
 
@@ -567,7 +567,7 @@ public class BetterMineshaftGenerator {
             int k;
             BetterMineshaftGenerator.MineshaftPart structurePiece2;
             BlockBox blockBox4;
-            for(k = 0; k < this.boundingBox.getBlockCountX(); k += 4) {
+            for (k = 0; k < this.boundingBox.getBlockCountX(); k += 4) {
                 k += random.nextInt(this.boundingBox.getBlockCountX());
                 if (k + 3 > this.boundingBox.getBlockCountX()) {
                     break;
@@ -580,7 +580,7 @@ public class BetterMineshaftGenerator {
                 }
             }
 
-            for(k = 0; k < this.boundingBox.getBlockCountX(); k += 4) {
+            for (k = 0; k < this.boundingBox.getBlockCountX(); k += 4) {
                 k += random.nextInt(this.boundingBox.getBlockCountX());
                 if (k + 3 > this.boundingBox.getBlockCountX()) {
                     break;
@@ -593,7 +593,7 @@ public class BetterMineshaftGenerator {
                 }
             }
 
-            for(k = 0; k < this.boundingBox.getBlockCountZ(); k += 4) {
+            for (k = 0; k < this.boundingBox.getBlockCountZ(); k += 4) {
                 k += random.nextInt(this.boundingBox.getBlockCountZ());
                 if (k + 3 > this.boundingBox.getBlockCountZ()) {
                     break;
@@ -606,7 +606,7 @@ public class BetterMineshaftGenerator {
                 }
             }
 
-            for(k = 0; k < this.boundingBox.getBlockCountZ(); k += 4) {
+            for (k = 0; k < this.boundingBox.getBlockCountZ(); k += 4) {
                 k += random.nextInt(this.boundingBox.getBlockCountZ());
                 if (k + 3 > this.boundingBox.getBlockCountZ()) {
                     break;
@@ -629,7 +629,7 @@ public class BetterMineshaftGenerator {
                 this.fillWithOutline(world, box, this.boundingBox.minX, this.boundingBox.minY + 1, this.boundingBox.minZ, this.boundingBox.maxX, Math.min(this.boundingBox.minY + 3, this.boundingBox.maxY), this.boundingBox.maxZ, AIR, AIR, false);
                 Iterator<BlockBox> var6 = this.entrances.iterator();
 
-                while(var6.hasNext()) {
+                while (var6.hasNext()) {
                     BlockBox blockBox = var6.next();
                     this.fillWithOutline(world, box, blockBox.minX, blockBox.maxY - 2, blockBox.minZ, blockBox.maxX, blockBox.maxY, blockBox.maxZ, AIR, AIR, false);
                 }
@@ -643,7 +643,7 @@ public class BetterMineshaftGenerator {
             super.translate(x, y, z);
             Iterator<BlockBox> var4 = this.entrances.iterator();
 
-            while(var4.hasNext()) {
+            while (var4.hasNext()) {
                 BlockBox blockBox = var4.next();
                 blockBox.offset(x, y, z);
             }
@@ -655,7 +655,7 @@ public class BetterMineshaftGenerator {
             ListTag listTag = new ListTag();
             Iterator<BlockBox> var3 = this.entrances.iterator();
 
-            while(var3.hasNext()) {
+            while (var3.hasNext()) {
                 BlockBox blockBox = var3.next();
                 listTag.add(blockBox.toNbt());
             }
@@ -682,7 +682,7 @@ public class BetterMineshaftGenerator {
         }
 
         protected BlockState method_16443() {
-            switch(this.mineshaftType) {
+            switch (this.mineshaftType) {
                 case NORMAL:
                 default:
                     return Blocks.REDSTONE_BLOCK.getDefaultState();
@@ -692,7 +692,7 @@ public class BetterMineshaftGenerator {
         }
 
         protected BlockState method_14718() {
-            switch(this.mineshaftType) {
+            switch (this.mineshaftType) {
                 case NORMAL:
                 default:
                     return Blocks.OAK_FENCE.getDefaultState();
@@ -702,7 +702,7 @@ public class BetterMineshaftGenerator {
         }
 
         protected boolean method_14719(BlockView blockView, BlockBox blockBox, int i, int j, int k, int l) {
-            for(int m = i; m <= j; ++m) {
+            for (int m = i; m <= j; ++m) {
                 if (this.getBlockAt(blockView, m, k + 1, l, blockBox).isAir()) {
                     return false;
                 }

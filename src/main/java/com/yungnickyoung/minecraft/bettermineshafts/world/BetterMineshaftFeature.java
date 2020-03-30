@@ -1,14 +1,13 @@
-package com.yungnickyoung.minecraft.bettermineshafts;
+package com.yungnickyoung.minecraft.bettermineshafts.world;
 
 import com.mojang.datafixers.Dynamic;
-import net.minecraft.structure.MineshaftGenerator;
+import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshafts;
 import net.minecraft.structure.StructureManager;
 import net.minecraft.structure.StructurePiece;
 import net.minecraft.structure.StructureStart;
 import net.minecraft.util.math.BlockBox;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
-import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.MineshaftFeature;
 import net.minecraft.world.gen.feature.MineshaftFeatureConfig;
 import net.minecraft.world.gen.feature.StructureFeature;
@@ -37,7 +36,7 @@ public class BetterMineshaftFeature extends MineshaftFeature {
         }
 
         public void initialize(ChunkGenerator<?> chunkGenerator, StructureManager structureManager, int x, int z, Biome biome) {
-            MineshaftFeatureConfig mineshaftFeatureConfig = chunkGenerator.getStructureConfig(biome, BetterMineshafts.betterMineshaft);
+            MineshaftFeatureConfig mineshaftFeatureConfig = chunkGenerator.getStructureConfig(biome, BetterMineshafts.BETTER_MINESHAFT_FEATURE);
             BetterMineshaftGenerator.MineshaftRoom mineshaftRoom = new BetterMineshaftGenerator.MineshaftRoom(0, this.random, (x << 4) + 2, (z << 4) + 2, mineshaftFeatureConfig.type);
             this.children.add(mineshaftRoom);
             mineshaftRoom.method_14918(mineshaftRoom, this.children, this.random);
