@@ -17,7 +17,7 @@ public class FeatureAdder {
         removeVanillaMineshaft(biome);
         biome.addStructureFeature(
             BetterMineshafts.BETTER_MINESHAFT_FEATURE.configure(
-                new MineshaftFeatureConfig(0.004D, MineshaftFeature.Type.NORMAL)
+                new MineshaftFeatureConfig(0.004D, MineshaftFeature.Type.NORMAL) // TODO - replace hardcoded spawnrates w/ config option
             )
         );
         biome.addFeature(

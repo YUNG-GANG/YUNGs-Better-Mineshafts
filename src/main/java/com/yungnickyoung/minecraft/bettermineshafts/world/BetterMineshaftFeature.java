@@ -12,8 +12,11 @@ import net.minecraft.world.gen.feature.MineshaftFeature;
 import net.minecraft.world.gen.feature.MineshaftFeatureConfig;
 import net.minecraft.world.gen.feature.StructureFeature;
 
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class BetterMineshaftFeature extends MineshaftFeature {
     public BetterMineshaftFeature(Function<Dynamic<?>, ? extends MineshaftFeatureConfig> configFactory) {
@@ -35,9 +38,22 @@ public class BetterMineshaftFeature extends MineshaftFeature {
             super(structureFeature, chunkX, chunkZ, blockBox, i, l);
         }
 
-        public void initialize(ChunkGenerator<?> chunkGenerator, StructureManager structureManager, int x, int z, Biome biome) {
-            MineshaftFeatureConfig mineshaftFeatureConfig = chunkGenerator.getStructureConfig(biome, BetterMineshafts.BETTER_MINESHAFT_FEATURE);
-            BetterMineshaftGenerator.MineshaftRoom mineshaftRoom = new BetterMineshaftGenerator.MineshaftRoom(0, this.random, (x << 4) + 2, (z << 4) + 2, mineshaftFeatureConfig.type);
+        public void initialize(
+            ChunkGenerator<?> chunkGenerator,
+            StructureManager structureManager,
+            int chunkX,
+            int chunkZ,
+            Biome biome
+        ) {
+            MineshaftFeatureConfig mineshaftFeatureConfig =
+                chunkGenerator.getStructureConfig(biome, BetterMineshafts.BETTER_MINESHAFT_FEATURE);
+            BetterMineshaftGenerator.MineshaftRoom mineshaftRoom = new BetterMineshaftGenerator.MineshaftRoom(
+                0,
+                this.random,
+                (chunkX << 4) + 2,
+                (chunkZ << 4) + 2,
+                mineshaftFeatureConfig.type
+            );
             this.children.add(mineshaftRoom);
             mineshaftRoom.method_14918(mineshaftRoom, this.children, this.random);
             this.setBoundingBoxFromChildren();
@@ -53,6 +69,33 @@ public class BetterMineshaftFeature extends MineshaftFeature {
             } else {
                 this.method_14978(chunkGenerator.getSeaLevel(), this.random, 10);
             }
+        }
+    }
+
+    public enum Type {
+        NORMAL("normal"),
+        MESA("mesa");
+
+        private final String name;
+
+        private Type(String name) {
+            this.name = name;
+        }
+
+        private static final Map<String, Type> nameMap = Arrays.stream(values())
+            .collect(Collectors.toMap(Type::getName, type -> type)
+            );
+
+        public String getName() {
+            return this.name;
+        }
+
+        public static Type byName(String name) {
+            return nameMap.get(name);
+        }
+
+        public static Type byIndex(int index) {
+            return index >= 0 && index < values().length ? values()[index] : NORMAL;
         }
     }
 }
