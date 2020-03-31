@@ -1,6 +1,7 @@
 package com.yungnickyoung.minecraft.bettermineshafts;
 
 import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftFeature;
+import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftFeatureConfig;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -12,7 +13,7 @@ import org.apache.logging.log4j.Logger;
 public class BetterMineshafts implements ModInitializer {
     public static final String MOD_ID = "bettermineshafts";
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
-    public static final MineshaftFeature BETTER_MINESHAFT_FEATURE = new BetterMineshaftFeature(MineshaftFeatureConfig::deserialize);
+    public static final BetterMineshaftFeature BETTER_MINESHAFT_FEATURE = new BetterMineshaftFeature(BetterMineshaftFeatureConfig::deserialize);
     public static StructureFeature<?> VANILLA_MINESHAFT_FEATURE;
 
     @Override

@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Random;
 
 public class BetterMineshaftGenerator {
-    private static BetterMineshaftGenerator.MineshaftPart createRandomMineshaftPiece(List<StructurePiece> list, Random random, int x, int y, int z, Direction direction, int l, MineshaftFeature.Type type) {
+    private static BetterMineshaftGenerator.MineshaftPart createRandomMineshaftPiece(List<StructurePiece> list, Random random, int x, int y, int z, Direction direction, int l, BetterMineshaftFeature.Type type) {
         int rand = random.nextInt(100);
         BlockBox blockBox;
         if (rand >= 80) {
@@ -58,7 +58,7 @@ public class BetterMineshaftGenerator {
         if (l > 8) {
             return null;
         } else if (Math.abs(x - structurePiece.getBoundingBox().minX) <= 80 && Math.abs(z - structurePiece.getBoundingBox().minZ) <= 80) {
-            MineshaftFeature.Type type = ((BetterMineshaftGenerator.MineshaftPart) structurePiece).mineshaftType;
+            BetterMineshaftFeature.Type type = ((BetterMineshaftGenerator.MineshaftPart) structurePiece).mineshaftType;
             BetterMineshaftGenerator.MineshaftPart mineshaftPart = createRandomMineshaftPiece(list, random, x, y, z, direction, l + 1, type);
             if (mineshaftPart != null) {
                 list.add(mineshaftPart);
@@ -72,7 +72,7 @@ public class BetterMineshaftGenerator {
     }
 
     public static class MineshaftStairs extends BetterMineshaftGenerator.MineshaftPart {
-        public MineshaftStairs(int i, BlockBox blockBox, Direction direction, MineshaftFeature.Type type) {
+        public MineshaftStairs(int i, BlockBox blockBox, Direction direction, BetterMineshaftFeature.Type type) {
             super(StructurePieceType.MINESHAFT_STAIRS, i, type);
             this.setOrientation(direction);
             this.boundingBox = blockBox;
@@ -169,7 +169,7 @@ public class BetterMineshaftGenerator {
             tag.putInt("D", this.direction.getHorizontal());
         }
 
-        public MineshaftCrossing(int i, BlockBox blockBox, Direction direction, MineshaftFeature.Type type) {
+        public MineshaftCrossing(int i, BlockBox blockBox, Direction direction, BetterMineshaftFeature.Type type) {
             super(StructurePieceType.MINESHAFT_CROSSING, i, type);
             this.direction = direction;
             this.boundingBox = blockBox;
@@ -321,7 +321,7 @@ public class BetterMineshaftGenerator {
             tag.putInt("Num", this.sectionCount);
         }
 
-        public MineshaftCorridor(int i, Random random, BlockBox blockBox, Direction direction, MineshaftFeature.Type type) {
+        public MineshaftCorridor(int i, Random random, BlockBox blockBox, Direction direction, BetterMineshaftFeature.Type type) {
             super(StructurePieceType.MINESHAFT_CORRIDOR, i, type);
             this.setOrientation(direction);
             this.boundingBox = blockBox;
@@ -573,7 +573,7 @@ public class BetterMineshaftGenerator {
     public static class MineshaftRoom extends BetterMineshaftGenerator.MineshaftPart {
         private final List<BlockBox> entrances = Lists.newLinkedList();
 
-        public MineshaftRoom(int i, Random random, int x, int z, MineshaftFeature.Type type) {
+        public MineshaftRoom(int i, Random random, int x, int z, BetterMineshaftFeature.Type type) {
             super(StructurePieceType.MINESHAFT_ROOM, i, type);
             this.mineshaftType = type;
             this.boundingBox = new BlockBox(x, 50, z, x + 7 + random.nextInt(6), 54 + random.nextInt(6), z + 7 + random.nextInt(6));
@@ -684,16 +684,16 @@ public class BetterMineshaftGenerator {
     }
 
     abstract static class MineshaftPart extends StructurePiece {
-        protected MineshaftFeature.Type mineshaftType;
+        protected BetterMineshaftFeature.Type mineshaftType;
 
-        public MineshaftPart(StructurePieceType structurePieceType, int i, MineshaftFeature.Type type) {
+        public MineshaftPart(StructurePieceType structurePieceType, int i, BetterMineshaftFeature.Type type) {
             super(structurePieceType, i);
             this.mineshaftType = type;
         }
 
         public MineshaftPart(StructurePieceType structurePieceType, CompoundTag compoundTag) {
             super(structurePieceType, compoundTag);
-            this.mineshaftType = MineshaftFeature.Type.byIndex(compoundTag.getInt("MST"));
+            this.mineshaftType = BetterMineshaftFeature.Type.byIndex(compoundTag.getInt("MST"));
         }
 
         protected void toNbt(CompoundTag tag) {

@@ -7,6 +7,8 @@ import net.minecraft.structure.StructurePiece;
 import net.minecraft.structure.StructureStart;
 import net.minecraft.util.math.BlockBox;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.source.BiomeAccess;
+import net.minecraft.world.gen.ChunkRandom;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.feature.MineshaftFeature;
 import net.minecraft.world.gen.feature.MineshaftFeatureConfig;
@@ -15,12 +17,33 @@ import net.minecraft.world.gen.feature.StructureFeature;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Random;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class BetterMineshaftFeature extends MineshaftFeature {
-    public BetterMineshaftFeature(Function<Dynamic<?>, ? extends MineshaftFeatureConfig> configFactory) {
+public class BetterMineshaftFeature extends StructureFeature<BetterMineshaftFeatureConfig> {
+    public BetterMineshaftFeature(Function<Dynamic<?>, ? extends BetterMineshaftFeatureConfig> configFactory) {
         super(configFactory);
+    }
+
+    @Override
+    public boolean shouldStartAt(BiomeAccess biomeAccess, ChunkGenerator<?> chunkGenerator, Random random, int chunkX, int chunkZ, Biome biome) {
+        ((ChunkRandom)random).setStructureSeed(chunkGenerator.getSeed(), chunkX, chunkZ);
+        if (chunkGenerator.hasStructure(biome, this)) {
+            BetterMineshaftFeatureConfig featureConfig = chunkGenerator.getStructureConfig(biome, this);
+            // Default to normal mineshaft in case we fail to load config for this biome
+            if (featureConfig == null) {
+                featureConfig = new BetterMineshaftFeatureConfig(.004, Type.NORMAL);
+            }
+            return random.nextDouble() < featureConfig.probability;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public StructureStartFactory getStructureStartFactory() {
+        return Start::new;
     }
 
     @Override
@@ -29,8 +52,8 @@ public class BetterMineshaftFeature extends MineshaftFeature {
     }
 
     @Override
-    public StructureStartFactory getStructureStartFactory() {
-        return Start::new;
+    public int getRadius() {
+        return 8;
     }
 
     public static class Start extends StructureStart {
@@ -45,7 +68,7 @@ public class BetterMineshaftFeature extends MineshaftFeature {
             int chunkZ,
             Biome biome
         ) {
-            MineshaftFeatureConfig mineshaftFeatureConfig =
+            BetterMineshaftFeatureConfig mineshaftFeatureConfig =
                 chunkGenerator.getStructureConfig(biome, BetterMineshafts.BETTER_MINESHAFT_FEATURE);
             BetterMineshaftGenerator.MineshaftRoom mineshaftRoom = new BetterMineshaftGenerator.MineshaftRoom(
                 0,
@@ -57,15 +80,10 @@ public class BetterMineshaftFeature extends MineshaftFeature {
             this.children.add(mineshaftRoom);
             mineshaftRoom.method_14918(mineshaftRoom, this.children, this.random);
             this.setBoundingBoxFromChildren();
-            if (mineshaftFeatureConfig.type == MineshaftFeature.Type.MESA) {
-                int j = chunkGenerator.getSeaLevel() - this.boundingBox.maxY + this.boundingBox.getBlockCountY() / 2 - -5;
+            if (mineshaftFeatureConfig.type == BetterMineshaftFeature.Type.MESA) {
+                int j = chunkGenerator.getSeaLevel() - this.boundingBox.maxY + this.boundingBox.getBlockCountY() / 2 + 5;
                 this.boundingBox.offset(0, j, 0);
-                Iterator<StructurePiece> var10 = this.children.iterator();
-
-                while (var10.hasNext()) {
-                    StructurePiece structurePiece = var10.next();
-                    structurePiece.translate(0, j, 0);
-                }
+                children.forEach(structurePiece -> structurePiece.translate(0, j, 0));
             } else {
                 this.method_14978(chunkGenerator.getSeaLevel(), this.random, 10);
             }
