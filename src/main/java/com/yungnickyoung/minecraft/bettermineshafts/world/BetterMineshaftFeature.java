@@ -2,20 +2,17 @@ package com.yungnickyoung.minecraft.bettermineshafts.world;
 
 import com.mojang.datafixers.Dynamic;
 import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshafts;
+import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
 import net.minecraft.structure.StructureManager;
-import net.minecraft.structure.StructurePiece;
 import net.minecraft.structure.StructureStart;
 import net.minecraft.util.math.BlockBox;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.source.BiomeAccess;
 import net.minecraft.world.gen.ChunkRandom;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
-import net.minecraft.world.gen.feature.MineshaftFeature;
-import net.minecraft.world.gen.feature.MineshaftFeatureConfig;
 import net.minecraft.world.gen.feature.StructureFeature;
 
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 import java.util.function.Function;
@@ -68,23 +65,36 @@ public class BetterMineshaftFeature extends StructureFeature<BetterMineshaftFeat
             int chunkZ,
             Biome biome
         ) {
-            BetterMineshaftFeatureConfig mineshaftFeatureConfig =
+            BetterMineshaftFeatureConfig featureConfig =
                 chunkGenerator.getStructureConfig(biome, BetterMineshafts.BETTER_MINESHAFT_FEATURE);
+            if (featureConfig == null) { // Default to normal mineshaft in case we fail to load config for this biome
+                featureConfig = new BetterMineshaftFeatureConfig(.004, Type.NORMAL);
+            }
             BetterMineshaftGenerator.MineshaftRoom mineshaftRoom = new BetterMineshaftGenerator.MineshaftRoom(
                 0,
                 this.random,
                 (chunkX << 4) + 2,
                 (chunkZ << 4) + 2,
-                mineshaftFeatureConfig.type
+                featureConfig.type
             );
             this.children.add(mineshaftRoom);
+
+            // Build room component. This also populates the children list, effectively building the entire mineshaft.
+            // Note that no blocks are actually placed yet.
             mineshaftRoom.method_14918(mineshaftRoom, this.children, this.random);
+
+            // Expand bounding box to encompass all children
             this.setBoundingBoxFromChildren();
-            if (mineshaftFeatureConfig.type == BetterMineshaftFeature.Type.MESA) {
-                int j = chunkGenerator.getSeaLevel() - this.boundingBox.maxY + this.boundingBox.getBlockCountY() / 2 + 5;
-                this.boundingBox.offset(0, j, 0);
-                children.forEach(structurePiece -> structurePiece.translate(0, j, 0));
-            } else {
+
+            // y-coordinate adjustments
+            if (featureConfig.type == BetterMineshaftFeature.Type.MESA) {
+                // The following is probably logic to make mesa mineshafts higher up (they seem to penetrate the surface much more)
+                int yOffset = chunkGenerator.getSeaLevel() - this.boundingBox.maxY + this.boundingBox.getBlockCountY() / 2 + 5;
+                this.boundingBox.offset(0, yOffset, 0);
+                children.forEach(structurePiece -> structurePiece.translate(0, yOffset, 0));
+            }
+            else {
+                // Method for adjusting y of all structure pieces (similar to above)
                 this.method_14978(chunkGenerator.getSeaLevel(), this.random, 10);
             }
         }
