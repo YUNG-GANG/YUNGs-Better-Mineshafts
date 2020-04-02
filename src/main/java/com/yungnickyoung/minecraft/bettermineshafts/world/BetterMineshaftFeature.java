@@ -3,9 +3,12 @@ package com.yungnickyoung.minecraft.bettermineshafts.world;
 import com.mojang.datafixers.Dynamic;
 import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshafts;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
+import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.BigTunnel;
 import net.minecraft.structure.StructureManager;
 import net.minecraft.structure.StructureStart;
 import net.minecraft.util.math.BlockBox;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.source.BiomeAccess;
 import net.minecraft.world.gen.ChunkRandom;
@@ -70,18 +73,34 @@ public class BetterMineshaftFeature extends StructureFeature<BetterMineshaftFeat
             if (featureConfig == null) { // Default to normal mineshaft in case we fail to load config for this biome
                 featureConfig = new BetterMineshaftFeatureConfig(.004, Type.NORMAL);
             }
-            BetterMineshaftGenerator.MineshaftRoom mineshaftRoom = new BetterMineshaftGenerator.MineshaftRoom(
+            Direction direction;
+            switch(random.nextInt(4)) {
+                case 0:
+                default:
+                    direction = Direction.NORTH;
+                    break;
+                case 1:
+                    direction = Direction.SOUTH;
+                    break;
+                case 2:
+                    direction = Direction.EAST;
+                    break;
+                case 3:
+                    direction = Direction.WEST;
+            }
+            BlockPos startingPos = new BlockPos((chunkX << 4) + 2, 50, (chunkZ << 4) + 2); // TODO - customize y
+            BigTunnel entryPoint = new BigTunnel(
                 0,
                 this.random,
-                (chunkX << 4) + 2,
-                (chunkZ << 4) + 2,
+                startingPos,
+                direction,
                 featureConfig.type
             );
-            this.children.add(mineshaftRoom);
+            this.children.add(entryPoint);
 
             // Build room component. This also populates the children list, effectively building the entire mineshaft.
             // Note that no blocks are actually placed yet.
-            mineshaftRoom.method_14918(mineshaftRoom, this.children, this.random);
+            entryPoint.method_14918(entryPoint, this.children, this.random);
 
             // Expand bounding box to encompass all children
             this.setBoundingBoxFromChildren();
@@ -95,7 +114,7 @@ public class BetterMineshaftFeature extends StructureFeature<BetterMineshaftFeat
             }
             else {
                 // Method for adjusting y of all structure pieces (similar to above)
-                this.method_14978(chunkGenerator.getSeaLevel(), this.random, 10);
+//                this.method_14978(chunkGenerator.getSeaLevel(), this.random, 10);
             }
         }
     }

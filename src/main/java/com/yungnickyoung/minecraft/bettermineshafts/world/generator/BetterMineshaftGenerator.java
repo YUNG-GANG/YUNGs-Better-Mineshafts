@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 
 import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftFeature;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.CustomCrossing;
-import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.CustomTunnel;
+import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.BigTunnel;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.MineshaftPart;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.PieceType;
 import net.minecraft.block.*;
@@ -36,9 +36,9 @@ public class BetterMineshaftGenerator {
         BlockBox blockBox;
 
         if (rand >= 25) {
-            blockBox = CustomTunnel.determineBoxPosition(list, random, x, y, z, direction);
+            blockBox = BigTunnel.determineBoxPosition(list, random, x, y, z, direction);
             if (blockBox != null) {
-                return new CustomTunnel(l, random, blockBox, direction, type);
+                return new BigTunnel(l, random, blockBox, direction, type);
             }
         }
         else {
@@ -55,9 +55,9 @@ public class BetterMineshaftGenerator {
         BlockBox blockBox;
         switch (pieceType) {
             case TUNNEL:
-                blockBox = CustomTunnel.determineBoxPosition(list, random, x, y, z, direction);
+                blockBox = BigTunnel.determineBoxPosition(list, random, x, y, z, direction);
                 if (blockBox != null) {
-                    return new CustomTunnel(l, random, blockBox, direction, type);
+                    return new BigTunnel(l, random, blockBox, direction, type);
                 }
             case CROSSING:
                 blockBox = CustomCrossing.determineBoxPosition(list, random, x, y, z, direction);
