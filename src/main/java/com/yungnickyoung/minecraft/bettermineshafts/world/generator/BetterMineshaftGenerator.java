@@ -3,6 +3,10 @@ package com.yungnickyoung.minecraft.bettermineshafts.world.generator;
 import com.google.common.collect.Lists;
 
 import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftFeature;
+import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.CustomCrossing;
+import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.CustomTunnel;
+import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.MineshaftPart;
+import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.PieceType;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.MobSpawnerBlockEntity;
@@ -20,7 +24,6 @@ import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 
@@ -28,18 +31,18 @@ import java.util.List;
 import java.util.Random;
 
 public class BetterMineshaftGenerator {
-    private static BetterMineshaftGenerator.MineshaftPart createRandomMineshaftPiece(List<StructurePiece> list, Random random, int x, int y, int z, Direction direction, int l, BetterMineshaftFeature.Type type) {
+    public static MineshaftPart createRandomMineshaftPiece(List<StructurePiece> list, Random random, int x, int y, int z, Direction direction, int l, BetterMineshaftFeature.Type type) {
         int rand = random.nextInt(100);
         BlockBox blockBox;
 
         if (rand >= 25) {
-            blockBox = BetterMineshaftGenerator.CustomTunnel.determineBoxPosition(list, random, x, y, z, direction);
+            blockBox = CustomTunnel.determineBoxPosition(list, random, x, y, z, direction);
             if (blockBox != null) {
                 return new CustomTunnel(l, random, blockBox, direction, type);
             }
         }
         else {
-            blockBox = BetterMineshaftGenerator.CustomCrossing.determineBoxPosition(list, random, x, y, z, direction);
+            blockBox = CustomCrossing.determineBoxPosition(list, random, x, y, z, direction);
             if (blockBox != null) {
                 return new CustomCrossing(l, random, blockBox, direction, type);
             }
@@ -48,16 +51,16 @@ public class BetterMineshaftGenerator {
         return null;
     }
 
-    private static BetterMineshaftGenerator.MineshaftPart createMineshaftPiece(List<StructurePiece> list, PieceType pieceType, Random random, int x, int y, int z, Direction direction, int l, BetterMineshaftFeature.Type type) {
+    public static MineshaftPart createMineshaftPiece(List<StructurePiece> list, PieceType pieceType, Random random, int x, int y, int z, Direction direction, int l, BetterMineshaftFeature.Type type) {
         BlockBox blockBox;
         switch (pieceType) {
             case TUNNEL:
-                blockBox = BetterMineshaftGenerator.CustomTunnel.determineBoxPosition(list, random, x, y, z, direction);
+                blockBox = CustomTunnel.determineBoxPosition(list, random, x, y, z, direction);
                 if (blockBox != null) {
                     return new CustomTunnel(l, random, blockBox, direction, type);
                 }
             case CROSSING:
-                blockBox = BetterMineshaftGenerator.CustomCrossing.determineBoxPosition(list, random, x, y, z, direction);
+                blockBox = CustomCrossing.determineBoxPosition(list, random, x, y, z, direction);
                 if (blockBox != null) {
                     return new CustomCrossing(l, random, blockBox, direction, type);
                 }
@@ -70,7 +73,7 @@ public class BetterMineshaftGenerator {
     /**
      * chainLen refers to the length of the chain of pieces leading up to this one, in terms of number of chunks the structure spans
      */
-    private static BetterMineshaftGenerator.MineshaftPart generateAndAddRandomPiece(
+    public static MineshaftPart generateAndAddRandomPiece(
         StructurePiece structurePiece,
         List<StructurePiece> list,
         Random random,
@@ -81,8 +84,8 @@ public class BetterMineshaftGenerator {
             return null; // Quit out if chain is past max length
         }
 //        else if (Math.abs(x - structurePiece.getBoundingBox().minX) <= 80 && Math.abs(z - structurePiece.getBoundingBox().minZ) <= 80) {
-            BetterMineshaftFeature.Type type = ((BetterMineshaftGenerator.MineshaftPart) structurePiece).mineshaftType;
-            BetterMineshaftGenerator.MineshaftPart mineshaftPart = createRandomMineshaftPiece(list, random, x, y, z, direction, chainLen + 1, type);
+            BetterMineshaftFeature.Type type = ((MineshaftPart) structurePiece).mineshaftType;
+            MineshaftPart mineshaftPart = createRandomMineshaftPiece(list, random, x, y, z, direction, chainLen + 1, type);
             if (mineshaftPart != null) {
                 list.add(mineshaftPart);
                 mineshaftPart.method_14918(structurePiece, list, random); // buildComponent
@@ -95,7 +98,7 @@ public class BetterMineshaftGenerator {
 //        }
     }
 
-    private static BetterMineshaftGenerator.MineshaftPart generateAndAddPiece(
+    public static MineshaftPart generateAndAddPiece(
         StructurePiece structurePiece,
         PieceType pieceType,
         BetterMineshaftFeature.Type mineshaftType,
@@ -108,7 +111,7 @@ public class BetterMineshaftGenerator {
             return null; // Quit out if chain is past max length
         }
 
-        BetterMineshaftGenerator.MineshaftPart mineshaftPart = createMineshaftPiece(list, pieceType, random, x, y, z, direction, chainLen + 1, mineshaftType);
+        MineshaftPart mineshaftPart = createMineshaftPiece(list, pieceType, random, x, y, z, direction, chainLen + 1, mineshaftType);
         if (mineshaftPart != null) {
             list.add(mineshaftPart);
             mineshaftPart.method_14918(structurePiece, list, random); // buildComponent
@@ -117,7 +120,7 @@ public class BetterMineshaftGenerator {
         return mineshaftPart;
     }
 
-    public static class MineshaftStairs extends BetterMineshaftGenerator.MineshaftPart {
+    public static class MineshaftStairs extends MineshaftPart {
         public MineshaftStairs(int i, BlockBox blockBox, Direction direction, BetterMineshaftFeature.Type type) {
             super(StructurePieceType.MINESHAFT_STAIRS, i, type);
             this.setOrientation(direction);
@@ -199,7 +202,7 @@ public class BetterMineshaftGenerator {
         }
     }
 
-    public static class MineshaftCrossing extends BetterMineshaftGenerator.MineshaftPart {
+    public static class MineshaftCrossing extends MineshaftPart {
         private final Direction direction;
         private final boolean twoFloors;
 
@@ -344,187 +347,7 @@ public class BetterMineshaftGenerator {
         }
     }
 
-    public static class CustomCrossing extends BetterMineshaftGenerator.MineshaftPart {
-
-        public CustomCrossing(StructureManager structureManager, CompoundTag compoundTag) {
-            super(BetterMineshaftStructurePieceType.CUSTOM_CROSSING, compoundTag);
-        }
-
-        public CustomCrossing(int i, Random random, BlockBox blockBox, Direction direction, BetterMineshaftFeature.Type type) {
-            super(BetterMineshaftStructurePieceType.CUSTOM_CROSSING, i, type);
-            this.setOrientation(direction);
-            this.boundingBox = blockBox;
-        }
-
-        protected void toNbt(CompoundTag tag) {
-            super.toNbt(tag);
-        }
-
-        public static BlockBox determineBoxPosition(List<StructurePiece> list, Random random, int x, int y, int z, Direction direction) {
-            BlockBox blockBox = new BlockBox(x, y, z, x, y + 6, z);
-            switch (direction) {
-                case NORTH:
-                default:
-                    blockBox.minX = x - 3;
-                    blockBox.maxX = x + 6;
-                    blockBox.minZ = z - 8;
-                    break;
-                case SOUTH:
-                    blockBox.minX = x - 3;
-                    blockBox.maxX = x + 6;
-                    blockBox.maxZ = z + 8;
-                    break;
-                case EAST:
-                    blockBox.maxX = x + 8;
-                    blockBox.minZ = z - 3;
-                    blockBox.maxZ = z + 6;
-                    break;
-                case WEST:
-                    blockBox.minX = x - 8;
-                    blockBox.minZ = z - 3;
-                    blockBox.maxZ = z + 6;
-            }
-
-            // The following func call returns null if this new blockbox does not intersect with any pieces in the list.
-            // If there is an intersection, the following func call returns the piece that intersects.
-            StructurePiece intersectingPiece = StructurePiece.method_14932(list, blockBox); // findIntersecting
-
-            // Thus, this function returns null if blackBox intersects with an existing piece. Otherwise, we return blackbox
-            return intersectingPiece != null ? null : blockBox;
-        }
-
-        /**
-         * buildComponent
-         */
-        public void method_14918(StructurePiece structurePiece, List<StructurePiece> list, Random random) {
-        }
-
-        public boolean generate(IWorld world, ChunkGenerator<?> generator, Random random, BlockBox box, ChunkPos pos) {
-            int xEnd = 11 - 1,
-                yEnd = 7 - 1,
-                zEnd = 11 - 1;
-            this.fillWithOutline(world, box, 0, 0, 0, xEnd, yEnd, zEnd, Blocks.STONE_BRICKS.getDefaultState(), AIR, false);
-            this.fillWithOutline(world, box, 1, 1, 1, xEnd - 1, yEnd - 1, zEnd - 1, AIR, AIR, false);
-            this.fillWithOutline(world, box, 4, 1, 0, 6, yEnd - 3, 0, AIR, AIR, false);
-            return true;
-        }
-    }
-
-
-
-    public static class CustomTunnel extends BetterMineshaftGenerator.MineshaftPart {
-        private static final int X_LEN = 5, Y_LEN = 4;
-        private int zSectionCount;
-
-        public CustomTunnel(StructureManager structureManager, CompoundTag compoundTag) {
-            super(BetterMineshaftStructurePieceType.CUSTOM_TUNNEL, compoundTag);
-            this.zSectionCount = compoundTag.getInt("Num");
-        }
-
-        public CustomTunnel(int i, Random random, BlockBox blockBox, Direction direction, BetterMineshaftFeature.Type type) {
-            super(BetterMineshaftStructurePieceType.CUSTOM_TUNNEL, i, type);
-            this.setOrientation(direction);
-            this.boundingBox = blockBox;
-            if (this.getFacing().getAxis() == Direction.Axis.Z) {
-                this.zSectionCount = blockBox.getBlockCountZ() / 8;
-            } else {
-                this.zSectionCount = blockBox.getBlockCountX() / 8;
-            }
-        }
-
-        protected void toNbt(CompoundTag tag) {
-            super.toNbt(tag);
-            tag.putInt("Num", this.zSectionCount);
-        }
-
-        public static BlockBox determineBoxPosition(List<StructurePiece> list, Random random, int x, int y, int z, Direction direction) {
-            BlockBox blockBox = new BlockBox(x, y, z, x, y + Y_LEN, z);
-
-            // Test to see if we can make it length 32 blocks. Decrease by 8 until we can, or until we determine not possible at all
-            int n;
-            for (n = 32; n > 0; n -= 8) {
-                switch (direction) {
-                    case NORTH:
-                    default:
-                        blockBox.maxX = x + X_LEN;
-                        blockBox.minZ = z - (n - 1);
-                        break;
-                    case SOUTH:
-                        blockBox.maxX = x + X_LEN;
-                        blockBox.maxZ = z + (n - 1);
-                        break;
-                    case WEST:
-                        blockBox.minX = x - (n - 1);
-                        blockBox.maxZ = z + X_LEN;
-                        break;
-                    case EAST:
-                        blockBox.maxX = x + (n - 1);
-                        blockBox.maxZ = z + X_LEN;
-                }
-
-                // If the blockBox does not intersect with any pieces, break from the loop
-                if (StructurePiece.method_14932(list, blockBox) == null) { // findIntersecting
-                    break;
-                }
-            }
-
-            // Return null if we were unable to get a box that doesn't intersect with other pieces.
-            // Otherwise return the box.
-            return n > 0 ? blockBox : null;
-        }
-
-        /**
-         * buildComponent
-         */
-        public void method_14918(StructurePiece structurePiece, List<StructurePiece> list, Random random) {
-            int chainLen = this.method_14923(); // getComponentType
-            Direction direction = this.getFacing();
-            if (direction != null) {
-                switch (direction) {
-                    case NORTH:
-                    default:
-                        BetterMineshaftGenerator.generateAndAddRandomPiece(structurePiece, list, random, this.boundingBox.minX, this.boundingBox.minY, this.boundingBox.minZ - 1, direction, chainLen);
-                        break;
-                    case SOUTH:
-                        BetterMineshaftGenerator.generateAndAddRandomPiece(structurePiece, list, random, this.boundingBox.minX, this.boundingBox.minY, this.boundingBox.maxZ + 1, direction, chainLen);
-                        break;
-                    case WEST:
-                        BetterMineshaftGenerator.generateAndAddRandomPiece(structurePiece, list, random, this.boundingBox.minX - 1, this.boundingBox.minY, this.boundingBox.minZ, direction, chainLen);
-                        break;
-                    case EAST:
-                        BetterMineshaftGenerator.generateAndAddRandomPiece(structurePiece, list, random, this.boundingBox.maxX + 1, this.boundingBox.minY, this.boundingBox.minZ, direction, chainLen);
-                }
-            }
-        }
-
-        @Override
-        public boolean generate(IWorld world, ChunkGenerator<?> generator, Random random, BlockBox box, ChunkPos pos) {
-            if (this.method_14937(world, box)) { // check if box contains any liquid
-//                return false;
-            }
-            int xEnd = X_LEN - 1,
-                yEnd = Y_LEN - 1,
-                zEnd = zSectionCount * 8 - 1;
-
-            this.fillWithOutline(world, box, 0, 0, 0, xEnd, yEnd, zEnd, AIR, AIR, false);
-            this.fillWithOutline(world, box, 0, 0, 0, xEnd, 0, zEnd, Blocks.DARK_OAK_PLANKS.getDefaultState(), AIR, false);
-
-            // mark the corners
-            // Coords are [x, z]
-            // [0, 0] -> GOLD BLOCK
-            this.fillWithOutline(world, box, 0, 0, 0, 0, 0, 0, Blocks.GOLD_BLOCK.getDefaultState(), AIR, false);
-            // [0, endZ] -> REDSTONE BLOCK
-            this.fillWithOutline(world, box, 0, 0, zEnd, 0, 0, zEnd, Blocks.REDSTONE_BLOCK.getDefaultState(), AIR, false);
-            // [endX, 0] -> BLUE WOOL BLOCK
-            this.fillWithOutline(world, box, xEnd, 0, 0, xEnd, 0, 0, Blocks.BLUE_WOOL.getDefaultState(), AIR, false);
-            // [endX, endZ] -> DIAMOND BLOCK
-            this.fillWithOutline(world, box, xEnd, 0, zEnd, xEnd, 0, zEnd, Blocks.DIAMOND_BLOCK.getDefaultState(), AIR, false);
-
-            return true;
-        }
-    }
-
-    public static class MineshaftCorridor extends BetterMineshaftGenerator.MineshaftPart {
+    public static class MineshaftCorridor extends MineshaftPart {
         private final boolean hasRails;
         private final boolean hasCobwebs;
         private boolean hasSpawner;
@@ -795,7 +618,7 @@ public class BetterMineshaftGenerator {
         }
     }
 
-    public static class MineshaftRoom extends BetterMineshaftGenerator.MineshaftPart {
+    public static class MineshaftRoom extends MineshaftPart {
         private final List<BlockBox> entrances = Lists.newLinkedList();
 
         public MineshaftRoom(int i, Random random, int x, int z, BetterMineshaftFeature.Type type) {
@@ -821,7 +644,7 @@ public class BetterMineshaftGenerator {
             int k;
 
             BetterMineshaftFeature.Type mineshaftType = ((MineshaftPart)structurePiece).mineshaftType;
-            BetterMineshaftGenerator.MineshaftPart newPiece;
+            MineshaftPart newPiece;
             BlockBox newBox;
 
             for (k = 0; k < this.boundingBox.getBlockCountX(); k += 4) {
@@ -906,62 +729,5 @@ public class BetterMineshaftGenerator {
             entrances.forEach(blockBox -> listTag.add(blockBox.toNbt()));
             tag.put("Entrances", listTag);
         }
-    }
-
-    abstract static class MineshaftPart extends StructurePiece {
-        protected BetterMineshaftFeature.Type mineshaftType;
-
-        public MineshaftPart(StructurePieceType structurePieceType, int i, BetterMineshaftFeature.Type type) {
-            super(structurePieceType, i);
-            this.mineshaftType = type;
-        }
-
-        public MineshaftPart(StructurePieceType structurePieceType, CompoundTag compoundTag) {
-            super(structurePieceType, compoundTag);
-            this.mineshaftType = BetterMineshaftFeature.Type.byIndex(compoundTag.getInt("MST"));
-        }
-
-        protected void toNbt(CompoundTag tag) {
-            tag.putInt("MST", this.mineshaftType.ordinal());
-        }
-
-        protected BlockState getMainBlock() {
-            switch (this.mineshaftType) {
-                case NORMAL:
-                default:
-                    return Blocks.REDSTONE_BLOCK.getDefaultState();
-                case MESA:
-                    return Blocks.DARK_OAK_PLANKS.getDefaultState();
-            }
-        }
-
-        protected BlockState getSupportBlock() {
-            switch (this.mineshaftType) {
-                case NORMAL:
-                default:
-                    return Blocks.OAK_FENCE.getDefaultState();
-                case MESA:
-                    return Blocks.DARK_OAK_FENCE.getDefaultState();
-            }
-        }
-
-        /**
-         * Seems to check for air within a BlockBox at (xMin to xMax, y + 1, z).
-         * Note that getBlockAt() also returns air if the coordinate passed in is not within the blockBox passed in.
-         * Returns false if any air is found
-         */
-        protected boolean method_14719(BlockView blockView, BlockBox blockBox, int xMin, int xMax, int y, int z) {
-            for (int x = xMin; x <= xMax; ++x) {
-                if (this.getBlockAt(blockView, x, y + 1, z, blockBox).isAir()) {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-    }
-
-    private enum PieceType {
-        TUNNEL, CROSSING, NONE
     }
 }
