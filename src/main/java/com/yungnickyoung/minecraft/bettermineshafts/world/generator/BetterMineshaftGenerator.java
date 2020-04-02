@@ -362,27 +362,26 @@ public class BetterMineshaftGenerator {
 
         public static BlockBox determineBoxPosition(List<StructurePiece> list, Random random, int x, int y, int z, Direction direction) {
             BlockBox blockBox = new BlockBox(x, y, z, x, y + 6, z);
-
             switch (direction) {
                 case NORTH:
                 default:
-                    blockBox.minX = x - 2;
+                    blockBox.minX = x - 3;
                     blockBox.maxX = x + 6;
                     blockBox.minZ = z - 8;
                     break;
                 case SOUTH:
-                    blockBox.minX = x - 2;
+                    blockBox.minX = x - 3;
                     blockBox.maxX = x + 6;
                     blockBox.maxZ = z + 8;
                     break;
                 case EAST:
                     blockBox.maxX = x + 8;
-                    blockBox.minZ = z - 2;
+                    blockBox.minZ = z - 3;
                     blockBox.maxZ = z + 6;
                     break;
                 case WEST:
                     blockBox.minX = x - 8;
-                    blockBox.minZ = z - 2;
+                    blockBox.minZ = z - 3;
                     blockBox.maxZ = z + 6;
             }
 
@@ -398,31 +397,15 @@ public class BetterMineshaftGenerator {
          * buildComponent
          */
         public void method_14918(StructurePiece structurePiece, List<StructurePiece> list, Random random) {
-//            int chainLen = this.method_14923(); // getComponentType
-//            if (srcDirection != null) {
-//                switch (srcDirection) {
-//                    case NORTH:
-//                    default:
-//                        BetterMineshaftGenerator.generateAndAddPiece(structurePiece, list, random, this.boundingBox.minX, this.boundingBox.minY, this.boundingBox.minZ - 1, direction, chainLen);
-//                        break;
-//                    case SOUTH:
-//                        BetterMineshaftGenerator.generateAndAddPiece(structurePiece, list, random, this.boundingBox.minX, this.boundingBox.minY, this.boundingBox.maxZ + 1, direction, chainLen);
-//                        break;
-//                    case WEST:
-//                        BetterMineshaftGenerator.generateAndAddPiece(structurePiece, list, random, this.boundingBox.minX - 1, this.boundingBox.minY, this.boundingBox.minZ, direction, chainLen);
-//                        break;
-//                    case EAST:
-//                        BetterMineshaftGenerator.generateAndAddPiece(structurePiece, list, random, this.boundingBox.maxX + 1, this.boundingBox.minY, this.boundingBox.minZ, direction, chainLen);
-//                }
-//            }
         }
 
         public boolean generate(IWorld world, ChunkGenerator<?> generator, Random random, BlockBox box, ChunkPos pos) {
-            int xEnd = 8 - 1,
-                yEnd = 6 - 1,
-                zEnd = 8 - 1;
-            this.fillWithOutline(world, box, 0, 0, 0, xEnd, yEnd, zEnd, AIR, AIR, false);
-            this.fillWithOutline(world, box, 0, 0, 0, xEnd, 0, zEnd, Blocks.STONE_BRICKS.getDefaultState(), AIR, false);
+            int xEnd = 11 - 1,
+                yEnd = 7 - 1,
+                zEnd = 11 - 1;
+            this.fillWithOutline(world, box, 0, 0, 0, xEnd, yEnd, zEnd, Blocks.STONE_BRICKS.getDefaultState(), AIR, false);
+            this.fillWithOutline(world, box, 1, 1, 1, xEnd - 1, yEnd - 1, zEnd - 1, AIR, AIR, false);
+            this.fillWithOutline(world, box, 4, 1, 0, 6, yEnd - 3, 0, AIR, AIR, false);
             return true;
         }
     }
@@ -840,7 +823,6 @@ public class BetterMineshaftGenerator {
             BetterMineshaftFeature.Type mineshaftType = ((MineshaftPart)structurePiece).mineshaftType;
             BetterMineshaftGenerator.MineshaftPart newPiece;
             BlockBox newBox;
-
 
             for (k = 0; k < this.boundingBox.getBlockCountX(); k += 4) {
                 k += random.nextInt(this.boundingBox.getBlockCountX());
