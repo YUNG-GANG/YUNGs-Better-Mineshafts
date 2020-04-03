@@ -3,9 +3,12 @@ package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftFeature;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.structure.StructurePiece;
 import net.minecraft.structure.StructurePieceType;
+import net.minecraft.util.BlockMirror;
+import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
@@ -34,7 +37,7 @@ public abstract class MineshaftPart extends StructurePiece {
         switch (this.mineshaftType) {
             case NORMAL:
             default:
-                return Blocks.REDSTONE_BLOCK.getDefaultState();
+                return Blocks.OAK_PLANKS.getDefaultState();
             case MESA:
                 return Blocks.DARK_OAK_PLANKS.getDefaultState();
         }
@@ -81,6 +84,18 @@ public abstract class MineshaftPart extends StructurePiece {
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * Sets the block state, disregarding any blockbox shenanigans
+     */
+    protected void setBlockState(IWorld world, BlockState block, int x, int y, int z) {
+        BlockPos blockPos = new BlockPos(this.applyXTransform(x, z), this.applyYTransform(y), this.applyZTransform(x, z));
+        world.setBlockState(blockPos, block, 2);
+        FluidState fluidState = world.getFluidState(blockPos);
+        if (!fluidState.isEmpty()) {
+            world.getFluidTickScheduler().schedule(blockPos, fluidState.getFluid(), 0);
         }
     }
 

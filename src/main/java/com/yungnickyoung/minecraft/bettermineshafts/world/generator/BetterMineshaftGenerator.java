@@ -6,7 +6,6 @@ import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftFeature
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.CustomCrossing;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.BigTunnel;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.MineshaftPart;
-import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.PieceType;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.MobSpawnerBlockEntity;
@@ -35,7 +34,7 @@ public class BetterMineshaftGenerator {
         int rand = random.nextInt(100);
         BlockBox blockBox;
 
-        if (rand >= 25) {
+        if (rand >= 10) {
             blockBox = BigTunnel.determineBoxPosition(list, random, x, y, z, direction);
             if (blockBox != null) {
                 return new BigTunnel(l, random, blockBox, direction, type);
@@ -51,23 +50,21 @@ public class BetterMineshaftGenerator {
         return null;
     }
 
-    public static MineshaftPart createMineshaftPiece(List<StructurePiece> list, PieceType pieceType, Random random, int x, int y, int z, Direction direction, int l, BetterMineshaftFeature.Type type) {
+    public static MineshaftPart createMineshaftPiece(List<StructurePiece> list, StructurePieceType pieceType, Random random, int x, int y, int z, Direction direction, int l, BetterMineshaftFeature.Type type) {
         BlockBox blockBox;
-        switch (pieceType) {
-            case TUNNEL:
-                blockBox = BigTunnel.determineBoxPosition(list, random, x, y, z, direction);
-                if (blockBox != null) {
-                    return new BigTunnel(l, random, blockBox, direction, type);
-                }
-            case CROSSING:
-                blockBox = CustomCrossing.determineBoxPosition(list, random, x, y, z, direction);
-                if (blockBox != null) {
-                    return new CustomCrossing(l, random, blockBox, direction, type);
-                }
-            case NONE:
-            default:
-                return null;
+        if (pieceType == BetterMineshaftStructurePieceType.BIG_TUNNEL) {
+            blockBox = BigTunnel.determineBoxPosition(list, random, x, y, z, direction);
+            if (blockBox != null) {
+                return new BigTunnel(l, random, blockBox, direction, type);
+            }
         }
+        else if (pieceType == BetterMineshaftStructurePieceType.CUSTOM_CROSSING) {
+            blockBox = CustomCrossing.determineBoxPosition(list, random, x, y, z, direction);
+            if (blockBox != null) {
+                return new CustomCrossing(l, random, blockBox, direction, type);
+            }
+        }
+        return null;
     }
 
     /**
@@ -100,7 +97,7 @@ public class BetterMineshaftGenerator {
 
     public static MineshaftPart generateAndAddPiece(
         StructurePiece structurePiece,
-        PieceType pieceType,
+        StructurePieceType pieceType,
         BetterMineshaftFeature.Type mineshaftType,
         List<StructurePiece> list,
         Random random,
@@ -653,7 +650,7 @@ public class BetterMineshaftGenerator {
                     break;
                 }
 
-                newPiece = BetterMineshaftGenerator.generateAndAddPiece(structurePiece, PieceType.TUNNEL, mineshaftType, list, random, this.boundingBox.minX + k, this.boundingBox.minY, this.boundingBox.minZ - 1, Direction.NORTH, i);
+                newPiece = BetterMineshaftGenerator.generateAndAddPiece(structurePiece, BetterMineshaftStructurePieceType.CORRIDOR, mineshaftType, list, random, this.boundingBox.minX + k, this.boundingBox.minY, this.boundingBox.minZ - 1, Direction.NORTH, i);
                 if (newPiece != null) {
                     newBox = newPiece.getBoundingBox();
                     this.entrances.add(new BlockBox(newBox.minX, newBox.minY, this.boundingBox.minZ, newBox.maxX, newBox.maxY, this.boundingBox.minZ + 1));
@@ -666,7 +663,7 @@ public class BetterMineshaftGenerator {
                     break;
                 }
 
-                newPiece = BetterMineshaftGenerator.generateAndAddPiece(structurePiece, PieceType.TUNNEL, mineshaftType, list, random, this.boundingBox.minX + k, this.boundingBox.minY, this.boundingBox.maxZ + 1, Direction.SOUTH, i);
+                newPiece = BetterMineshaftGenerator.generateAndAddPiece(structurePiece, BetterMineshaftStructurePieceType.CORRIDOR, mineshaftType, list, random, this.boundingBox.minX + k, this.boundingBox.minY, this.boundingBox.maxZ + 1, Direction.SOUTH, i);
                 if (newPiece != null) {
                     newBox = newPiece.getBoundingBox();
                     this.entrances.add(new BlockBox(newBox.minX, newBox.minY, this.boundingBox.maxZ - 1, newBox.maxX, newBox.maxY, this.boundingBox.maxZ));
@@ -679,7 +676,7 @@ public class BetterMineshaftGenerator {
                     break;
                 }
 
-                newPiece = BetterMineshaftGenerator.generateAndAddPiece(structurePiece, PieceType.TUNNEL, mineshaftType, list, random, this.boundingBox.minX - 1, this.boundingBox.minY, this.boundingBox.minZ + k, Direction.WEST, i);
+                newPiece = BetterMineshaftGenerator.generateAndAddPiece(structurePiece, BetterMineshaftStructurePieceType.CORRIDOR, mineshaftType, list, random, this.boundingBox.minX - 1, this.boundingBox.minY, this.boundingBox.minZ + k, Direction.WEST, i);
                 if (newPiece != null) {
                     newBox = newPiece.getBoundingBox();
                     this.entrances.add(new BlockBox(this.boundingBox.minX, newBox.minY, newBox.minZ, this.boundingBox.minX + 1, newBox.maxY, newBox.maxZ));
@@ -692,13 +689,12 @@ public class BetterMineshaftGenerator {
                     break;
                 }
 
-                newPiece = BetterMineshaftGenerator.generateAndAddPiece(structurePiece, PieceType.TUNNEL, mineshaftType, list, random, this.boundingBox.maxX + 1, this.boundingBox.minY, this.boundingBox.minZ + k, Direction.EAST, i);
+                newPiece = BetterMineshaftGenerator.generateAndAddPiece(structurePiece, BetterMineshaftStructurePieceType.CORRIDOR, mineshaftType, list, random, this.boundingBox.maxX + 1, this.boundingBox.minY, this.boundingBox.minZ + k, Direction.EAST, i);
                 if (newPiece != null) {
                     newBox = newPiece.getBoundingBox();
                     this.entrances.add(new BlockBox(this.boundingBox.maxX - 1, newBox.minY, newBox.minZ, this.boundingBox.maxX, newBox.maxY, newBox.maxZ));
                 }
             }
-
         }
 
         public boolean generate(IWorld world, ChunkGenerator<?> generator, Random random, BlockBox box, ChunkPos pos) {
