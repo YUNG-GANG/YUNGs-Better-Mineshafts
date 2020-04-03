@@ -140,23 +140,23 @@ public class BigTunnel extends MineshaftPart {
             yEnd = Y_AXIS_LEN - 1,
             zEnd = MAIN_AXIS_LEN - 1;
 
+        // Randomize blocks
+        this.randomFillWithOutline(world, box, random, .1f, 0, 0, 0, xEnd, yEnd, zEnd, Blocks.COBBLESTONE.getDefaultState(), Blocks.COBBLESTONE.getDefaultState(), true);
+        this.randomFillWithOutline(world, box, random, .1f, 0, 0, 0, xEnd, yEnd, zEnd, Blocks.STONE_BRICKS.getDefaultState(), Blocks.STONE_BRICKS.getDefaultState(), true);
+        this.randomFillWithOutline(world, box, random, .1f, 0, 0, 0, xEnd, yEnd, zEnd, Blocks.MOSSY_STONE_BRICKS.getDefaultState(), Blocks.MOSSY_STONE_BRICKS.getDefaultState(), true);
+        this.randomFillWithOutline(world, box, random, .1f, 0, 0, 0, xEnd, yEnd, zEnd, Blocks.CRACKED_STONE_BRICKS.getDefaultState(), Blocks.CRACKED_STONE_BRICKS.getDefaultState(), true);
+        this.randomFillWithOutline(world, box, random, .2f, 0, 0, 0, xEnd, yEnd, zEnd, AIR, AIR, true);
+
         // Fill with air
-        this.fillWithOutline(world, box, 1, 1, 0, xEnd - 1, yEnd, zEnd, AIR, AIR, false);
+        this.fillWithOutline(world, box, 1, 1, 0, xEnd - 1, yEnd - 3, zEnd, AIR, AIR, false);
+        this.fillWithOutline(world, box, 2, yEnd - 3, 0, xEnd - 2, yEnd - 2, zEnd, AIR, AIR, false);
+        this.fillWithOutline(world, box, 3, yEnd - 1, 0, xEnd - 3, yEnd - 1, zEnd, AIR, AIR, false);
 
         // Add random blocks in floor
-        this.randomFillWithOutline(world, box, random, .8f, 0, 0, 0, xEnd, 0, zEnd, Blocks.OAK_PLANKS.getDefaultState(), AIR, false);
+        this.randomFillWithOutline(world, box, random, .4f, 0, 0, 0, xEnd, 0, zEnd, Blocks.OAK_PLANKS.getDefaultState(), AIR, false);
 
         // Fill in any air in floor with planks
         this.replaceAirInBox(world, box, 0, 0, 0, xEnd, 0, zEnd, Blocks.OAK_PLANKS.getDefaultState());
-
-        // Add cobble and bricks to walls
-        this.randomFillWithOutline(world, box, random, .1f, 0, 0, 0, 0, yEnd, zEnd, Blocks.COBBLESTONE.getDefaultState(), AIR, true);
-        this.randomFillWithOutline(world, box, random, .3f, 0, 0, 0, 0, yEnd, zEnd, Blocks.STONE_BRICKS.getDefaultState(), AIR, true);
-
-        this.randomFillWithOutline(world, box, random, .1f, xEnd, 0, 0, xEnd, yEnd, zEnd, Blocks.COBBLESTONE.getDefaultState(), AIR, true);
-        this.randomFillWithOutline(world, box, random, .3f, xEnd, 0, 0, xEnd, yEnd, zEnd, Blocks.STONE_BRICKS.getDefaultState(), AIR, true);
-
-        // TODO - ceiling
 
         // Small mineshaft entrances
         this.smallShaftLeftEntrances.forEach(entrancePos -> placeSmallShaftEntranceLeft(world, box, random, entrancePos.getX(), entrancePos.getY(), entrancePos.getZ()));
