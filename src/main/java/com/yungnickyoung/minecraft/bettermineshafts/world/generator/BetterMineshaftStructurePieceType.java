@@ -2,6 +2,7 @@ package com.yungnickyoung.minecraft.bettermineshafts.world.generator;
 
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.CustomCrossing;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.BigTunnel;
+import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.SideRoom;
 import net.minecraft.structure.StructurePieceType;
 import net.minecraft.util.registry.Registry;
 
@@ -14,6 +15,7 @@ public interface BetterMineshaftStructurePieceType extends StructurePieceType {
     StructurePieceType STAIRS = register(BetterMineshaftGenerator.MineshaftStairs::new, "BMSStairs");
     StructurePieceType BIG_TUNNEL = register(BigTunnel::new, "BMSCustomTunnel");
     StructurePieceType CUSTOM_CROSSING = register(CustomCrossing::new, "BMSCustomCrossing");
+    StructurePieceType SIDE_ROOM = register(SideRoom::new, "BMSSideRoom");
 
     static BetterMineshaftStructurePieceType register(BetterMineshaftStructurePieceType pieceType, String id) {
         return Registry.register(Registry.STRUCTURE_PIECE, id.toLowerCase(Locale.ROOT), pieceType);

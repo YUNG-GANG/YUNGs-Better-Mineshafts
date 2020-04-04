@@ -19,12 +19,14 @@ public class BoxUtil {
                 blockBox.minZ = z - (mainAxisLen - 1);
                 break;
             case SOUTH:
-                blockBox.maxX = x + (secondaryAxisLen - 1);
+//                blockBox.maxX = x + (secondaryAxisLen - 1);
+                blockBox.minX = x - (secondaryAxisLen - 1);
                 blockBox.maxZ = z + (mainAxisLen - 1);
                 break;
             case WEST:
                 blockBox.minX = x - (mainAxisLen - 1);
-                blockBox.maxZ = z + (secondaryAxisLen - 1);
+//                blockBox.maxZ = z + (secondaryAxisLen - 1);
+                blockBox.minZ = z - (secondaryAxisLen - 1);
                 break;
             case EAST:
                 blockBox.maxX = x + (mainAxisLen - 1);

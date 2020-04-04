@@ -6,6 +6,7 @@ import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftFeature
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.CustomCrossing;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.BigTunnel;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.MineshaftPart;
+import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.SideRoom;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.MobSpawnerBlockEntity;
@@ -62,6 +63,12 @@ public class BetterMineshaftGenerator {
             blockBox = CustomCrossing.determineBoxPosition(list, random, x, y, z, direction);
             if (blockBox != null) {
                 return new CustomCrossing(l, random, blockBox, direction, type);
+            }
+        }
+        else if (pieceType == BetterMineshaftStructurePieceType.SIDE_ROOM) {
+            blockBox = SideRoom.determineBoxPosition(list, random, x, y, z, direction);
+            if (blockBox != null) {
+                return new SideRoom(l, random, blockBox, direction, type);
             }
         }
         return null;
