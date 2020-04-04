@@ -101,7 +101,7 @@ public class BigTunnel extends MineshaftPart {
         BetterMineshaftFeature.Type mineshaftType = ((MineshaftPart)structurePiece).mineshaftType;
         int chainLen = this.method_14923(); // getComponentType
 
-        Direction sideRoomDirection;
+        Direction nextPieceDirection;
         StructurePiece newPiece;
 
         Direction direction = this.getFacing();
@@ -133,29 +133,29 @@ public class BigTunnel extends MineshaftPart {
                 switch (direction) {
                     case NORTH:
                     default:
-                        sideRoomDirection = Direction.EAST;
-                        newPiece = BetterMineshaftGenerator.generateAndAddPiece(structurePiece, BetterMineshaftStructurePieceType.SIDE_ROOM, mineshaftType, list, random, this.boundingBox.minX - 5, this.boundingBox.minY, this.boundingBox.maxZ - n - 9, sideRoomDirection, this.method_14923());
+                        nextPieceDirection = Direction.EAST;
+                        newPiece = BetterMineshaftGenerator.generateAndAddPiece(structurePiece, BetterMineshaftStructurePieceType.SIDE_ROOM, mineshaftType, list, random, this.boundingBox.minX - 5, this.boundingBox.minY, this.boundingBox.maxZ - n - 9, nextPieceDirection, this.method_14923());
                         if (newPiece != null) {
                             sideRoomEntrances.add(new BlockBox(0, 1, n, 0, 3, n + 9));
                         }
                         break;
                     case SOUTH:
-                        sideRoomDirection = Direction.WEST;
-                        newPiece = BetterMineshaftGenerator.generateAndAddPiece(structurePiece, BetterMineshaftStructurePieceType.SIDE_ROOM, mineshaftType, list, random, this.boundingBox.maxX + 5, this.boundingBox.minY, this.boundingBox.minZ + n + 9, sideRoomDirection, this.method_14923());
+                        nextPieceDirection = Direction.WEST;
+                        newPiece = BetterMineshaftGenerator.generateAndAddPiece(structurePiece, BetterMineshaftStructurePieceType.SIDE_ROOM, mineshaftType, list, random, this.boundingBox.maxX + 5, this.boundingBox.minY, this.boundingBox.minZ + n + 9, nextPieceDirection, this.method_14923());
                         if (newPiece != null) {
                             sideRoomEntrances.add(new BlockBox(SECONDARY_AXIS_LEN - 1, 1, n, SECONDARY_AXIS_LEN - 1, 3, n + 9));
                         }
                         break;
                     case WEST:
-                        sideRoomDirection = Direction.NORTH;
-                        newPiece = BetterMineshaftGenerator.generateAndAddPiece(structurePiece, BetterMineshaftStructurePieceType.SIDE_ROOM, mineshaftType, list, random, this.boundingBox.maxX - n - 9, this.boundingBox.minY, this.boundingBox.maxZ + 5, sideRoomDirection, this.method_14923());
+                        nextPieceDirection = Direction.NORTH;
+                        newPiece = BetterMineshaftGenerator.generateAndAddPiece(structurePiece, BetterMineshaftStructurePieceType.SIDE_ROOM, mineshaftType, list, random, this.boundingBox.maxX - n - 9, this.boundingBox.minY, this.boundingBox.maxZ + 5, nextPieceDirection, this.method_14923());
                         if (newPiece != null) {
                             sideRoomEntrances.add(new BlockBox(SECONDARY_AXIS_LEN - 1, 1, n, SECONDARY_AXIS_LEN - 1, 3, n + 9));
                         }
                         break;
                     case EAST:
-                        sideRoomDirection = Direction.SOUTH;
-                        newPiece = BetterMineshaftGenerator.generateAndAddPiece(structurePiece, BetterMineshaftStructurePieceType.SIDE_ROOM, mineshaftType, list, random, this.boundingBox.minX + n + 9, this.boundingBox.minY, this.boundingBox.minZ - 5, sideRoomDirection, this.method_14923());
+                        nextPieceDirection = Direction.SOUTH;
+                        newPiece = BetterMineshaftGenerator.generateAndAddPiece(structurePiece, BetterMineshaftStructurePieceType.SIDE_ROOM, mineshaftType, list, random, this.boundingBox.minX + n + 9, this.boundingBox.minY, this.boundingBox.minZ - 5, nextPieceDirection, this.method_14923());
                         if (newPiece != null) {
                             sideRoomEntrances.add(new BlockBox(0, 1, n, 0, 3, n + 9));
                         }
@@ -171,29 +171,29 @@ public class BigTunnel extends MineshaftPart {
                 switch (direction) {
                     case NORTH:
                     default:
-                        sideRoomDirection = Direction.WEST;
-                        newPiece = BetterMineshaftGenerator.generateAndAddPiece(structurePiece, BetterMineshaftStructurePieceType.SIDE_ROOM, mineshaftType, list, random, this.boundingBox.maxX + 5, this.boundingBox.minY, this.boundingBox.maxZ - n, sideRoomDirection, this.method_14923());
+                        nextPieceDirection = Direction.WEST;
+                        newPiece = BetterMineshaftGenerator.generateAndAddPiece(structurePiece, BetterMineshaftStructurePieceType.SIDE_ROOM, mineshaftType, list, random, this.boundingBox.maxX + 5, this.boundingBox.minY, this.boundingBox.maxZ - n, nextPieceDirection, this.method_14923());
                         if (newPiece != null) {
                             sideRoomEntrances.add(new BlockBox(SECONDARY_AXIS_LEN - 1, 1, n, SECONDARY_AXIS_LEN - 1, 3, n + 9));
                         }
                         break;
                     case SOUTH:
-                        sideRoomDirection = Direction.EAST;
-                        newPiece = BetterMineshaftGenerator.generateAndAddPiece(structurePiece, BetterMineshaftStructurePieceType.SIDE_ROOM, mineshaftType, list, random, this.boundingBox.minX - 5, this.boundingBox.minY, this.boundingBox.minZ + n, sideRoomDirection, this.method_14923());
+                        nextPieceDirection = Direction.EAST;
+                        newPiece = BetterMineshaftGenerator.generateAndAddPiece(structurePiece, BetterMineshaftStructurePieceType.SIDE_ROOM, mineshaftType, list, random, this.boundingBox.minX - 5, this.boundingBox.minY, this.boundingBox.minZ + n, nextPieceDirection, this.method_14923());
                         if (newPiece != null) {
                             sideRoomEntrances.add(new BlockBox(0, 1, n, 0, 3, n + 9));
                         }
                         break;
                     case WEST:
-                        sideRoomDirection = Direction.SOUTH;
-                        newPiece = BetterMineshaftGenerator.generateAndAddPiece(structurePiece, BetterMineshaftStructurePieceType.SIDE_ROOM, mineshaftType, list, random, this.boundingBox.maxX - n, this.boundingBox.minY, this.boundingBox.minZ - 5, sideRoomDirection, this.method_14923());
+                        nextPieceDirection = Direction.SOUTH;
+                        newPiece = BetterMineshaftGenerator.generateAndAddPiece(structurePiece, BetterMineshaftStructurePieceType.SIDE_ROOM, mineshaftType, list, random, this.boundingBox.maxX - n, this.boundingBox.minY, this.boundingBox.minZ - 5, nextPieceDirection, this.method_14923());
                         if (newPiece != null) {
                             sideRoomEntrances.add(new BlockBox(0, 1, n, 0, 3, n + 9));
                         }
                         break;
                     case EAST:
-                        sideRoomDirection = Direction.NORTH;
-                        newPiece = BetterMineshaftGenerator.generateAndAddPiece(structurePiece, BetterMineshaftStructurePieceType.SIDE_ROOM, mineshaftType, list, random, this.boundingBox.minX + n, this.boundingBox.minY, this.boundingBox.maxZ + 5, sideRoomDirection, this.method_14923());
+                        nextPieceDirection = Direction.NORTH;
+                        newPiece = BetterMineshaftGenerator.generateAndAddPiece(structurePiece, BetterMineshaftStructurePieceType.SIDE_ROOM, mineshaftType, list, random, this.boundingBox.minX + n, this.boundingBox.minY, this.boundingBox.maxZ + 5, nextPieceDirection, this.method_14923());
                         if (newPiece != null) {
                             sideRoomEntrances.add(new BlockBox(SECONDARY_AXIS_LEN - 1, 1, n, SECONDARY_AXIS_LEN - 1, 3, n + 9));
                         }
@@ -204,17 +204,80 @@ public class BigTunnel extends MineshaftPart {
         }
 
         // Add smaller side shafts on the left, and record their entrances
-        for (int z = 0; z < (pieceLen - 1) - 2; z++) {
+        for (int n = 0; n < (pieceLen - 1) - 4; n++) {
             if (random.nextFloat() < smallShaftSpawnChance) {
-                this.smallShaftLeftEntrances.add(new BlockPos(0, 1, z));
-                z += random.nextInt(7) + 5;
+                switch (direction) {
+                    case NORTH:
+                    default:
+                        nextPieceDirection = Direction.WEST;
+                        newPiece = BetterMineshaftGenerator.generateAndAddPiece(structurePiece, BetterMineshaftStructurePieceType.SMALL_TUNNEL, mineshaftType, list, random, this.boundingBox.minX - 1, this.boundingBox.minY, this.boundingBox.maxZ - n, nextPieceDirection, this.method_14923());
+                        if (newPiece != null) {
+                            this.smallShaftLeftEntrances.add(new BlockPos(0, 1, n + 1));
+                        }
+                        break;
+                    case SOUTH:
+                        nextPieceDirection = Direction.EAST;
+                        newPiece = BetterMineshaftGenerator.generateAndAddPiece(structurePiece, BetterMineshaftStructurePieceType.SMALL_TUNNEL, mineshaftType, list, random, this.boundingBox.maxX + 1, this.boundingBox.minY, this.boundingBox.minZ + n, nextPieceDirection, this.method_14923());
+                        if (newPiece != null) {
+                            this.smallShaftRightEntrances.add(new BlockPos(SECONDARY_AXIS_LEN - 2, 1, n + 1));
+                        }
+                        break;
+                    case WEST:
+                        nextPieceDirection = Direction.SOUTH;
+                        newPiece = BetterMineshaftGenerator.generateAndAddPiece(structurePiece, BetterMineshaftStructurePieceType.SMALL_TUNNEL, mineshaftType, list, random, this.boundingBox.maxX - n, this.boundingBox.minY, this.boundingBox.maxZ + 1, nextPieceDirection, this.method_14923());
+                        if (newPiece != null) {
+                            this.smallShaftRightEntrances.add(new BlockPos(SECONDARY_AXIS_LEN - 2, 1, n + 1));
+                        }
+                        break;
+                    case EAST:
+                        nextPieceDirection = Direction.NORTH;
+                        newPiece = BetterMineshaftGenerator.generateAndAddPiece(structurePiece, BetterMineshaftStructurePieceType.SMALL_TUNNEL, mineshaftType, list, random, this.boundingBox.minX + n, this.boundingBox.minY, this.boundingBox.minZ - 1, nextPieceDirection, this.method_14923());
+                        if (newPiece != null) {
+                            this.smallShaftLeftEntrances.add(new BlockPos(0, 1, n + 1));
+                        }
+                        break;
+                }
+
+                n += random.nextInt(7) + 5;
             }
         }
+
         // Add smaller side shafts on the right, and record their entrances
-        for (int z = 0; z < (pieceLen - 1) - 2; z++) {
+        for (int n = 5; n < pieceLen; n++) {
             if (random.nextFloat() < smallShaftSpawnChance) {
-                this.smallShaftRightEntrances.add(new BlockPos(SECONDARY_AXIS_LEN - 2, 1, z));
-                z += random.nextInt(7) + 5;
+                switch (direction) {
+                    case NORTH:
+                    default:
+                        nextPieceDirection = Direction.EAST;
+                        newPiece = BetterMineshaftGenerator.generateAndAddPiece(structurePiece, BetterMineshaftStructurePieceType.SMALL_TUNNEL, mineshaftType, list, random, this.boundingBox.maxX + 1, this.boundingBox.minY, this.boundingBox.maxZ - n, nextPieceDirection, this.method_14923());
+                        if (newPiece != null) {
+                            this.smallShaftRightEntrances.add(new BlockPos(SECONDARY_AXIS_LEN - 2, 1,  n - 3));
+                        }
+                        break;
+                    case SOUTH:
+                        nextPieceDirection = Direction.WEST;
+                        newPiece = BetterMineshaftGenerator.generateAndAddPiece(structurePiece, BetterMineshaftStructurePieceType.SMALL_TUNNEL, mineshaftType, list, random, this.boundingBox.minX - 1, this.boundingBox.minY, this.boundingBox.minZ + n, nextPieceDirection, this.method_14923());
+                        if (newPiece != null) {
+                            this.smallShaftLeftEntrances.add(new BlockPos(0, 1, n - 3));
+                        }
+                        break;
+                    case WEST:
+                        nextPieceDirection = Direction.NORTH;
+                        newPiece = BetterMineshaftGenerator.generateAndAddPiece(structurePiece, BetterMineshaftStructurePieceType.SMALL_TUNNEL, mineshaftType, list, random, this.boundingBox.maxX - n, this.boundingBox.minY, this.boundingBox.minZ - 1, nextPieceDirection, this.method_14923());
+                        if (newPiece != null) {
+                            this.smallShaftLeftEntrances.add(new BlockPos(0, 1, n - 3));
+                        }
+                        break;
+                    case EAST:
+                        nextPieceDirection = Direction.SOUTH;
+                        newPiece = BetterMineshaftGenerator.generateAndAddPiece(structurePiece, BetterMineshaftStructurePieceType.SMALL_TUNNEL, mineshaftType, list, random, this.boundingBox.minX + n, this.boundingBox.minY, this.boundingBox.maxZ + 1, nextPieceDirection, this.method_14923());
+                        if (newPiece != null) {
+                            this.smallShaftRightEntrances.add(new BlockPos(SECONDARY_AXIS_LEN - 2, 1, n - 3));
+                        }
+                        break;
+                }
+
+                n += random.nextInt(7) + 5;
             }
         }
     }

@@ -13,9 +13,12 @@ public interface BetterMineshaftStructurePieceType extends StructurePieceType {
     StructurePieceType CROSSING = register(BetterMineshaftGenerator.MineshaftCrossing::new, "BMSCrossing");
     StructurePieceType ROOM = register(BetterMineshaftGenerator.MineshaftRoom::new, "BMSRoom");
     StructurePieceType STAIRS = register(BetterMineshaftGenerator.MineshaftStairs::new, "BMSStairs");
-    StructurePieceType BIG_TUNNEL = register(BigTunnel::new, "BMSCustomTunnel");
-    StructurePieceType CUSTOM_CROSSING = register(CustomCrossing::new, "BMSCustomCrossing");
+
+    StructurePieceType BIG_TUNNEL = register(BigTunnel::new, "BMSBigTunnel");
+    StructurePieceType SMALL_TUNNEL = register(SideRoom::new, "BMSSmallTunnel");
     StructurePieceType SIDE_ROOM = register(SideRoom::new, "BMSSideRoom");
+
+    StructurePieceType CUSTOM_CROSSING = register(CustomCrossing::new, "BMSCustomCrossing");
 
     static BetterMineshaftStructurePieceType register(BetterMineshaftStructurePieceType pieceType, String id) {
         return Registry.register(Registry.STRUCTURE_PIECE, id.toLowerCase(Locale.ROOT), pieceType);
