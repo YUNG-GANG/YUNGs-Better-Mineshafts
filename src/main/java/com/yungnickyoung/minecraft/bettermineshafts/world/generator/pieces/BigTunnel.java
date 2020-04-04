@@ -7,6 +7,8 @@ import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMinesh
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BoxUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.RailBlock;
+import net.minecraft.block.enums.RailShape;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntArrayTag;
 import net.minecraft.nbt.ListTag;
@@ -250,6 +252,9 @@ public class BigTunnel extends MineshaftPart {
 
         // Open up entrances to side rooms
         sideRoomEntrances.forEach(roomBox -> placeSideRoomOpening(world, box, roomBox, random));
+
+        // Place rails in center
+        this.fillWithOutline(world, box, xEnd / 2, 1, 0, xEnd / 2, 1, zEnd, Blocks.RAIL.getDefaultState(), Blocks.RAIL.getDefaultState(), false);
 
         return true;
     }

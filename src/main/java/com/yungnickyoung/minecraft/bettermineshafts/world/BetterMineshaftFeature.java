@@ -73,10 +73,13 @@ public class BetterMineshaftFeature extends StructureFeature<BetterMineshaftFeat
             if (featureConfig == null) { // Default to normal mineshaft in case we fail to load config for this biome
                 featureConfig = new BetterMineshaftFeatureConfig(.004, Type.NORMAL);
             }
-            Direction direction;
-            switch(random.nextInt(4)) {
+            Direction direction = Direction.NORTH;
+            // Separate rand is necessary bc for some reason otherwise r is 0 every time
+            Random rand = new Random(this.getChunkX() + this.getChunkZ());
+            int r = rand.nextInt(4);
+            BetterMineshafts.LOGGER.info("NUMM " + r);
+            switch(r) {
                 case 0:
-                default:
                     direction = Direction.NORTH;
                     break;
                 case 1:
