@@ -8,12 +8,18 @@ import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BoxUtil;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FurnaceBlock;
 import net.minecraft.block.LadderBlock;
+import net.minecraft.block.entity.BarrelBlockEntity;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.FurnaceBlockEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.loot.LootTables;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.structure.StructureManager;
 import net.minecraft.structure.StructurePiece;
 import net.minecraft.structure.StructurePieceType;
 import net.minecraft.util.math.BlockBox;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.IWorld;
@@ -108,14 +114,28 @@ public class SideRoom extends MineshaftPart {
         this.randomFillWithOutline(world, box, random, .1f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, Blocks.STONE.getDefaultState(), Blocks.STONE.getDefaultState(), true);
 
         // Decorations
-        if (random.nextInt(2) == 0)
+        // Furnace 1
+        if (random.nextInt(2) == 0) {
             this.addBlock(world, Blocks.FURNACE.getDefaultState().with(FurnaceBlock.FACING, Direction.NORTH), 2, 1, 1, box);
-        if (random.nextInt(2) == 0)
+            BlockEntity blockEntity = world.getBlockEntity(new BlockPos(this.applyXTransform(2, 1), this.applyYTransform(1), this.applyZTransform(2, 1)));
+            if (blockEntity instanceof FurnaceBlockEntity) {
+                ((FurnaceBlockEntity)blockEntity).setInvStack(1, new ItemStack(Items.COAL, random.nextInt(33)));
+            }
+        }
+        // Furnace 2
+        if (random.nextInt(2) == 0) {
             this.addBlock(world, Blocks.FURNACE.getDefaultState().with(FurnaceBlock.FACING, Direction.NORTH), 1, 1, 1, box);
-        if (random.nextInt(2) == 0)
+            BlockEntity blockEntity = world.getBlockEntity(new BlockPos(this.applyXTransform(1, 1), this.applyYTransform(1), this.applyZTransform(1, 1)));
+            if (blockEntity instanceof FurnaceBlockEntity) {
+                ((FurnaceBlockEntity)blockEntity).setInvStack(1, new ItemStack(Items.COAL, random.nextInt(33)));
+            }
+        }
+        // Crafting table
+        if (random.nextInt(2) == 0) {
             this.addBlock(world, Blocks.CRAFTING_TABLE.getDefaultState(), 3, 1, 1, box);
+        }
 
-        // Possibly spawn barrel
+        // Barrel with loot
         if (random.nextInt(10) == 0)
             this.addBarrel(world, box, random, LOCAL_X_END - 1, 1, 1, LootTables.ABANDONED_MINESHAFT_CHEST);
 
