@@ -12,7 +12,7 @@ import java.util.Random;
 
 public class BetterMineshaftGenerator {
     public static MineshaftPart generateAndAddBigTunnelPiece(StructurePiece structurePiece, List<StructurePiece> list, Random random, int x, int y, int z, Direction direction, int l, int pieceChainLen) {
-        if (pieceChainLen > 12) {
+        if (pieceChainLen > 3) {
             return null;
         }
 

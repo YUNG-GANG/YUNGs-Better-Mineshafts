@@ -9,9 +9,9 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.LanternBlock;
 import net.minecraft.block.PoweredRailBlock;
-import net.minecraft.entity.vehicle.MinecartEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntArrayTag;
+import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.structure.StructureManager;
 import net.minecraft.structure.StructurePiece;
@@ -20,7 +20,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 
 import java.util.List;
@@ -31,10 +30,12 @@ public class BigTunnel extends MineshaftPart {
     private final List<BlockPos> smallShaftRightEntrances = Lists.newLinkedList();
     private final List<BlockBox> sideRoomEntrances = Lists.newLinkedList();
     private final List<BlockPos> filledPositions = Lists.newLinkedList();
+    private final List<Integer> bigSupports = Lists.newLinkedList(); // local z coords
+    private final List<Integer> smallSupports = Lists.newLinkedList(); // local z coords
     private static final int
         SECONDARY_AXIS_LEN = 9,
         Y_AXIS_LEN = 8,
-        MAIN_AXIS_LEN = 32;
+        MAIN_AXIS_LEN = 64;
     private static final int
         LOCAL_X_END = SECONDARY_AXIS_LEN - 1,
         LOCAL_Y_END = Y_AXIS_LEN - 1,
@@ -50,6 +51,8 @@ public class BigTunnel extends MineshaftPart {
         ListTag listTag2 = compoundTag.getList("SmallShaftRightEntrances", 11);
         ListTag listTag3 = compoundTag.getList("SideRoomEntrances", 11);
         ListTag listTag4 = compoundTag.getList("FilledPositions", 11);
+        ListTag listTag5 = compoundTag.getList("BigSupports", 3);
+        ListTag listTag6 = compoundTag.getList("SmallSupports", 3);
 
         for (int i = 0; i < listTag1.size(); ++i) {
             this.smallShaftLeftEntrances.add(new BlockPos(listTag1.getIntArray(i)[0], listTag1.getIntArray(i)[1], listTag1.getIntArray(i)[2]));
@@ -65,6 +68,14 @@ public class BigTunnel extends MineshaftPart {
 
         for (int i = 0; i < listTag4.size(); ++i) {
             this.filledPositions.add(new BlockPos(listTag4.getIntArray(i)[0], listTag4.getIntArray(i)[1], listTag4.getIntArray(i)[2]));
+        }
+
+        for (int i = 0; i < listTag5.size(); ++i) {
+            this.bigSupports.add(listTag5.getInt(i));
+        }
+
+        for (int i = 0; i < listTag6.size(); ++i) {
+            this.smallSupports.add(listTag6.getInt(i));
         }
     }
 
@@ -84,14 +95,20 @@ public class BigTunnel extends MineshaftPart {
         ListTag listTag2 = new ListTag();
         ListTag listTag3 = new ListTag();
         ListTag listTag4 = new ListTag();
+        ListTag listTag5 = new ListTag();
+        ListTag listTag6 = new ListTag();
         smallShaftLeftEntrances.forEach(pos -> listTag1.add(new IntArrayTag(new int[]{pos.getX(), pos.getY(), pos.getZ()})));
         smallShaftRightEntrances.forEach(pos -> listTag2.add(new IntArrayTag(new int[]{pos.getX(), pos.getY(), pos.getZ()})));
         sideRoomEntrances.forEach(blockBox -> listTag3.add(blockBox.toNbt()));
         filledPositions.forEach(pos -> listTag4.add(new IntArrayTag(new int[]{pos.getX(), pos.getY(), pos.getZ()})));
+        bigSupports.forEach(z -> listTag5.add(IntTag.of(z)));
+        smallSupports.forEach(z -> listTag6.add(IntTag.of(z)));
         tag.put("SmallShaftLeftEntrances", listTag1);
         tag.put("SmallShaftRightEntrances", listTag2);
         tag.put("SideRoomEntrances", listTag3);
         tag.put("FilledPositions", listTag4);
+        tag.put("BigSupports", listTag5);
+        tag.put("SmallSupports", listTag6);
     }
 
     public static BlockBox determineBoxPosition(List<StructurePiece> list, Random random, int x, int y, int z, Direction direction) {
@@ -144,6 +161,9 @@ public class BigTunnel extends MineshaftPart {
         // Build small shafts and mark their entrances
         buildSmallShaftsLeft(structurePiece, list, random, direction, pieceLen);
         buildSmallShaftsRight(structurePiece, list, random, direction, pieceLen);
+
+        // Determine supports positions
+        buildSupports(random);
     }
 
     @Override
@@ -171,8 +191,8 @@ public class BigTunnel extends MineshaftPart {
         this.replaceAirInBox(world, box, 0, 0, 0, LOCAL_X_END, 0, LOCAL_Z_END, Blocks.OAK_PLANKS.getDefaultState());
 
         // Small mineshaft entrances
-        this.smallShaftLeftEntrances.forEach(entrancePos -> generateSmallShaftEntranceLeft(world, box, random, entrancePos.getX(), entrancePos.getY(), entrancePos.getZ()));
-        this.smallShaftRightEntrances.forEach(entrancePos -> generateSmallShaftEntranceRight(world, box, random, entrancePos.getX(), entrancePos.getY(), entrancePos.getZ()));
+        smallShaftLeftEntrances.forEach(entrancePos -> generateSmallShaftEntranceLeft(world, box, random, entrancePos.getX(), entrancePos.getY(), entrancePos.getZ()));
+        smallShaftRightEntrances.forEach(entrancePos -> generateSmallShaftEntranceRight(world, box, random, entrancePos.getX(), entrancePos.getY(), entrancePos.getZ()));
 
         // Open up entrances to side rooms
         sideRoomEntrances.forEach(roomBox -> generateSideRoomOpening(world, box, roomBox, random));
@@ -180,18 +200,51 @@ public class BigTunnel extends MineshaftPart {
         generateRails(world, box, random);
         generateLanterns(world, box, random);
 
+        bigSupports.forEach(z -> generateBigSupport(world, box, random, z));
+        smallSupports.forEach(z -> generateSmallSupport(world, box, random, z));
+
         return true;
+    }
+
+    private void generateBigSupport(IWorld world, BlockBox box, Random random, int z) {
+        // Bottom slabs
+        this.randomFillWithOutline(world, box, random, .6f, 1, 1, z, 2, 1, z + 2, Blocks.OAK_SLAB.getDefaultState(), Blocks.OAK_SLAB.getDefaultState(), false);
+        this.randomFillWithOutline(world, box, random, .6f, LOCAL_X_END - 2, 1, z, LOCAL_X_END - 1, 1, z + 2, Blocks.OAK_SLAB.getDefaultState(), Blocks.OAK_SLAB.getDefaultState(), false);
+        // Main blocks
+        this.addBlock(world, getMainBlock(), 1, 1, z + 1, box);
+        this.addBlock(world, getMainBlock(), LOCAL_X_END - 1, 1, z + 1, box);
+        this.addBlock(world, getMainBlock(), 1, 4, z + 1, box);
+        this.addBlock(world, getMainBlock(), LOCAL_X_END - 1, 4, z + 1, box);
+        this.fillWithOutline(world, box, 2, 5, z + 1, LOCAL_X_END - 2, 5, z + 1, getMainBlock(), getMainBlock(), false);
+        this.randomFillWithOutline(world, box, random, .4f, 2, 5, z + 1, LOCAL_X_END - 2, 5, z + 1, getSupportBlock(), getSupportBlock(), true);
+        // Supports
+        this.fillWithOutline(world, box, 1, 2, z + 1, 1, 3, z + 1, getSupportBlock(), getSupportBlock(), false);
+        this.fillWithOutline(world, box, LOCAL_X_END - 1, 2, z + 1, LOCAL_X_END - 1, 3, z + 1, getSupportBlock(), getSupportBlock(), false);
+        this.randomFillWithOutline(world, box, random, .7f,2, 3, z + 1, 2, 3, z + 1, getSupportBlock(), getSupportBlock(), true);
+        this.randomFillWithOutline(world, box, random, .7f,LOCAL_X_END - 2, 3, z + 1, 2, 3, z + 1, getSupportBlock(), getSupportBlock(), true);
+        this.randomFillWithOutline(world, box, random, .5f, 2, 4, z + 1, LOCAL_X_END - 2, 4, z + 1, getSupportBlock(), getSupportBlock(), false);
+    }
+
+    private void generateSmallSupport(IWorld world, BlockBox box, Random random, int z) {
+        this.addBlock(world, getMainBlock(), 2, 1, z, box);
+        this.addBlock(world, getMainBlock(), LOCAL_X_END - 2, 1, z, box);
+        this.addBlock(world, getSupportBlock(), 2, 2, z, box);
+        this.addBlock(world, getSupportBlock(), LOCAL_X_END - 2, 2, z, box);
+        this.addBlock(world, getMainBlock(), 2, 3, z, box);
+        this.addBlock(world, getMainBlock(), LOCAL_X_END - 2, 3, z, box);
+        this.fillWithOutline(world, box, 3, 4, z, LOCAL_X_END - 3, 4, z, getMainBlock(), getMainBlock(), false);
+        this.randomFillWithOutline(world, box, random, .5f, 3, 4, z, LOCAL_X_END - 3, 4, z, getSupportBlock(), getSupportBlock(), true);
+        this.randomFillWithOutline(world, box, random, .4f, 2, 3, z, LOCAL_X_END - 2, 3, z, getSupportBlock(), getSupportBlock(), false);
     }
 
     private void generateLanterns(IWorld world, BlockBox box, Random random) {
         BlockState LANTERN = Blocks.LANTERN.getDefaultState().with(LanternBlock.HANGING, true);
-        int lastZ = -21; // prevent lanterns spawning within 20 blocks of each other
         for (int z = 0; z <= LOCAL_Z_END; z++) {
             for (int x = 3; x <= LOCAL_X_END - 3; x++) {
-                if (z - lastZ > 20 && random.nextInt(150) == 0) {
+                if (random.nextInt(150) == 0) {
                     if (!this.getBlockAt(world, x, LOCAL_Y_END, z, box).isAir()) {
                         this.addBlock(world, LANTERN, x, LOCAL_Y_END - 1, z, box);
-                        lastZ = z;
+                        z += 20;
                     }
                 }
             }
@@ -253,6 +306,36 @@ public class BigTunnel extends MineshaftPart {
             case 2:
                 // No openings - random block removal will expose these, probably
                 return;
+        }
+    }
+
+    private void buildSupports(Random random) {
+        for (int z = 0; z <= LOCAL_Z_END - 2; z++) {
+            // Make sure we arent overlapping with small shaft entrances
+            boolean blockingEntrance = false;
+            for (BlockPos entrancePos : smallShaftLeftEntrances) {
+                if (entrancePos.getZ() <= z + 2 && z <= entrancePos.getZ() + 2) {
+                    blockingEntrance = true;
+                    break;
+                }
+            }
+            for (BlockPos entrancePos : smallShaftRightEntrances) {
+                if (entrancePos.getZ() <= z + 2 && z <= entrancePos.getZ() + 2) {
+                    blockingEntrance = true;
+                    break;
+                }
+            }
+            if (blockingEntrance) continue;
+
+            int r = random.nextInt(10);
+            if (r == 0) { // Big support
+                bigSupports.add(z);
+                z += 5;
+            }
+            else if (r == 1) { // Small support
+                smallSupports.add(z);
+                z += 5;
+            }
         }
     }
 
