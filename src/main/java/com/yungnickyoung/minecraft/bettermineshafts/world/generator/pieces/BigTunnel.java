@@ -6,7 +6,6 @@ import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMinesh
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BoxUtil;
 import net.minecraft.block.*;
-import net.minecraft.block.enums.RailShape;
 import net.minecraft.entity.vehicle.ChestMinecartEntity;
 import net.minecraft.loot.LootTables;
 import net.minecraft.nbt.CompoundTag;
@@ -200,7 +199,7 @@ public class BigTunnel extends MineshaftPart {
 
         generateRails(world, box, random);
         generateLanterns(world, box, random);
-        generateChests(world, box, random, LootTables.ABANDONED_MINESHAFT_CHEST);
+        generateChestCarts(world, box, random, LootTables.ABANDONED_MINESHAFT_CHEST);
 
         bigSupports.forEach(z -> generateBigSupport(world, box, random, z));
         smallSupports.forEach(z -> generateSmallSupport(world, box, random, z));
@@ -208,7 +207,7 @@ public class BigTunnel extends MineshaftPart {
         return true;
     }
 
-    private void generateChests(IWorld world, BlockBox box, Random random, Identifier lootTableId) {
+    private void generateChestCarts(IWorld world, BlockBox box, Random random, Identifier lootTableId) {
         for (int z = 0; z <= LOCAL_Z_END; z++) {
             if (random.nextInt(100) == 0) {
                 BlockPos blockPos = new BlockPos(this.applyXTransform(LOCAL_X_END / 2, z), applyYTransform(1), this.applyZTransform(LOCAL_X_END / 2, z));
@@ -250,6 +249,8 @@ public class BigTunnel extends MineshaftPart {
         this.fillWithOutline(world, box, 3, 4, z, LOCAL_X_END - 3, 4, z, getMainBlock(), getMainBlock(), false);
         this.randomFillWithOutline(world, box, random, .5f, 3, 4, z, LOCAL_X_END - 3, 4, z, getSupportBlock(), getSupportBlock(), true);
         this.randomFillWithOutline(world, box, random, .4f, 2, 3, z, LOCAL_X_END - 2, 3, z, getSupportBlock(), getSupportBlock(), false);
+        this.addBlock(world, getSupportBlock(), 3, 3, z, box);
+        this.addBlock(world, getSupportBlock(), LOCAL_X_END - 3, 3, z, box);
     }
 
     private void generateLanterns(IWorld world, BlockBox box, Random random) {

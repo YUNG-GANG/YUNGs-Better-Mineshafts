@@ -1,14 +1,19 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
 import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftFeature;
+import net.minecraft.block.BarrelBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.entity.BarrelBlockEntity;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.structure.StructurePiece;
 import net.minecraft.structure.StructurePieceType;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.IWorld;
 
@@ -51,6 +56,25 @@ public abstract class MineshaftPart extends StructurePiece {
             case MESA:
                 return Blocks.DARK_OAK_FENCE.getDefaultState();
         }
+    }
+
+    protected boolean addBarrel(IWorld world, BlockBox boundingBox, Random random, BlockPos pos, Identifier lootTableId) {
+        if (boundingBox.contains(pos) && world.getBlockState(pos).getBlock() != Blocks.BARREL) {
+            world.setBlockState(pos, Blocks.BARREL.getDefaultState().with(BarrelBlock.FACING, Direction.UP), 2);
+            BlockEntity blockEntity = world.getBlockEntity(pos);
+            if (blockEntity instanceof BarrelBlockEntity) {
+                ((BarrelBlockEntity)blockEntity).setLootTable(lootTableId, random.nextLong());
+            }
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    protected boolean addBarrel(IWorld world, BlockBox boundingBox, Random random, int x, int y, int z, Identifier lootTableId) {
+        BlockPos blockPos = new BlockPos(this.applyXTransform(x, z), this.applyYTransform(y), this.applyZTransform(x, z));
+        return this.addBarrel(world, boundingBox, random, blockPos, lootTableId);
     }
 
     /**
