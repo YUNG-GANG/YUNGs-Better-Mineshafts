@@ -1,9 +1,11 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
 import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftFeature;
+import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BoxUtil;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.PoweredRailBlock;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.structure.StructureManager;
 import net.minecraft.structure.StructurePiece;
@@ -21,6 +23,10 @@ public class SmallTunnel extends MineshaftPart {
         SECONDARY_AXIS_LEN = 5,
         Y_AXIS_LEN = 5,
         MAIN_AXIS_LEN = 16;
+    private static final int
+        LOCAL_X_END = SECONDARY_AXIS_LEN - 1,
+        LOCAL_Y_END = Y_AXIS_LEN - 1,
+        LOCAL_Z_END = MAIN_AXIS_LEN - 1;
 
     public SmallTunnel(StructureManager structureManager, CompoundTag compoundTag) {
         super(BetterMineshaftStructurePieceType.SMALL_TUNNEL, compoundTag);
@@ -51,6 +57,25 @@ public class SmallTunnel extends MineshaftPart {
      * buildComponent
      */
     public void method_14918(StructurePiece structurePiece, List<StructurePiece> list, Random random) {
+        Direction direction = this.getFacing();
+        if (direction == null) {
+            return;
+        }
+
+        switch (direction) {
+            case NORTH:
+            default:
+                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.minX, this.boundingBox.minY, this.boundingBox.minZ - 1, direction, this.method_14923(), pieceChainLen);
+                break;
+            case SOUTH:
+                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.maxX, this.boundingBox.minY, this.boundingBox.maxZ + 1, direction, this.method_14923(), pieceChainLen);
+                break;
+            case WEST:
+                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.minX - 1, this.boundingBox.minY, this.boundingBox.maxZ, direction, this.method_14923(), pieceChainLen);
+                break;
+            case EAST:
+                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.maxX + 1, this.boundingBox.minY, this.boundingBox.minZ, direction, this.method_14923(), pieceChainLen);
+        }
     }
 
     @Override
@@ -59,25 +84,35 @@ public class SmallTunnel extends MineshaftPart {
 //                return false;
         }
 
-        int xEnd = SECONDARY_AXIS_LEN - 1,
-            yEnd = Y_AXIS_LEN - 1,
-            zEnd = MAIN_AXIS_LEN - 1;
-
         // Place floor
-        this.fillWithOutline(world, box, 1, 0, 0, xEnd - 1, 0, zEnd, Blocks.OAK_PLANKS.getDefaultState(), Blocks.OAK_PLANKS.getDefaultState(), false);
+        this.fillWithOutline(world, box, 1, 0, 0, LOCAL_X_END - 1, 0, LOCAL_Z_END, Blocks.OAK_PLANKS.getDefaultState(), Blocks.OAK_PLANKS.getDefaultState(), false);
         // Randomize floor blocks
-        this.randomFillWithOutline(world, box, random, .1f, 1, 0, 0, xEnd - 1, 0, zEnd, Blocks.COBBLESTONE.getDefaultState(), Blocks.COBBLESTONE.getDefaultState(), true);
+        this.randomFillWithOutline(world, box, random, .1f, 1, 0, 0, LOCAL_X_END - 1, 0, LOCAL_Z_END, Blocks.COBBLESTONE.getDefaultState(), Blocks.COBBLESTONE.getDefaultState(), true);
 
         // Randomize blocks
-        this.randomFillWithOutline(world, box, random, .1f, 0, 1, 0, xEnd, yEnd, zEnd, Blocks.COBBLESTONE.getDefaultState(), Blocks.COBBLESTONE.getDefaultState(), true);
-        this.randomFillWithOutline(world, box, random, .1f, 0, 1, 0, xEnd, yEnd, zEnd, Blocks.STONE_BRICKS.getDefaultState(), Blocks.STONE_BRICKS.getDefaultState(), true);
-        this.randomFillWithOutline(world, box, random, .1f, 0, 1, 0, xEnd, yEnd, zEnd, Blocks.MOSSY_STONE_BRICKS.getDefaultState(), Blocks.MOSSY_STONE_BRICKS.getDefaultState(), true);
-        this.randomFillWithOutline(world, box, random, .1f, 0, 1, 0, xEnd, yEnd, zEnd, Blocks.CRACKED_STONE_BRICKS.getDefaultState(), Blocks.CRACKED_STONE_BRICKS.getDefaultState(), true);
-        this.randomFillWithOutline(world, box, random, .2f, 0, 1, 0, xEnd, yEnd, zEnd, AIR, AIR, true);
+        this.randomFillWithOutline(world, box, random, .1f, 0, 1, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, Blocks.COBBLESTONE.getDefaultState(), Blocks.COBBLESTONE.getDefaultState(), true);
+        this.randomFillWithOutline(world, box, random, .1f, 0, 1, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, Blocks.STONE_BRICKS.getDefaultState(), Blocks.STONE_BRICKS.getDefaultState(), true);
+        this.randomFillWithOutline(world, box, random, .1f, 0, 1, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, Blocks.MOSSY_STONE_BRICKS.getDefaultState(), Blocks.MOSSY_STONE_BRICKS.getDefaultState(), true);
+        this.randomFillWithOutline(world, box, random, .1f, 0, 1, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, Blocks.CRACKED_STONE_BRICKS.getDefaultState(), Blocks.CRACKED_STONE_BRICKS.getDefaultState(), true);
+        this.randomFillWithOutline(world, box, random, .2f, 0, 1, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, AIR, AIR, true);
 
         // Fill with air
-        this.fillWithOutline(world, box, 1, 1, 0, xEnd - 1, yEnd - 1, zEnd, AIR, AIR, false);
+        this.fillWithOutline(world, box, 1, 1, 0, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END, AIR, AIR, false);
+
+        generateRails(world, box, random);
 
         return true;
+    }
+
+    private void generateRails(IWorld world, BlockBox box, Random random) {
+        // Place rails in center
+        this.fillWithOutline(world, box, 2, 1, 0, 2, 1, LOCAL_Z_END, Blocks.RAIL.getDefaultState(), Blocks.RAIL.getDefaultState(), false);
+        // Place powered rails
+        for (int n = 0; n <= LOCAL_Z_END; n++) {
+            if (random.nextInt(15) == 0) {
+                this.addBlock(world, Blocks.POWERED_RAIL.getDefaultState().with(PoweredRailBlock.POWERED, true), 2, 1, n, box);
+                break;
+            }
+        }
     }
 }

@@ -21,7 +21,6 @@ public class BetterMineshafts implements ModInitializer {
         // This code runs as soon as Minecraft is in a mod-load-ready state.
         // However, some things (like resources) may still be uninitialized.
         // Proceed with mild caution.
-        LOGGER.info("Initializing...");
 
 		// Register Better Mineshaft to replace default mineshaft in registry
 		SimpleRegistry<StructureFeature<?>> registry = (SimpleRegistry<StructureFeature<?>>) Registry.STRUCTURE_FEATURE;

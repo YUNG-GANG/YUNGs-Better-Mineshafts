@@ -9,7 +9,7 @@
   ],
   "contact": {
     "homepage": "",
-    "sources": "https://github.com/yungnickyoung/mineshaft-mod"
+    "sources": "https://github.com/yungnickyoung/YUNGs-Better-Mineshafts"
   },
   "license": "CC0-1.0",
   "icon": "assets/modid/icon.png",
@@ -20,7 +20,6 @@
     ]
   },
   "mixins": [
-    "bettermineshafts.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.7.4",
