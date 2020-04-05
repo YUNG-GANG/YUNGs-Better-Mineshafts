@@ -5,16 +5,17 @@ import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftFeature
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BoxUtil;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.LanternBlock;
-import net.minecraft.block.PoweredRailBlock;
+import net.minecraft.block.*;
+import net.minecraft.block.enums.RailShape;
+import net.minecraft.entity.vehicle.ChestMinecartEntity;
+import net.minecraft.loot.LootTables;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntArrayTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.structure.StructureManager;
 import net.minecraft.structure.StructurePiece;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -199,11 +200,25 @@ public class BigTunnel extends MineshaftPart {
 
         generateRails(world, box, random);
         generateLanterns(world, box, random);
+        generateChests(world, box, random, LootTables.ABANDONED_MINESHAFT_CHEST);
 
         bigSupports.forEach(z -> generateBigSupport(world, box, random, z));
         smallSupports.forEach(z -> generateSmallSupport(world, box, random, z));
 
         return true;
+    }
+
+    private void generateChests(IWorld world, BlockBox box, Random random, Identifier lootTableId) {
+        for (int z = 0; z <= LOCAL_Z_END; z++) {
+            if (random.nextInt(100) == 0) {
+                BlockPos blockPos = new BlockPos(this.applyXTransform(LOCAL_X_END / 2, z), applyYTransform(1), this.applyZTransform(LOCAL_X_END / 2, z));
+                if (box.contains(blockPos) && !world.getBlockState(blockPos.down()).isAir()) {
+                    ChestMinecartEntity chestMinecartEntity = new ChestMinecartEntity(world.getWorld(), ((float) blockPos.getX() + 0.5F), ((float) blockPos.getY() + 0.5F), ((float) blockPos.getZ() + 0.5F));
+                    chestMinecartEntity.setLootTable(lootTableId, random.nextLong());
+                    world.spawnEntity(chestMinecartEntity);
+                }
+            }
+        }
     }
 
     private void generateBigSupport(IWorld world, BlockBox box, Random random, int z) {
