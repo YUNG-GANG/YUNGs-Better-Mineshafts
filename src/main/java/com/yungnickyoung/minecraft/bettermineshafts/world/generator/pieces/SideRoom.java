@@ -65,25 +65,25 @@ public class SideRoom extends MineshaftPart {
      */
     public void method_14918(StructurePiece structurePiece, List<StructurePiece> list, Random random) {
         // Chance of generating side room dungeon downstairs
-        if (random.nextInt(10) == 0) {
+        if (random.nextInt(5) == 0) {
             Direction direction = this.getFacing();
             if (direction == null) {
                 return;
             }
 
-            StructurePiece newDungeonPiece;
+            StructurePiece newDungeonPiece = null;
             switch (direction) {
                 case NORTH:
-                    newDungeonPiece = BetterMineshaftGenerator.generateAndAddSideRoomDungeonPiece(structurePiece, list, random, x, y, z, this.getFacing(), this.method_14923(), 0);
+                    newDungeonPiece = BetterMineshaftGenerator.generateAndAddSideRoomDungeonPiece(structurePiece, list, random, this.boundingBox.minX + 6, this.boundingBox.minY - 4, this.boundingBox.maxZ, this.getFacing(), this.method_14923(), 0);
                     break;
                 case SOUTH:
-                    newDungeonPiece = BetterMineshaftGenerator.generateAndAddSideRoomDungeonPiece(structurePiece, list, random, x, y, z, this.getFacing(), this.method_14923(), 0);
+                    newDungeonPiece = BetterMineshaftGenerator.generateAndAddSideRoomDungeonPiece(structurePiece, list, random, this.boundingBox.minX + 6, this.boundingBox.minY - 4, this.boundingBox.minZ, this.getFacing(), this.method_14923(), 0);
                     break;
                 case WEST:
-                    newDungeonPiece = BetterMineshaftGenerator.generateAndAddSideRoomDungeonPiece(structurePiece, list, random, x, y, z, this.getFacing(), this.method_14923(), 0);
+                    newDungeonPiece = BetterMineshaftGenerator.generateAndAddSideRoomDungeonPiece(structurePiece, list, random, this.boundingBox.maxX, this.boundingBox.minY - 4, this.boundingBox.minZ + 6, this.getFacing(), this.method_14923(), 0);
                     break;
                 case EAST:
-                    newDungeonPiece = BetterMineshaftGenerator.generateAndAddSideRoomDungeonPiece(structurePiece, list, random, x, y, z, this.getFacing(), this.method_14923(), 0);
+                    newDungeonPiece = BetterMineshaftGenerator.generateAndAddSideRoomDungeonPiece(structurePiece, list, random, this.boundingBox.minX, this.boundingBox.minY - 4, this.boundingBox.minZ + 6, this.getFacing(), this.method_14923(), 0);
             }
 
             if (newDungeonPiece != null) {

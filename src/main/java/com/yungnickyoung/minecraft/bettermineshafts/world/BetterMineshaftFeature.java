@@ -90,7 +90,7 @@ public class BetterMineshaftFeature extends StructureFeature<BetterMineshaftFeat
                 case 3:
                     direction = Direction.WEST;
             }
-//            direction = Direction.EAST;
+//            direction = Direction.NORTH;
             BlockPos startingPos = new BlockPos((chunkX << 4) + 2, 50, (chunkZ << 4) + 2); // TODO - customize y
             BigTunnel entryPoint = new BigTunnel(
                 0,
