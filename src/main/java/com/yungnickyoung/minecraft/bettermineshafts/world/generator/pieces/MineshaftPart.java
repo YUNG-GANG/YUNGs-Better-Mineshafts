@@ -7,8 +7,6 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.structure.StructurePiece;
 import net.minecraft.structure.StructurePieceType;
-import net.minecraft.util.BlockMirror;
-import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
@@ -18,10 +16,12 @@ import java.util.Random;
 
 public abstract class MineshaftPart extends StructurePiece {
     public BetterMineshaftFeature.Type mineshaftType;
+    protected int pieceChainLen;
 
-    public MineshaftPart(StructurePieceType structurePieceType, int i, BetterMineshaftFeature.Type type) {
+    public MineshaftPart(StructurePieceType structurePieceType, int i, int pieceChainLen, BetterMineshaftFeature.Type type) {
         super(structurePieceType, i);
         this.mineshaftType = type;
+        this.pieceChainLen = pieceChainLen;
     }
 
     public MineshaftPart(StructurePieceType structurePieceType, CompoundTag compoundTag) {

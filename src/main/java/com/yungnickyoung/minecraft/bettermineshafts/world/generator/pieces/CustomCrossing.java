@@ -21,8 +21,8 @@ public class CustomCrossing extends MineshaftPart {
         super(BetterMineshaftStructurePieceType.CUSTOM_CROSSING, compoundTag);
     }
 
-    public CustomCrossing(int i, Random random, BlockBox blockBox, Direction direction, BetterMineshaftFeature.Type type) {
-        super(BetterMineshaftStructurePieceType.CUSTOM_CROSSING, i, type);
+    public CustomCrossing(int i, int pieceChainLen, Random random, BlockBox blockBox, Direction direction, BetterMineshaftFeature.Type type) {
+        super(BetterMineshaftStructurePieceType.CUSTOM_CROSSING, i, pieceChainLen, type);
         this.setOrientation(direction);
         this.boundingBox = blockBox;
     }

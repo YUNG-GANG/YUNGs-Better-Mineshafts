@@ -26,8 +26,8 @@ public class SideRoom extends MineshaftPart {
         super(BetterMineshaftStructurePieceType.SIDE_ROOM, compoundTag);
     }
 
-    public SideRoom(int i, Random random, BlockBox blockBox, Direction direction, BetterMineshaftFeature.Type type) {
-        super(BetterMineshaftStructurePieceType.SIDE_ROOM, i, type);
+    public SideRoom(int i, int pieceChainLen, Random random, BlockBox blockBox, Direction direction, BetterMineshaftFeature.Type type) {
+        super(BetterMineshaftStructurePieceType.SIDE_ROOM, i, pieceChainLen, type);
         this.setOrientation(direction);
         this.boundingBox = blockBox;
     }

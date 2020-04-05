@@ -9,11 +9,6 @@ import net.minecraft.util.registry.Registry;
 import java.util.Locale;
 
 public interface BetterMineshaftStructurePieceType extends StructurePieceType {
-    StructurePieceType CORRIDOR = register(BetterMineshaftGenerator.MineshaftCorridor::new, "BMSCorridor");
-    StructurePieceType CROSSING = register(BetterMineshaftGenerator.MineshaftCrossing::new, "BMSCrossing");
-    StructurePieceType ROOM = register(BetterMineshaftGenerator.MineshaftRoom::new, "BMSRoom");
-    StructurePieceType STAIRS = register(BetterMineshaftGenerator.MineshaftStairs::new, "BMSStairs");
-
     StructurePieceType BIG_TUNNEL = register(BigTunnel::new, "BMSBigTunnel");
     StructurePieceType SMALL_TUNNEL = register(SideRoom::new, "BMSSmallTunnel");
     StructurePieceType SIDE_ROOM = register(SideRoom::new, "BMSSideRoom");

@@ -77,23 +77,23 @@ public class BetterMineshaftFeature extends StructureFeature<BetterMineshaftFeat
             // Separate rand is necessary bc for some reason otherwise r is 0 every time
             Random rand = new Random(this.getChunkX() + this.getChunkZ());
             int r = rand.nextInt(4);
-            BetterMineshafts.LOGGER.info("NUMM " + r);
-//            switch(r) {
-//                case 0:
-//                    direction = Direction.NORTH;
-//                    break;
-//                case 1:
-//                    direction = Direction.SOUTH;
-//                    break;
-//                case 2:
-//                    direction = Direction.EAST;
-//                    break;
-//                case 3:
-//                    direction = Direction.WEST;
-//            }
-            direction = Direction.EAST;
+            switch(r) {
+                case 0:
+                    direction = Direction.NORTH;
+                    break;
+                case 1:
+                    direction = Direction.SOUTH;
+                    break;
+                case 2:
+                    direction = Direction.EAST;
+                    break;
+                case 3:
+                    direction = Direction.WEST;
+            }
+//            direction = Direction.EAST;
             BlockPos startingPos = new BlockPos((chunkX << 4) + 2, 50, (chunkZ << 4) + 2); // TODO - customize y
             BigTunnel entryPoint = new BigTunnel(
+                0,
                 0,
                 this.random,
                 startingPos,
