@@ -111,6 +111,21 @@ public abstract class MineshaftPart extends StructurePiece {
         }
     }
 
+    protected void randomlyReplaceAirInBox(IWorld world, BlockBox blockBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState blockState) {
+        for(int o = minY; o <= maxY; ++o) {
+            for(int p = minX; p <= maxX; ++p) {
+                for(int q = minZ; q <= maxZ; ++q) {
+                    if (random.nextFloat() < chance) {
+                        BlockState currState = this.getBlockAtFixed(world, p, o, q, blockBox);
+                        if (currState != null && currState.isAir()) {
+                            this.addBlock(world, blockState, p, o, q, blockBox);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * Sets the block state, disregarding any blockbox shenanigans
      */

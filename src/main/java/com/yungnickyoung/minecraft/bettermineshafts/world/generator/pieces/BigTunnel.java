@@ -15,6 +15,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.structure.StructureManager;
 import net.minecraft.structure.StructurePiece;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -29,9 +30,9 @@ public class BigTunnel extends MineshaftPart {
     private final List<BlockPos> smallShaftLeftEntrances = Lists.newLinkedList();
     private final List<BlockPos> smallShaftRightEntrances = Lists.newLinkedList();
     private final List<BlockBox> sideRoomEntrances = Lists.newLinkedList();
-    private final List<BlockPos> filledPositions = Lists.newLinkedList();
     private final List<Integer> bigSupports = Lists.newLinkedList(); // local z coords
     private final List<Integer> smallSupports = Lists.newLinkedList(); // local z coords
+    private final List<Pair<Integer, Integer>> gravelDeposits = Lists.newLinkedList(); // Pair<z coordinate, side> where side 0 = left, 1 = right
     private static final int
         SECONDARY_AXIS_LEN = 9,
         Y_AXIS_LEN = 8,
@@ -50,9 +51,9 @@ public class BigTunnel extends MineshaftPart {
         ListTag listTag1 = compoundTag.getList("SmallShaftLeftEntrances", 11);
         ListTag listTag2 = compoundTag.getList("SmallShaftRightEntrances", 11);
         ListTag listTag3 = compoundTag.getList("SideRoomEntrances", 11);
-        ListTag listTag4 = compoundTag.getList("FilledPositions", 11);
-        ListTag listTag5 = compoundTag.getList("BigSupports", 3);
-        ListTag listTag6 = compoundTag.getList("SmallSupports", 3);
+        ListTag listTag4 = compoundTag.getList("BigSupports", 3);
+        ListTag listTag5 = compoundTag.getList("SmallSupports", 3);
+        ListTag listTag6 = compoundTag.getList("GravelDeposits", 11);
 
         for (int i = 0; i < listTag1.size(); ++i) {
             this.smallShaftLeftEntrances.add(new BlockPos(listTag1.getIntArray(i)[0], listTag1.getIntArray(i)[1], listTag1.getIntArray(i)[2]));
@@ -67,15 +68,15 @@ public class BigTunnel extends MineshaftPart {
         }
 
         for (int i = 0; i < listTag4.size(); ++i) {
-            this.filledPositions.add(new BlockPos(listTag4.getIntArray(i)[0], listTag4.getIntArray(i)[1], listTag4.getIntArray(i)[2]));
+            this.bigSupports.add(listTag4.getInt(i));
         }
 
         for (int i = 0; i < listTag5.size(); ++i) {
-            this.bigSupports.add(listTag5.getInt(i));
+            this.smallSupports.add(listTag5.getInt(i));
         }
 
         for (int i = 0; i < listTag6.size(); ++i) {
-            this.smallSupports.add(listTag6.getInt(i));
+            this.gravelDeposits.add(new Pair<>(listTag6.getIntArray(i)[0], listTag6.getIntArray(i)[1]));
         }
     }
 
@@ -100,15 +101,15 @@ public class BigTunnel extends MineshaftPart {
         smallShaftLeftEntrances.forEach(pos -> listTag1.add(new IntArrayTag(new int[]{pos.getX(), pos.getY(), pos.getZ()})));
         smallShaftRightEntrances.forEach(pos -> listTag2.add(new IntArrayTag(new int[]{pos.getX(), pos.getY(), pos.getZ()})));
         sideRoomEntrances.forEach(blockBox -> listTag3.add(blockBox.toNbt()));
-        filledPositions.forEach(pos -> listTag4.add(new IntArrayTag(new int[]{pos.getX(), pos.getY(), pos.getZ()})));
-        bigSupports.forEach(z -> listTag5.add(IntTag.of(z)));
-        smallSupports.forEach(z -> listTag6.add(IntTag.of(z)));
+        bigSupports.forEach(z -> listTag4.add(IntTag.of(z)));
+        smallSupports.forEach(z -> listTag5.add(IntTag.of(z)));
+        gravelDeposits.forEach(pair -> listTag6.add(new IntArrayTag(new int[]{pair.getLeft(), pair.getRight()})));
         tag.put("SmallShaftLeftEntrances", listTag1);
         tag.put("SmallShaftRightEntrances", listTag2);
         tag.put("SideRoomEntrances", listTag3);
-        tag.put("FilledPositions", listTag4);
-        tag.put("BigSupports", listTag5);
-        tag.put("SmallSupports", listTag6);
+        tag.put("BigSupports", listTag4);
+        tag.put("SmallSupports", listTag5);
+        tag.put("GravelDeposits", listTag6);
     }
 
     public static BlockBox determineBoxPosition(List<StructurePiece> list, Random random, int x, int y, int z, Direction direction) {
@@ -162,8 +163,9 @@ public class BigTunnel extends MineshaftPart {
         buildSmallShaftsLeft(structurePiece, list, random, direction, pieceLen);
         buildSmallShaftsRight(structurePiece, list, random, direction, pieceLen);
 
-        // Determine supports positions
+        // Decorations
         buildSupports(random);
+        buildGravelDeposits(random);
     }
 
     @Override
@@ -204,7 +206,37 @@ public class BigTunnel extends MineshaftPart {
         bigSupports.forEach(z -> generateBigSupport(world, box, random, z));
         smallSupports.forEach(z -> generateSmallSupport(world, box, random, z));
 
+        gravelDeposits.forEach(pair -> generateGravelDeposit(world, box, random, pair.getLeft(), pair.getRight()));
+
         return true;
+    }
+
+    private void generateGravelDeposit(IWorld world, BlockBox box, Random random, int z, int side) {
+        BlockState GRAVEL = Blocks.GRAVEL.getDefaultState();
+        switch (side) {
+            case 0: // Left side
+            default:
+                // Row closest to wall
+                this.replaceAirInBox(world, box, 1, 1, z, 1, 2, z + 2, GRAVEL);
+                this.replaceAirInBox(world, box, 1, 3, z + 1, 1, 3 + random.nextInt(2), z + 1, GRAVEL);
+                this.randomlyReplaceAirInBox(world, box, random, .5f, 1, 3, z, 1, 3, z + 2, GRAVEL);
+                // Middle row
+                this.replaceAirInBox(world, box, 2, 1, z + 1, 2, 2 + random.nextInt(2), z + 1, GRAVEL);
+                this.replaceAirInBox(world, box, 2, 1, z, 2, 1 + random.nextInt(2), z + 2, GRAVEL);
+                // Innermost row
+                this.randomlyReplaceAirInBox(world, box, random, .5f, 3, 1, z, 3, 1, z + 2, GRAVEL);
+                break;
+            case 1: // Right side
+                // Row closest to wall
+                this.replaceAirInBox(world, box, LOCAL_X_END - 1, 1, z, LOCAL_X_END - 1, 2, z + 2, GRAVEL);
+                this.replaceAirInBox(world, box, LOCAL_X_END - 1, 3, z + 1, LOCAL_X_END - 1, 3 + random.nextInt(2), z + 1, GRAVEL);
+                this.randomlyReplaceAirInBox(world, box, random, .5f, LOCAL_X_END - 1, 3, z, LOCAL_X_END - 1, 3, z + 2, GRAVEL);
+                // Middle row
+                this.replaceAirInBox(world, box, LOCAL_X_END - 2, 1, z + 1, LOCAL_X_END - 2, 2 + random.nextInt(2), z + 1, GRAVEL);
+                this.replaceAirInBox(world, box, LOCAL_X_END - 2, 1, z, LOCAL_X_END - 2, 1 + random.nextInt(2), z + 2, GRAVEL);
+                // Innermost row
+                this.randomlyReplaceAirInBox(world, box, random, .5f, LOCAL_X_END - 3, 1, z, LOCAL_X_END - 3, 1, z + 2, GRAVEL);
+        }
     }
 
     private void generateChestCarts(IWorld world, BlockBox box, Random random, Identifier lootTableId) {
@@ -322,6 +354,45 @@ public class BigTunnel extends MineshaftPart {
             case 2:
                 // No openings - random block removal will expose these, probably
                 return;
+        }
+    }
+
+    private void buildGravelDeposits(Random random) {
+        for (int z = 0; z <= LOCAL_Z_END - 2; z++) {
+//            int endZ;
+//            int r = random.nextInt(4);
+//            if (r == 0 || r == 1)
+//                endZ = z + 2; // Small deposits
+//            else
+//                endZ = z + 3; // Large deposits
+//
+//            // Make sure we arent overlapping with other decorations (supports, entrances etc)
+//            boolean blockingEntrance = false;
+//            for (BlockPos entrancePos : smallShaftLeftEntrances) {
+//                if (entrancePos.getZ() <= endZ && z <= entrancePos.getZ() + 2) {
+//                    blockingEntrance = true;
+//                    break;
+//                }
+//            }
+//            for (BlockPos entrancePos : smallShaftRightEntrances) {
+//                if (entrancePos.getZ() <= endZ && z <= entrancePos.getZ() + 2) {
+//                    blockingEntrance = true;
+//                    break;
+//                }
+//            }
+
+//            if (blockingEntrance) continue;
+
+            int r = random.nextInt(20);
+            int currPos = z;
+            if (r == 0) { // Left side
+                gravelDeposits.add(new Pair<>(currPos, 0));
+                z += 5;
+            }
+            else if (r == 1) { // Right side
+                gravelDeposits.add(new Pair<>(currPos, 1));
+                z += 5;
+            }
         }
     }
 
