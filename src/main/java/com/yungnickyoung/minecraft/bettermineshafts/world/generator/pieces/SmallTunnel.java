@@ -114,10 +114,18 @@ public class SmallTunnel extends MineshaftPart {
         // Fill with air
         this.fillWithOutline(world, box, 1, 1, 0, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END, AIR, AIR, false);
 
-        generateRails(world, box, random);
         this.supports.forEach(z -> generateSupport(world, box, random, z));
+        generateRails(world, box, random);
+        generateCobwebs(world, box, random);
 
         return true;
+    }
+
+    private void generateCobwebs(IWorld world, BlockBox box, Random random) {
+        supports.forEach(z -> {
+            this.randomlyReplaceAirInBox(world, box, random, .15f, 1, 3, z - 3, 1, 3, z + 3, Blocks.COBWEB.getDefaultState());
+            this.randomlyReplaceAirInBox(world, box, random, .15f, 3, 3, z - 3, 3, 3, z + 3, Blocks.COBWEB.getDefaultState());
+        });
     }
 
     private void generateSupport(IWorld world, BlockBox box, Random random, int z) {
