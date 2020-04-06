@@ -136,7 +136,7 @@ public class SideRoom extends MineshaftPart {
         }
 
         // Barrel with loot
-        if (random.nextInt(10) == 0)
+        if (random.nextInt(4) == 0)
             this.addBarrel(world, box, random, LOCAL_X_END - 1, 1, 1, LootTables.ABANDONED_MINESHAFT_CHEST);
 
         generateIronBarSupports(world, box, random);
