@@ -19,6 +19,9 @@ public class FeatureAdder {
         // TODO - replace hardcoded spawnrates w/ config option
         BetterMineshaftFeatureConfig config = new BetterMineshaftFeatureConfig(0.004D, BetterMineshaftFeature.Type.NORMAL);
 
+        if (biome.getCategory() == Biome.Category.MESA)
+            config = new BetterMineshaftFeatureConfig(.004D, BetterMineshaftFeature.Type.MESA);
+
         biome.addStructureFeature(
             BetterMineshafts.BETTER_MINESHAFT_FEATURE.configure(config)
         );

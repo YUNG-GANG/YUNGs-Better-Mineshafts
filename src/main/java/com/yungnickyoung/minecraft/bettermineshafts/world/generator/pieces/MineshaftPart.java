@@ -48,6 +48,16 @@ public abstract class MineshaftPart extends StructurePiece {
         }
     }
 
+    protected BlockState getMainSlab() {
+        switch (this.mineshaftType) {
+            case NORMAL:
+            default:
+                return Blocks.OAK_SLAB.getDefaultState();
+            case MESA:
+                return Blocks.DARK_OAK_SLAB.getDefaultState();
+        }
+    }
+
     protected BlockState getSupportBlock() {
         switch (this.mineshaftType) {
             case NORMAL:

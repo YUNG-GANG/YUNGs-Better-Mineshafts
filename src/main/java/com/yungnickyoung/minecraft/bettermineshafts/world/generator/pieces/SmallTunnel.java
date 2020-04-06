@@ -56,7 +56,7 @@ public class SmallTunnel extends MineshaftPart {
     @Override
     public boolean generate(IWorld world, ChunkGenerator<?> generator, Random random, BlockBox box, ChunkPos pos) {
         if (this.method_14937(world, box)) { // check if box contains any liquid
-//                return false;
+                return false;
         }
 
         int xEnd = SECONDARY_AXIS_LEN - 1,
@@ -64,7 +64,7 @@ public class SmallTunnel extends MineshaftPart {
             zEnd = MAIN_AXIS_LEN - 1;
 
         // Place floor
-        this.fillWithOutline(world, box, 1, 0, 0, xEnd - 1, 0, zEnd, Blocks.OAK_PLANKS.getDefaultState(), Blocks.OAK_PLANKS.getDefaultState(), false);
+        this.fillWithOutline(world, box, 1, 0, 0, xEnd - 1, 0, zEnd, getMainBlock(), getMainBlock(), false);
         // Randomize floor blocks
         this.randomFillWithOutline(world, box, random, .1f, 1, 0, 0, xEnd - 1, 0, zEnd, Blocks.COBBLESTONE.getDefaultState(), Blocks.COBBLESTONE.getDefaultState(), true);
 

@@ -18,8 +18,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import static net.minecraft.server.command.CommandManager.literal;
 
 @Mixin(LocateCommand.class)
-public abstract class ExampleMixin {
-    private ExampleMixin() {
+public abstract class LocateMixin {
+    private LocateMixin() {
         // NO-OP
     }
 

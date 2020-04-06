@@ -101,7 +101,7 @@ public class SideRoom extends MineshaftPart {
     @Override
     public boolean generate(IWorld world, ChunkGenerator<?> generator, Random random, BlockBox box, ChunkPos pos) {
         if (this.method_14937(world, box)) { // check if box contains any liquid
-//                return false;
+                return false;
         }
 
         // Fill with stone then clean out with air
