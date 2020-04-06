@@ -1,5 +1,6 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
+import com.google.common.collect.Lists;
 import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftFeature;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
@@ -7,9 +8,12 @@ import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BoxUtil;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.PoweredRailBlock;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.IntTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.structure.StructureManager;
 import net.minecraft.structure.StructurePiece;
 import net.minecraft.util.math.BlockBox;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.IWorld;
@@ -19,6 +23,7 @@ import java.util.List;
 import java.util.Random;
 
 public class SmallTunnel extends MineshaftPart {
+    private final List<Integer> supports = Lists.newLinkedList(); // local z coords
     private static final int
         SECONDARY_AXIS_LEN = 5,
         Y_AXIS_LEN = 5,
@@ -30,6 +35,10 @@ public class SmallTunnel extends MineshaftPart {
 
     public SmallTunnel(StructureManager structureManager, CompoundTag compoundTag) {
         super(BetterMineshaftStructurePieceType.SMALL_TUNNEL, compoundTag);
+        ListTag listTag1 = compoundTag.getList("Supports", 3);
+        for (int i = 0; i < listTag1.size(); ++i) {
+            this.supports.add(listTag1.getInt(i));
+        }
     }
 
     public SmallTunnel(int i, int chunkPieceLen, Random random, BlockBox blockBox, Direction direction, BetterMineshaftFeature.Type type) {
@@ -40,6 +49,9 @@ public class SmallTunnel extends MineshaftPart {
 
     protected void toNbt(CompoundTag tag) {
         super.toNbt(tag);
+        ListTag listTag1 = new ListTag();
+        supports.forEach(z -> listTag1.add(IntTag.of(z)));
+        tag.put("Supports", listTag1);
     }
 
     public static BlockBox determineBoxPosition(List<StructurePiece> list, Random random, int x, int y, int z, Direction direction) {
@@ -76,6 +88,8 @@ public class SmallTunnel extends MineshaftPart {
             case EAST:
                 BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.maxX + 1, this.boundingBox.minY, this.boundingBox.minZ, direction, this.method_14923(), pieceChainLen);
         }
+
+        buildSupports(random);
     }
 
     @Override
@@ -101,8 +115,16 @@ public class SmallTunnel extends MineshaftPart {
         this.fillWithOutline(world, box, 1, 1, 0, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END, AIR, AIR, false);
 
         generateRails(world, box, random);
+        this.supports.forEach(z -> generateSupport(world, box, random, z));
 
         return true;
+    }
+
+    private void generateSupport(IWorld world, BlockBox box, Random random, int z) {
+        this.fillWithOutline(world, box, 1, 1, z, 1, 2, z, getSupportBlock(), getSupportBlock(), false);
+        this.fillWithOutline(world, box, 3, 1, z, 3, 2, z, getSupportBlock(), getSupportBlock(), false);
+        this.fillWithOutline(world, box, 1, 3, z, 3, 3, z, getMainBlock(), getMainBlock(), false);
+        this.randomFillWithOutline(world, box, random, .25f, 1, 3, z, 3, 3, z, getSupportBlock(), getSupportBlock(), true);
     }
 
     private void generateRails(IWorld world, BlockBox box, Random random) {
@@ -113,6 +135,16 @@ public class SmallTunnel extends MineshaftPart {
             if (random.nextInt(15) == 0) {
                 this.addBlock(world, Blocks.POWERED_RAIL.getDefaultState().with(PoweredRailBlock.POWERED, true), 2, 1, n, box);
                 break;
+            }
+        }
+    }
+
+    private void buildSupports(Random random) {
+        for (int z = 0; z <= LOCAL_Z_END; z++) {
+            int r = random.nextInt(7);
+            if (r == 0) { // Big support
+                supports.add(z);
+                z += 5;
             }
         }
     }
