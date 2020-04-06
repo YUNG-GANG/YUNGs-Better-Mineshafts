@@ -49,7 +49,7 @@ public class SmallTunnelTurn extends MineshaftPart {
 
     public SmallTunnelTurn(StructureManager structureManager, CompoundTag compoundTag) {
         super(BetterMineshaftStructurePieceType.SMALL_TUNNEL_TURN, compoundTag);
-        this.turnDirection = TurnDirection.valueOf(compoundTag.getInt("turnDirection"));
+        this.turnDirection = TurnDirection.valueOf(compoundTag.getInt("TurnDirection"));
     }
 
     public SmallTunnelTurn(int i, int chunkPieceLen, Random random, BlockBox blockBox, Direction direction, BetterMineshaftFeature.Type type) {
@@ -61,7 +61,7 @@ public class SmallTunnelTurn extends MineshaftPart {
 
     protected void toNbt(CompoundTag tag) {
         super.toNbt(tag);
-        tag.putInt("turnDirection", this.turnDirection.value);
+        tag.putInt("TurnDirection", this.turnDirection.value);
     }
 
     public static BlockBox determineBoxPosition(List<StructurePiece> list, Random random, int x, int y, int z, Direction direction) {
@@ -104,7 +104,7 @@ public class SmallTunnelTurn extends MineshaftPart {
     @Override
     public boolean generate(IWorld world, ChunkGenerator<?> generator, Random random, BlockBox box, ChunkPos pos) {
         if (this.method_14937(world, box)) { // check if box contains any liquid
-                return false;
+//                return false;
         }
 
         Direction direction = this.getFacing();
