@@ -53,7 +53,7 @@ public class BetterMineshaftFeature extends StructureFeature<BetterMineshaftFeat
 
     @Override
     public int getRadius() {
-        return 12;
+        return 12; // TODO - change to 8?
     }
 
     public static class Start extends StructureStart {

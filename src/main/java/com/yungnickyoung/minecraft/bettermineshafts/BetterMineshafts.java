@@ -14,7 +14,8 @@ import org.apache.logging.log4j.Logger;
 public class BetterMineshafts implements ModInitializer {
     public static final String MOD_ID = "bettermineshafts";
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
-    public static final BetterMineshaftFeature BETTER_MINESHAFT_FEATURE = new BetterMineshaftFeature(BetterMineshaftFeatureConfig::deserialize);
+
+    public static StructureFeature<BetterMineshaftFeatureConfig> BETTER_MINESHAFT_FEATURE;
     public static StructureFeature<?> VANILLA_MINESHAFT_FEATURE;
 
     @Override
@@ -23,10 +24,24 @@ public class BetterMineshafts implements ModInitializer {
         // However, some things (like resources) may still be uninitialized.
         // Proceed with mild caution.
 
-		// Register Better Mineshaft to replace default mineshaft in registry
-		SimpleRegistry<StructureFeature<?>> registry = (SimpleRegistry<StructureFeature<?>>) Registry.STRUCTURE_FEATURE;
-		VANILLA_MINESHAFT_FEATURE = getVanillaMineshaftFromRegistry(registry);
-		registerBetterMineshafts(registry);
+        // Register feature and structure
+        BETTER_MINESHAFT_FEATURE = Registry.register(
+            Registry.FEATURE,
+            new Identifier(MOD_ID, "mineshaft"),
+            new BetterMineshaftFeature(BetterMineshaftFeatureConfig::deserialize)
+        );
+
+        Registry.register(
+            Registry.STRUCTURE_FEATURE,
+            new Identifier(MOD_ID, "mineshaft"),
+            BETTER_MINESHAFT_FEATURE
+        );
+
+        // Register pieces
+        BetterMineshaftStructurePieceType.init();
+
+        // Get vanilla mineshaft, used to check which biomes should be modified
+        VANILLA_MINESHAFT_FEATURE = Registry.STRUCTURE_FEATURE.get(new Identifier("minecraft:mineshaft"));
 
         // Add Better Mineshaft to applicable biomes, replacing vanilla mineshafts
         Registry.BIOME.forEach(biome -> {
@@ -34,19 +49,8 @@ public class BetterMineshafts implements ModInitializer {
                 FeatureAdder.addBetterMineshafts(biome);
             }
         });
-        
+
         // This is for making /locate work
-        Feature.STRUCTURES.put("mineshaft", BETTER_MINESHAFT_FEATURE);
-    }
-
-    private static StructureFeature<?> getVanillaMineshaftFromRegistry(SimpleRegistry<StructureFeature<?>> registry) {
-		Identifier id = new Identifier("minecraft:mineshaft");
-		return registry.get(id);
-	}
-
-    private static void registerBetterMineshafts(SimpleRegistry<StructureFeature<?>> registry) {
-		Identifier id = new Identifier("minecraft:mineshaft");
-		int rawID = registry.getRawId(VANILLA_MINESHAFT_FEATURE);
-		registry.set(rawID, id, BETTER_MINESHAFT_FEATURE);
+        Feature.STRUCTURES.put("bettermineshaft", BETTER_MINESHAFT_FEATURE);
     }
 }

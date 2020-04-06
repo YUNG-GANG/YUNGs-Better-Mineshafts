@@ -29,7 +29,10 @@ public class FeatureAdder {
             for (int i = 0; i < list.size(); i++) {
                 ConfiguredFeature<?, ?> feature = list.get(i);
                 if (((DecoratedFeatureConfig) (feature.config)).feature.feature instanceof MineshaftFeature) {
-                    list.set(i, BetterMineshafts.BETTER_MINESHAFT_FEATURE.configure(config).createDecoratedFeature(Decorator.NOPE.configure(DecoratorConfig.DEFAULT)));
+                    list.remove(i);
+//                    list.set(i, BetterMineshafts.BETTER_MINESHAFT_FEATURE.configure(config).createDecoratedFeature(Decorator.NOPE.configure(DecoratorConfig.DEFAULT)));
+//                    list.add(BetterMineshafts.BETTER_MINESHAFT_FEATURE.configure(config).createDecoratedFeature(Decorator.NOPE.configure(DecoratorConfig.DEFAULT)));
+                    break;
                 }
             }
         } catch (Exception e) {
@@ -41,5 +44,7 @@ public class FeatureAdder {
                 )
             );
         }
+
+        biome.addFeature(GenerationStep.Feature.UNDERGROUND_STRUCTURES, BetterMineshafts.BETTER_MINESHAFT_FEATURE.configure(config));
     }
 }
