@@ -3,7 +3,7 @@
   "id": "bettermineshafts",
   "version": "${version}",
   "name": "YUNG's Better Mineshafts",
-  "description": "Improves mineshafts.",
+  "description": "The long-awaited and much-needed abandoned mineshaft overhaul!",
   "authors": [
     "YUNGNICKYOUNG"
   ],
@@ -19,8 +19,6 @@
       "com.yungnickyoung.minecraft.bettermineshafts.BetterMineshafts"
     ]
   },
-  "mixins": [
-  ],
   "depends": {
     "fabricloader": ">=0.7.4",
     "fabric": "*",

@@ -2,6 +2,7 @@ package com.yungnickyoung.minecraft.bettermineshafts;
 
 import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftFeature;
 import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftFeatureConfig;
+import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -33,7 +34,7 @@ public class BetterMineshafts implements ModInitializer {
                 FeatureAdder.addBetterMineshafts(biome);
             }
         });
-
+        
         // This is for making /locate work
         Feature.STRUCTURES.put("mineshaft", BETTER_MINESHAFT_FEATURE);
     }
