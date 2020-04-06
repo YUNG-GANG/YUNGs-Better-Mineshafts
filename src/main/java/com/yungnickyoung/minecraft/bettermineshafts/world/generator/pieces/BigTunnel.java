@@ -359,30 +359,6 @@ public class BigTunnel extends MineshaftPart {
 
     private void buildGravelDeposits(Random random) {
         for (int z = 0; z <= LOCAL_Z_END - 2; z++) {
-//            int endZ;
-//            int r = random.nextInt(4);
-//            if (r == 0 || r == 1)
-//                endZ = z + 2; // Small deposits
-//            else
-//                endZ = z + 3; // Large deposits
-//
-//            // Make sure we arent overlapping with other decorations (supports, entrances etc)
-//            boolean blockingEntrance = false;
-//            for (BlockPos entrancePos : smallShaftLeftEntrances) {
-//                if (entrancePos.getZ() <= endZ && z <= entrancePos.getZ() + 2) {
-//                    blockingEntrance = true;
-//                    break;
-//                }
-//            }
-//            for (BlockPos entrancePos : smallShaftRightEntrances) {
-//                if (entrancePos.getZ() <= endZ && z <= entrancePos.getZ() + 2) {
-//                    blockingEntrance = true;
-//                    break;
-//                }
-//            }
-
-//            if (blockingEntrance) continue;
-
             int r = random.nextInt(20);
             int currPos = z;
             if (r == 0) { // Left side
@@ -517,28 +493,28 @@ public class BigTunnel extends MineshaftPart {
                     case NORTH:
                     default:
                         nextPieceDirection = Direction.WEST;
-                        newPiece = BetterMineshaftGenerator.generateAndAddSmallShaftPiece(structurePiece, list, random, this.boundingBox.minX - 1, this.boundingBox.minY, this.boundingBox.maxZ - n, nextPieceDirection, this.method_14923(), 0);
+                        newPiece = BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.minX - 1, this.boundingBox.minY, this.boundingBox.maxZ - n, nextPieceDirection, this.method_14923(), 0);
                         if (newPiece != null) {
                             this.smallShaftLeftEntrances.add(new BlockPos(0, 1, n + 1));
                         }
                         break;
                     case SOUTH:
                         nextPieceDirection = Direction.EAST;
-                        newPiece = BetterMineshaftGenerator.generateAndAddSmallShaftPiece(structurePiece, list, random, this.boundingBox.maxX + 1, this.boundingBox.minY, this.boundingBox.minZ + n, nextPieceDirection, this.method_14923(), 0);
+                        newPiece = BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.maxX + 1, this.boundingBox.minY, this.boundingBox.minZ + n, nextPieceDirection, this.method_14923(), 0);
                         if (newPiece != null) {
                             this.smallShaftRightEntrances.add(new BlockPos(SECONDARY_AXIS_LEN - 2, 1, n + 1));
                         }
                         break;
                     case WEST:
                         nextPieceDirection = Direction.SOUTH;
-                        newPiece = BetterMineshaftGenerator.generateAndAddSmallShaftPiece(structurePiece, list, random, this.boundingBox.maxX - n, this.boundingBox.minY, this.boundingBox.maxZ + 1, nextPieceDirection, this.method_14923(), 0);
+                        newPiece = BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.maxX - n, this.boundingBox.minY, this.boundingBox.maxZ + 1, nextPieceDirection, this.method_14923(), 0);
                         if (newPiece != null) {
                             this.smallShaftRightEntrances.add(new BlockPos(SECONDARY_AXIS_LEN - 2, 1, n + 1));
                         }
                         break;
                     case EAST:
                         nextPieceDirection = Direction.NORTH;
-                        newPiece = BetterMineshaftGenerator.generateAndAddSmallShaftPiece(structurePiece, list, random, this.boundingBox.minX + n, this.boundingBox.minY, this.boundingBox.minZ - 1, nextPieceDirection, this.method_14923(), 0);
+                        newPiece = BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.minX + n, this.boundingBox.minY, this.boundingBox.minZ - 1, nextPieceDirection, this.method_14923(), 0);
                         if (newPiece != null) {
                             this.smallShaftLeftEntrances.add(new BlockPos(0, 1, n + 1));
                         }
@@ -559,28 +535,28 @@ public class BigTunnel extends MineshaftPart {
                     case NORTH:
                     default:
                         nextPieceDirection = Direction.EAST;
-                        newPiece = BetterMineshaftGenerator.generateAndAddSmallShaftPiece(structurePiece, list, random, this.boundingBox.maxX + 1, this.boundingBox.minY, this.boundingBox.maxZ - n, nextPieceDirection, this.method_14923(), 0);
+                        newPiece = BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.maxX + 1, this.boundingBox.minY, this.boundingBox.maxZ - n, nextPieceDirection, this.method_14923(), 0);
                         if (newPiece != null) {
                             this.smallShaftRightEntrances.add(new BlockPos(SECONDARY_AXIS_LEN - 2, 1, n - 3));
                         }
                         break;
                     case SOUTH:
                         nextPieceDirection = Direction.WEST;
-                        newPiece = BetterMineshaftGenerator.generateAndAddSmallShaftPiece(structurePiece, list, random, this.boundingBox.minX - 1, this.boundingBox.minY, this.boundingBox.minZ + n, nextPieceDirection, this.method_14923(), 0);
+                        newPiece = BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.minX - 1, this.boundingBox.minY, this.boundingBox.minZ + n, nextPieceDirection, this.method_14923(), 0);
                         if (newPiece != null) {
                             this.smallShaftLeftEntrances.add(new BlockPos(0, 1, n - 3));
                         }
                         break;
                     case WEST:
                         nextPieceDirection = Direction.NORTH;
-                        newPiece = BetterMineshaftGenerator.generateAndAddSmallShaftPiece(structurePiece, list, random, this.boundingBox.maxX - n, this.boundingBox.minY, this.boundingBox.minZ - 1, nextPieceDirection, this.method_14923(), 0);
+                        newPiece = BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.maxX - n, this.boundingBox.minY, this.boundingBox.minZ - 1, nextPieceDirection, this.method_14923(), 0);
                         if (newPiece != null) {
                             this.smallShaftLeftEntrances.add(new BlockPos(0, 1, n - 3));
                         }
                         break;
                     case EAST:
                         nextPieceDirection = Direction.SOUTH;
-                        newPiece = BetterMineshaftGenerator.generateAndAddSmallShaftPiece(structurePiece, list, random, this.boundingBox.minX + n, this.boundingBox.minY, this.boundingBox.maxZ + 1, nextPieceDirection, this.method_14923(), 0);
+                        newPiece = BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.minX + n, this.boundingBox.minY, this.boundingBox.maxZ + 1, nextPieceDirection, this.method_14923(), 0);
                         if (newPiece != null) {
                             this.smallShaftRightEntrances.add(new BlockPos(SECONDARY_AXIS_LEN - 2, 1, n - 3));
                         }

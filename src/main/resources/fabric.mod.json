@@ -20,7 +20,6 @@
     ]
   },
   "mixins": [
-    "bettermineshafts.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.7.4",
