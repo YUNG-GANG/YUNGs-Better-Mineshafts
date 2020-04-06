@@ -18,8 +18,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import static net.minecraft.server.command.CommandManager.literal;
 
 @Mixin(LocateCommand.class)
-public abstract class ExampleMixin {
-    private ExampleMixin() {
+public abstract class LocateMixin {
+    private LocateMixin() {
         // NO-OP
     }
 
@@ -35,6 +35,6 @@ public abstract class ExampleMixin {
     @Inject(method = "register", at = @At(value = "RETURN"))
     private static void onRegister(CommandDispatcher<ServerCommandSource> dispatcher, CallbackInfo info) {
         dispatcher.register(literal("locate").requires(source -> source.hasPermissionLevel(2))
-                .then(literal("BetterMineshaft").executes(ctx -> execute(ctx.getSource(), "Better_Mineshaft"))));
+                .then(literal("Mineshaft").executes(ctx -> execute(ctx.getSource(), "Mineshaft"))));
     }
 }

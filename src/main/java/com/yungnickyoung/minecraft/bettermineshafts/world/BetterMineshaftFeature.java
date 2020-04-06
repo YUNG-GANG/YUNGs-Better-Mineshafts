@@ -48,7 +48,7 @@ public class BetterMineshaftFeature extends StructureFeature<BetterMineshaftFeat
 
     @Override
     public String getName() {
-        return "Better Mineshaft";
+        return "Mineshaft";
     }
 
     @Override
@@ -91,7 +91,7 @@ public class BetterMineshaftFeature extends StructureFeature<BetterMineshaftFeat
                     direction = Direction.WEST;
             }
 //            direction = Direction.NORTH;
-            BlockPos startingPos = new BlockPos((chunkX << 4) + 2, 50, (chunkZ << 4) + 2); // TODO - customize y
+            BlockPos startingPos = new BlockPos((chunkX << 4) + 2, 50, (chunkZ << 4) + 2);
             BigTunnel entryPoint = new BigTunnel(
                 0,
                 0,
@@ -118,7 +118,7 @@ public class BetterMineshaftFeature extends StructureFeature<BetterMineshaftFeat
             }
             else {
                 // Method for adjusting y of all structure pieces (similar to above)
-//                this.method_14978(chunkGenerator.getSeaLevel(), this.random, 10);
+                this.method_14978(chunkGenerator.getSeaLevel(), this.random, 10);
             }
         }
     }

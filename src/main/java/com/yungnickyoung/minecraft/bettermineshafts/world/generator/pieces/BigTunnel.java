@@ -171,7 +171,7 @@ public class BigTunnel extends MineshaftPart {
     @Override
     public boolean generate(IWorld world, ChunkGenerator<?> generator, Random random, BlockBox box, ChunkPos pos) {
         if (this.method_14937(world, box)) { // check if box contains any liquid
-//                return false;
+                return false;
         }
 
         // Randomize blocks
@@ -187,10 +187,10 @@ public class BigTunnel extends MineshaftPart {
         this.fillWithOutline(world, box, 3, LOCAL_Y_END - 1, 0, LOCAL_X_END - 3, LOCAL_Y_END - 1, LOCAL_Z_END, AIR, AIR, false);
 
         // Add random blocks in floor
-        this.randomFillWithOutline(world, box, random, .4f, 0, 0, 0, LOCAL_X_END, 0, LOCAL_Z_END, Blocks.OAK_PLANKS.getDefaultState(), AIR, false);
+        this.randomFillWithOutline(world, box, random, .4f, 0, 0, 0, LOCAL_X_END, 0, LOCAL_Z_END, getMainBlock(), AIR, false);
 
         // Fill in any air in floor with planks
-        this.replaceAirInBox(world, box, 0, 0, 0, LOCAL_X_END, 0, LOCAL_Z_END, Blocks.OAK_PLANKS.getDefaultState());
+        this.replaceAirInBox(world, box, 0, 0, 0, LOCAL_X_END, 0, LOCAL_Z_END, getMainBlock());
 
         // Small mineshaft entrances
         smallShaftLeftEntrances.forEach(entrancePos -> generateSmallShaftEntranceLeft(world, box, random, entrancePos.getX(), entrancePos.getY(), entrancePos.getZ()));
