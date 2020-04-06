@@ -34,21 +34,23 @@ public class BetterMineshaftGenerator {
 
     public static MineshaftPart generateAndAddSmallTunnelPiece(StructurePiece structurePiece, List<StructurePiece> list, Random random, int x, int y, int z, Direction direction, int l, int pieceChainLen) {
         BlockBox blockBox;
+        int rand = random.nextInt(100);
         BetterMineshaftFeature.Type type = ((MineshaftPart) structurePiece).mineshaftType;
 
-        if (pieceChainLen > 8) {
-            blockBox = OreDeposit.determineBoxPosition(list, random, x, y, z, direction);
-            if (blockBox != null) {
-                MineshaftPart newPiece = new OreDeposit(l + 1, pieceChainLen + 1, random, blockBox, direction, type);
-                list.add(newPiece);
-                newPiece.method_14918(structurePiece, list, random); // buildComponent
-                return newPiece;
+        if (pieceChainLen > 7) {
+            if (rand > 50) {
+                blockBox = OreDeposit.determineBoxPosition(list, random, x, y, z, direction);
+                if (blockBox != null) {
+                    MineshaftPart newPiece = new OreDeposit(l + 1, pieceChainLen + 1, random, blockBox, direction, type);
+                    list.add(newPiece);
+                    newPiece.method_14918(structurePiece, list, random); // buildComponent
+                    return newPiece;
+                }
             }
+            return null;
         }
 
-        int rand = random.nextInt(100);
-
-        if (rand >= 25 || pieceChainLen < 2) { // check piece len to make sure we can't have turns super early on
+        if (rand >= 30 || pieceChainLen < 2) { // check piece len to make sure we can't have turns super early on
             blockBox = SmallTunnel.determineBoxPosition(list, random, x, y, z, direction);
             if (blockBox != null) {
                 MineshaftPart newPiece = new SmallTunnel(l + 1, pieceChainLen + 1, random, blockBox, direction, type);
@@ -57,10 +59,19 @@ public class BetterMineshaftGenerator {
                 return newPiece;
             }
         }
-        else {
+        else if (rand >= 15) {
             blockBox = SmallTunnelTurn.determineBoxPosition(list, random, x, y, z, direction);
             if (blockBox != null) {
                 MineshaftPart newPiece = new SmallTunnelTurn(l + 1, pieceChainLen + 1, random, blockBox, direction, type);
+                list.add(newPiece);
+                newPiece.method_14918(structurePiece, list, random); // buildComponent
+                return newPiece;
+            }
+        }
+        else {
+            blockBox = LayeredIntersection4.determineBoxPosition(list, random, x, y, z, direction);
+            if (blockBox != null) {
+                MineshaftPart newPiece = new LayeredIntersection4(l + 1, pieceChainLen + 1, random, blockBox, direction, type);
                 list.add(newPiece);
                 newPiece.method_14918(structurePiece, list, random); // buildComponent
                 return newPiece;

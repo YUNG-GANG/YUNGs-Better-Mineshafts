@@ -8,6 +8,7 @@ import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BoxUtil;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FurnaceBlock;
 import net.minecraft.block.LadderBlock;
+import net.minecraft.block.TrapdoorBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.FurnaceBlockEntity;
 import net.minecraft.item.ItemStack;
@@ -69,7 +70,7 @@ public class SideRoom extends MineshaftPart {
      */
     public void method_14918(StructurePiece structurePiece, List<StructurePiece> list, Random random) {
         // Chance of generating side room dungeon downstairs
-        if (random.nextInt(5) == 0) {
+        if (random.nextInt(4) == 0) {
             Direction direction = this.getFacing();
             if (direction == null) {
                 return;
@@ -142,6 +143,7 @@ public class SideRoom extends MineshaftPart {
 
         if (this.hasDownstairs) {
             this.addBlock(world, Blocks.LADDER.getDefaultState().with(LadderBlock.FACING, Direction.NORTH), 6, 0, 1, box);
+            this.addBlock(world, Blocks.OAK_TRAPDOOR.getDefaultState().with(TrapdoorBlock.FACING, Direction.NORTH), 6, 1, 1, box);
         }
 
         return true;

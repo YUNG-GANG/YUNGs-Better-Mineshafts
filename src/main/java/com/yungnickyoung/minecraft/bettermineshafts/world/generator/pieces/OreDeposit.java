@@ -1,15 +1,11 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
-import com.google.common.collect.Lists;
 import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftFeature;
-import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BoxUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.IntTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.structure.StructureManager;
 import net.minecraft.structure.StructurePiece;
 import net.minecraft.util.math.BlockBox;
@@ -24,13 +20,13 @@ import java.util.Random;
 
 public class OreDeposit extends MineshaftPart {
     public enum OreType {
-        GOLD(0),     // 15 % chance
-        IRON(1),     // 15 % chance
-        COAL(2),     // 20 % chance
-        LAPIS(3),    // 10 % chance
-        REDSTONE(4), // 15 % chance
-        EMERALD(5),  // 15 % chance
-        DIAMOND(6);  // 10 % chance
+        GOLD(0),
+        IRON(1),
+        COAL(2),
+        LAPIS(3),
+        REDSTONE(4),
+        EMERALD(5),
+        DIAMOND(6);
 
         private final int value;
 
@@ -86,17 +82,17 @@ public class OreDeposit extends MineshaftPart {
      */
     public void method_14918(StructurePiece structurePiece, List<StructurePiece> list, Random random) {
         int r = random.nextInt(100);
-        if (r <= 15)
-            this.oreType = OreType.GOLD;
-        else if (r <= 30)
-            this.oreType = OreType.IRON;
-        else if (r <= 50)
+        if (r <= 50)
             this.oreType = OreType.COAL;
-        else if (r <= 60)
-            this.oreType = OreType.LAPIS;
-        else if (r <= 75)
+        else if (r <= 70)
+            this.oreType = OreType.IRON;
+        else if (r <= 80)
             this.oreType = OreType.REDSTONE;
         else if (r <= 90)
+            this.oreType = OreType.GOLD;
+        else if (r <= 95)
+            this.oreType = OreType.LAPIS;
+        else if (r <= 98)
             this.oreType = OreType.EMERALD;
         else
             this.oreType = OreType.DIAMOND;

@@ -50,7 +50,7 @@ public class BetterMineshafts implements ModInitializer {
             }
         });
 
-        // This is for making /locate work
+        // This is for making /locate work (not sure if necessary?)
         Feature.STRUCTURES.put("bettermineshaft", BETTER_MINESHAFT_FEATURE);
     }
 }
