@@ -22,7 +22,7 @@ public class SmallTunnel extends MineshaftPart {
     private static final int
         SECONDARY_AXIS_LEN = 5,
         Y_AXIS_LEN = 5,
-        MAIN_AXIS_LEN = 16;
+        MAIN_AXIS_LEN = 8;
     private static final int
         LOCAL_X_END = SECONDARY_AXIS_LEN - 1,
         LOCAL_Y_END = Y_AXIS_LEN - 1,

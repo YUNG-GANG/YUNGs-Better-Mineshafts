@@ -36,7 +36,7 @@ public class BigTunnel extends MineshaftPart {
     private static final int
         SECONDARY_AXIS_LEN = 9,
         Y_AXIS_LEN = 8,
-        MAIN_AXIS_LEN = 64;
+        MAIN_AXIS_LEN = 24;
     private static final int
         LOCAL_X_END = SECONDARY_AXIS_LEN - 1,
         LOCAL_Y_END = Y_AXIS_LEN - 1,

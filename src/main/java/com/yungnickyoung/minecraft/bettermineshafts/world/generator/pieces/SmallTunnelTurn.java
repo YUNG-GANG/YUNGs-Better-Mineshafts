@@ -5,6 +5,8 @@ import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMinesh
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BoxUtil;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.RailBlock;
+import net.minecraft.block.enums.RailShape;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.structure.StructureManager;
 import net.minecraft.structure.StructurePiece;
@@ -102,8 +104,10 @@ public class SmallTunnelTurn extends MineshaftPart {
     @Override
     public boolean generate(IWorld world, ChunkGenerator<?> generator, Random random, BlockBox box, ChunkPos pos) {
         if (this.method_14937(world, box)) { // check if box contains any liquid
-//                return false;
+                return false;
         }
+
+        Direction direction = this.getFacing();
 
         // Place floor
         this.fillWithOutline(world, box, 1, 0, 0, LOCAL_X_END - 1, 0, LOCAL_Z_END - 1, getMainBlock(), getMainBlock(), false);
@@ -121,20 +125,40 @@ public class SmallTunnelTurn extends MineshaftPart {
         this.fillWithOutline(world, box, 1, 1, 0, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END - 1, AIR, AIR, false);
 
         // Rails
-        this.fillWithOutline(world, box, 2, 1, 0, 2, 1, 2, Blocks.RAIL.getDefaultState(), Blocks.RAIL.getDefaultState(), false);
+        this.fillWithOutline(world, box, 2, 1, 0, 2, 1, 1, Blocks.RAIL.getDefaultState(), Blocks.RAIL.getDefaultState(), false);
 
         if (this.turnDirection == TurnDirection.LEFT) {
-            this.fillWithOutline(world, box, 0, 1, 1, 0, LOCAL_Y_END - 1, LOCAL_Z_END - 1, AIR, AIR, false);
-            this.fillWithOutline(world, box, 0, 0, 0, 0, 0, LOCAL_Z_END - 1, getMainBlock(), getMainBlock(), false);
-            this.fillWithOutline(world, box, 0, 1, 2, 1, 1, 2, Blocks.RAIL.getDefaultState(), Blocks.RAIL.getDefaultState(), false);
+            if (direction == Direction.NORTH || direction == Direction.EAST) {
+                generateLeftTurn(world, random, box);
+            }
+            else {
+                generateRightTurn(world, random, box);
+            }
         }
         else {
-            this.fillWithOutline(world, box, LOCAL_X_END, 1, 1, LOCAL_X_END, LOCAL_Y_END - 1, LOCAL_Z_END - 1, AIR, AIR, false);
-            this.fillWithOutline(world, box, LOCAL_X_END, 0, 0, LOCAL_X_END, 0, LOCAL_Z_END - 1, getMainBlock(), getMainBlock(), false);
-            this.fillWithOutline(world, box, LOCAL_X_END - 2, 1, 2, LOCAL_X_END, 1, 2, Blocks.RAIL.getDefaultState(), Blocks.RAIL.getDefaultState(), false);
+            if (direction == Direction.NORTH || direction == Direction.EAST) {
+                generateRightTurn(world, random, box);
+            }
+            else {
+                generateLeftTurn(world, random, box);
+            }
         }
 
         return true;
+    }
+
+    private void generateLeftTurn(IWorld world, Random random, BlockBox box) {
+        this.fillWithOutline(world, box, 0, 1, 1, 0, LOCAL_Y_END - 1, LOCAL_Z_END - 1, AIR, AIR, false);
+        this.fillWithOutline(world, box, 0, 0, 0, 0, 0, LOCAL_Z_END - 1, getMainBlock(), getMainBlock(), false);
+        this.fillWithOutline(world, box, 2, 1, 2, 2, 1, 2, Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, RailShape.SOUTH_WEST), Blocks.RAIL.getDefaultState(), false);
+        this.fillWithOutline(world, box, 0, 1, 2, 1, 1, 2, Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, RailShape.EAST_WEST), Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, RailShape.EAST_WEST), false);
+    }
+
+    private void generateRightTurn(IWorld world, Random random, BlockBox box) {
+        this.fillWithOutline(world, box, LOCAL_X_END, 1, 1, LOCAL_X_END, LOCAL_Y_END - 1, LOCAL_Z_END - 1, AIR, AIR, false);
+        this.fillWithOutline(world, box, LOCAL_X_END, 0, 0, LOCAL_X_END, 0, LOCAL_Z_END - 1, getMainBlock(), getMainBlock(), false);
+        this.fillWithOutline(world, box, 2, 1, 2, 2, 1, 2, Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, RailShape.SOUTH_EAST), Blocks.RAIL.getDefaultState(), false);
+        this.fillWithOutline(world, box, LOCAL_X_END - 1, 1, 2, LOCAL_X_END, 1, 2, Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, RailShape.EAST_WEST), Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, RailShape.EAST_WEST), false);
     }
 
     private static Direction rotate90Right(Direction direction) {

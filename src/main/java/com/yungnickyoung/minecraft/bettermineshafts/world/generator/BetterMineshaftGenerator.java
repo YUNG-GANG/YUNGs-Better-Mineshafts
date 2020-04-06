@@ -11,7 +11,7 @@ import java.util.Random;
 
 public class BetterMineshaftGenerator {
     public static MineshaftPart generateAndAddBigTunnelPiece(StructurePiece structurePiece, List<StructurePiece> list, Random random, int x, int y, int z, Direction direction, int l, int pieceChainLen) {
-        if (pieceChainLen > 3) {
+        if (pieceChainLen > 3) { // will result in n + 2 max number of segments.
             return null;
         }
 
