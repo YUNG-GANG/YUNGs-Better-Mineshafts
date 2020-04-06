@@ -35,7 +35,7 @@ public class BetterMineshafts implements ModInitializer {
         });
 
         // This is for making /locate work
-        Feature.STRUCTURES.put("better_mineshaft", BETTER_MINESHAFT_FEATURE);
+        Feature.STRUCTURES.put("mineshaft", BETTER_MINESHAFT_FEATURE);
     }
 
     private static StructureFeature<?> getVanillaMineshaftFromRegistry(SimpleRegistry<StructureFeature<?>> registry) {

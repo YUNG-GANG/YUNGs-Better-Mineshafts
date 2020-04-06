@@ -35,6 +35,6 @@ public abstract class LocateMixin {
     @Inject(method = "register", at = @At(value = "RETURN"))
     private static void onRegister(CommandDispatcher<ServerCommandSource> dispatcher, CallbackInfo info) {
         dispatcher.register(literal("locate").requires(source -> source.hasPermissionLevel(2))
-                .then(literal("BetterMineshaft").executes(ctx -> execute(ctx.getSource(), "Better_Mineshaft"))));
+                .then(literal("Mineshaft").executes(ctx -> execute(ctx.getSource(), "Mineshaft"))));
     }
 }

@@ -48,7 +48,7 @@ public class BetterMineshaftFeature extends StructureFeature<BetterMineshaftFeat
 
     @Override
     public String getName() {
-        return "Better Mineshaft";
+        return "Mineshaft";
     }
 
     @Override
