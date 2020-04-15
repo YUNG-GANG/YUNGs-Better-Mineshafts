@@ -7,6 +7,7 @@ import net.fabricmc.api.ModInitializer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.SimpleRegistry;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.feature.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -45,12 +46,21 @@ public class BetterMineshafts implements ModInitializer {
 
         // Add Better Mineshaft to applicable biomes, replacing vanilla mineshafts
         Registry.BIOME.forEach(biome -> {
-            if (biome.hasStructureFeature(VANILLA_MINESHAFT_FEATURE)) {
+            if (biome.hasStructureFeature(VANILLA_MINESHAFT_FEATURE)
+                && betterMineshaftsCanSpawnUndergroundIn(biome)) {
                 FeatureAdder.addBetterMineshafts(biome);
             }
         });
 
         // This is for making /locate work (not sure if necessary?)
         Feature.STRUCTURES.put("bettermineshaft", BETTER_MINESHAFT_FEATURE);
+    }
+
+    boolean betterMineshaftsCanSpawnUndergroundIn(Biome biome) {
+        Biome.Category biomeCategory = biome.getCategory();
+        return !(
+                biomeCategory.equals(Biome.Category.MESA)
+                || biomeCategory.equals(Biome.Category.OCEAN)
+                );
     }
 }
