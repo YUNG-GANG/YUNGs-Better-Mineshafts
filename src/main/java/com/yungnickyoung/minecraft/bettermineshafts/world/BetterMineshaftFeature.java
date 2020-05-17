@@ -1,8 +1,7 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world;
 
 import com.mojang.datafixers.Dynamic;
-import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshafts;
-import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
+import com.yungnickyoung.minecraft.bettermineshafts.init.BMStructureFeature;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.BigTunnel;
 import net.minecraft.structure.StructureManager;
 import net.minecraft.structure.StructureStart;
@@ -69,7 +68,7 @@ public class BetterMineshaftFeature extends StructureFeature<BetterMineshaftFeat
             Biome biome
         ) {
             BetterMineshaftFeatureConfig featureConfig =
-                chunkGenerator.getStructureConfig(biome, BetterMineshafts.BETTER_MINESHAFT_FEATURE);
+                chunkGenerator.getStructureConfig(biome, BMStructureFeature.BETTER_MINESHAFT_FEATURE);
             if (featureConfig == null) { // Default to normal mineshaft in case we fail to load config for this biome
                 featureConfig = new BetterMineshaftFeatureConfig(.004, Type.NORMAL);
             }

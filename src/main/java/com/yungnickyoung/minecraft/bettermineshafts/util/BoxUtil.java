@@ -1,4 +1,4 @@
-package com.yungnickyoung.minecraft.bettermineshafts.world.generator;
+package com.yungnickyoung.minecraft.bettermineshafts.util;
 
 import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.Direction;
