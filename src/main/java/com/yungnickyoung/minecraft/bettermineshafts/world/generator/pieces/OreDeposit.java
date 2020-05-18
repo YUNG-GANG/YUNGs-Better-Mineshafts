@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-public class OreDeposit extends MineshaftPart {
+public class OreDeposit extends MineshaftPiece {
     public enum OreType {
         GOLD(0),
         IRON(1),

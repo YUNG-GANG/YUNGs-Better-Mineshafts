@@ -21,7 +21,7 @@ import net.minecraft.world.gen.chunk.ChunkGenerator;
 import java.util.List;
 import java.util.Random;
 
-public class SmallTunnel extends MineshaftPart {
+public class SmallTunnel extends MineshaftPiece {
     private final List<Integer> supports = Lists.newLinkedList(); // local z coords
     private static final int
         SECONDARY_AXIS_LEN = 5,

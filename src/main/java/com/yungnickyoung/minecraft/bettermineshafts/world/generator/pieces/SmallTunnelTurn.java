@@ -20,7 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-public class SmallTunnelTurn extends MineshaftPart {
+public class SmallTunnelTurn extends MineshaftPiece {
     public enum TurnDirection {
         LEFT(0), RIGHT(1);
 

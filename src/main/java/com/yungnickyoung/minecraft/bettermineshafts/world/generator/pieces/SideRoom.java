@@ -27,7 +27,7 @@ import net.minecraft.world.gen.chunk.ChunkGenerator;
 import java.util.List;
 import java.util.Random;
 
-public class SideRoom extends MineshaftPart {
+public class SideRoom extends MineshaftPiece {
     private boolean hasDownstairs;
     private static final int
         SECONDARY_AXIS_LEN = 10,

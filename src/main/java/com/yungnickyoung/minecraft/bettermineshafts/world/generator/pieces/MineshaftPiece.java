@@ -20,17 +20,17 @@ import net.minecraft.world.IWorld;
 import java.util.List;
 import java.util.Random;
 
-public abstract class MineshaftPart extends StructurePiece {
+public abstract class MineshaftPiece extends StructurePiece {
     public BetterMineshaftFeature.Type mineshaftType;
     protected int pieceChainLen;
 
-    public MineshaftPart(StructurePieceType structurePieceType, int i, int pieceChainLen, BetterMineshaftFeature.Type type) {
+    public MineshaftPiece(StructurePieceType structurePieceType, int i, int pieceChainLen, BetterMineshaftFeature.Type type) {
         super(structurePieceType, i);
         this.mineshaftType = type;
         this.pieceChainLen = pieceChainLen;
     }
 
-    public MineshaftPart(StructurePieceType structurePieceType, CompoundTag compoundTag) {
+    public MineshaftPiece(StructurePieceType structurePieceType, CompoundTag compoundTag) {
         super(structurePieceType, compoundTag);
         this.mineshaftType = BetterMineshaftFeature.Type.byIndex(compoundTag.getInt("MST"));
     }

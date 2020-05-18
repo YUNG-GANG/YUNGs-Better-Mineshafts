@@ -17,7 +17,7 @@ import net.minecraft.world.gen.chunk.ChunkGenerator;
 import java.util.List;
 import java.util.Random;
 
-public class LayeredIntersection4 extends MineshaftPart {
+public class LayeredIntersection4 extends MineshaftPiece {
     private static final int
         SECONDARY_AXIS_LEN = 7,
         Y_AXIS_LEN = 9,

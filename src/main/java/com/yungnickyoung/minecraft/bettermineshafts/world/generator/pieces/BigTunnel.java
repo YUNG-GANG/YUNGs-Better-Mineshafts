@@ -26,7 +26,7 @@ import net.minecraft.world.gen.chunk.ChunkGenerator;
 import java.util.List;
 import java.util.Random;
 
-public class BigTunnel extends MineshaftPart {
+public class BigTunnel extends MineshaftPiece {
     private final List<BlockPos> smallShaftLeftEntrances = Lists.newLinkedList();
     private final List<BlockPos> smallShaftRightEntrances = Lists.newLinkedList();
     private final List<BlockBox> sideRoomEntrances = Lists.newLinkedList();

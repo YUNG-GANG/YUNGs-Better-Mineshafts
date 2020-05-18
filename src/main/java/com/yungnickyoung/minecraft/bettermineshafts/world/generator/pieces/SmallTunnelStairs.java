@@ -20,7 +20,7 @@ import net.minecraft.world.gen.chunk.ChunkGenerator;
 import java.util.List;
 import java.util.Random;
 
-public class SmallTunnelStairs extends MineshaftPart {
+public class SmallTunnelStairs extends MineshaftPiece {
     private static final int
         SECONDARY_AXIS_LEN = 5,
         Y_AXIS_LEN = 9,

@@ -22,7 +22,7 @@ import net.minecraft.world.gen.chunk.ChunkGenerator;
 import java.util.List;
 import java.util.Random;
 
-public class SideRoomDungeon extends MineshaftPart {
+public class SideRoomDungeon extends MineshaftPiece {
     private static final int
         SECONDARY_AXIS_LEN = 9,
         Y_AXIS_LEN = 4,
