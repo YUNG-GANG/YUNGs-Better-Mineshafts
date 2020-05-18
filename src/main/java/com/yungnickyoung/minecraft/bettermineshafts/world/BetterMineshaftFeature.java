@@ -32,7 +32,7 @@ public class BetterMineshaftFeature extends StructureFeature<BetterMineshaftFeat
             BetterMineshaftFeatureConfig featureConfig = chunkGenerator.getStructureConfig(biome, this);
             // Default to normal mineshaft in case we fail to load config for this biome
             if (featureConfig == null) {
-                featureConfig = new BetterMineshaftFeatureConfig(.004, Type.NORMAL);
+                featureConfig = new BetterMineshaftFeatureConfig(.003, Type.NORMAL);
             }
             return random.nextDouble() < featureConfig.probability;
         } else {
@@ -70,7 +70,7 @@ public class BetterMineshaftFeature extends StructureFeature<BetterMineshaftFeat
             BetterMineshaftFeatureConfig featureConfig =
                 chunkGenerator.getStructureConfig(biome, BMStructureFeature.BETTER_MINESHAFT_FEATURE);
             if (featureConfig == null) { // Default to normal mineshaft in case we fail to load config for this biome
-                featureConfig = new BetterMineshaftFeatureConfig(.004, Type.NORMAL);
+                featureConfig = new BetterMineshaftFeatureConfig(.003, Type.NORMAL);
             }
             Direction direction = Direction.NORTH;
             // Separate rand is necessary bc for some reason otherwise r is 0 every time

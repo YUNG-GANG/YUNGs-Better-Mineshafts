@@ -45,11 +45,11 @@ public class BMStructureFeature {
      */
     private static void addBetterMineshafts(Biome biome) {
         // TODO - replace hardcoded spawnrates w/ config option
-        BetterMineshaftFeatureConfig config = new BetterMineshaftFeatureConfig(0.004D, BetterMineshaftFeature.Type.NORMAL);
+        BetterMineshaftFeatureConfig config = new BetterMineshaftFeatureConfig(0.003D, BetterMineshaftFeature.Type.NORMAL);
 
         // TODO - add biome variant check here
         if (biome.getCategory() == Biome.Category.MESA)
-            config = new BetterMineshaftFeatureConfig(.004D, BetterMineshaftFeature.Type.MESA);
+            config = new BetterMineshaftFeatureConfig(.003D, BetterMineshaftFeature.Type.MESA);
 
         removeVanillaMineshafts(biome);
 
