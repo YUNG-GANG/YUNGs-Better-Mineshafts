@@ -27,7 +27,7 @@ public class BetterMineshaftFeature extends StructureFeature<BetterMineshaftFeat
 
     @Override
     public boolean shouldStartAt(BiomeAccess biomeAccess, ChunkGenerator<?> chunkGenerator, Random random, int chunkX, int chunkZ, Biome biome) {
-        ((ChunkRandom)random).setStructureSeed(chunkGenerator.getSeed(), chunkX, chunkZ);
+        ((ChunkRandom) random).setStructureSeed(chunkGenerator.getSeed(), chunkX, chunkZ);
         if (chunkGenerator.hasStructure(biome, this)) {
             BetterMineshaftFeatureConfig featureConfig = chunkGenerator.getStructureConfig(biome, this);
             // Default to normal mineshaft in case we fail to load config for this biome
@@ -76,7 +76,7 @@ public class BetterMineshaftFeature extends StructureFeature<BetterMineshaftFeat
             // Separate rand is necessary bc for some reason otherwise r is 0 every time
             Random rand = new Random(this.getChunkX() + this.getChunkZ());
             int r = rand.nextInt(4);
-            switch(r) {
+            switch (r) {
                 case 0:
                     direction = Direction.NORTH;
                     break;
@@ -109,16 +109,18 @@ public class BetterMineshaftFeature extends StructureFeature<BetterMineshaftFeat
             this.setBoundingBoxFromChildren();
 
             // y-coordinate adjustments
-            if (featureConfig.type == BetterMineshaftFeature.Type.MESA) {
-                // The following is probably logic to make mesa mineshafts higher up (they seem to penetrate the surface much more)
-                int yOffset = chunkGenerator.getSeaLevel() - this.boundingBox.maxY + this.boundingBox.getBlockCountY() / 2 + 5;
-                this.boundingBox.offset(0, yOffset, 0);
-                children.forEach(structurePiece -> structurePiece.translate(0, yOffset, 0));
-            }
-            else {
-                // Method for adjusting y of all structure pieces (similar to above)
-                this.method_14978(chunkGenerator.getSeaLevel(), this.random, 10);
-            }
+//            if (featureConfig.type == BetterMineshaftFeature.Type.MESA) {
+//                // The following is logic to make mesa mineshafts higher up
+//                int yOffset = chunkGenerator.getSeaLevel() - this.boundingBox.maxY + this.boundingBox.getBlockCountY() / 2 + 5;
+//                this.boundingBox.offset(0, yOffset, 0);
+//                children.forEach(structurePiece -> structurePiece.translate(0, yOffset, 0));
+//            }
+//            else {
+//                // Method for adjusting y of all structure pieces (similar to above)
+//                this.method_14978(chunkGenerator.getSeaLevel(), this.random, 10);
+//            }
+            // Method for adjusting y of all structure pieces
+            this.method_14978(chunkGenerator.getSeaLevel(), this.random, 10);
         }
     }
 

@@ -46,6 +46,7 @@ public class SmallTunnel extends MineshaftPart {
         this.boundingBox = blockBox;
     }
 
+    @Override
     protected void toNbt(CompoundTag tag) {
         super.toNbt(tag);
         ListTag listTag1 = new ListTag();
@@ -64,9 +65,7 @@ public class SmallTunnel extends MineshaftPart {
         return intersectingPiece != null ? null : blockBox;
     }
 
-    /**
-     * buildComponent
-     */
+    @Override
     public void method_14918(StructurePiece structurePiece, List<StructurePiece> list, Random random) {
         Direction direction = this.getFacing();
         if (direction == null) {
@@ -93,14 +92,12 @@ public class SmallTunnel extends MineshaftPart {
 
     @Override
     public boolean generate(IWorld world, ChunkGenerator<?> generator, Random random, BlockBox box, ChunkPos pos) {
-        if (this.method_14937(world, box)) { // check if box contains any liquid
-//                return false;
+        if (this.method_14937(world, box)) {
+            return false;
         }
 
         // Place floor
-        this.fillWithOutline(world, box, 1, 0, 0, LOCAL_X_END - 1, 0, LOCAL_Z_END, getMainBlock(), getMainBlock(), false);
-
-        // Randomize floor blocks
+        this.randomFillWithOutline(world, box, random, .4f, 1, 0, 0, LOCAL_X_END - 1, 0, LOCAL_Z_END, getMainBlock(), getMainBlock(), true);
         this.randomFillWithOutline(world, box, random, .1f, 1, 0, 0, LOCAL_X_END - 1, 0, LOCAL_Z_END, Blocks.COBBLESTONE.getDefaultState(), Blocks.COBBLESTONE.getDefaultState(), true);
 
         // Randomize blocks

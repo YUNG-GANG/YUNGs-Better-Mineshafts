@@ -90,6 +90,7 @@ public class BigTunnel extends MineshaftPart {
         this(i, pieceChainLen, random, determineInitialBoxPosition(random, pos.getX(), pos.getY(), pos.getZ(), direction), direction, type);
     }
 
+    @Override
     protected void toNbt(CompoundTag tag) {
         super.toNbt(tag);
         ListTag listTag1 = new ListTag();
@@ -127,9 +128,7 @@ public class BigTunnel extends MineshaftPart {
         return BoxUtil.boxFromCoordsWithRotation(x, y, z, SECONDARY_AXIS_LEN, Y_AXIS_LEN, MAIN_AXIS_LEN, direction);
     }
 
-    /**
-     * buildComponent
-     */
+    @Override
     public void method_14918(StructurePiece structurePiece, List<StructurePiece> list, Random random) {
         Direction direction = this.getFacing();
         if (direction == null) {
@@ -170,8 +169,8 @@ public class BigTunnel extends MineshaftPart {
 
     @Override
     public boolean generate(IWorld world, ChunkGenerator<?> generator, Random random, BlockBox box, ChunkPos pos) {
-        if (this.method_14937(world, box)) { // check if box contains any liquid
-                return false;
+        if (this.method_14937(world, box)) {
+            return false;
         }
 
         // Randomize blocks

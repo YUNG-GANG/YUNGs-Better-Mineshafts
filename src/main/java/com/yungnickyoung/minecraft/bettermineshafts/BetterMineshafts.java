@@ -26,7 +26,7 @@ public class BetterMineshafts implements ModInitializer {
         BMStructureFeaturePieces.init(); // Register pieces
         BMStructureFeature.init(); // Add structure/feature to applicable biomes
 
-        // This is for making /locate work (not sure if necessary?)
+        // Not sure exactly what this is for but it's necessary to make work.
         Feature.STRUCTURES.put("bettermineshaft", BMStructureFeature.BETTER_MINESHAFT_FEATURE);
     }
 }

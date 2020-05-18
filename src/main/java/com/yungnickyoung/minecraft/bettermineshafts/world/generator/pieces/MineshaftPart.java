@@ -17,6 +17,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.IWorld;
 
+import java.util.List;
 import java.util.Random;
 
 public abstract class MineshaftPart extends StructurePiece {
@@ -37,6 +38,25 @@ public abstract class MineshaftPart extends StructurePiece {
     protected void toNbt(CompoundTag tag) {
         tag.putInt("MST", this.mineshaftType.ordinal());
     }
+
+    /**
+     * buildComponent.
+     * Adds new pieces to the list passed in.
+     * Also resolves variables local to this piece like support positions.
+     * Does not actually place any blocks.
+     */
+    @Override
+    public void method_14918(StructurePiece structurePiece, List<StructurePiece> list, Random random) {
+    }
+
+    /**
+     * Returns true if box contains any liquid.
+     */
+    @Override
+    protected boolean method_14937(BlockView blockView, BlockBox blockBox) {
+        return super.method_14937(blockView, blockBox);
+    }
+
 
     protected BlockState getMainBlock() {
         switch (this.mineshaftType) {
@@ -73,7 +93,7 @@ public abstract class MineshaftPart extends StructurePiece {
             world.setBlockState(pos, Blocks.BARREL.getDefaultState().with(BarrelBlock.FACING, Direction.UP), 2);
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if (blockEntity instanceof BarrelBlockEntity) {
-                ((BarrelBlockEntity)blockEntity).setLootTable(lootTableId, random.nextLong());
+                ((BarrelBlockEntity) blockEntity).setLootTable(lootTableId, random.nextLong());
             }
 
             return true;
@@ -91,9 +111,9 @@ public abstract class MineshaftPart extends StructurePiece {
      * Replaces each block with a given chance.
      */
     protected void randomFillWithOutline(IWorld world, BlockBox blockBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState blockState, BlockState inside, boolean bl) {
-        for(int o = minY; o <= maxY; ++o) {
-            for(int p = minX; p <= maxX; ++p) {
-                for(int q = minZ; q <= maxZ; ++q) {
+        for (int o = minY; o <= maxY; ++o) {
+            for (int p = minX; p <= maxX; ++p) {
+                for (int q = minZ; q <= maxZ; ++q) {
                     if (random.nextFloat() < chance) {
                         if (!bl || !this.getBlockAt(world, p, o, q, blockBox).isAir()) {
                             if (o != minY && o != maxY && p != minX && p != maxX && q != minZ && q != maxZ) {
@@ -109,9 +129,9 @@ public abstract class MineshaftPart extends StructurePiece {
     }
 
     protected void replaceAirInBox(IWorld world, BlockBox blockBox, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState blockState) {
-        for(int o = minY; o <= maxY; ++o) {
-            for(int p = minX; p <= maxX; ++p) {
-                for(int q = minZ; q <= maxZ; ++q) {
+        for (int o = minY; o <= maxY; ++o) {
+            for (int p = minX; p <= maxX; ++p) {
+                for (int q = minZ; q <= maxZ; ++q) {
                     BlockState currState = this.getBlockAtFixed(world, p, o, q, blockBox);
                     if (currState != null && currState.isAir()) {
                         this.addBlock(world, blockState, p, o, q, blockBox);
@@ -122,9 +142,9 @@ public abstract class MineshaftPart extends StructurePiece {
     }
 
     protected void randomlyReplaceAirInBox(IWorld world, BlockBox blockBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState blockState) {
-        for(int o = minY; o <= maxY; ++o) {
-            for(int p = minX; p <= maxX; ++p) {
-                for(int q = minZ; q <= maxZ; ++q) {
+        for (int o = minY; o <= maxY; ++o) {
+            for (int p = minX; p <= maxX; ++p) {
+                for (int q = minZ; q <= maxZ; ++q) {
                     if (random.nextFloat() < chance) {
                         BlockState currState = this.getBlockAtFixed(world, p, o, q, blockBox);
                         if (currState != null && currState.isAir()) {

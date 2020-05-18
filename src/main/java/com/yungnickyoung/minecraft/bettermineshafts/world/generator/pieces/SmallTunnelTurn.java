@@ -59,6 +59,7 @@ public class SmallTunnelTurn extends MineshaftPart {
         this.boundingBox = blockBox;
     }
 
+    @Override
     protected void toNbt(CompoundTag tag) {
         super.toNbt(tag);
         tag.putInt("TurnDirection", this.turnDirection.value);
@@ -75,9 +76,7 @@ public class SmallTunnelTurn extends MineshaftPart {
         return intersectingPiece != null ? null : blockBox;
     }
 
-    /**
-     * buildComponent
-     */
+    @Override
     public void method_14918(StructurePiece structurePiece, List<StructurePiece> list, Random random) {
         Direction direction = this.getFacing();
         if (direction == null) {
@@ -103,8 +102,8 @@ public class SmallTunnelTurn extends MineshaftPart {
 
     @Override
     public boolean generate(IWorld world, ChunkGenerator<?> generator, Random random, BlockBox box, ChunkPos pos) {
-        if (this.method_14937(world, box)) { // check if box contains any liquid
-//                return false;
+        if (this.method_14937(world, box)) {
+            return false;
         }
 
         Direction direction = this.getFacing();

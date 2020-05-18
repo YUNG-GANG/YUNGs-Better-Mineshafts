@@ -61,6 +61,7 @@ public class OreDeposit extends MineshaftPart {
         this.boundingBox = blockBox;
     }
 
+    @Override
     protected void toNbt(CompoundTag tag) {
         super.toNbt(tag);
         tag.putInt("OreType", this.oreType.value);
@@ -77,9 +78,7 @@ public class OreDeposit extends MineshaftPart {
         return intersectingPiece != null ? null : blockBox;
     }
 
-    /**
-     * buildComponent
-     */
+    @Override
     public void method_14918(StructurePiece structurePiece, List<StructurePiece> list, Random random) {
         int r = random.nextInt(100);
         if (r <= 50)
@@ -100,9 +99,10 @@ public class OreDeposit extends MineshaftPart {
 
     @Override
     public boolean generate(IWorld world, ChunkGenerator<?> generator, Random random, BlockBox box, ChunkPos pos) {
-        if (this.method_14937(world, box)) { // check if box contains any liquid
-//            return false;
+        if (this.method_14937(world, box)) {
+            return false;
         }
+
         BlockState ORE_BLOCK;
         if (this.oreType == OreType.GOLD)
             ORE_BLOCK = Blocks.GOLD_ORE.getDefaultState();
