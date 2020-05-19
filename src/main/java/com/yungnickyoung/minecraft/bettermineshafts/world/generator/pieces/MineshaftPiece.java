@@ -1,9 +1,7 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
 import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftFeature;
-import net.minecraft.block.BarrelBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
+import net.minecraft.block.*;
 import net.minecraft.block.entity.BarrelBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.fluid.FluidState;
@@ -108,6 +106,38 @@ public abstract class MineshaftPiece extends StructurePiece {
     }
 
     /**
+     * Randomly add vines with a given chance in a given area, facing the specified direction.
+     */
+    protected void addVines(IWorld world, BlockBox boundingBox, Direction facing, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
+        BlockPos.Mutable mutable = new BlockPos.Mutable();
+        for (int x = minX; x <= maxX; x++) {
+            for (int y = minY; y <= maxY; y++) {
+                for (int z = minZ; z <= maxZ; z++) {
+                    mutable.set(x, y, z);
+                    if (
+                        this.getBlockAt(world, x, y, z, boundingBox).isAir()
+                            && Block.isFaceFullSquare(this.getBlockAt(world, x + facing.getOffsetX(), y + facing.getOffsetY(), z + facing.getOffsetZ(), boundingBox).getCollisionShape(world, mutable), facing.getOpposite())
+                    ) {
+                        if (random.nextFloat() < chance) {
+                            this.addBlock(world, Blocks.VINE.getDefaultState().with(VineBlock.getFacingProperty(facing.getAxis() == Direction.Axis.X ? facing : facing.getOpposite()), true), x, y, z, boundingBox);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Randomly add vines with a given chance in a given area, doing passes for all four horizontal directions.
+     */
+    protected void addVines(IWorld world, BlockBox boundingBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
+        this.addVines(world, boundingBox, Direction.EAST, random, chance, minX, minY, minZ, maxX, maxY, maxZ);
+        this.addVines(world, boundingBox, Direction.WEST, random, chance, minX, minY, minZ, maxX, maxY, maxZ);
+        this.addVines(world, boundingBox, Direction.NORTH, random, chance, minX, minY, minZ, maxX, maxY, maxZ);
+        this.addVines(world, boundingBox, Direction.SOUTH, random, chance, minX, minY, minZ, maxX, maxY, maxZ);
+    }
+
+    /**
      * Replaces each block with a given chance.
      */
     protected void randomFillWithOutline(IWorld world, BlockBox blockBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState blockState, BlockState inside, boolean bl) {
@@ -154,6 +184,54 @@ public abstract class MineshaftPiece extends StructurePiece {
                 }
             }
         }
+    }
+
+    protected int withTransformedXOffset(int offsetX, int offsetZ) {
+        Direction direction = this.getFacing();
+        if (direction == null) {
+            return offsetX;
+        }
+        switch (direction) {
+            case NORTH:
+            case SOUTH:
+            default:
+                return offsetX;
+            case WEST:
+                return -offsetZ;
+            case EAST:
+                return offsetZ;
+        }
+    }
+
+    protected int withTransformedZOffset(int offsetX, int offsetZ) {
+        Direction direction = this.getFacing();
+        if (direction == null) {
+            return offsetX;
+        }
+        switch (direction) {
+            case NORTH:
+                return -offsetZ;
+            case SOUTH:
+            default:
+                return offsetZ;
+            case WEST:
+            case EAST:
+                return offsetX;
+        }
+    }
+
+    protected BlockState getBlockAtOffset(BlockView blockView, int x, int y, int z, int offsetX, int offsetY, int offsetZ, BlockBox blockBox) {
+        int i = this.applyXTransform(x, z);
+        int j = this.applyYTransform(y);
+        int k = this.applyZTransform(x, z);
+        BlockPos blockPos = new BlockPos(i, j, k);
+
+        Direction direction = this.getFacing();
+        if (direction == Direction.NORTH) {
+
+        }
+
+        return !blockBox.contains(blockPos) ? Blocks.AIR.getDefaultState() : blockView.getBlockState(blockPos);
     }
 
     /**

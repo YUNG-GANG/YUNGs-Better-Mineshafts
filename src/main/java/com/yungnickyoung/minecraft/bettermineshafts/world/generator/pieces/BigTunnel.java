@@ -207,6 +207,8 @@ public class BigTunnel extends MineshaftPiece {
 
         gravelDeposits.forEach(pair -> generateGravelDeposit(world, box, random, pair.getLeft(), pair.getRight()));
 
+        this.addVines(world, box, random, .5f, 1, 0, 1, LOCAL_X_END - 1, LOCAL_Y_END, LOCAL_Z_END - 1);
+
         return true;
     }
 

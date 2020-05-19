@@ -1,6 +1,7 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world;
 
 import com.mojang.datafixers.Dynamic;
+import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshafts;
 import com.yungnickyoung.minecraft.bettermineshafts.init.BMStructureFeature;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.BigTunnel;
 import net.minecraft.structure.StructureManager;
@@ -76,6 +77,7 @@ public class BetterMineshaftFeature extends StructureFeature<BetterMineshaftFeat
             // Separate rand is necessary bc for some reason otherwise r is 0 every time
             Random rand = new Random(this.getChunkX() + this.getChunkZ());
             int r = rand.nextInt(4);
+            BetterMineshafts.LOGGER.info(r);
             switch (r) {
                 case 0:
                     direction = Direction.NORTH;
