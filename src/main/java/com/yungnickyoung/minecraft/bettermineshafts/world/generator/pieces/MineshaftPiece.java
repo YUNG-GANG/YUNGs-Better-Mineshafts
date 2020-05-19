@@ -86,6 +86,15 @@ public abstract class MineshaftPiece extends StructurePiece {
         }
     }
 
+    protected float getVineChance() {
+        switch (this.mineshaftType) {
+            case JUNGLE:
+                return .6f;
+            default:
+                return .25f;
+        }
+    }
+
     protected boolean addBarrel(IWorld world, BlockBox boundingBox, Random random, BlockPos pos, Identifier lootTableId) {
         if (boundingBox.contains(pos) && world.getBlockState(pos).getBlock() != Blocks.BARREL) {
             world.setBlockState(pos, Blocks.BARREL.getDefaultState().with(BarrelBlock.FACING, Direction.UP), 2);
@@ -184,54 +193,6 @@ public abstract class MineshaftPiece extends StructurePiece {
                 }
             }
         }
-    }
-
-    protected int withTransformedXOffset(int offsetX, int offsetZ) {
-        Direction direction = this.getFacing();
-        if (direction == null) {
-            return offsetX;
-        }
-        switch (direction) {
-            case NORTH:
-            case SOUTH:
-            default:
-                return offsetX;
-            case WEST:
-                return -offsetZ;
-            case EAST:
-                return offsetZ;
-        }
-    }
-
-    protected int withTransformedZOffset(int offsetX, int offsetZ) {
-        Direction direction = this.getFacing();
-        if (direction == null) {
-            return offsetX;
-        }
-        switch (direction) {
-            case NORTH:
-                return -offsetZ;
-            case SOUTH:
-            default:
-                return offsetZ;
-            case WEST:
-            case EAST:
-                return offsetX;
-        }
-    }
-
-    protected BlockState getBlockAtOffset(BlockView blockView, int x, int y, int z, int offsetX, int offsetY, int offsetZ, BlockBox blockBox) {
-        int i = this.applyXTransform(x, z);
-        int j = this.applyYTransform(y);
-        int k = this.applyZTransform(x, z);
-        BlockPos blockPos = new BlockPos(i, j, k);
-
-        Direction direction = this.getFacing();
-        if (direction == Direction.NORTH) {
-
-        }
-
-        return !blockBox.contains(blockPos) ? Blocks.AIR.getDefaultState() : blockView.getBlockState(blockPos);
     }
 
     /**

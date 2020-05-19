@@ -108,6 +108,9 @@ public class SmallTunnelStairs extends MineshaftPiece {
             } else {
                 this.addBlock(world, Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, RailShape.ASCENDING_NORTH), 2, i + 1, i, box);
             }
+
+            // Ensure solid block is below each rail
+            this.addBlock(world, getMainBlock(), 2, i, i, box);
         }
 
         return true;

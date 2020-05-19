@@ -136,6 +136,16 @@ public class LayeredIntersection4 extends MineshaftPiece {
         this.addBlock(world, Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, RailShape.ASCENDING_NORTH), 3, 2, 5, box);
         this.addBlock(world, Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, RailShape.ASCENDING_NORTH), 3, 3, 6, box);
 
+        // Ensure solid block is below each rail
+        this.addBlock(world, getMainBlock(), 3, 2, 0, box);
+        this.addBlock(world, getMainBlock(), 3, 1, 1, box);
+        this.addBlock(world, getMainBlock(), 3, 0, 2, box);
+        this.addBlock(world, getMainBlock(), 3, 0, 3, box);
+        this.addBlock(world, getMainBlock(), 3, 0, 4, box);
+        this.addBlock(world, getMainBlock(), 3, 1, 5, box);
+        this.addBlock(world, getMainBlock(), 3, 2, 6, box);
+
+
         // Top wood
         this.fillWithOutline(world, box, 0, 3, 2, 1, 3, 4, getMainBlock(), getMainBlock(), false);
         this.fillWithOutline(world, box, 2, 4, 2, 4, 4, 4, getMainBlock(), getMainBlock(), false);

@@ -99,7 +99,8 @@ public class SmallTunnel extends MineshaftPiece {
         }
 
         // Place floor
-        this.randomFillWithOutline(world, box, random, .4f, 1, 0, 0, LOCAL_X_END - 1, 0, LOCAL_Z_END, getMainBlock(), getMainBlock(), true);
+        this.fillWithOutline(world, box, 1, 0, 0, LOCAL_X_END - 1, 0, LOCAL_Z_END, getMainBlock(), getMainBlock(), false);
+        this.randomFillWithOutline(world, box, random, .5f, 1, 0, 0, LOCAL_X_END - 1, 0, LOCAL_Z_END, Blocks.STONE.getDefaultState(), Blocks.STONE.getDefaultState(), true);
         this.randomFillWithOutline(world, box, random, .1f, 1, 0, 0, LOCAL_X_END - 1, 0, LOCAL_Z_END, Blocks.COBBLESTONE.getDefaultState(), Blocks.COBBLESTONE.getDefaultState(), true);
 
         // Randomize blocks

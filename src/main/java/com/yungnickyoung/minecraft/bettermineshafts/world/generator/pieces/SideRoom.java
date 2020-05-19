@@ -146,7 +146,7 @@ public class SideRoom extends MineshaftPiece {
 
         // Decorations
         generateIronBarSupports(world, box, random);
-        this.addVines(world, box, random, .3f, 1, 0, 1, LOCAL_X_END - 1, LOCAL_Y_END, LOCAL_Z_END - 1);
+        this.addVines(world, box, random, getVineChance(), 1, 0, 1, LOCAL_X_END - 1, LOCAL_Y_END, LOCAL_Z_END - 1);
 
         return true;
     }

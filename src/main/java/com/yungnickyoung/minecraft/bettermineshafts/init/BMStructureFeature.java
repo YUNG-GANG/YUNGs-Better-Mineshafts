@@ -45,11 +45,21 @@ public class BMStructureFeature {
      */
     private static void addBetterMineshafts(Biome biome) {
         // TODO - replace hardcoded spawnrates w/ config option
-        BetterMineshaftFeatureConfig config = new BetterMineshaftFeatureConfig(0.003D, BetterMineshaftFeature.Type.NORMAL);
+        final double spawnRate = .003;
 
-        // TODO - add biome variant check here
-        if (biome.getCategory() == Biome.Category.MESA)
-            config = new BetterMineshaftFeatureConfig(.003D, BetterMineshaftFeature.Type.MESA);
+        BetterMineshaftFeatureConfig config;
+
+        // Set config based on biome
+        switch (biome.getCategory()) {
+            case MESA:
+                config = new BetterMineshaftFeatureConfig(spawnRate, BetterMineshaftFeature.Type.MESA);
+                break;
+            case JUNGLE:
+                config = new BetterMineshaftFeatureConfig(spawnRate, BetterMineshaftFeature.Type.JUNGLE);
+                break;
+            default:
+                config = new BetterMineshaftFeatureConfig(spawnRate, BetterMineshaftFeature.Type.NORMAL);
+        }
 
         removeVanillaMineshafts(biome);
 
@@ -70,8 +80,6 @@ public class BMStructureFeature {
                 ConfiguredFeature<?, ?> feature = list.get(i);
                 if (((DecoratedFeatureConfig) (feature.config)).feature.feature instanceof MineshaftFeature) {
                     list.remove(i);
-//                    list.set(i, BetterMineshafts.BETTER_MINESHAFT_FEATURE.configure(config).createDecoratedFeature(Decorator.NOPE.configure(DecoratorConfig.DEFAULT)));
-//                    list.add(BetterMineshafts.BETTER_MINESHAFT_FEATURE.configure(config).createDecoratedFeature(Decorator.NOPE.configure(DecoratorConfig.DEFAULT)));
                     break;
                 }
             }
