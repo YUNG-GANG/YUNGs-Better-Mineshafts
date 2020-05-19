@@ -138,12 +138,15 @@ public class SideRoom extends MineshaftPiece {
         if (random.nextInt(4) == 0)
             this.addBarrel(world, box, random, LOCAL_X_END - 1, 1, 1, LootTables.ABANDONED_MINESHAFT_CHEST);
 
-        generateIronBarSupports(world, box, random);
-
+        // Entrance to spider lair
         if (this.hasDownstairs) {
             this.addBlock(world, Blocks.LADDER.getDefaultState().with(LadderBlock.FACING, Direction.NORTH), 6, 0, 1, box);
             this.addBlock(world, Blocks.OAK_TRAPDOOR.getDefaultState().with(TrapdoorBlock.FACING, Direction.NORTH), 6, 1, 1, box);
         }
+
+        // Decorations
+        generateIronBarSupports(world, box, random);
+        this.addVines(world, box, random, .3f, 1, 0, 1, LOCAL_X_END - 1, LOCAL_Y_END, LOCAL_Z_END - 1);
 
         return true;
     }

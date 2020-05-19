@@ -198,15 +198,13 @@ public class BigTunnel extends MineshaftPiece {
         // Open up entrances to side rooms
         sideRoomEntrances.forEach(roomBox -> generateSideRoomOpening(world, box, roomBox, random));
 
+        // Decorations
         generateRails(world, box, random);
         generateLanterns(world, box, random);
         generateChestCarts(world, box, random, LootTables.ABANDONED_MINESHAFT_CHEST);
-
         bigSupports.forEach(z -> generateBigSupport(world, box, random, z));
         smallSupports.forEach(z -> generateSmallSupport(world, box, random, z));
-
         gravelDeposits.forEach(pair -> generateGravelDeposit(world, box, random, pair.getLeft(), pair.getRight()));
-
         this.addVines(world, box, random, .5f, 1, 0, 1, LOCAL_X_END - 1, LOCAL_Y_END, LOCAL_Z_END - 1);
 
         return true;

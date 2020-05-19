@@ -110,6 +110,7 @@ public class SmallTunnel extends MineshaftPiece {
         // Fill with air
         this.fillWithOutline(world, box, 1, 1, 0, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END, AIR, AIR, false);
 
+        // Decorations
         this.supports.forEach(z -> generateSupport(world, box, random, z));
         generateRails(world, box, random);
         generateCobwebs(world, box, random);
