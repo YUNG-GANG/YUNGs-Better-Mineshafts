@@ -7,12 +7,14 @@ import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMinesh
 import com.yungnickyoung.minecraft.bettermineshafts.util.BoxUtil;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.PoweredRailBlock;
+import net.minecraft.entity.vehicle.TntMinecartEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.structure.StructureManager;
 import net.minecraft.structure.StructurePiece;
 import net.minecraft.util.math.BlockBox;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.IWorld;
@@ -114,6 +116,7 @@ public class SmallTunnel extends MineshaftPiece {
         this.supports.forEach(z -> generateSupport(world, box, random, z));
         generateRails(world, box, random);
         generateCobwebs(world, box, random);
+        generateTntCarts(world, box, random);
 
         return true;
     }
@@ -140,6 +143,18 @@ public class SmallTunnel extends MineshaftPiece {
             if (random.nextInt(15) == 0) {
                 this.addBlock(world, Blocks.POWERED_RAIL.getDefaultState().with(PoweredRailBlock.POWERED, true), 2, 1, n, box);
                 break;
+            }
+        }
+    }
+
+    private void generateTntCarts(IWorld world, BlockBox box, Random random) {
+        for (int z = 0; z <= LOCAL_Z_END; z++) {
+            if (random.nextInt(400) == 0) {
+                BlockPos blockPos = new BlockPos(this.applyXTransform(LOCAL_X_END / 2, z), applyYTransform(1), this.applyZTransform(LOCAL_X_END / 2, z));
+                if (box.contains(blockPos) && !world.getBlockState(blockPos.down()).isAir()) {
+                    TntMinecartEntity tntMinecartEntity = new TntMinecartEntity(world.getWorld(), ((float) blockPos.getX() + 0.5F), ((float) blockPos.getY() + 0.5F), ((float) blockPos.getZ() + 0.5F));
+                    world.spawnEntity(tntMinecartEntity);
+                }
             }
         }
     }

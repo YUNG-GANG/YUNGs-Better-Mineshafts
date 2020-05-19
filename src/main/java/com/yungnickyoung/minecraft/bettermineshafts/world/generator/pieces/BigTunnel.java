@@ -7,6 +7,7 @@ import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMinesh
 import com.yungnickyoung.minecraft.bettermineshafts.util.BoxUtil;
 import net.minecraft.block.*;
 import net.minecraft.entity.vehicle.ChestMinecartEntity;
+import net.minecraft.entity.vehicle.TntMinecartEntity;
 import net.minecraft.loot.LootTables;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntArrayTag;
@@ -202,6 +203,7 @@ public class BigTunnel extends MineshaftPiece {
         generateRails(world, box, random);
         generateLanterns(world, box, random);
         generateChestCarts(world, box, random, LootTables.ABANDONED_MINESHAFT_CHEST);
+        generateTntCarts(world, box, random);
         bigSupports.forEach(z -> generateBigSupport(world, box, random, z));
         smallSupports.forEach(z -> generateSmallSupport(world, box, random, z));
         gravelDeposits.forEach(pair -> generateGravelDeposit(world, box, random, pair.getLeft(), pair.getRight()));
@@ -246,6 +248,18 @@ public class BigTunnel extends MineshaftPiece {
                     ChestMinecartEntity chestMinecartEntity = new ChestMinecartEntity(world.getWorld(), ((float) blockPos.getX() + 0.5F), ((float) blockPos.getY() + 0.5F), ((float) blockPos.getZ() + 0.5F));
                     chestMinecartEntity.setLootTable(lootTableId, random.nextLong());
                     world.spawnEntity(chestMinecartEntity);
+                }
+            }
+        }
+    }
+
+    private void generateTntCarts(IWorld world, BlockBox box, Random random) {
+        for (int z = 0; z <= LOCAL_Z_END; z++) {
+            if (random.nextInt(400) == 0) {
+                BlockPos blockPos = new BlockPos(this.applyXTransform(LOCAL_X_END / 2, z), applyYTransform(1), this.applyZTransform(LOCAL_X_END / 2, z));
+                if (box.contains(blockPos) && !world.getBlockState(blockPos.down()).isAir()) {
+                    TntMinecartEntity tntMinecartEntity = new TntMinecartEntity(world.getWorld(), ((float) blockPos.getX() + 0.5F), ((float) blockPos.getY() + 0.5F), ((float) blockPos.getZ() + 0.5F));
+                    world.spawnEntity(tntMinecartEntity);
                 }
             }
         }
