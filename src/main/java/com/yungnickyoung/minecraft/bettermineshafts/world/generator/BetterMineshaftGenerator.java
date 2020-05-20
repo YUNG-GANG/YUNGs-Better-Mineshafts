@@ -39,10 +39,23 @@ public class BetterMineshaftGenerator {
 
         // End of chain - chance of placing ore deposit
         if (pieceChainLen > 7) {
-            if (rand > 50) {
+            if (rand > 10) {
                 blockBox = OreDeposit.determineBoxPosition(list, random, x, y, z, direction);
                 if (blockBox != null) {
                     MineshaftPiece newPiece = new OreDeposit(l + 1, pieceChainLen + 1, random, blockBox, direction, type);
+                    list.add(newPiece);
+                    newPiece.method_14918(structurePiece, list, random); // buildComponent
+                    return newPiece;
+                }
+            } else {
+                // Need to offset by 1 since room is wider than tunnel
+                if (direction == Direction.NORTH) x -= 1;
+                else if (direction == Direction.EAST) z -= 1;
+                else if (direction == Direction.SOUTH) x += 1;
+                else if (direction == Direction.WEST) z += 1;
+                blockBox = ZombieVillagerRoom.determineBoxPosition(list, random, x, y, z, direction);
+                if (blockBox != null) {
+                    MineshaftPiece newPiece = new ZombieVillagerRoom(l + 1, pieceChainLen + 1, random, blockBox, direction, type);
                     list.add(newPiece);
                     newPiece.method_14918(structurePiece, list, random); // buildComponent
                     return newPiece;
@@ -52,7 +65,7 @@ public class BetterMineshaftGenerator {
         }
 
         // Add new piece.
-        if (rand >= 90 && pieceChainLen > 2) { // Turns can't be placed early on
+        if (rand >= 90 && pieceChainLen > 2 && pieceChainLen < 7) { // Intersection can't be placed early on or at the very end
             blockBox = LayeredIntersection4.determineBoxPosition(list, random, x, y, z, direction);
             if (blockBox != null) {
                 MineshaftPiece newPiece = new LayeredIntersection4(l + 1, pieceChainLen + 1, random, blockBox, direction, type);
