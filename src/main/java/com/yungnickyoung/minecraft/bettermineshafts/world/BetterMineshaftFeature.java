@@ -3,7 +3,7 @@ package com.yungnickyoung.minecraft.bettermineshafts.world;
 import com.mojang.datafixers.Dynamic;
 import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshafts;
 import com.yungnickyoung.minecraft.bettermineshafts.init.BMStructureFeature;
-import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.BigTunnel;
+import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.VerticalEntrance;
 import net.minecraft.structure.StructureManager;
 import net.minecraft.structure.StructureStart;
 import net.minecraft.util.math.BlockBox;
@@ -93,9 +93,9 @@ public class BetterMineshaftFeature extends StructureFeature<BetterMineshaftFeat
             }
 //            direction = Direction.NORTH;
             BlockPos startingPos = new BlockPos((chunkX << 4) + 2, 50, (chunkZ << 4) + 2);
-            BigTunnel entryPoint = new BigTunnel(
+            VerticalEntrance entryPoint = new VerticalEntrance(
                 0,
-                0,
+                -1,
                 this.random,
                 startingPos,
                 direction,

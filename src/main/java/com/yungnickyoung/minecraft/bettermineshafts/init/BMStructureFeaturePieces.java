@@ -10,6 +10,7 @@ import java.util.Locale;
 
 public class BMStructureFeaturePieces {
     public static void init() {
+        BetterMineshaftStructurePieceType.VERTICAL_ENTRANCE = Registry.register(Registry.STRUCTURE_PIECE, new Identifier(BetterMineshafts.MOD_ID, "BMSVerticalEntrance".toLowerCase(Locale.ROOT)), VerticalEntrance::new);
         BetterMineshaftStructurePieceType.BIG_TUNNEL = Registry.register(Registry.STRUCTURE_PIECE, new Identifier(BetterMineshafts.MOD_ID, "BMSBigTunnel".toLowerCase(Locale.ROOT)), BigTunnel::new);
         BetterMineshaftStructurePieceType.SMALL_TUNNEL = Registry.register(Registry.STRUCTURE_PIECE, new Identifier(BetterMineshafts.MOD_ID, "BMSSmallTunnel".toLowerCase(Locale.ROOT)), SmallTunnel::new);
         BetterMineshaftStructurePieceType.SMALL_TUNNEL_TURN = Registry.register(Registry.STRUCTURE_PIECE, new Identifier(BetterMineshafts.MOD_ID, "BMSSmallTunnelTurn".toLowerCase(Locale.ROOT)), SmallTunnelTurn::new);
