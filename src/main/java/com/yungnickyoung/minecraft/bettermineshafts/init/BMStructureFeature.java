@@ -12,6 +12,8 @@ import net.minecraft.world.gen.feature.*;
 import java.util.List;
 
 public class BMStructureFeature {
+    // TODO - replace hardcoded spawnrates w/ config option
+    public static final double SPAWN_RATE = .01; // .003
 
     private static StructureFeature<?> VANILLA_MINESHAFT_FEATURE;
     public static StructureFeature<BetterMineshaftFeatureConfig> BETTER_MINESHAFT_FEATURE;
@@ -44,21 +46,18 @@ public class BMStructureFeature {
      * Adds Better Mineshaft to the given biome, and removes vanilla mineshaft from its feature list.
      */
     private static void addBetterMineshafts(Biome biome) {
-        // TODO - replace hardcoded spawnrates w/ config option
-        final double spawnRate = .003;
-
         BetterMineshaftFeatureConfig config;
 
         // Set config based on biome
         switch (biome.getCategory()) {
             case MESA:
-                config = new BetterMineshaftFeatureConfig(spawnRate, BetterMineshaftFeature.Type.MESA);
+                config = new BetterMineshaftFeatureConfig(SPAWN_RATE, BetterMineshaftFeature.Type.MESA);
                 break;
             case JUNGLE:
-                config = new BetterMineshaftFeatureConfig(spawnRate, BetterMineshaftFeature.Type.JUNGLE);
+                config = new BetterMineshaftFeatureConfig(SPAWN_RATE, BetterMineshaftFeature.Type.JUNGLE);
                 break;
             default:
-                config = new BetterMineshaftFeatureConfig(spawnRate, BetterMineshaftFeature.Type.NORMAL);
+                config = new BetterMineshaftFeatureConfig(SPAWN_RATE, BetterMineshaftFeature.Type.NORMAL);
         }
 
         removeVanillaMineshafts(biome);

@@ -3,6 +3,8 @@ package com.yungnickyoung.minecraft.bettermineshafts.world;
 import com.mojang.datafixers.Dynamic;
 import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshafts;
 import com.yungnickyoung.minecraft.bettermineshafts.init.BMStructureFeature;
+import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.BigTunnel;
+import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.MineshaftPiece;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.VerticalEntrance;
 import net.minecraft.structure.StructureManager;
 import net.minecraft.structure.StructureStart;
@@ -33,7 +35,7 @@ public class BetterMineshaftFeature extends StructureFeature<BetterMineshaftFeat
             BetterMineshaftFeatureConfig featureConfig = chunkGenerator.getStructureConfig(biome, this);
             // Default to normal mineshaft in case we fail to load config for this biome
             if (featureConfig == null) {
-                featureConfig = new BetterMineshaftFeatureConfig(.003, Type.NORMAL);
+                featureConfig = new BetterMineshaftFeatureConfig(BMStructureFeature.SPAWN_RATE, Type.NORMAL);
             }
             return random.nextDouble() < featureConfig.probability;
         } else {
@@ -93,14 +95,16 @@ public class BetterMineshaftFeature extends StructureFeature<BetterMineshaftFeat
             }
 //            direction = Direction.NORTH;
             BlockPos startingPos = new BlockPos((chunkX << 4) + 2, 50, (chunkZ << 4) + 2);
-            VerticalEntrance entryPoint = new VerticalEntrance(
+
+            // Entrypoint
+            MineshaftPiece entryPoint = new VerticalEntrance(
                 0,
                 -1,
-                this.random,
                 startingPos,
                 direction,
                 featureConfig.type
             );
+
             this.children.add(entryPoint);
 
             // Build room component. This also populates the children list, effectively building the entire mineshaft.
@@ -122,7 +126,7 @@ public class BetterMineshaftFeature extends StructureFeature<BetterMineshaftFeat
 //                this.method_14978(chunkGenerator.getSeaLevel(), this.random, 10);
 //            }
             // Method for adjusting y of all structure pieces
-            this.method_14978(chunkGenerator.getSeaLevel(), this.random, 10);
+//            this.method_14978(chunkGenerator.getSeaLevel(), this.random, 10);
         }
     }
 

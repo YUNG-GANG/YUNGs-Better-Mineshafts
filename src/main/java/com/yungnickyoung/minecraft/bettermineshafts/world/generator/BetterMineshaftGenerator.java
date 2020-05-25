@@ -4,6 +4,8 @@ import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftFeature
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.*;
 import net.minecraft.structure.StructurePiece;
 import net.minecraft.util.math.BlockBox;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ColumnPos;
 import net.minecraft.util.math.Direction;
 
 import java.util.List;
@@ -131,5 +133,14 @@ public class BetterMineshaftGenerator {
         }
 
         return null;
+    }
+
+    public static MineshaftPiece generateAndAddSurfaceTunnel(StructurePiece structurePiece, List<StructurePiece> list, Random random, int x, int z, int l) {
+        BetterMineshaftFeature.Type type = ((MineshaftPiece) structurePiece).mineshaftType;
+
+        SurfaceTunnel surfaceTunnel = new SurfaceTunnel(l, type, new ColumnPos(x, z));
+        list.add(surfaceTunnel);
+//        surfaceTunnel.method_14918(structurePiece, list, random);
+        return surfaceTunnel;
     }
 }

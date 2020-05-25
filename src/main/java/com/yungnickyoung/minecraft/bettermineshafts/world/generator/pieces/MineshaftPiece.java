@@ -37,6 +37,10 @@ public abstract class MineshaftPiece extends StructurePiece {
         tag.putInt("MST", this.mineshaftType.ordinal());
     }
 
+    public void setBoundingBox(BlockBox boundingBox) {
+        this.boundingBox = boundingBox;
+    }
+
     /**
      * buildComponent.
      * Adds new pieces to the list passed in.
