@@ -55,7 +55,7 @@ public class VerticalEntrance extends MineshaftPiece {
         int y = random.nextInt(centerPos.getY() / 2) + 11;
         centerPos.setY(y);
         this.centerPos = new BlockPos(centerPos); // position passed in is center of shaft piece (unlike all other pieces, where it is a corner)
-        this.boundingBox = determineInitialBoxPosition(centerPos);
+        this.boundingBox = getInitialBlockBox(centerPos);
     }
 
     @Override
@@ -68,7 +68,7 @@ public class VerticalEntrance extends MineshaftPiece {
         tag.putInt("tunnelDir", tunnelDirection.getHorizontal());
     }
 
-    public static BlockBox determineInitialBoxPosition(BlockPos centerPos) {
+    private static BlockBox getInitialBlockBox(BlockPos centerPos) {
         return new BlockBox(centerPos.getX() - 24, centerPos.getY(), centerPos.getZ() - 24, centerPos.getX() + 24, 256, centerPos.getZ() + 24);
     }
 
@@ -147,9 +147,11 @@ public class VerticalEntrance extends MineshaftPiece {
             tunnelEndZ = 0;
         Direction facing = this.getFacing();
 
+        // We have to account for this piece's rotation.
+        // This is normally handled internally, but must be tweaked manually for surface tunnels
+        // since their orientation is not determined until generation time.
         float rotationDifference = facing.asRotation() - tunnelDirection.asRotation();
         Direction relativeTunnelDir = Direction.fromRotation(Direction.NORTH.asRotation() - rotationDifference);
-
         if (relativeTunnelDir == Direction.NORTH) {
             tunnelStartX = 22;
             tunnelStartZ = 26;
@@ -180,6 +182,7 @@ public class VerticalEntrance extends MineshaftPiece {
             tunnelEndZ = 26;
         }
 
+        // Tunnel
         if (facing.getAxis() == tunnelDirection.getAxis()) {
             // Place floor
             this.fillWithOutline(world, box, tunnelStartX + 1, tunnelFloorAltitude, tunnelStartZ, tunnelEndX - 1, tunnelFloorAltitude, tunnelEndZ, getMainBlock(), getMainBlock(), true);
@@ -210,12 +213,13 @@ public class VerticalEntrance extends MineshaftPiece {
 
             // Fill with air
             this.fillWithOutline(world, box, tunnelStartX, tunnelFloorAltitude + 1, tunnelStartZ + 1, tunnelEndX, tunnelFloorAltitude + 3, tunnelEndZ - 1, AIR, AIR, false);
-
         }
+
         // Decorations
         // Note that while normally, building (i.e. determining placement) of decorations is done before generation,
         // that is not the case here since localZEnd is not known until generation.
 
+        // Mark positions where center floor block is solid
         boolean[] validPositions;
         if (facing.getAxis() == tunnelDirection.getAxis()) {
             validPositions = new boolean[tunnelEndZ - tunnelStartZ + 1];

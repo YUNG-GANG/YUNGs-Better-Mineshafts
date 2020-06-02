@@ -115,15 +115,7 @@ public class BigTunnel extends MineshaftPiece {
     }
 
     public static BlockBox determineBoxPosition(List<StructurePiece> list, Random random, int x, int y, int z, Direction direction) {
-        BlockBox blockBox = BoxUtil.boxFromCoordsWithRotation(x, y, z, SECONDARY_AXIS_LEN, Y_AXIS_LEN, MAIN_AXIS_LEN, direction);
-        return blockBox;
-
-        // The following func call returns null if this new blockbox does not intersect with any pieces in the list.
-        // If there is an intersection, the following func call returns the piece that intersects.
-//        StructurePiece intersectingPiece = StructurePiece.method_14932(list, blockBox); // findIntersecting
-
-        // Thus, this function returns null if blackBox intersects with an existing piece. Otherwise, we return blackbox
-//        return intersectingPiece != null ? null : blockBox;
+        return BoxUtil.boxFromCoordsWithRotation(x, y, z, SECONDARY_AXIS_LEN, Y_AXIS_LEN, MAIN_AXIS_LEN, direction);
     }
 
     public static BlockBox determineInitialBoxPosition(Random random, int x, int y, int z, Direction direction) {
