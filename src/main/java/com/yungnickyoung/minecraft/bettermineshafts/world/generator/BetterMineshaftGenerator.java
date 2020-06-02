@@ -134,13 +134,4 @@ public class BetterMineshaftGenerator {
 
         return null;
     }
-
-    public static MineshaftPiece generateAndAddSurfaceTunnel(StructurePiece structurePiece, List<StructurePiece> list, Random random, int x, int z, int l) {
-        BetterMineshaftFeature.Type type = ((MineshaftPiece) structurePiece).mineshaftType;
-
-        SurfaceTunnel surfaceTunnel = new SurfaceTunnel(l, type, new ColumnPos(x, z));
-        list.add(surfaceTunnel);
-//        surfaceTunnel.method_14918(structurePiece, list, random);
-        return surfaceTunnel;
-    }
 }

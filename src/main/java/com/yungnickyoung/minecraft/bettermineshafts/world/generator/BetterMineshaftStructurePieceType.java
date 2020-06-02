@@ -4,7 +4,6 @@ import net.minecraft.structure.StructurePieceType;
 
 public class BetterMineshaftStructurePieceType {
     public static StructurePieceType VERTICAL_ENTRANCE;
-    public static StructurePieceType SURFACE_TUNNEL;
     public static StructurePieceType BIG_TUNNEL;
     public static StructurePieceType SMALL_TUNNEL;
     public static StructurePieceType SMALL_TUNNEL_TURN;
