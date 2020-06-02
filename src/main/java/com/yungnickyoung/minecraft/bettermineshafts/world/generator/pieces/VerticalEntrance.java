@@ -97,15 +97,6 @@ public class VerticalEntrance extends MineshaftPiece {
 
     @Override
     public boolean generate(IWorld world, ChunkGenerator<?> generator, Random random, BlockBox box, ChunkPos pos) {
-        if (this.method_14937(world, box)) {
-//            return false;
-        }
-
-//        if (centerPos.getX() == -958) {
-        if (centerPos.getX() == 258) {
-            BetterMineshafts.LOGGER.error("");
-        }
-
         DirInfo dirInfo = determineDirection(world);
         // Only generate vertical entrance if there is valid surrounding terrain
         if (dirInfo != null) {
@@ -181,8 +172,7 @@ public class VerticalEntrance extends MineshaftPiece {
             tunnelEndZ = 22;
         }
         else if (
-            (relativeTunnelDir == Direction.EAST && !(facing == Direction.SOUTH || facing == Direction.WEST)) ||
-            (relativeTunnelDir == Direction.WEST && (facing == Direction.SOUTH || facing == Direction.WEST))
+            relativeTunnelDir == Direction.EAST || relativeTunnelDir == Direction.WEST
         ) {
             tunnelStartX = 26;
             tunnelStartZ = 22;
@@ -319,7 +309,7 @@ public class VerticalEntrance extends MineshaftPiece {
                     int chunkX = realX >> 4,
                         chunkZ = realZ >> 4;
                     int surfaceHeight = SurfaceUtil.getSurfaceHeight(world.getChunk(chunkX, chunkZ), new ColumnPos(realX, realZ));
-                    if (surfaceHeight != 0) {
+                    if (surfaceHeight > 1) {
                         minSurfaceHeight = Math.min(minSurfaceHeight, surfaceHeight);
                     }
                 } catch (NullPointerException e) {
@@ -364,7 +354,7 @@ public class VerticalEntrance extends MineshaftPiece {
                         break;
                     }
 
-                    if (surfaceHeight <= floorHeight && surfaceHeight != 0) {
+                    if (surfaceHeight <= floorHeight && surfaceHeight > 1) {
                         return new DirInfo(direction, i, ceilingHeight);
                     }
 
