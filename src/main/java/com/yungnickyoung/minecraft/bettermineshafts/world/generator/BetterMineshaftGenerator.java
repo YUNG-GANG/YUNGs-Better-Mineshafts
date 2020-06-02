@@ -21,7 +21,7 @@ public class BetterMineshaftGenerator {
         BetterMineshaftFeature.Type type = ((MineshaftPiece) structurePiece).mineshaftType;
 
         BlockBox blockBox;
-        if (rand >= 10) {
+        if (rand >= 10 || pieceChainLen < 1) {
             blockBox = BigTunnel.determineBoxPosition(list, random, x, y, z, direction);
             if (blockBox != null) {
                 MineshaftPiece newPiece = new BigTunnel(l + 1, pieceChainLen + 1, random, blockBox, direction, type);

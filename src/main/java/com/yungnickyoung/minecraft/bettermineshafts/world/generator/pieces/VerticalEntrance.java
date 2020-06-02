@@ -1,16 +1,17 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
 import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshafts;
-import com.yungnickyoung.minecraft.bettermineshafts.util.BoxUtil;
+import com.yungnickyoung.minecraft.bettermineshafts.util.SurfaceUtil;
 import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftFeature;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
-import net.minecraft.block.Blocks;
+import net.minecraft.block.*;
+import net.minecraft.block.enums.RailShape;
+import net.minecraft.block.enums.SlabType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.structure.StructureManager;
 import net.minecraft.structure.StructurePiece;
 import net.minecraft.util.math.*;
-import net.minecraft.world.Heightmap;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 
@@ -18,66 +19,57 @@ import java.util.List;
 import java.util.Random;
 
 public class VerticalEntrance extends MineshaftPiece {
-    private BlockPos startPos;
     private BlockPos centerPos;
-    private SurfaceTunnel surfaceTunnel; // reference to the surface tunnel attached to this
     private int  // height of vertical shaft depends on surface terrain
-        yAxisLen,
-        localYEnd;
+        yAxisLen  = 0,
+        localYEnd = 0;
+    private int // Surface tunnel vars
+        tunnelLength        = 0,
+        tunnelFloorAltitude = 0;
+    private Direction tunnelDirection = Direction.NORTH;
 
+    // Vertical shaft static vars
     private static final int
-        SECONDARY_AXIS_LEN = 7,
-        MAIN_AXIS_LEN = 5;
-    private static final int
-        LOCAL_X_END = SECONDARY_AXIS_LEN - 1,
-        LOCAL_Z_END = MAIN_AXIS_LEN - 1;
-
+        SHAFT_LOCAL_XZ_START = 22,
+        SHAFT_LOCAL_XZ_END = 26;
 
     public VerticalEntrance(StructureManager structureManager, CompoundTag compoundTag) {
         super(BetterMineshaftStructurePieceType.VERTICAL_ENTRANCE, compoundTag);
+        int centerPosX = compoundTag.getIntArray("centerPos")[0];
+        int centerPosY = compoundTag.getIntArray("centerPos")[1];
+        int centerPosZ = compoundTag.getIntArray("centerPos")[2];
+        this.centerPos = new BlockPos(centerPosX, centerPosY, centerPosZ);
+
+        this.yAxisLen = compoundTag.getInt("yAxisLen");
+        this.localYEnd = this.yAxisLen - 1;
+        this.tunnelLength = compoundTag.getInt("tunnelLen");
+        this.tunnelFloorAltitude = compoundTag.getInt("floorAltitude");
+
+        int tunnelDirInt = compoundTag.getInt("tunnelDir");
+        this.tunnelDirection = tunnelDirInt == -1 ? null : Direction.fromHorizontal(tunnelDirInt);
     }
 
-    public VerticalEntrance(int i, int pieceChainLen, Direction direction, BlockBox blockBox, BetterMineshaftFeature.Type type) {
+    public VerticalEntrance(int i, int pieceChainLen, Random random, BlockPos.Mutable centerPos, Direction direction, BetterMineshaftFeature.Type type) {
         super(BetterMineshaftStructurePieceType.VERTICAL_ENTRANCE, i, pieceChainLen, type);
         this.setOrientation(direction);
-        this.boundingBox = blockBox;
-    }
-
-    public VerticalEntrance(int i, int pieceChainLen, BlockPos pos, Direction direction, BetterMineshaftFeature.Type type) {
-        this(i, pieceChainLen, direction, determineInitialBoxPosition(pos.getX(), pos.getY(), pos.getZ(), direction), type);
-        this.startPos = pos;
-        this.centerPos = calcCenterBlockPos();
+        int y = random.nextInt(centerPos.getY() / 2) + 11;
+        centerPos.setY(y);
+        this.centerPos = new BlockPos(centerPos); // position passed in is center of shaft piece (unlike all other pieces, where it is a corner)
+        this.boundingBox = determineInitialBoxPosition(centerPos);
     }
 
     @Override
     protected void toNbt(CompoundTag tag) {
         super.toNbt(tag);
+        tag.putIntArray("centerPos", new int[]{centerPos.getX(), centerPos.getY(), centerPos.getZ()});
+        tag.putInt("yAxisLen", yAxisLen);
+        tag.putInt("tunnelLen", tunnelLength);
+        tag.putInt("floorAltitude", tunnelFloorAltitude);
+        tag.putInt("tunnelDir", tunnelDirection.getHorizontal());
     }
 
-    private BlockPos calcCenterBlockPos() {
-        if (this.getFacing() == null) return startPos;
-
-        int startX = startPos.getX(),
-            startY = startPos.getY(),
-            startZ = startPos.getZ();
-
-        switch (this.getFacing()) {
-            default:
-            case NORTH:
-                return new BlockPos(startX + 3, startY, startZ - 2);
-            case SOUTH:
-                return new BlockPos(startX - 3, startY, startZ + 2);
-            case EAST:
-                return new BlockPos(startX + 2, startY, startZ + 3);
-            case WEST:
-                return new BlockPos(startX - 2, startY, startZ - 3);
-        }
-    }
-
-    public static BlockBox determineInitialBoxPosition(int x, int y, int z, Direction direction) {
-        // Use yLen of 30 as placeholder estimation since we won't know the true Y_AXIS_LEN until we generate,
-        // since the y-coordinate depends on surrounding surface terrain.
-        return BoxUtil.boxFromCoordsWithRotation(x, y, z, SECONDARY_AXIS_LEN, 30, MAIN_AXIS_LEN, direction);
+    public static BlockBox determineInitialBoxPosition(BlockPos centerPos) {
+        return new BlockBox(centerPos.getX() - 24, centerPos.getY(), centerPos.getZ() - 24, centerPos.getX() + 24, 256, centerPos.getZ() + 24);
     }
 
     @Override
@@ -87,31 +79,31 @@ public class VerticalEntrance extends MineshaftPiece {
             return;
         }
 
-        // Add surface tunnel (with placeholder values) and first big tunnel piece
         switch (direction) {
             case NORTH:
             default:
-                surfaceTunnel = (SurfaceTunnel) BetterMineshaftGenerator.generateAndAddSurfaceTunnel(structurePiece, list, random, this.boundingBox.minX, this.boundingBox.minZ - 1, this.method_14923());
-                BetterMineshaftGenerator.generateAndAddBigTunnelPiece(structurePiece, list, random, this.boundingBox.minX - 1, this.boundingBox.minY, this.boundingBox.minZ - 1, direction, this.method_14923(), pieceChainLen);
+                BetterMineshaftGenerator.generateAndAddBigTunnelPiece(structurePiece, list, random, this.centerPos.getX() - 4, this.centerPos.getY(), this.centerPos.getZ() - 3, direction, this.method_14923(), pieceChainLen);
                 break;
             case SOUTH:
-                surfaceTunnel = (SurfaceTunnel) BetterMineshaftGenerator.generateAndAddSurfaceTunnel(structurePiece, list, random, this.boundingBox.maxX, this.boundingBox.maxZ + 1, this.method_14923());
-                BetterMineshaftGenerator.generateAndAddBigTunnelPiece(structurePiece, list, random, this.boundingBox.maxX + 1, this.boundingBox.minY, this.boundingBox.maxZ + 1, direction, this.method_14923(), pieceChainLen);
+                BetterMineshaftGenerator.generateAndAddBigTunnelPiece(structurePiece, list, random, this.centerPos.getX() + 4, this.centerPos.getY(), this.centerPos.getZ() + 3, direction, this.method_14923(), pieceChainLen);
                 break;
             case WEST:
-                surfaceTunnel = (SurfaceTunnel) BetterMineshaftGenerator.generateAndAddSurfaceTunnel(structurePiece, list, random, this.boundingBox.minX - 1, this.boundingBox.maxZ, this.method_14923());
-                BetterMineshaftGenerator.generateAndAddBigTunnelPiece(structurePiece, list, random, this.boundingBox.minX - 1, this.boundingBox.minY, this.boundingBox.maxZ + 1, direction, this.method_14923(), pieceChainLen);
+                BetterMineshaftGenerator.generateAndAddBigTunnelPiece(structurePiece, list, random, this.centerPos.getX() - 3, this.centerPos.getY(), this.centerPos.getZ() + 4, direction, this.method_14923(), pieceChainLen);
                 break;
             case EAST:
-                surfaceTunnel = (SurfaceTunnel) BetterMineshaftGenerator.generateAndAddSurfaceTunnel(structurePiece, list, random, this.boundingBox.maxX + 1, this.boundingBox.minZ, this.method_14923());
-                BetterMineshaftGenerator.generateAndAddBigTunnelPiece(structurePiece, list, random, this.boundingBox.maxX + 1, this.boundingBox.minY, this.boundingBox.minZ - 1, direction, this.method_14923(), pieceChainLen);
+                BetterMineshaftGenerator.generateAndAddBigTunnelPiece(structurePiece, list, random, this.centerPos.getX() + 3, this.centerPos.getY(), this.centerPos.getZ() - 4, direction, this.method_14923(), pieceChainLen);
         }
     }
 
     @Override
     public boolean generate(IWorld world, ChunkGenerator<?> generator, Random random, BlockBox box, ChunkPos pos) {
         if (this.method_14937(world, box)) {
-            return false;
+//            return false;
+        }
+
+//        if (centerPos.getX() == -958) {
+        if (centerPos.getX() == 258) {
+            BetterMineshafts.LOGGER.error("");
         }
 
         DirInfo dirInfo = determineDirection(world);
@@ -120,15 +112,11 @@ public class VerticalEntrance extends MineshaftPiece {
             generateVerticalEntrance(world, random, box);
             // Build surface tunnel.
             // This must be done dynamically since its length depends on terrain.
-            int floorAltitude = dirInfo.ceilingAltitude - 4;
-            Direction surfaceTunnelDir = dirInfo.direction;
-            int mainAxisLen = dirInfo.horizontalLen;
+            this.tunnelDirection = dirInfo.direction;
+            this.tunnelFloorAltitude = dirInfo.ceilingAltitude - 4 - this.boundingBox.minY;
+            this.tunnelLength = dirInfo.horizontalLen;
 
-            surfaceTunnel.setOrientation(surfaceTunnelDir);
-            surfaceTunnel.setFloorAltitude(floorAltitude);
-            surfaceTunnel.setMainAxisLength(mainAxisLen);
-            surfaceTunnel.updatePosition(centerPos, this.getFacing());
-            surfaceTunnel.updateBoundingBox();
+            generateSurfaceTunnel(world, random, box);
 
             return true;
         }
@@ -138,25 +126,177 @@ public class VerticalEntrance extends MineshaftPiece {
 
     private void generateVerticalEntrance(IWorld world, Random random, BlockBox box) {
         // Fill with stone then clean out with air
-        this.fillWithOutline(world, box, 1, 0, 0, LOCAL_X_END - 1, localYEnd, LOCAL_Z_END, Blocks.STONE_BRICKS.getDefaultState(), Blocks.STONE_BRICKS.getDefaultState(), false);
-        this.fillWithOutline(world, box, 2, 1, 1, LOCAL_X_END - 2, localYEnd, LOCAL_Z_END - 1, AIR, AIR, false);
+        this.fillWithOutline(world, box, SHAFT_LOCAL_XZ_START, 0, SHAFT_LOCAL_XZ_START, SHAFT_LOCAL_XZ_END, localYEnd, SHAFT_LOCAL_XZ_END, Blocks.STONE_BRICKS.getDefaultState(), Blocks.STONE_BRICKS.getDefaultState(), false);
+        this.fillWithOutline(world, box, SHAFT_LOCAL_XZ_START + 1, 1, SHAFT_LOCAL_XZ_START + 1, SHAFT_LOCAL_XZ_END - 1, localYEnd, SHAFT_LOCAL_XZ_END - 1, AIR, AIR, false);
 
         // Randomize blocks
-        this.randomFillWithOutline(world, box, random, .1f, 1, 0, 0, LOCAL_X_END - 1, localYEnd, LOCAL_Z_END, Blocks.MOSSY_STONE_BRICKS.getDefaultState(), Blocks.MOSSY_STONE_BRICKS.getDefaultState(), true);
-        this.randomFillWithOutline(world, box, random, .1f, 1, 0, 0, LOCAL_X_END - 1, localYEnd, LOCAL_Z_END, Blocks.CRACKED_STONE_BRICKS.getDefaultState(), Blocks.CRACKED_STONE_BRICKS.getDefaultState(), true);
-        this.randomFillWithOutline(world, box, random, .1f, 1, 0, 0, LOCAL_X_END - 1, localYEnd, LOCAL_Z_END, getMainBlock(), getMainBlock(), true);
-        this.randomFillWithOutline(world, box, random, .1f, 1, 0, 0, LOCAL_X_END - 1, localYEnd, LOCAL_Z_END, AIR, AIR, true);
+        this.randomFillWithOutline(world, box, random, .1f, SHAFT_LOCAL_XZ_START, 0, SHAFT_LOCAL_XZ_START, SHAFT_LOCAL_XZ_END, localYEnd, SHAFT_LOCAL_XZ_END, Blocks.MOSSY_STONE_BRICKS.getDefaultState(), Blocks.MOSSY_STONE_BRICKS.getDefaultState(), true);
+        this.randomFillWithOutline(world, box, random, .1f, SHAFT_LOCAL_XZ_START, 0, SHAFT_LOCAL_XZ_START, SHAFT_LOCAL_XZ_END, localYEnd, SHAFT_LOCAL_XZ_END, Blocks.CRACKED_STONE_BRICKS.getDefaultState(), Blocks.CRACKED_STONE_BRICKS.getDefaultState(), true);
+        this.randomFillWithOutline(world, box, random, .1f, SHAFT_LOCAL_XZ_START, 0, SHAFT_LOCAL_XZ_START, SHAFT_LOCAL_XZ_END, localYEnd, SHAFT_LOCAL_XZ_END, getMainBlock(), getMainBlock(), true);
+        this.randomFillWithOutline(world, box, random, .1f, SHAFT_LOCAL_XZ_START, 0, SHAFT_LOCAL_XZ_START, SHAFT_LOCAL_XZ_END, localYEnd, SHAFT_LOCAL_XZ_END, AIR, AIR, true);
 
-        // Add random blocks in floor
-        this.randomFillWithOutline(world, box, random, .4f, 1, 0, 0, LOCAL_X_END - 1, 0, LOCAL_Z_END - 1, getMainBlock(), AIR, false);
-
-        // Doorway
-        this.fillWithOutline(world, box, 0, 0, LOCAL_Z_END, LOCAL_X_END, 6, LOCAL_Z_END, Blocks.STONE_BRICKS.getDefaultState(), Blocks.STONE_BRICKS.getDefaultState(), true);
-        this.fillWithOutline(world, box, 2, 1, LOCAL_Z_END, 4, 3, LOCAL_Z_END, AIR, AIR, true);
+        // Add random main blocks in floor
+        this.randomFillWithOutline(world, box, random, .4f, SHAFT_LOCAL_XZ_START + 1, 0, SHAFT_LOCAL_XZ_START + 1, SHAFT_LOCAL_XZ_END - 1, 0, SHAFT_LOCAL_XZ_END - 1, getMainBlock(), AIR, false);
 
         // Ladder
-        this.fillWithOutline(world, box, 3, 1, 0, 3, localYEnd, 0, Blocks.STONE_BRICKS.getDefaultState(), AIR, false);
-        this.fillWithOutline(world, box, 3, 1, 1, 3, localYEnd, 1, Blocks.LADDER.getDefaultState(), AIR, false);
+        this.fillWithOutline(world, box, SHAFT_LOCAL_XZ_START + 2, 1, SHAFT_LOCAL_XZ_START, SHAFT_LOCAL_XZ_START + 2, localYEnd - 3, SHAFT_LOCAL_XZ_START, Blocks.STONE_BRICKS.getDefaultState(), AIR, false);
+        this.fillWithOutline(world, box, SHAFT_LOCAL_XZ_START + 2, 1, SHAFT_LOCAL_XZ_START + 1, SHAFT_LOCAL_XZ_START + 2, localYEnd - 3, SHAFT_LOCAL_XZ_START + 1, Blocks.LADDER.getDefaultState(), AIR, false);
+
+        // Doorway
+        this.fillWithOutline(world, box, SHAFT_LOCAL_XZ_START + 1, 1, SHAFT_LOCAL_XZ_START + 4, SHAFT_LOCAL_XZ_START + 3, 2, SHAFT_LOCAL_XZ_START + 4, Blocks.STONE_BRICK_WALL.getDefaultState(), AIR, false);
+        this.fillWithOutline(world, box, SHAFT_LOCAL_XZ_START + 2, 3, SHAFT_LOCAL_XZ_START + 4, SHAFT_LOCAL_XZ_START + 2, 3, SHAFT_LOCAL_XZ_START + 4, Blocks.STONE_BRICK_SLAB.getDefaultState().with(SlabBlock.TYPE, SlabType.TOP), AIR, false);
+        this.fillWithOutline(world, box, SHAFT_LOCAL_XZ_START + 2, 1, SHAFT_LOCAL_XZ_START + 4, SHAFT_LOCAL_XZ_START + 2, 2, SHAFT_LOCAL_XZ_START + 4, AIR, AIR, false);
+
+    }
+
+    private void generateSurfaceTunnel(IWorld world, Random random, BlockBox box) {
+        int tunnelStartX = 0,
+            tunnelStartZ = 0,
+            tunnelEndX = 0,
+            tunnelEndZ = 0;
+        Direction facing = this.getFacing();
+
+        float rotationDifference = facing.asRotation() - tunnelDirection.asRotation();
+        Direction relativeTunnelDir = Direction.fromRotation(Direction.NORTH.asRotation() - rotationDifference);
+
+        if (relativeTunnelDir == Direction.NORTH) {
+            tunnelStartX = 22;
+            tunnelStartZ = 26;
+            tunnelEndX = 26;
+            tunnelEndZ = 26 + tunnelLength;
+        }
+        else if (
+            (relativeTunnelDir == Direction.WEST && !(facing == Direction.SOUTH || facing == Direction.WEST)) ||
+            (relativeTunnelDir == Direction.EAST && (facing == Direction.SOUTH || facing == Direction.WEST))
+        ) {
+            tunnelStartX = 22 - tunnelLength;
+            tunnelStartZ = 22;
+            tunnelEndX = 22;
+            tunnelEndZ = 26;
+        }
+        else if (relativeTunnelDir == Direction.SOUTH) {
+            tunnelStartX = 22;
+            tunnelStartZ = 22 - tunnelLength;
+            tunnelEndX = 26;
+            tunnelEndZ = 22;
+        }
+        else if (
+            (relativeTunnelDir == Direction.EAST && !(facing == Direction.SOUTH || facing == Direction.WEST)) ||
+            (relativeTunnelDir == Direction.WEST && (facing == Direction.SOUTH || facing == Direction.WEST))
+        ) {
+            tunnelStartX = 26;
+            tunnelStartZ = 22;
+            tunnelEndX = 26 + tunnelLength;
+            tunnelEndZ = 26;
+        }
+
+        if (facing.getAxis() == tunnelDirection.getAxis()) {
+            // Place floor
+            this.fillWithOutline(world, box, tunnelStartX + 1, tunnelFloorAltitude, tunnelStartZ, tunnelEndX - 1, tunnelFloorAltitude, tunnelEndZ, getMainBlock(), getMainBlock(), true);
+            this.randomFillWithOutline(world, box, random, .5f, tunnelStartX + 1, tunnelFloorAltitude, tunnelStartZ, tunnelEndX - 1, tunnelFloorAltitude, tunnelEndZ, Blocks.STONE.getDefaultState(), Blocks.STONE.getDefaultState(), true);
+            this.randomFillWithOutline(world, box, random, .1f, tunnelStartX + 1, tunnelFloorAltitude, tunnelStartZ, tunnelEndX - 1, tunnelFloorAltitude, tunnelEndZ, Blocks.COBBLESTONE.getDefaultState(), Blocks.COBBLESTONE.getDefaultState(), true);
+
+            // Randomize blocks
+            this.randomFillWithOutline(world, box, random, .1f, tunnelStartX, tunnelFloorAltitude + 1, tunnelStartZ, tunnelEndX, tunnelFloorAltitude + 4, tunnelEndZ, Blocks.COBBLESTONE.getDefaultState(), Blocks.COBBLESTONE.getDefaultState(), true);
+            this.randomFillWithOutline(world, box, random, .1f, tunnelStartX, tunnelFloorAltitude + 1, tunnelStartZ, tunnelEndX, tunnelFloorAltitude + 4, tunnelEndZ, Blocks.STONE_BRICKS.getDefaultState(), Blocks.STONE_BRICKS.getDefaultState(), true);
+            this.randomFillWithOutline(world, box, random, .1f, tunnelStartX, tunnelFloorAltitude + 1, tunnelStartZ, tunnelEndX, tunnelFloorAltitude + 4, tunnelEndZ, Blocks.MOSSY_STONE_BRICKS.getDefaultState(), Blocks.MOSSY_STONE_BRICKS.getDefaultState(), true);
+            this.randomFillWithOutline(world, box, random, .1f, tunnelStartX, tunnelFloorAltitude + 1, tunnelStartZ, tunnelEndX, tunnelFloorAltitude + 4, tunnelEndZ, Blocks.CRACKED_STONE_BRICKS.getDefaultState(), Blocks.CRACKED_STONE_BRICKS.getDefaultState(), true);
+            this.randomFillWithOutline(world, box, random, .2f, tunnelStartX, tunnelFloorAltitude + 1, tunnelStartZ, tunnelEndX, tunnelFloorAltitude + 4, tunnelEndZ, AIR, AIR, true);
+
+            // Fill with air
+            this.fillWithOutline(world, box, tunnelStartX + 1, tunnelFloorAltitude + 1, tunnelStartZ, tunnelEndX - 1, tunnelFloorAltitude + 3, tunnelEndZ, AIR, AIR, false);
+        } else {
+            // Place floor
+            this.fillWithOutline(world, box, tunnelStartX, tunnelFloorAltitude, tunnelStartZ + 1, tunnelEndX, tunnelFloorAltitude, tunnelEndZ - 1, getMainBlock(), getMainBlock(), true);
+            this.randomFillWithOutline(world, box, random, .5f, tunnelStartX, tunnelFloorAltitude, tunnelStartZ + 1, tunnelEndX, tunnelFloorAltitude, tunnelEndZ - 1, Blocks.STONE.getDefaultState(), Blocks.STONE.getDefaultState(), true);
+            this.randomFillWithOutline(world, box, random, .1f, tunnelStartX, tunnelFloorAltitude, tunnelStartZ + 1, tunnelEndX, tunnelFloorAltitude, tunnelEndZ - 1, Blocks.COBBLESTONE.getDefaultState(), Blocks.COBBLESTONE.getDefaultState(), true);
+
+            // Randomize blocks
+            this.randomFillWithOutline(world, box, random, .1f, tunnelStartX, tunnelFloorAltitude + 1, tunnelStartZ, tunnelEndX, tunnelFloorAltitude + 4, tunnelEndZ, Blocks.COBBLESTONE.getDefaultState(), Blocks.COBBLESTONE.getDefaultState(), true);
+            this.randomFillWithOutline(world, box, random, .1f, tunnelStartX, tunnelFloorAltitude + 1, tunnelStartZ, tunnelEndX, tunnelFloorAltitude + 4, tunnelEndZ, Blocks.STONE_BRICKS.getDefaultState(), Blocks.STONE_BRICKS.getDefaultState(), true);
+            this.randomFillWithOutline(world, box, random, .1f, tunnelStartX, tunnelFloorAltitude + 1, tunnelStartZ, tunnelEndX, tunnelFloorAltitude + 4, tunnelEndZ, Blocks.MOSSY_STONE_BRICKS.getDefaultState(), Blocks.MOSSY_STONE_BRICKS.getDefaultState(), true);
+            this.randomFillWithOutline(world, box, random, .1f, tunnelStartX, tunnelFloorAltitude + 1, tunnelStartZ, tunnelEndX, tunnelFloorAltitude + 4, tunnelEndZ, Blocks.CRACKED_STONE_BRICKS.getDefaultState(), Blocks.CRACKED_STONE_BRICKS.getDefaultState(), true);
+            this.randomFillWithOutline(world, box, random, .2f, tunnelStartX, tunnelFloorAltitude + 1, tunnelStartZ, tunnelEndX, tunnelFloorAltitude + 4, tunnelEndZ, AIR, AIR, true);
+
+            // Fill with air
+            this.fillWithOutline(world, box, tunnelStartX, tunnelFloorAltitude + 1, tunnelStartZ + 1, tunnelEndX, tunnelFloorAltitude + 3, tunnelEndZ - 1, AIR, AIR, false);
+
+        }
+        // Decorations
+        // Note that while normally, building (i.e. determining placement) of decorations is done before generation,
+        // that is not the case here since localZEnd is not known until generation.
+
+        boolean[] validPositions;
+        if (facing.getAxis() == tunnelDirection.getAxis()) {
+            validPositions = new boolean[tunnelEndZ - tunnelStartZ + 1];
+            for (int z = 0; z < validPositions.length; z++) {
+                BlockState floorBlock = this.getBlockAt(world, tunnelStartX + 2, tunnelFloorAltitude, tunnelStartZ + z, box);
+                if (floorBlock.getMaterial().isSolid()) {
+                    validPositions[z] = true;
+                }
+            }
+        } else {
+            validPositions = new boolean[tunnelEndX - tunnelStartX + 1];
+            for (int x = 0; x < validPositions.length; x++) {
+                BlockState floorBlock = this.getBlockAt(world, tunnelStartX + x, tunnelFloorAltitude, tunnelStartZ + 2, box);
+                if (floorBlock.getMaterial().isSolid()) {
+                    validPositions[x] = true;
+                }
+            }
+        }
+
+        // Generate supports.
+        if (facing.getAxis() == tunnelDirection.getAxis()) {
+            for (int z = tunnelStartZ; z <= tunnelEndZ; z++) {
+                int r = random.nextInt(4);
+                // TOOD - fix z to account for direction of shaft
+                if (r == 0 && validPositions[z - tunnelStartZ]) {
+                    // Support
+                    this.fillWithOutline(world, box, tunnelStartX + 1, tunnelFloorAltitude + 1, z, tunnelStartX + 1, tunnelFloorAltitude + 2, z, getSupportBlock(), getSupportBlock(), false);
+                    this.fillWithOutline(world, box, tunnelStartX + 3, tunnelFloorAltitude + 1, z, tunnelStartX + 3, tunnelFloorAltitude + 2, z, getSupportBlock(), getSupportBlock(), false);
+                    this.fillWithOutline(world, box, tunnelStartX + 1, tunnelFloorAltitude + 3, z, tunnelStartX + 3, tunnelFloorAltitude + 3, z, getMainBlock(), getMainBlock(), false);
+                    this.randomFillWithOutline(world, box, random, .25f, tunnelStartX + 1, tunnelFloorAltitude + 3, z, tunnelStartX + 3, tunnelFloorAltitude + 3, z, getSupportBlock(), getSupportBlock(), true);
+
+                    // Cobwebs
+                    this.randomlyReplaceAirInBox(world, box, random, .15f, tunnelStartX + 1, tunnelFloorAltitude + 3, z - 1, tunnelStartX + 1, tunnelFloorAltitude + 3, z + 1, Blocks.COBWEB.getDefaultState());
+                    this.randomlyReplaceAirInBox(world, box, random, .15f, tunnelStartX + 3, tunnelFloorAltitude + 3, z - 1, tunnelStartX + 3, tunnelFloorAltitude + 3, z + 1, Blocks.COBWEB.getDefaultState());
+                    z += 3;
+                }
+            }
+        } else {
+            for (int x = tunnelStartX; x <= tunnelEndX; x++) {
+                int r = random.nextInt(4);
+                // TOOD - fix z to account for direction of shaft
+                if (r == 0 && validPositions[x - tunnelStartX]) {
+                    // Support
+                    this.fillWithOutline(world, box, x, tunnelFloorAltitude + 1, tunnelStartZ + 1, x, tunnelFloorAltitude + 2, tunnelStartZ + 1, getSupportBlock(), getSupportBlock(), false);
+                    this.fillWithOutline(world, box, x, tunnelFloorAltitude + 1, tunnelStartZ + 3, x, tunnelFloorAltitude + 2, tunnelStartZ + 3, getSupportBlock(), getSupportBlock(), false);
+                    this.fillWithOutline(world, box, x, tunnelFloorAltitude + 3, tunnelStartZ + 1, x, tunnelFloorAltitude + 3, tunnelStartZ + 3, getMainBlock(), getMainBlock(), false);
+                    this.randomFillWithOutline(world, box, random, .25f, x, tunnelFloorAltitude + 3, tunnelStartZ + 1, x, tunnelFloorAltitude + 3, tunnelStartZ + 3, getSupportBlock(), getSupportBlock(), true);
+
+                    // Cobwebs
+                    this.randomlyReplaceAirInBox(world, box, random, .15f, x - 1, tunnelFloorAltitude + 3, tunnelStartZ + 1, x + 1, tunnelFloorAltitude + 3, tunnelStartZ + 1, Blocks.COBWEB.getDefaultState());
+                    this.randomlyReplaceAirInBox(world, box, random, .15f, x - 1, tunnelFloorAltitude + 3, tunnelStartZ + 3, x + 1, tunnelFloorAltitude + 3, tunnelStartZ + 3, Blocks.COBWEB.getDefaultState());
+                    x += 3;
+                }
+            }
+        }
+
+        // Generate rails.
+        RailShape railShape = relativeTunnelDir.getAxis() == Direction.Axis.Z ? RailShape.NORTH_SOUTH : RailShape.EAST_WEST;
+        if (facing.getAxis() == tunnelDirection.getAxis()) {
+            for (int z = 0; z < tunnelEndZ - tunnelStartZ + 1; z++) {
+                if (validPositions[z] && random.nextFloat() < .5) {
+                    this.addBlock(world, Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, railShape), tunnelStartX + 2, tunnelFloorAltitude + 1, tunnelStartZ + z, box);
+                }
+            }
+        } else {
+            for (int x = 0; x < tunnelEndX - tunnelStartX + 1; x++) {
+                if (validPositions[x] && random.nextFloat() < .5) {
+                    this.addBlock(world, Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, railShape), tunnelStartX + x, tunnelFloorAltitude + 1, tunnelStartZ + 2, box);
+                }
+            }
+        }
     }
 
     /**
@@ -173,36 +313,38 @@ public class VerticalEntrance extends MineshaftPiece {
         // Set height for this, equal to 2 below the min height in the 5x5 vertical shaft piece
         for (int xOffset = -2; xOffset <= 2; xOffset++) {
             for (int zOffset = -2; zOffset <= 2; zOffset++) {
-                int realX = centerPos.getX() + xOffset,
-                    realZ = centerPos.getZ() + zOffset;
-                int chunkX = realX >> 4,
-                    chunkZ = realZ >> 4;
-                int localX = realX & 0xF,
-                    localZ = realZ & 0xF;
-
                 try {
-                    minSurfaceHeight = Math.min(minSurfaceHeight, world.getChunk(chunkX, chunkZ).getHeightmap(Heightmap.Type.WORLD_SURFACE_WG).get(localX, localZ));
+                    int realX = centerPos.getX() + xOffset,
+                        realZ = centerPos.getZ() + zOffset;
+                    int chunkX = realX >> 4,
+                        chunkZ = realZ >> 4;
+                    int surfaceHeight = SurfaceUtil.getSurfaceHeight(world.getChunk(chunkX, chunkZ), new ColumnPos(realX, realZ));
+                    if (surfaceHeight != 0) {
+                        minSurfaceHeight = Math.min(minSurfaceHeight, surfaceHeight);
+                    }
                 } catch (NullPointerException e) {
-                    BetterMineshafts.LOGGER.error(e.getStackTrace());
+                    BetterMineshafts.LOGGER.error("Unexpected YUNG's Better Mineshafts error. Please report this!");
+                    BetterMineshafts.LOGGER.error(e.toString());
+                    BetterMineshafts.LOGGER.error(e.getMessage());
                 }
             }
         }
 
         // Require surface opening to be at high-ish altitude
-        if (minSurfaceHeight < 70 || minSurfaceHeight == 255) return null;
+        if (minSurfaceHeight < 60 || minSurfaceHeight == 255) return null;
 
         int ceilingHeight = minSurfaceHeight - 2;
         int floorHeight = ceilingHeight - 4;
 
         // Update
-        yAxisLen = ceilingHeight - startPos.getY() + 1;
+        yAxisLen = ceilingHeight - centerPos.getY() + 1;
         localYEnd = yAxisLen - 1;
 
         BlockPos.Mutable mutable = new BlockPos.Mutable(centerPos);
 
         int radius = 8; // Number of blocks that constitutes one 'radius'
         int maxRadialDist = 3; // Number of radii to check in each direction. E.g. 3 radii * radius of 8 = 24 blocks
-        int minDistToDropoff = 6; // Minimum required distance in a given direction before reaching a drop-off.
+        int minDistToDropoff = 2; // Minimum required distance in a given direction before reaching a drop-off.
         // Prevents the vertical entrance itself from being partly on the edge of a drop-off,
         // and also ensures there will be at least a tiny bit of tunnel leading to the vertical entrance.
 
@@ -211,20 +353,20 @@ public class VerticalEntrance extends MineshaftPiece {
             for (Direction direction : Direction.values()) {
                 if (direction == Direction.UP || direction == Direction.DOWN) continue;
 
-                // Get start and end
-                BlockPos startPos = mutable.offset(direction, 0);
-                BlockPos endPos = startPos.offset(direction, 7);
-
-                mutable.set(startPos);
+                mutable.set(centerPos.offset(direction, radius * radialDist));
 
                 // Check altitude of each individual block along the direction.
                 for (int i = radialDist * radius; i < radialDist * radius + radius; i++) {
-                    int surfaceHeight = world.getChunk(mutable).getHeightmap(Heightmap.Type.WORLD_SURFACE).get(mutable.getX() & 15, mutable.getZ() & 15);
+                    int surfaceHeight = SurfaceUtil.getSurfaceHeight(world.getChunk(mutable), new ColumnPos(mutable.getX(), mutable.getZ()));
 
                     // Too early for a drop-off
-                    if (i < minDistToDropoff && surfaceHeight < minSurfaceHeight) break;
+                    if (i < minDistToDropoff && surfaceHeight < minSurfaceHeight) {
+                        break;
+                    }
 
-                    if (surfaceHeight <= floorHeight) return new DirInfo(direction, i, ceilingHeight);
+                    if (surfaceHeight <= floorHeight && surfaceHeight != 0) {
+                        return new DirInfo(direction, i, ceilingHeight);
+                    }
 
                     mutable.setOffset(direction);
                 }

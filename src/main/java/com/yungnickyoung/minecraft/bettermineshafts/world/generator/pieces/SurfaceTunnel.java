@@ -37,7 +37,7 @@ public class SurfaceTunnel extends MineshaftPiece {
         this.startPos = startPos;
         // Initialize null bounding box to ensure this piece is added to the list.
         // The actual bounding box will be set during generation.
-        this.boundingBox = BoxUtil.boxFromCoordsWithRotation(startPos.x, 0, startPos.z, 0, 0, 0, Direction.NORTH);
+        this.boundingBox = BoxUtil.boxFromCoordsWithRotation(startPos.x - 24, 1, startPos.z - 24, 49, 256, 49, Direction.NORTH);
     }
 
     public void setMainAxisLength(int len) {
@@ -49,35 +49,23 @@ public class SurfaceTunnel extends MineshaftPiece {
         this.floorAltitude = altitude;
     }
 
-    public void updatePosition(BlockPos shaftCenterPos, Direction verticalShaftDir) {
+    public void updatePosition(BlockPos shaftCenterPos) {
         int centerX = shaftCenterPos.getX(),
             centerZ = shaftCenterPos.getZ();
 
         switch (this.getFacing()) {
             default:
             case NORTH:
-                if (verticalShaftDir.getAxis() == Direction.Axis.X)
-                    this.startPos = new ColumnPos(centerX - 2, centerZ - 2);
-                else
-                    this.startPos = new ColumnPos(centerX - 2, centerZ - 2);
+                this.startPos = new ColumnPos(centerX - 2, centerZ - 2);
                 break;
             case SOUTH:
-                if (verticalShaftDir.getAxis() == Direction.Axis.X)
-                    this.startPos = new ColumnPos(centerX + 2, centerZ + 2);
-                else
-                    this.startPos = new ColumnPos(centerX + 2, centerZ + 2);
+                this.startPos = new ColumnPos(centerX + 2, centerZ + 2);
                 break;
             case EAST:
-                if (verticalShaftDir.getAxis() == Direction.Axis.X)
-                    this.startPos = new ColumnPos(centerX + 2, centerZ - 2);
-                else
-                    this.startPos = new ColumnPos(centerX + 2, centerZ - 2);
+                this.startPos = new ColumnPos(centerX + 2, centerZ - 2);
                 break;
             case WEST:
-                if (verticalShaftDir.getAxis() == Direction.Axis.X)
-                    this.startPos = new ColumnPos(centerX - 2, centerZ + 2);
-                else
-                    this.startPos = new ColumnPos(centerX - 2, centerZ + 2);
+                this.startPos = new ColumnPos(centerX - 2, centerZ + 2);
                 break;
         }
     }
@@ -114,7 +102,7 @@ public class SurfaceTunnel extends MineshaftPiece {
     @Override
     public boolean generate(IWorld world, ChunkGenerator<?> generator, Random random, BlockBox box, ChunkPos pos) {
         if (this.method_14937(world, box)) {
-            return false;
+//            return false;
         }
 
         // Abort if fields haven't been defined

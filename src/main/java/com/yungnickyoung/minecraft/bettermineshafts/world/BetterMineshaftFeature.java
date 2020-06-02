@@ -77,9 +77,10 @@ public class BetterMineshaftFeature extends StructureFeature<BetterMineshaftFeat
             }
             Direction direction = Direction.NORTH;
             // Separate rand is necessary bc for some reason otherwise r is 0 every time
-            Random rand = new Random(this.getChunkX() + this.getChunkZ());
+            ChunkRandom rand = new ChunkRandom();
+            rand.setSeed(chunkX, chunkZ);
             int r = rand.nextInt(4);
-            BetterMineshafts.LOGGER.info(r);
+//            BetterMineshafts.LOGGER.info(r);
             switch (r) {
                 case 0:
                     direction = Direction.NORTH;
@@ -94,12 +95,13 @@ public class BetterMineshaftFeature extends StructureFeature<BetterMineshaftFeat
                     direction = Direction.WEST;
             }
 //            direction = Direction.NORTH;
-            BlockPos startingPos = new BlockPos((chunkX << 4) + 2, 50, (chunkZ << 4) + 2);
+            BlockPos.Mutable startingPos = new BlockPos.Mutable((chunkX << 4) + 2, 50, (chunkZ << 4) + 2);
 
             // Entrypoint
             MineshaftPiece entryPoint = new VerticalEntrance(
                 0,
                 -1,
+                this.random,
                 startingPos,
                 direction,
                 featureConfig.type
@@ -142,8 +144,7 @@ public class BetterMineshaftFeature extends StructureFeature<BetterMineshaftFeat
         }
 
         private static final Map<String, Type> nameMap = Arrays.stream(values())
-            .collect(Collectors.toMap(Type::getName, type -> type)
-            );
+            .collect(Collectors.toMap(Type::getName, type -> type));
 
         public String getName() {
             return this.name;
