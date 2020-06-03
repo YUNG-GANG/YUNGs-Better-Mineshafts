@@ -19,7 +19,7 @@ public class SurfaceUtil {
 
         for (int y = 255; y >= 0; y--) {
             BlockState blockState = chunkIn.getBlockState(blockPos);
-            if (blockState != Blocks.AIR.getDefaultState() && blockState.getMaterial() != Material.WATER)
+            if (blockState != Blocks.AIR.getDefaultState())
                 return y + 1;
             blockPos.setOffset(Direction.DOWN);
         }

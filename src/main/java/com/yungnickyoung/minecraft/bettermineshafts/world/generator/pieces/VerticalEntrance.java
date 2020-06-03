@@ -97,9 +97,13 @@ public class VerticalEntrance extends MineshaftPiece {
 
     @Override
     public boolean generate(IWorld world, ChunkGenerator<?> generator, Random random, BlockBox box, ChunkPos pos) {
-        DirInfo dirInfo = determineDirection(world);
+        BetterMineshafts.count.incrementAndGet();
         // Only generate vertical entrance if there is valid surrounding terrain
+        DirInfo dirInfo = determineDirection(world);
         if (dirInfo != null) {
+            BetterMineshafts.surfaceEntrances.add(this.centerPos.hashCode());
+            BetterMineshafts.LOGGER.info(String.format("(%d, %d) --- %d / %d  (%f%%)", centerPos.getX(), centerPos.getZ(), BetterMineshafts.surfaceEntrances.size(), BetterMineshafts.count.get(), (float)BetterMineshafts.surfaceEntrances.size() * 100 / BetterMineshafts.count.get()));
+
             generateVerticalEntrance(world, random, box);
             // Build surface tunnel.
             // This must be done dynamically since its length depends on terrain.
