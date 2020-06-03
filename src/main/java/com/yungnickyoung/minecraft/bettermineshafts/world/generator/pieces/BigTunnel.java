@@ -87,10 +87,6 @@ public class BigTunnel extends MineshaftPiece {
         this.boundingBox = blockBox;
     }
 
-    public BigTunnel(int i, int pieceChainLen, Random random, BlockPos pos, Direction direction, BetterMineshaftFeature.Type type) {
-        this(i, pieceChainLen, random, determineInitialBoxPosition(random, pos.getX(), pos.getY(), pos.getZ(), direction), direction, type);
-    }
-
     @Override
     protected void toNbt(CompoundTag tag) {
         super.toNbt(tag);
@@ -114,11 +110,7 @@ public class BigTunnel extends MineshaftPiece {
         tag.put("GravelDeposits", listTag6);
     }
 
-    public static BlockBox determineBoxPosition(List<StructurePiece> list, Random random, int x, int y, int z, Direction direction) {
-        return BoxUtil.boxFromCoordsWithRotation(x, y, z, SECONDARY_AXIS_LEN, Y_AXIS_LEN, MAIN_AXIS_LEN, direction);
-    }
-
-    public static BlockBox determineInitialBoxPosition(Random random, int x, int y, int z, Direction direction) {
+    public static BlockBox determineBoxPosition(int x, int y, int z, Direction direction) {
         return BoxUtil.boxFromCoordsWithRotation(x, y, z, SECONDARY_AXIS_LEN, Y_AXIS_LEN, MAIN_AXIS_LEN, direction);
     }
 
@@ -163,27 +155,23 @@ public class BigTunnel extends MineshaftPiece {
 
     @Override
     public boolean generate(IWorld world, ChunkGenerator<?> generator, Random random, BlockBox box, ChunkPos pos) {
-        if (this.method_14937(world, box)) {
-//            return false;
-        }
-
         // Randomize blocks
-        this.randomFillWithOutline(world, box, random, .1f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, Blocks.COBBLESTONE.getDefaultState(), Blocks.COBBLESTONE.getDefaultState(), true);
-        this.randomFillWithOutline(world, box, random, .1f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, Blocks.STONE_BRICKS.getDefaultState(), Blocks.STONE_BRICKS.getDefaultState(), true);
-        this.randomFillWithOutline(world, box, random, .1f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, Blocks.MOSSY_STONE_BRICKS.getDefaultState(), Blocks.MOSSY_STONE_BRICKS.getDefaultState(), true);
-        this.randomFillWithOutline(world, box, random, .1f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, Blocks.CRACKED_STONE_BRICKS.getDefaultState(), Blocks.CRACKED_STONE_BRICKS.getDefaultState(), true);
-        this.randomFillWithOutline(world, box, random, .2f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, AIR, AIR, true);
+        this.randomReplaceNonAir(world, box, random, .1f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, Blocks.COBBLESTONE.getDefaultState());
+        this.randomReplaceNonAir(world, box, random, .1f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, Blocks.STONE_BRICKS.getDefaultState());
+        this.randomReplaceNonAir(world, box, random, .1f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, Blocks.MOSSY_STONE_BRICKS.getDefaultState());
+        this.randomReplaceNonAir(world, box, random, .1f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, Blocks.CRACKED_STONE_BRICKS.getDefaultState());
+        this.randomReplaceNonAir(world, box, random, .2f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, AIR);
 
         // Fill with air
-        this.fillWithOutline(world, box, 1, 1, 0, LOCAL_X_END - 1, LOCAL_Y_END - 3, LOCAL_Z_END, AIR, AIR, false);
-        this.fillWithOutline(world, box, 2, LOCAL_Y_END - 3, 0, LOCAL_X_END - 2, LOCAL_Y_END - 2, LOCAL_Z_END, AIR, AIR, false);
-        this.fillWithOutline(world, box, 3, LOCAL_Y_END - 1, 0, LOCAL_X_END - 3, LOCAL_Y_END - 1, LOCAL_Z_END, AIR, AIR, false);
+        this.fill(world, box, 1, 1, 0, LOCAL_X_END - 1, LOCAL_Y_END - 3, LOCAL_Z_END, AIR);
+        this.fill(world, box, 2, LOCAL_Y_END - 3, 0, LOCAL_X_END - 2, LOCAL_Y_END - 2, LOCAL_Z_END, AIR);
+        this.fill(world, box, 3, LOCAL_Y_END - 1, 0, LOCAL_X_END - 3, LOCAL_Y_END - 1, LOCAL_Z_END, AIR);
 
         // Add random blocks in floor
-        this.randomFillWithOutline(world, box, random, .4f, 0, 0, 0, LOCAL_X_END, 0, LOCAL_Z_END, getMainBlock(), AIR, false);
+        this.randomFill(world, box, random, .4f, 0, 0, 0, LOCAL_X_END, 0, LOCAL_Z_END, getMainBlock());
 
         // Fill in any air in floor with planks
-        this.replaceAirInBox(world, box, 0, 0, 0, LOCAL_X_END, 0, LOCAL_Z_END, getMainBlock());
+        this.replaceAir(world, box, 0, 0, 0, LOCAL_X_END, 0, LOCAL_Z_END, getMainBlock());
 
         // Small mineshaft entrances
         smallShaftLeftEntrances.forEach(entrancePos -> generateSmallShaftEntranceLeft(world, box, random, entrancePos.getX(), entrancePos.getY(), entrancePos.getZ()));
@@ -211,25 +199,25 @@ public class BigTunnel extends MineshaftPiece {
             case 0: // Left side
             default:
                 // Row closest to wall
-                this.replaceAirInBox(world, box, 1, 1, z, 1, 2, z + 2, GRAVEL);
-                this.replaceAirInBox(world, box, 1, 3, z + 1, 1, 3 + random.nextInt(2), z + 1, GRAVEL);
-                this.randomlyReplaceAirInBox(world, box, random, .5f, 1, 3, z, 1, 3, z + 2, GRAVEL);
+                this.replaceAir(world, box, 1, 1, z, 1, 2, z + 2, GRAVEL);
+                this.replaceAir(world, box, 1, 3, z + 1, 1, 3 + random.nextInt(2), z + 1, GRAVEL);
+                this.randomReplaceAir(world, box, random, .5f, 1, 3, z, 1, 3, z + 2, GRAVEL);
                 // Middle row
-                this.replaceAirInBox(world, box, 2, 1, z + 1, 2, 2 + random.nextInt(2), z + 1, GRAVEL);
-                this.replaceAirInBox(world, box, 2, 1, z, 2, 1 + random.nextInt(2), z + 2, GRAVEL);
+                this.replaceAir(world, box, 2, 1, z + 1, 2, 2 + random.nextInt(2), z + 1, GRAVEL);
+                this.replaceAir(world, box, 2, 1, z, 2, 1 + random.nextInt(2), z + 2, GRAVEL);
                 // Innermost row
-                this.randomlyReplaceAirInBox(world, box, random, .5f, 3, 1, z, 3, 1, z + 2, GRAVEL);
+                this.randomReplaceAir(world, box, random, .5f, 3, 1, z, 3, 1, z + 2, GRAVEL);
                 break;
             case 1: // Right side
                 // Row closest to wall
-                this.replaceAirInBox(world, box, LOCAL_X_END - 1, 1, z, LOCAL_X_END - 1, 2, z + 2, GRAVEL);
-                this.replaceAirInBox(world, box, LOCAL_X_END - 1, 3, z + 1, LOCAL_X_END - 1, 3 + random.nextInt(2), z + 1, GRAVEL);
-                this.randomlyReplaceAirInBox(world, box, random, .5f, LOCAL_X_END - 1, 3, z, LOCAL_X_END - 1, 3, z + 2, GRAVEL);
+                this.replaceAir(world, box, LOCAL_X_END - 1, 1, z, LOCAL_X_END - 1, 2, z + 2, GRAVEL);
+                this.replaceAir(world, box, LOCAL_X_END - 1, 3, z + 1, LOCAL_X_END - 1, 3 + random.nextInt(2), z + 1, GRAVEL);
+                this.randomReplaceAir(world, box, random, .5f, LOCAL_X_END - 1, 3, z, LOCAL_X_END - 1, 3, z + 2, GRAVEL);
                 // Middle row
-                this.replaceAirInBox(world, box, LOCAL_X_END - 2, 1, z + 1, LOCAL_X_END - 2, 2 + random.nextInt(2), z + 1, GRAVEL);
-                this.replaceAirInBox(world, box, LOCAL_X_END - 2, 1, z, LOCAL_X_END - 2, 1 + random.nextInt(2), z + 2, GRAVEL);
+                this.replaceAir(world, box, LOCAL_X_END - 2, 1, z + 1, LOCAL_X_END - 2, 2 + random.nextInt(2), z + 1, GRAVEL);
+                this.replaceAir(world, box, LOCAL_X_END - 2, 1, z, LOCAL_X_END - 2, 1 + random.nextInt(2), z + 2, GRAVEL);
                 // Innermost row
-                this.randomlyReplaceAirInBox(world, box, random, .5f, LOCAL_X_END - 3, 1, z, LOCAL_X_END - 3, 1, z + 2, GRAVEL);
+                this.randomReplaceAir(world, box, random, .5f, LOCAL_X_END - 3, 1, z, LOCAL_X_END - 3, 1, z + 2, GRAVEL);
         }
     }
 
@@ -260,21 +248,21 @@ public class BigTunnel extends MineshaftPiece {
 
     private void generateBigSupport(IWorld world, BlockBox box, Random random, int z) {
         // Bottom slabs
-        this.randomFillWithOutline(world, box, random, .6f, 1, 1, z, 2, 1, z + 2, Blocks.OAK_SLAB.getDefaultState(), Blocks.OAK_SLAB.getDefaultState(), false);
-        this.randomFillWithOutline(world, box, random, .6f, LOCAL_X_END - 2, 1, z, LOCAL_X_END - 1, 1, z + 2, Blocks.OAK_SLAB.getDefaultState(), Blocks.OAK_SLAB.getDefaultState(), false);
+        this.randomFill(world, box, random, .6f, 1, 1, z, 2, 1, z + 2, Blocks.OAK_SLAB.getDefaultState());
+        this.randomFill(world, box, random, .6f, LOCAL_X_END - 2, 1, z, LOCAL_X_END - 1, 1, z + 2, Blocks.OAK_SLAB.getDefaultState());
         // Main blocks
         this.addBlock(world, getMainBlock(), 1, 1, z + 1, box);
         this.addBlock(world, getMainBlock(), LOCAL_X_END - 1, 1, z + 1, box);
         this.addBlock(world, getMainBlock(), 1, 4, z + 1, box);
         this.addBlock(world, getMainBlock(), LOCAL_X_END - 1, 4, z + 1, box);
-        this.fillWithOutline(world, box, 2, 5, z + 1, LOCAL_X_END - 2, 5, z + 1, getMainBlock(), getMainBlock(), false);
-        this.randomFillWithOutline(world, box, random, .4f, 2, 5, z + 1, LOCAL_X_END - 2, 5, z + 1, getSupportBlock(), getSupportBlock(), true);
+        this.fill(world, box, 2, 5, z + 1, LOCAL_X_END - 2, 5, z + 1, getMainBlock());
+        this.randomReplaceNonAir(world, box, random, .4f, 2, 5, z + 1, LOCAL_X_END - 2, 5, z + 1, getSupportBlock());
         // Supports
-        this.fillWithOutline(world, box, 1, 2, z + 1, 1, 3, z + 1, getSupportBlock(), getSupportBlock(), false);
-        this.fillWithOutline(world, box, LOCAL_X_END - 1, 2, z + 1, LOCAL_X_END - 1, 3, z + 1, getSupportBlock(), getSupportBlock(), false);
-        this.randomFillWithOutline(world, box, random, .7f,2, 3, z + 1, 2, 3, z + 1, getSupportBlock(), getSupportBlock(), true);
-        this.randomFillWithOutline(world, box, random, .7f,LOCAL_X_END - 2, 3, z + 1, 2, 3, z + 1, getSupportBlock(), getSupportBlock(), true);
-        this.randomFillWithOutline(world, box, random, .5f, 2, 4, z + 1, LOCAL_X_END - 2, 4, z + 1, getSupportBlock(), getSupportBlock(), false);
+        this.fill(world, box, 1, 2, z + 1, 1, 3, z + 1, getSupportBlock());
+        this.fill(world, box, LOCAL_X_END - 1, 2, z + 1, LOCAL_X_END - 1, 3, z + 1, getSupportBlock());
+        this.randomReplaceNonAir(world, box, random, .7f,2, 3, z + 1, 2, 3, z + 1, getSupportBlock());
+        this.randomReplaceNonAir(world, box, random, .7f,LOCAL_X_END - 2, 3, z + 1, 2, 3, z + 1, getSupportBlock());
+        this.randomReplaceNonAir(world, box, random, .5f, 2, 4, z + 1, LOCAL_X_END - 2, 4, z + 1, getSupportBlock());
     }
 
     private void generateSmallSupport(IWorld world, BlockBox box, Random random, int z) {
@@ -284,9 +272,9 @@ public class BigTunnel extends MineshaftPiece {
         this.addBlock(world, getSupportBlock(), LOCAL_X_END - 2, 2, z, box);
         this.addBlock(world, getMainBlock(), 2, 3, z, box);
         this.addBlock(world, getMainBlock(), LOCAL_X_END - 2, 3, z, box);
-        this.fillWithOutline(world, box, 3, 4, z, LOCAL_X_END - 3, 4, z, getMainBlock(), getMainBlock(), false);
-        this.randomFillWithOutline(world, box, random, .5f, 3, 4, z, LOCAL_X_END - 3, 4, z, getSupportBlock(), getSupportBlock(), true);
-        this.randomFillWithOutline(world, box, random, .4f, 2, 3, z, LOCAL_X_END - 2, 3, z, getSupportBlock(), getSupportBlock(), false);
+        this.fill(world, box, 3, 4, z, LOCAL_X_END - 3, 4, z, getMainBlock());
+        this.randomReplaceNonAir(world, box, random, .5f, 3, 4, z, LOCAL_X_END - 3, 4, z, getSupportBlock());
+        this.randomFill(world, box, random, .4f, 2, 3, z, LOCAL_X_END - 2, 3, z, getSupportBlock());
         this.addBlock(world, getSupportBlock(), 3, 3, z, box);
         this.addBlock(world, getSupportBlock(), LOCAL_X_END - 3, 3, z, box);
     }
@@ -307,7 +295,7 @@ public class BigTunnel extends MineshaftPiece {
 
     private void generateRails(IWorld world, BlockBox box, Random random) {
         // Place rails in center
-        this.fillWithOutline(world, box, LOCAL_X_END / 2, 1, 0, LOCAL_X_END / 2, 1, LOCAL_Z_END, Blocks.RAIL.getDefaultState(), Blocks.RAIL.getDefaultState(), false);
+        this.randomFill(world, box, random, .5f, LOCAL_X_END / 2, 1, 0, LOCAL_X_END / 2, 1, LOCAL_Z_END, Blocks.RAIL.getDefaultState());
         // Place powered rails
         int blocksSinceLastRail = 0;
         for (int n = 0; n <= LOCAL_Z_END; n++) {
@@ -320,42 +308,36 @@ public class BigTunnel extends MineshaftPiece {
     }
 
     private void generateSmallShaftEntranceRight(IWorld world, BlockBox box, Random random, int x, int y, int z) {
-        BlockState mainBlock = this.getMainBlock();
-        BlockState supportBlock = this.getSupportBlock();
-
-        this.fillWithOutline(world, box, x + 1, y, z, x + 1, y, z + 2, AIR, AIR, false);
-        this.fillWithOutline(world, box, x + 1, y + 1, z, x + 1, y + 1, z, supportBlock, AIR, false);
-        this.fillWithOutline(world, box, x + 1, y + 1, z + 2, x + 1, y + 1, z + 2, supportBlock, AIR, false);
-        this.fillWithOutline(world, box, x, y, z, x, y + 1, z, supportBlock, AIR, false);
-        this.fillWithOutline(world, box, x, y, z + 2, x, y + 1, z + 2, supportBlock, AIR, false);
-        this.randomFillWithOutline(world, box, random, .75f, x, y + 2, z, x + 1, y + 2, z + 2, mainBlock, AIR, false);
-        this.fillWithOutline(world, box, x, y + 1, z + 1, x + 1, y + 1, z + 1, AIR, AIR, false);
+        this.fill(world, box, x + 1, y, z, x + 1, y, z + 2, AIR);
+        this.addBlock(world, getSupportBlock(), x + 1, y + 1, z, box);
+        this.addBlock(world, getSupportBlock(), x + 1, y + 1, z + 2, box);
+        this.fill(world, box, x, y, z, x, y + 1, z, getSupportBlock());
+        this.fill(world, box, x, y, z + 2, x, y + 1, z + 2, getSupportBlock());
+        this.randomFill(world, box, random, .75f, x, y + 2, z, x + 1, y + 2, z + 2, getMainBlock());
+        this.fill(world, box, x, y + 1, z + 1, x + 1, y + 1, z + 1, AIR);
     }
 
     private void generateSmallShaftEntranceLeft(IWorld world, BlockBox box, Random random, int x, int y, int z) {
-        BlockState mainBlock = this.getMainBlock();
-        BlockState supportBlock = this.getSupportBlock();
-
-        this.fillWithOutline(world, box, x, y, z, x, y, z + 2, AIR, AIR, false);
-        this.fillWithOutline(world, box, x, y + 1, z, x, y + 1, z, supportBlock, AIR, false);
-        this.fillWithOutline(world, box, x, y + 1, z + 2, x, y + 1, z + 2, supportBlock, AIR, false);
-        this.fillWithOutline(world, box, x + 1, y, z, x + 1, y + 1, z, supportBlock, AIR, false);
-        this.fillWithOutline(world, box, x + 1, y, z + 2, x + 1, y + 1, z + 2, supportBlock, AIR, false);
-        this.randomFillWithOutline(world, box, random, .75f, x, y + 2, z, x + 1, y + 2, z + 2, mainBlock, AIR, false);
-        this.fillWithOutline(world, box, x, y + 1, z + 1, x + 1, y + 1, z + 1, AIR, AIR, false);
+        this.fill(world, box, x, y, z, x, y, z + 2, AIR);
+        this.addBlock(world, getSupportBlock(), x, y + 1, z, box);
+        this.addBlock(world, getSupportBlock(), x, y + 1, z + 2, box);
+        this.fill(world, box, x + 1, y, z, x + 1, y + 1, z, getSupportBlock());
+        this.fill(world, box, x + 1, y, z + 2, x + 1, y + 1, z + 2, getSupportBlock());
+        this.randomFill(world, box, random, .75f, x, y + 2, z, x + 1, y + 2, z + 2, getMainBlock());
+        this.fill(world, box, x, y + 1, z + 1, x + 1, y + 1, z + 1, AIR);
     }
 
     private void generateSideRoomOpening(IWorld world, BlockBox chunkBox, BlockBox entranceBox, Random random) {
         switch (random.nextInt(3)) {
             case 0:
                 // Completely open
-                this.fillWithOutline(world, chunkBox, entranceBox.minX, entranceBox.minY, entranceBox.minZ + 2, entranceBox.maxX, entranceBox.maxY, entranceBox.maxZ - 2, AIR, AIR, false);
+                this.fill(world, chunkBox, entranceBox.minX, entranceBox.minY, entranceBox.minZ + 2, entranceBox.maxX, entranceBox.maxY, entranceBox.maxZ - 2, AIR);
                 return;
             case 1:
                 // A few columns for openings
-                this.fillWithOutline(world, chunkBox, entranceBox.minX, entranceBox.minY, entranceBox.minZ + 2, entranceBox.maxX, entranceBox.maxY - 1, entranceBox.minZ + 2, AIR, AIR, false);
-                this.fillWithOutline(world, chunkBox, entranceBox.minX, entranceBox.minY, entranceBox.minZ + 4, entranceBox.maxX, entranceBox.maxY - 1, entranceBox.minZ + 5, AIR, AIR, false);
-                this.fillWithOutline(world, chunkBox, entranceBox.minX, entranceBox.minY, entranceBox.minZ + 7, entranceBox.maxX, entranceBox.maxY - 1, entranceBox.minZ + 7, AIR, AIR, false);
+                this.fill(world, chunkBox, entranceBox.minX, entranceBox.minY, entranceBox.minZ + 2, entranceBox.maxX, entranceBox.maxY - 1, entranceBox.minZ + 2, AIR);
+                this.fill(world, chunkBox, entranceBox.minX, entranceBox.minY, entranceBox.minZ + 4, entranceBox.maxX, entranceBox.maxY - 1, entranceBox.minZ + 5, AIR);
+                this.fill(world, chunkBox, entranceBox.minX, entranceBox.minY, entranceBox.minZ + 7, entranceBox.maxX, entranceBox.maxY - 1, entranceBox.minZ + 7, AIR);
                 return;
             case 2:
                 // No openings - random block removal will expose these, probably

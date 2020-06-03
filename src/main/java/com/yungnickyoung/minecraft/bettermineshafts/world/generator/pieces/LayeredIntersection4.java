@@ -114,27 +114,27 @@ public class LayeredIntersection4 extends MineshaftPiece {
         }
 
         // Randomize stone then clean out with air
-        this.randomFillWithOutline(world, box, random, .1f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, Blocks.COBBLESTONE.getDefaultState(), Blocks.COBBLESTONE.getDefaultState(), true);
-        this.randomFillWithOutline(world, box, random, .1f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, Blocks.STONE_BRICKS.getDefaultState(), Blocks.STONE_BRICKS.getDefaultState(), true);
-        this.randomFillWithOutline(world, box, random, .1f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, Blocks.MOSSY_STONE_BRICKS.getDefaultState(), Blocks.MOSSY_STONE_BRICKS.getDefaultState(), true);
-        this.randomFillWithOutline(world, box, random, .1f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, Blocks.CRACKED_STONE_BRICKS.getDefaultState(), Blocks.CRACKED_STONE_BRICKS.getDefaultState(), true);
-        this.fillWithOutline(world, box, 2, 1, 2, 4, 1, 4, AIR, AIR, false);
-        this.fillWithOutline(world, box, 2, 2, 1, 4, 2, 5, AIR, AIR, false);
-        this.fillWithOutline(world, box, 2, 3, 0, 4, 6, 6, AIR, AIR, false);
-        this.fillWithOutline(world, box, 0, 3, 2, 6, 6, 4, AIR, AIR, false);
+        this.randomReplaceNonAir(world, box, random, .1f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, Blocks.COBBLESTONE.getDefaultState());
+        this.randomReplaceNonAir(world, box, random, .1f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, Blocks.STONE_BRICKS.getDefaultState());
+        this.randomReplaceNonAir(world, box, random, .1f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, Blocks.MOSSY_STONE_BRICKS.getDefaultState());
+        this.randomReplaceNonAir(world, box, random, .1f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, Blocks.CRACKED_STONE_BRICKS.getDefaultState());
+        this.fill(world, box, 2, 1, 2, 4, 1, 4, AIR);
+        this.fill(world, box, 2, 2, 1, 4, 2, 5, AIR);
+        this.fill(world, box, 2, 3, 0, 4, 6, 6, AIR);
+        this.fill(world, box, 0, 3, 2, 6, 6, 4, AIR);
 
         // Floor
-        this.fillWithOutline(world, box, 2, 0, 0, 4, 2, LOCAL_Z_END, getMainBlock(), getMainBlock(), true);
-        this.randomFillWithOutline(world, box, random, .1f, 2, 0, 0, 4, 2, LOCAL_Z_END, Blocks.COBBLESTONE.getDefaultState(), Blocks.COBBLESTONE.getDefaultState(), true);
+        this.replaceNonAir(world, box, 2, 0, 0, 4, 2, LOCAL_Z_END, getMainBlock());
+        this.randomReplaceNonAir(world, box, random, .1f, 2, 0, 0, 4, 2, LOCAL_Z_END, Blocks.COBBLESTONE.getDefaultState());
 
         // Bottom rails
-        this.addBlock(world, Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, RailShape.ASCENDING_SOUTH), 3, 3, 0, box);
-        this.addBlock(world, Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, RailShape.ASCENDING_SOUTH), 3, 2, 1, box);
-        this.addBlock(world, Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, RailShape.ASCENDING_SOUTH), 3, 1, 2, box);
-        this.addBlock(world, Blocks.POWERED_RAIL.getDefaultState().with(PoweredRailBlock.SHAPE, RailShape.NORTH_SOUTH).with(PoweredRailBlock.POWERED, true), 3, 1, 3, box);
-        this.addBlock(world, Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, RailShape.ASCENDING_NORTH), 3, 1, 4, box);
-        this.addBlock(world, Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, RailShape.ASCENDING_NORTH), 3, 2, 5, box);
-        this.addBlock(world, Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, RailShape.ASCENDING_NORTH), 3, 3, 6, box);
+        this.randomAddBlock(world, random, .5f, Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, RailShape.ASCENDING_SOUTH), 3, 3, 0, box);
+        this.randomAddBlock(world, random, .5f, Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, RailShape.ASCENDING_SOUTH), 3, 2, 1, box);
+        this.randomAddBlock(world, random, .5f, Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, RailShape.ASCENDING_SOUTH), 3, 1, 2, box);
+        this.randomAddBlock(world, random, .5f, Blocks.POWERED_RAIL.getDefaultState().with(PoweredRailBlock.SHAPE, RailShape.NORTH_SOUTH).with(PoweredRailBlock.POWERED, true), 3, 1, 3, box);
+        this.randomAddBlock(world, random, .5f, Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, RailShape.ASCENDING_NORTH), 3, 1, 4, box);
+        this.randomAddBlock(world, random, .5f, Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, RailShape.ASCENDING_NORTH), 3, 2, 5, box);
+        this.randomAddBlock(world, random, .5f, Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, RailShape.ASCENDING_NORTH), 3, 3, 6, box);
 
         // Ensure solid block is below each rail
         this.addBlock(world, getMainBlock(), 3, 2, 0, box);
@@ -145,18 +145,17 @@ public class LayeredIntersection4 extends MineshaftPiece {
         this.addBlock(world, getMainBlock(), 3, 1, 5, box);
         this.addBlock(world, getMainBlock(), 3, 2, 6, box);
 
-
         // Top wood
-        this.fillWithOutline(world, box, 0, 3, 2, 1, 3, 4, getMainBlock(), getMainBlock(), false);
-        this.fillWithOutline(world, box, 2, 4, 2, 4, 4, 4, getMainBlock(), getMainBlock(), false);
-        this.fillWithOutline(world, box, 5, 3, 2, 6, 3, 4, getMainBlock(), getMainBlock(), false);
+        this.fill(world, box, 0, 3, 2, 1, 3, 4, getMainBlock());
+        this.fill(world, box, 2, 4, 2, 4, 4, 4, getMainBlock());
+        this.fill(world, box, 5, 3, 2, 6, 3, 4, getMainBlock());
 
         // Top rails
-        this.addBlock(world, Blocks.POWERED_RAIL.getDefaultState().with(PoweredRailBlock.SHAPE, RailShape.EAST_WEST).with(PoweredRailBlock.POWERED, true), 0, 4, 3, box);
-        this.addBlock(world, Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, RailShape.ASCENDING_EAST), 1, 4, 3, box);
-        this.fillWithOutline(world, box, 2, 5, 3, 4, 5, 3, Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, RailShape.EAST_WEST), Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, RailShape.EAST_WEST), false);
-        this.addBlock(world, Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, RailShape.ASCENDING_WEST), 5, 4, 3, box);
-        this.addBlock(world, Blocks.POWERED_RAIL.getDefaultState().with(PoweredRailBlock.SHAPE, RailShape.EAST_WEST).with(PoweredRailBlock.POWERED, true), 6, 4, 3, box);
+        this.randomAddBlock(world, random, .5f, Blocks.POWERED_RAIL.getDefaultState().with(PoweredRailBlock.SHAPE, RailShape.EAST_WEST).with(PoweredRailBlock.POWERED, true), 0, 4, 3, box);
+        this.randomAddBlock(world, random, .5f, Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, RailShape.ASCENDING_EAST), 1, 4, 3, box);
+        this.randomFill(world, box, random, .5f, 2, 5, 3, 4, 5, 3, Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, RailShape.EAST_WEST));
+        this.randomAddBlock(world, random, .5f, Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, RailShape.ASCENDING_WEST), 5, 4, 3, box);
+        this.randomAddBlock(world, random, .5f, Blocks.POWERED_RAIL.getDefaultState().with(PoweredRailBlock.SHAPE, RailShape.EAST_WEST).with(PoweredRailBlock.POWERED, true), 6, 4, 3, box);
 
         return true;
     }

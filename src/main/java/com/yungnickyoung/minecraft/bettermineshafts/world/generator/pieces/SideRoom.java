@@ -103,13 +103,13 @@ public class SideRoom extends MineshaftPiece {
         }
 
         // Fill with stone then clean out with air
-        this.fillWithOutline(world, box, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, Blocks.STONE_BRICKS.getDefaultState(), Blocks.STONE_BRICKS.getDefaultState(), false);
-        this.fillWithOutline(world, box, 1, 1, 1, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END, AIR, AIR, false);
+        this.fill(world, box, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, Blocks.STONE_BRICKS.getDefaultState());
+        this.fill(world, box, 1, 1, 1, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END, AIR);
 
         // Randomize blocks
-        this.randomFillWithOutline(world, box, random, .1f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, Blocks.MOSSY_STONE_BRICKS.getDefaultState(), Blocks.MOSSY_STONE_BRICKS.getDefaultState(), true);
-        this.randomFillWithOutline(world, box, random, .1f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, Blocks.CRACKED_STONE_BRICKS.getDefaultState(), Blocks.CRACKED_STONE_BRICKS.getDefaultState(), true);
-        this.randomFillWithOutline(world, box, random, .1f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, Blocks.STONE.getDefaultState(), Blocks.STONE.getDefaultState(), true);
+        this.randomReplaceNonAir(world, box, random, .1f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, Blocks.MOSSY_STONE_BRICKS.getDefaultState());
+        this.randomReplaceNonAir(world, box, random, .1f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, Blocks.CRACKED_STONE_BRICKS.getDefaultState());
+        this.randomReplaceNonAir(world, box, random, .1f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, Blocks.STONE.getDefaultState());
 
         // Furnace 1
         if (random.nextInt(2) == 0) {
@@ -130,13 +130,12 @@ public class SideRoom extends MineshaftPiece {
         }
 
         // Crafting table
-        if (random.nextInt(2) == 0) {
-            this.addBlock(world, Blocks.CRAFTING_TABLE.getDefaultState(), 3, 1, 1, box);
-        }
+        this.randomAddBlock(world, random, .5f, Blocks.CRAFTING_TABLE.getDefaultState(), 3, 1, 1, box);
 
         // Barrel with loot
-        if (random.nextInt(4) == 0)
+        if (random.nextInt(4) == 0) {
             this.addBarrel(world, box, random, LOCAL_X_END - 1, 1, 1, LootTables.ABANDONED_MINESHAFT_CHEST);
+        }
 
         // Entrance to spider lair
         if (this.hasDownstairs) {
@@ -159,7 +158,7 @@ public class SideRoom extends MineshaftPiece {
                     continue;
                 }
                 if (random.nextInt(5) == 0) {
-                    this.fillWithOutline(world, box, x, 1, z, x, 3, z, Blocks.IRON_BARS.getDefaultState(), Blocks.IRON_BARS.getDefaultState(), false);
+                    this.fill(world, box, x, 1, z, x, 3, z, Blocks.IRON_BARS.getDefaultState());
                     invalidXs.add(x);
                     x++;
                 }

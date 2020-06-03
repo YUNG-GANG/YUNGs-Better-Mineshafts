@@ -92,17 +92,17 @@ public class SideRoomDungeon extends MineshaftPiece {
         }
 
         // Fill with stone then clean out with air
-        this.fillWithOutline(world, box, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, Blocks.STONE_BRICKS.getDefaultState(), Blocks.STONE_BRICKS.getDefaultState(), false);
-        this.fillWithOutline(world, box, 1, 1, 1, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END - 1, AIR, AIR, false);
+        this.fill(world, box, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, Blocks.STONE_BRICKS.getDefaultState());
+        this.fill(world, box, 1, 1, 1, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END - 1, AIR);
 
         // Randomize blocks
-        this.randomFillWithOutline(world, box, random, .4f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, Blocks.CRACKED_STONE_BRICKS.getDefaultState(), Blocks.CRACKED_STONE_BRICKS.getDefaultState(), true);
-        this.randomFillWithOutline(world, box, random, .2f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, Blocks.COBBLESTONE.getDefaultState(), Blocks.COBBLESTONE.getDefaultState(), true);
-        this.randomFillWithOutline(world, box, random, .1f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, Blocks.MOSSY_STONE_BRICKS.getDefaultState(), Blocks.MOSSY_STONE_BRICKS.getDefaultState(), true);
+        this.randomReplaceNonAir(world, box, random, .4f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, Blocks.CRACKED_STONE_BRICKS.getDefaultState());
+        this.randomReplaceNonAir(world, box, random, .2f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, Blocks.COBBLESTONE.getDefaultState());
+        this.randomReplaceNonAir(world, box, random, .1f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, Blocks.MOSSY_STONE_BRICKS.getDefaultState());
 
         // Ladders
         BlockState LADDER = Blocks.LADDER.getDefaultState().with(LadderBlock.FACING, Direction.NORTH);
-        this.fillWithOutline(world, box, 4, 1, 1, 4, 3, 1, LADDER, LADDER, false);
+        this.fill(world, box, 4, 1, 1, 4, 3, 1, LADDER);
 
         // Spawner
         BlockPos spawnerPos = new BlockPos(this.applyXTransform(4,5), this.applyYTransform(1), this.applyZTransform(4, 5));
@@ -113,31 +113,16 @@ public class SideRoomDungeon extends MineshaftPiece {
         }
 
         // Cobwebs immediately surrounding chests
-        for (int x = 3; x <= 5; x++) {
-            for (int y = 1; y <= 2; y++) {
-                for (int z = 4; z <= 6; z++) {
-                    if (this.getBlockAt(world, x, y, z, box).isAir()) {
-                        this.addBlockWithRandomThreshold(world, box, random, .9f, x, y, z, Blocks.COBWEB.getDefaultState());
-                    }
-                }
-            }
-        }
+        this.randomReplaceAir(world, box, random, .9f, 3, 1, 4, 5, 2, 6, Blocks.COBWEB.getDefaultState());
 
         // Fill room randomly with cobwebs
-        for (int x = 1; x <= LOCAL_X_END - 1; x++) {
-            for (int y = 1; y <= 2; y++) {
-                for (int z = 1; z <= LOCAL_Z_END - 1; z++) {
-                    if (this.getBlockAt(world, x, y, z, box).isAir()) {
-                        this.addBlockWithRandomThreshold(world, box, random, .1f, x, y, z, Blocks.COBWEB.getDefaultState());
-                    }
-                }
-            }
-        }
+        this.randomReplaceAir(world, box, random, .1f, 1, 1, 1, LOCAL_X_END - 1, 2, LOCAL_Z_END, Blocks.COBWEB.getDefaultState());
 
         // Chests
         this.addChest(world, box, random, 1, 1, LOCAL_Z_END - 1, LootTables.ABANDONED_MINESHAFT_CHEST);
-        if (random.nextInt(2) == 0)
+        if (random.nextInt(2) == 0) { // Chance of second chest
             this.addChest(world, box, random, LOCAL_X_END - 1, 1, LOCAL_Z_END - 1, LootTables.STRONGHOLD_CORRIDOR_CHEST);
+        }
 
         return true;
     }

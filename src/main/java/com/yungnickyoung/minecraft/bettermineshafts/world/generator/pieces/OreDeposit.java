@@ -120,20 +120,20 @@ public class OreDeposit extends MineshaftPiece {
             ORE_BLOCK = Blocks.DIAMOND_ORE.getDefaultState();
 
         // Fill with air
-        this.fillWithOutline(world, box, 1, 1, 0, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END, AIR, AIR, false);
+        this.fill(world, box, 1, 1, 0, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END, AIR);
 
         // Ore deposit
-        this.randomFillWithOutline(world, box, random,.8f, 1, 1, 2, 3, 3, 3, ORE_BLOCK, ORE_BLOCK, false);
-        this.fillWithOutline(world, box, 1, 1, 1, 1, 1 + random.nextInt(3), 1, ORE_BLOCK, ORE_BLOCK, false);
-        this.fillWithOutline(world, box, 2, 1, 1, 2, 1 + random.nextInt(3), 1, ORE_BLOCK, ORE_BLOCK, false);
-        this.fillWithOutline(world, box, 3, 1, 1, 3, 1 + random.nextInt(3), 1, ORE_BLOCK, ORE_BLOCK, false);
-        this.addBlockWithRandomThreshold(world, box, random, .5f, 1, 1, 0, ORE_BLOCK);
-        this.addBlockWithRandomThreshold(world, box, random, .5f, 2, 1, 0, ORE_BLOCK);
-        this.addBlockWithRandomThreshold(world, box, random, .5f, 3, 1, 0, ORE_BLOCK);
+        this.randomFill(world, box, random,.8f, 1, 1, 2, 3, 3, 3, ORE_BLOCK);
+        this.fill(world, box, 1, 1, 1, 1, 1 + random.nextInt(3), 1, ORE_BLOCK);
+        this.fill(world, box, 2, 1, 1, 2, 1 + random.nextInt(3), 1, ORE_BLOCK);
+        this.fill(world, box, 3, 1, 1, 3, 1 + random.nextInt(3), 1, ORE_BLOCK);
+        this.randomAddBlock(world, random, .5f, ORE_BLOCK, 1, 1, 0, box);
+        this.randomAddBlock(world, random, .5f, ORE_BLOCK, 2, 1, 0, box);
+        this.randomAddBlock(world, random, .5f, ORE_BLOCK, 3, 1, 0, box);
 
         // Ceiling
-        this.fillWithOutline(world, box, 1, 4, 2, 3, 4, 3, ORE_BLOCK, ORE_BLOCK, true);
-        this.randomFillWithOutline(world, box, random, .5f,1, 4, 1, 3, 4, 1, ORE_BLOCK, ORE_BLOCK, true);
+        this.replaceNonAir(world, box, 1, 4, 2, 3, 4, 3, ORE_BLOCK);
+        this.randomReplaceNonAir(world, box, random, .5f,1, 4, 1, 3, 4, 1, ORE_BLOCK);
 
         return true;
     }

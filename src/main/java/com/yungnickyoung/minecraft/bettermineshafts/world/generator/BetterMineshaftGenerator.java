@@ -4,8 +4,6 @@ import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftFeature
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.*;
 import net.minecraft.structure.StructurePiece;
 import net.minecraft.util.math.BlockBox;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ColumnPos;
 import net.minecraft.util.math.Direction;
 
 import java.util.List;
@@ -20,15 +18,12 @@ public class BetterMineshaftGenerator {
         int rand = random.nextInt(100);
         BetterMineshaftFeature.Type type = ((MineshaftPiece) structurePiece).mineshaftType;
 
-        BlockBox blockBox;
         if (rand >= 10 || pieceChainLen < 1) {
-            blockBox = BigTunnel.determineBoxPosition(list, random, x, y, z, direction);
-            if (blockBox != null) {
-                MineshaftPiece newPiece = new BigTunnel(l + 1, pieceChainLen + 1, random, blockBox, direction, type);
-                list.add(newPiece);
-                newPiece.method_14918(structurePiece, list, random); // buildComponent
-                return newPiece;
-            }
+            BlockBox blockBox = BigTunnel.determineBoxPosition(x, y, z, direction);
+            MineshaftPiece newPiece = new BigTunnel(l + 1, pieceChainLen + 1, random, blockBox, direction, type);
+            list.add(newPiece);
+            newPiece.method_14918(structurePiece, list, random); // buildComponent
+            return newPiece;
         }
 
         return null;

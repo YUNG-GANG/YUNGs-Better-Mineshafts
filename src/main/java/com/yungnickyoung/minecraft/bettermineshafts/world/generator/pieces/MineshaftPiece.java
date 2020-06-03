@@ -150,49 +150,90 @@ public abstract class MineshaftPiece extends StructurePiece {
         this.addVines(world, boundingBox, Direction.SOUTH, random, chance, minX, minY, minZ, maxX, maxY, maxZ);
     }
 
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *                                       FILL METHODS                                      *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    /**
+     * Fills up the given bounded area with provided block.
+     */
+    protected void fill(IWorld world, BlockBox blockBox, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState blockState) {
+        for (int x = minX; x <= maxX; ++x) {
+            for (int y = minY; y <= maxY; ++y) {
+                for (int z = minZ; z <= maxZ; ++z) {
+                    this.addBlock(world, blockState, x, y, z, blockBox);
+                }
+            }
+        }
+    }
+
+    /**
+     * Fills up the given bounded area with provided inside and edge blocks.
+     *
+     * @param edgeBlock BlockState for blocks along the edges of the enclosed area
+     * @param insideBlock BlockState for blocks inside the enclosed area (not along an edge or corner)
+     */
+    protected void fillWithOutline(IWorld world, BlockBox blockBox, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState edgeBlock, BlockState insideBlock, boolean onlyReplaceNonAir) {
+        for (int x = minX; x <= maxX; ++x) {
+            for (int y = minY; y <= maxY; ++y) {
+                for (int z = minZ; z <= maxZ; ++z) {
+                    if (!onlyReplaceNonAir || !this.getBlockAt(world, x, y, z, blockBox).isAir()) {
+                        if (y != minY && y != maxY && x != minX && x != maxX && z != minZ && z != maxZ) {
+                            this.addBlock(world, insideBlock, x, y, z, blockBox);
+                        } else {
+                            this.addBlock(world, edgeBlock, x, y, z, blockBox);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Replaces all air blocks in the given bounded area with provided block.
+     */
+    protected void replaceAir(IWorld world, BlockBox blockBox, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState blockState) {
+        for (int x = minX; x <= maxX; ++x) {
+            for (int y = minY; y <= maxY; ++y) {
+                for (int z = minZ; z <= maxZ; ++z) {
+                    BlockState currState = this.getBlockAtFixed(world, x, y, z, blockBox);
+                    if (currState != null && currState.isAir()) {
+                        this.addBlock(world, blockState, x, y, z, blockBox);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Replaces all non-air blocks in the given bounded area with provided block.
+     */
+    protected void replaceNonAir(IWorld world, BlockBox blockBox, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState blockState) {
+        for (int x = minX; x <= maxX; ++x) {
+            for (int y = minY; y <= maxY; ++y) {
+                for (int z = minZ; z <= maxZ; ++z) {
+                    BlockState currState = this.getBlockAtFixed(world, x, y, z, blockBox);
+                    if (currState != null && !currState.isAir()) {
+                        this.addBlock(world, blockState, x, y, z, blockBox);
+                    }
+                }
+            }
+        }
+    }
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *                                   RANDOM FILL METHODS                                   *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
     /**
      * Replaces each block with a given chance.
      */
-    protected void randomFillWithOutline(IWorld world, BlockBox blockBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState blockState, BlockState inside, boolean bl) {
-        for (int o = minY; o <= maxY; ++o) {
-            for (int p = minX; p <= maxX; ++p) {
-                for (int q = minZ; q <= maxZ; ++q) {
+    protected void randomFill(IWorld world, BlockBox blockBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState blockState) {
+        for (int x = minX; x <= maxX; ++x) {
+            for (int y = minY; y <= maxY; ++y) {
+                for (int z = minZ; z <= maxZ; ++z) {
                     if (random.nextFloat() < chance) {
-                        if (!bl || !this.getBlockAt(world, p, o, q, blockBox).isAir()) {
-                            if (o != minY && o != maxY && p != minX && p != maxX && q != minZ && q != maxZ) {
-                                this.addBlock(world, inside, p, o, q, blockBox);
-                            } else {
-                                this.addBlock(world, blockState, p, o, q, blockBox);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    protected void replaceAirInBox(IWorld world, BlockBox blockBox, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState blockState) {
-        for (int o = minY; o <= maxY; ++o) {
-            for (int p = minX; p <= maxX; ++p) {
-                for (int q = minZ; q <= maxZ; ++q) {
-                    BlockState currState = this.getBlockAtFixed(world, p, o, q, blockBox);
-                    if (currState != null && currState.isAir()) {
-                        this.addBlock(world, blockState, p, o, q, blockBox);
-                    }
-                }
-            }
-        }
-    }
-
-    protected void randomlyReplaceAirInBox(IWorld world, BlockBox blockBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState blockState) {
-        for (int o = minY; o <= maxY; ++o) {
-            for (int p = minX; p <= maxX; ++p) {
-                for (int q = minZ; q <= maxZ; ++q) {
-                    if (random.nextFloat() < chance) {
-                        BlockState currState = this.getBlockAtFixed(world, p, o, q, blockBox);
-                        if (currState != null && currState.isAir()) {
-                            this.addBlock(world, blockState, p, o, q, blockBox);
-                        }
+                        this.addBlock(world, blockState, x, y, z, blockBox);
                     }
                 }
             }
@@ -200,19 +241,77 @@ public abstract class MineshaftPiece extends StructurePiece {
     }
 
     /**
-     * Sets the block state, disregarding any blockbox shenanigans
+     * Fills up the given bounded area with provided inside and edge blocks.
+     *
+     * @param edgeBlock BlockState for blocks along the edges of the enclosed area
+     * @param insideBlock BlockState for blocks inside the enclosed area (not along an edge or corner)
      */
-    protected void setBlockState(IWorld world, BlockState block, int x, int y, int z) {
-        BlockPos blockPos = new BlockPos(this.applyXTransform(x, z), this.applyYTransform(y), this.applyZTransform(x, z));
-        world.setBlockState(blockPos, block, 2);
-        FluidState fluidState = world.getFluidState(blockPos);
-        if (!fluidState.isEmpty()) {
-            world.getFluidTickScheduler().schedule(blockPos, fluidState.getFluid(), 0);
+    protected void randomFillWithOutline(IWorld world, BlockBox blockBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState edgeBlock, BlockState insideBlock) {
+        for (int x = minX; x <= maxX; ++x) {
+            for (int y = minY; y <= maxY; ++y) {
+                for (int z = minZ; z <= maxZ; ++z) {
+                    if (random.nextFloat() < chance) {
+                        if (y != minY && y != maxY && x != minX && x != maxX && z != minZ && z != maxZ) {
+                            this.addBlock(world, insideBlock, x, y, z, blockBox);
+                        } else {
+                            this.addBlock(world, edgeBlock, x, y, z, blockBox);
+                        }
+                    }
+                }
+            }
         }
     }
 
     /**
-     * Returns null instead of air if block is out of bounds
+     * Replaces each air block with a given chance.
+     */
+    protected void randomReplaceAir(IWorld world, BlockBox blockBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState blockState) {
+        for (int x = minX; x <= maxX; ++x) {
+            for (int y = minY; y <= maxY; ++y) {
+                for (int z = minZ; z <= maxZ; ++z) {
+                    if (random.nextFloat() < chance) {
+                        BlockState currState = this.getBlockAtFixed(world, x, y, z, blockBox);
+                        if (currState != null && currState.isAir()) {
+                            this.addBlock(world, blockState, x, y, z, blockBox);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Replaces all non-air blocks in the given bounded area with provided block.
+     */
+    protected void randomReplaceNonAir(IWorld world, BlockBox blockBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState blockState) {
+        for (int x = minX; x <= maxX; ++x) {
+            for (int y = minY; y <= maxY; ++y) {
+                for (int z = minZ; z <= maxZ; ++z) {
+                    if (random.nextFloat() < chance) {
+                        BlockState currState = this.getBlockAtFixed(world, x, y, z, blockBox);
+                        if (currState != null && !currState.isAir()) {
+                            this.addBlock(world, blockState, x, y, z, blockBox);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *                                      BLOCK SET/GET                                      *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    protected void randomAddBlock(IWorld world, Random random, float chance, BlockState block, int x, int y, int z, BlockBox blockBox) {
+        if (random.nextFloat() < chance) {
+            this.addBlock(world, block, x, y, z, blockBox);
+        }
+    }
+
+    /**
+     * My "fixed" version of getBlockAt that returns null instead of air if block is out of bounds
+     *
+     * @return the block at the given position, or null if it is outside of the blockBox
      */
     protected BlockState getBlockAtFixed(BlockView blockView, int x, int y, int z, BlockBox blockBox) {
         int i = this.applyXTransform(x, z);

@@ -69,39 +69,39 @@ public class ZombieVillagerRoom extends MineshaftPiece {
         }
 
         // Outermost walls
-        this.fillWithOutline(world, box, 1, 0, 0, 5, 2, 0, Blocks.STONE.getDefaultState(), Blocks.STONE.getDefaultState(), false);
-        this.fillWithOutline(world, box, 0, 0, 1, 0, 2, 5, Blocks.STONE.getDefaultState(), Blocks.STONE.getDefaultState(), false);
-        this.fillWithOutline(world, box, LOCAL_X_END, 0, 1, LOCAL_X_END, 2, 5, Blocks.STONE.getDefaultState(), Blocks.STONE.getDefaultState(), false);
-        this.fillWithOutline(world, box, 1, 0, LOCAL_Z_END, 5, 2, LOCAL_Z_END, Blocks.STONE.getDefaultState(), Blocks.STONE.getDefaultState(), false);
+        this.fill(world, box, 1, 0, 0, 5, 2, 0, Blocks.STONE.getDefaultState());
+        this.fill(world, box, 0, 0, 1, 0, 2, 5, Blocks.STONE.getDefaultState());
+        this.fill(world, box, LOCAL_X_END, 0, 1, LOCAL_X_END, 2, 5, Blocks.STONE.getDefaultState());
+        this.fill(world, box, 1, 0, LOCAL_Z_END, 5, 2, LOCAL_Z_END, Blocks.STONE.getDefaultState());
         // Randomize
         // Cobble
-        this.randomFillWithOutline(world, box, random, .4f, 1, 0, 0, 5, 2, 0, Blocks.COBBLESTONE.getDefaultState(), Blocks.COBBLESTONE.getDefaultState(), true);
-        this.randomFillWithOutline(world, box, random, .4f, 0, 0, 1, 0, 2, 5, Blocks.COBBLESTONE.getDefaultState(), Blocks.COBBLESTONE.getDefaultState(), true);
-        this.randomFillWithOutline(world, box, random, .4f, LOCAL_X_END, 0, 1, LOCAL_X_END, 2, 5, Blocks.COBBLESTONE.getDefaultState(), Blocks.COBBLESTONE.getDefaultState(), true);
-        this.randomFillWithOutline(world, box, random, .4f, 1, 0, LOCAL_Z_END, 5, 2, LOCAL_Z_END, Blocks.COBBLESTONE.getDefaultState(), Blocks.COBBLESTONE.getDefaultState(), true);
+        this.randomReplaceNonAir(world, box, random, .4f, 1, 0, 0, 5, 2, 0, Blocks.COBBLESTONE.getDefaultState());
+        this.randomReplaceNonAir(world, box, random, .4f, 0, 0, 1, 0, 2, 5, Blocks.COBBLESTONE.getDefaultState());
+        this.randomReplaceNonAir(world, box, random, .4f, LOCAL_X_END, 0, 1, LOCAL_X_END, 2, 5, Blocks.COBBLESTONE.getDefaultState());
+        this.randomReplaceNonAir(world, box, random, .4f, 1, 0, LOCAL_Z_END, 5, 2, LOCAL_Z_END, Blocks.COBBLESTONE.getDefaultState());
         // Stone brick
-        this.randomFillWithOutline(world, box, random, .1f, 1, 0, 0, 5, 2, 0, Blocks.STONE_BRICKS.getDefaultState(), Blocks.STONE_BRICKS.getDefaultState(), true);
-        this.randomFillWithOutline(world, box, random, .1f, 0, 0, 1, 0, 2, 5, Blocks.STONE_BRICKS.getDefaultState(), Blocks.STONE_BRICKS.getDefaultState(), true);
-        this.randomFillWithOutline(world, box, random, .1f, LOCAL_X_END, 0, 1, LOCAL_X_END, 2, 5, Blocks.STONE_BRICKS.getDefaultState(), Blocks.STONE_BRICKS.getDefaultState(), true);
-        this.randomFillWithOutline(world, box, random, .1f, 1, 0, LOCAL_Z_END, 5, 2, LOCAL_Z_END, Blocks.STONE_BRICKS.getDefaultState(), Blocks.STONE_BRICKS.getDefaultState(), true);
+        this.randomReplaceNonAir(world, box, random, .1f, 1, 0, 0, 5, 2, 0, Blocks.STONE_BRICKS.getDefaultState());
+        this.randomReplaceNonAir(world, box, random, .1f, 0, 0, 1, 0, 2, 5, Blocks.STONE_BRICKS.getDefaultState());
+        this.randomReplaceNonAir(world, box, random, .1f, LOCAL_X_END, 0, 1, LOCAL_X_END, 2, 5, Blocks.STONE_BRICKS.getDefaultState());
+        this.randomReplaceNonAir(world, box, random, .1f, 1, 0, LOCAL_Z_END, 5, 2, LOCAL_Z_END, Blocks.STONE_BRICKS.getDefaultState());
 
         // Slabs on top of outermost walls
-        this.fillWithOutline(world, box, 2, 3, 0, 4, 3, 0, Blocks.STONE_SLAB.getDefaultState(), Blocks.STONE_SLAB.getDefaultState(), false);
-        this.fillWithOutline(world, box, 0, 3, 2, 0, 3, 4, Blocks.STONE_SLAB.getDefaultState(), Blocks.STONE_SLAB.getDefaultState(), false);
-        this.fillWithOutline(world, box, LOCAL_X_END, 3, 2, LOCAL_X_END, 3, 4, Blocks.STONE_SLAB.getDefaultState(), Blocks.STONE_SLAB.getDefaultState(), false);
-        this.fillWithOutline(world, box, 2, 3, LOCAL_Z_END, 4, 3, LOCAL_Z_END, Blocks.STONE_SLAB.getDefaultState(), Blocks.STONE_SLAB.getDefaultState(), false);
+        this.fill(world, box, 2, 3, 0, 4, 3, 0, Blocks.STONE_SLAB.getDefaultState());
+        this.fill(world, box, 0, 3, 2, 0, 3, 4, Blocks.STONE_SLAB.getDefaultState());
+        this.fill(world, box, LOCAL_X_END, 3, 2, LOCAL_X_END, 3, 4, Blocks.STONE_SLAB.getDefaultState());
+        this.fill(world, box, 2, 3, LOCAL_Z_END, 4, 3, LOCAL_Z_END, Blocks.STONE_SLAB.getDefaultState());
         // Randomize
-        this.randomFillWithOutline(world, box, random, .5f, 2, 3, 0, 4, 3, 0, Blocks.COBBLESTONE_SLAB.getDefaultState(), Blocks.COBBLESTONE_SLAB.getDefaultState(), false);
-        this.randomFillWithOutline(world, box, random, .5f, 0, 3, 2, 0, 3, 4, Blocks.COBBLESTONE_SLAB.getDefaultState(), Blocks.COBBLESTONE_SLAB.getDefaultState(), false);
-        this.randomFillWithOutline(world, box, random, .5f, LOCAL_X_END, 3, 2, LOCAL_X_END, 3, 4, Blocks.COBBLESTONE_SLAB.getDefaultState(), Blocks.COBBLESTONE_SLAB.getDefaultState(), false);
-        this.randomFillWithOutline(world, box, random, .5f, 2, 3, LOCAL_Z_END, 4, 3, LOCAL_Z_END, Blocks.COBBLESTONE_SLAB.getDefaultState(), Blocks.COBBLESTONE_SLAB.getDefaultState(), false);
+        this.randomFill(world, box, random, .5f, 2, 3, 0, 4, 3, 0, Blocks.COBBLESTONE_SLAB.getDefaultState());
+        this.randomFill(world, box, random, .5f, 0, 3, 2, 0, 3, 4, Blocks.COBBLESTONE_SLAB.getDefaultState());
+        this.randomFill(world, box, random, .5f, LOCAL_X_END, 3, 2, LOCAL_X_END, 3, 4, Blocks.COBBLESTONE_SLAB.getDefaultState());
+        this.randomFill(world, box, random, .5f, 2, 3, LOCAL_Z_END, 4, 3, LOCAL_Z_END, Blocks.COBBLESTONE_SLAB.getDefaultState());
 
         // Second wall/ceiling layer, formed with upside-down stairs
         // Cardinal directions
-        this.fillWithOutline(world, box, 2, 3, 1, 4, 3, 1, Blocks.COBBLESTONE_STAIRS.getDefaultState().with(StairsBlock.FACING, Direction.SOUTH).with(StairsBlock.HALF, BlockHalf.TOP), Blocks.COBBLESTONE_STAIRS.getDefaultState().with(StairsBlock.FACING, Direction.SOUTH).with(StairsBlock.HALF, BlockHalf.TOP), false);
-        this.fillWithOutline(world, box, 1, 3, 2, 1, 3, 4, Blocks.COBBLESTONE_STAIRS.getDefaultState().with(StairsBlock.FACING, Direction.WEST).with(StairsBlock.HALF, BlockHalf.TOP), Blocks.COBBLESTONE_STAIRS.getDefaultState().with(StairsBlock.FACING, Direction.WEST).with(StairsBlock.HALF, BlockHalf.TOP), false);
-        this.fillWithOutline(world, box, 2, 3, 5, 4, 3, 5, Blocks.COBBLESTONE_STAIRS.getDefaultState().with(StairsBlock.FACING, Direction.NORTH).with(StairsBlock.HALF, BlockHalf.TOP), Blocks.COBBLESTONE_STAIRS.getDefaultState().with(StairsBlock.FACING, Direction.NORTH).with(StairsBlock.HALF, BlockHalf.TOP), false);
-        this.fillWithOutline(world, box, 5, 3, 2, 5, 3, 4, Blocks.COBBLESTONE_STAIRS.getDefaultState().with(StairsBlock.FACING, Direction.EAST).with(StairsBlock.HALF, BlockHalf.TOP), Blocks.COBBLESTONE_STAIRS.getDefaultState().with(StairsBlock.FACING, Direction.EAST).with(StairsBlock.HALF, BlockHalf.TOP), false);
+        this.fill(world, box, 2, 3, 1, 4, 3, 1, Blocks.COBBLESTONE_STAIRS.getDefaultState().with(StairsBlock.FACING, Direction.SOUTH).with(StairsBlock.HALF, BlockHalf.TOP));
+        this.fill(world, box, 1, 3, 2, 1, 3, 4, Blocks.COBBLESTONE_STAIRS.getDefaultState().with(StairsBlock.FACING, Direction.WEST).with(StairsBlock.HALF, BlockHalf.TOP));
+        this.fill(world, box, 2, 3, 5, 4, 3, 5, Blocks.COBBLESTONE_STAIRS.getDefaultState().with(StairsBlock.FACING, Direction.NORTH).with(StairsBlock.HALF, BlockHalf.TOP));
+        this.fill(world, box, 5, 3, 2, 5, 3, 4, Blocks.COBBLESTONE_STAIRS.getDefaultState().with(StairsBlock.FACING, Direction.EAST).with(StairsBlock.HALF, BlockHalf.TOP));
         // Corners
         this.addBlock(world, Blocks.COBBLESTONE_STAIRS.getDefaultState().with(StairsBlock.SHAPE, StairShape.INNER_RIGHT).with(StairsBlock.HALF, BlockHalf.TOP).with(StairsBlock.FACING, Direction.SOUTH), 1, 3, 1, box);
         this.addBlock(world, Blocks.COBBLESTONE_STAIRS.getDefaultState().with(StairsBlock.SHAPE, StairShape.INNER_LEFT).with(StairsBlock.HALF, BlockHalf.TOP).with(StairsBlock.FACING, Direction.NORTH), 1, 3, 5, box);
@@ -109,30 +109,30 @@ public class ZombieVillagerRoom extends MineshaftPiece {
         this.addBlock(world, Blocks.COBBLESTONE_STAIRS.getDefaultState().with(StairsBlock.SHAPE, StairShape.INNER_RIGHT).with(StairsBlock.HALF, BlockHalf.TOP).with(StairsBlock.FACING, Direction.NORTH), 5, 3, 5, box);
 
         // Third ceiling layer, formed with bottom-half slabs
-        this.fillWithOutline(world, box, 2, 4, 2, 4, 4, 4, Blocks.STONE_SLAB.getDefaultState(), Blocks.STONE_SLAB.getDefaultState(), false);
-        this.randomFillWithOutline(world, box, random, .5f, 2, 4, 2, 4, 4, 4, Blocks.COBBLESTONE_SLAB.getDefaultState(), Blocks.COBBLESTONE_SLAB.getDefaultState(), false);
+        this.fill(world, box, 2, 4, 2, 4, 4, 4, Blocks.STONE_SLAB.getDefaultState());
+        this.randomFill(world, box, random, .5f, 2, 4, 2, 4, 4, 4, Blocks.COBBLESTONE_SLAB.getDefaultState());
         this.addBlock(world, AIR, 3, 4, 3, box);
 
         // Top middle roof block
         this.addBlock(world, Blocks.STONE_SLAB.getDefaultState().with(SlabBlock.TYPE, SlabType.TOP), 3, 4,3, box);
 
         // Floor
-        this.fillWithOutline(world, box, 1, 0, 1, 5, 0, 5, Blocks.STONE.getDefaultState(), Blocks.STONE.getDefaultState(), false);
+        this.fill(world, box, 1, 0, 1, 5, 0, 5, Blocks.STONE.getDefaultState());
         // Randomize
-        this.randomFillWithOutline(world, box, random, .4f, 1, 0, 1, 5, 0, 5, Blocks.COBBLESTONE.getDefaultState(), Blocks.COBBLESTONE.getDefaultState(), false);
-        this.randomFillWithOutline(world, box, random, .1f, 1, 0, 1, 5, 0, 5, Blocks.STONE_BRICKS.getDefaultState(), Blocks.STONE_BRICKS.getDefaultState(), false);
+        this.randomFill(world, box, random, .4f, 1, 0, 1, 5, 0, 5, Blocks.COBBLESTONE.getDefaultState());
+        this.randomFill(world, box, random, .1f, 1, 0, 1, 5, 0, 5, Blocks.STONE_BRICKS.getDefaultState());
 
         // Fill with air
-        this.fillWithOutline(world, box, 1, 1, 1, 5, 2, 5, AIR, AIR, false);
-        this.fillWithOutline(world, box, 2, 3, 2, 4, 3, 4, AIR, AIR, false);
+        this.fill(world, box, 1, 1, 1, 5, 2, 5, AIR);
+        this.fill(world, box, 2, 3, 2, 4, 3, 4, AIR);
 
         // Place door
-        this.fillWithOutline(world, box, 3, 1, 0, 3, 2, 0, AIR, AIR, false);
+        this.fill(world, box, 3, 1, 0, 3, 2, 0, AIR);
         this.addBlock(world, Blocks.IRON_DOOR.getDefaultState().with(DoorBlock.FACING, Direction.NORTH).with(DoorBlock.HALF, DoubleBlockHalf.LOWER), 3, 1, 0, box);
         this.addBlock(world, Blocks.IRON_DOOR.getDefaultState().with(DoorBlock.FACING, Direction.NORTH).with(DoorBlock.HALF, DoubleBlockHalf.UPPER), 3, 2, 0, box);
 
         // Window
-        this.fillWithOutline(world, box, 6, 2, 2, 6, 2, 4, Blocks.IRON_BARS.getDefaultState(), Blocks.IRON_BARS.getDefaultState(), false);
+        this.fill(world, box, 6, 2, 2, 6, 2, 4, Blocks.IRON_BARS.getDefaultState());
 
         // Beds
         this.addBlock(world, Blocks.BLACK_BED.getDefaultState().with(BedBlock.FACING, Direction.NORTH).with(BedBlock.PART, BedPart.FOOT), 1, 1, 4, box);
@@ -170,7 +170,7 @@ public class ZombieVillagerRoom extends MineshaftPiece {
             this.addBlock(world, Blocks.BLAST_FURNACE.getDefaultState(), 2, 1, 5, box);
 
         // Cobwebs
-        this.randomFillWithOutline(world, box, random, .3f, 2, 3, 2, 4, 3, 4, Blocks.COBWEB.getDefaultState(), Blocks.COBWEB.getDefaultState(), false);
+        this.randomFill(world, box, random, .3f, 2, 3, 2, 4, 3, 4, Blocks.COBWEB.getDefaultState());
 
         return true;
     }
