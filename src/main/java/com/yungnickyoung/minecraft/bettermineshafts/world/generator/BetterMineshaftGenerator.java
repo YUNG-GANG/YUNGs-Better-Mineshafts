@@ -36,7 +36,7 @@ public class BetterMineshaftGenerator {
 
         // End of chain - chance of placing ore deposit
         if (pieceChainLen > 7) {
-            if (rand > 10) {
+            if (rand > 40) {
                 blockBox = OreDeposit.determineBoxPosition(list, random, x, y, z, direction);
                 if (blockBox != null) {
                     MineshaftPiece newPiece = new OreDeposit(l + 1, pieceChainLen + 1, random, blockBox, direction, type);
@@ -44,7 +44,7 @@ public class BetterMineshaftGenerator {
                     newPiece.method_14918(structurePiece, list, random); // buildComponent
                     return newPiece;
                 }
-            } else {
+            } else if (rand > 36) {
                 // Need to offset by 1 since room is wider than tunnel
                 if (direction == Direction.NORTH) x -= 1;
                 else if (direction == Direction.EAST) z -= 1;
@@ -57,6 +57,8 @@ public class BetterMineshaftGenerator {
                     newPiece.method_14918(structurePiece, list, random); // buildComponent
                     return newPiece;
                 }
+            } else {
+                // TODO - a few variations of ending pieces?
             }
             return null;
         }
@@ -84,6 +86,15 @@ public class BetterMineshaftGenerator {
             blockBox = SmallTunnelTurn.determineBoxPosition(list, random, x, y, z, direction);
             if (blockBox != null) {
                 MineshaftPiece newPiece = new SmallTunnelTurn(l + 1, pieceChainLen + 1, random, blockBox, direction, type);
+                list.add(newPiece);
+                newPiece.method_14918(structurePiece, list, random); // buildComponent
+                return newPiece;
+            }
+        }
+        else if (rand >= 60 && pieceChainLen > 2 && pieceChainLen < 7) { // Intersection can't be placed early on or at the very end
+            blockBox = LayeredIntersection5.determineBoxPosition(list, random, x, y, z, direction);
+            if (blockBox != null) {
+                MineshaftPiece newPiece = new LayeredIntersection5(l + 1, pieceChainLen + 1, random, blockBox, direction, type);
                 list.add(newPiece);
                 newPiece.method_14918(structurePiece, list, random); // buildComponent
                 return newPiece;

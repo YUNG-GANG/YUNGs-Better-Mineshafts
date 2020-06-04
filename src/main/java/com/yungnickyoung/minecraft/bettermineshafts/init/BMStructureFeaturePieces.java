@@ -19,6 +19,7 @@ public class BMStructureFeaturePieces {
         BetterMineshaftStructurePieceType.SIDE_ROOM_DUNGEON = Registry.register(Registry.STRUCTURE_PIECE, new Identifier(BetterMineshafts.MOD_ID, "BMSSideRoomDungeon".toLowerCase(Locale.ROOT)), SideRoomDungeon::new);
         BetterMineshaftStructurePieceType.ORE_DEPOSIT = Registry.register(Registry.STRUCTURE_PIECE, new Identifier(BetterMineshafts.MOD_ID, "BMSOreDeposit".toLowerCase(Locale.ROOT)), OreDeposit::new);
         BetterMineshaftStructurePieceType.LAYERED_INTERSECTION_4 = Registry.register(Registry.STRUCTURE_PIECE, new Identifier(BetterMineshafts.MOD_ID, "BMSLayeredIntersection4".toLowerCase(Locale.ROOT)), LayeredIntersection4::new);
+        BetterMineshaftStructurePieceType.LAYERED_INTERSECTION_5 = Registry.register(Registry.STRUCTURE_PIECE, new Identifier(BetterMineshafts.MOD_ID, "BMSLayeredIntersection5".toLowerCase(Locale.ROOT)), LayeredIntersection5::new);
         BetterMineshaftStructurePieceType.ZOMBIE_VILLAGER_ROOM = Registry.register(Registry.STRUCTURE_PIECE, new Identifier(BetterMineshafts.MOD_ID, "BMSZombieVillagerRoom".toLowerCase(Locale.ROOT)), ZombieVillagerRoom::new);
     }
 }

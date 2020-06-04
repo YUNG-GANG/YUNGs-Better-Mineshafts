@@ -12,5 +12,6 @@ public class BetterMineshaftStructurePieceType {
     public static StructurePieceType SIDE_ROOM_DUNGEON;
     public static StructurePieceType ORE_DEPOSIT;
     public static StructurePieceType LAYERED_INTERSECTION_4;
+    public static StructurePieceType LAYERED_INTERSECTION_5;
     public static StructurePieceType ZOMBIE_VILLAGER_ROOM;
 }
