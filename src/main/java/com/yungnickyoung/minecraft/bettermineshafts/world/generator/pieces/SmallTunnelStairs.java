@@ -113,6 +113,9 @@ public class SmallTunnelStairs extends MineshaftPiece {
             this.addBlock(world, getMainBlock(), 2, i, i, box);
         }
 
+        // Decorations
+        this.addVines(world, box, random, getVineChance(), 1, 0, 1, LOCAL_X_END - 1, LOCAL_Y_END, LOCAL_Z_END - 1);
+
         return true;
     }
 }

@@ -144,6 +144,9 @@ public class LayeredIntersection5 extends MineshaftPiece{
         BlockState LADDER = Blocks.LADDER.getDefaultState().with(LadderBlock.FACING, Direction.SOUTH);
         this.fill(world, box, 2, 1, 3, 2, 5, 3, LADDER);
 
+        // Decorations
+        this.addVines(world, box, random, getVineChance(), 1, 0, 1, LOCAL_X_END - 1, LOCAL_Y_END, LOCAL_Z_END - 1);
+
         return true;
     }
 }

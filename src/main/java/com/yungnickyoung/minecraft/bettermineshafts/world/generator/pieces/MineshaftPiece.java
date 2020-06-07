@@ -153,9 +153,11 @@ public abstract class MineshaftPiece extends StructurePiece {
             for (int y = minY; y <= maxY; y++) {
                 for (int z = minZ; z <= maxZ; z++) {
                     mutable.set(x, y, z);
+                    BlockState nextBlock = this.getBlockAt(world, x + facing.getOffsetX(), y + facing.getOffsetY(), z + facing.getOffsetZ(), boundingBox);
                     if (
                         this.getBlockAt(world, x, y, z, boundingBox).isAir()
-                            && Block.isFaceFullSquare(this.getBlockAt(world, x + facing.getOffsetX(), y + facing.getOffsetY(), z + facing.getOffsetZ(), boundingBox).getCollisionShape(world, mutable), facing.getOpposite())
+                            && Block.isFaceFullSquare(nextBlock.getCollisionShape(world, mutable), facing.getOpposite())
+                            && nextBlock.getBlock().getDefaultState() != Blocks.LADDER.getDefaultState()
                     ) {
                         if (random.nextFloat() < chance) {
                             this.addBlock(world, Blocks.VINE.getDefaultState().with(VineBlock.getFacingProperty(facing.getAxis() == Direction.Axis.X ? facing : facing.getOpposite()), true), x, y, z, boundingBox);

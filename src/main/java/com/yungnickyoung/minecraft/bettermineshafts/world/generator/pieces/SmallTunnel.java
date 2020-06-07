@@ -122,6 +122,7 @@ public class SmallTunnel extends MineshaftPiece {
         generateCobwebs(world, box, random);
         generateChestCarts(world, box, random, LootTables.ABANDONED_MINESHAFT_CHEST);
         generateTntCarts(world, box, random);
+        this.addVines(world, box, random, getVineChance(), 1, 0, 1, LOCAL_X_END - 1, LOCAL_Y_END, LOCAL_Z_END - 1);
 
         return true;
     }
@@ -135,7 +136,7 @@ public class SmallTunnel extends MineshaftPiece {
 
     private void generateChestCarts(IWorld world, BlockBox box, Random random, Identifier lootTableId) {
         for (int z = 0; z <= LOCAL_Z_END; z++) {
-            if (random.nextInt(100) == 0) {
+            if (random.nextInt(800) == 0) {
                 BlockPos blockPos = new BlockPos(this.applyXTransform(LOCAL_X_END / 2, z), applyYTransform(1), this.applyZTransform(LOCAL_X_END / 2, z));
                 if (box.contains(blockPos) && !world.getBlockState(blockPos.down()).isAir()) {
                     ChestMinecartEntity chestMinecartEntity = new ChestMinecartEntity(world.getWorld(), ((float) blockPos.getX() + 0.5F), ((float) blockPos.getY() + 0.5F), ((float) blockPos.getZ() + 0.5F));
