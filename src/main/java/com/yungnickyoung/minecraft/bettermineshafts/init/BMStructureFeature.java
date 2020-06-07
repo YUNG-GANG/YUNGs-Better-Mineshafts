@@ -56,6 +56,10 @@ public class BMStructureFeature {
             case JUNGLE:
                 config = new BetterMineshaftFeatureConfig(SPAWN_RATE, BetterMineshaftFeature.Type.JUNGLE);
                 break;
+            case ICY:
+            case TAIGA:
+                config = new BetterMineshaftFeatureConfig(SPAWN_RATE, BetterMineshaftFeature.Type.ICE);
+                break;
             default:
                 config = new BetterMineshaftFeatureConfig(SPAWN_RATE, BetterMineshaftFeature.Type.NORMAL);
         }

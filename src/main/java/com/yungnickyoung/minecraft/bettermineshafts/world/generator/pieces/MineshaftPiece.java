@@ -67,6 +67,10 @@ public abstract class MineshaftPiece extends StructurePiece {
                 return Blocks.OAK_PLANKS.getDefaultState();
             case MESA:
                 return Blocks.DARK_OAK_PLANKS.getDefaultState();
+            case JUNGLE:
+                return Blocks.JUNGLE_PLANKS.getDefaultState();
+            case ICE:
+                return Blocks.SNOW_BLOCK.getDefaultState();
         }
     }
 
@@ -77,6 +81,10 @@ public abstract class MineshaftPiece extends StructurePiece {
                 return Blocks.OAK_SLAB.getDefaultState();
             case MESA:
                 return Blocks.DARK_OAK_SLAB.getDefaultState();
+            case JUNGLE:
+                return Blocks.JUNGLE_SLAB.getDefaultState();
+            case ICE:
+                return Blocks.PACKED_ICE.getDefaultState();
         }
     }
 
@@ -87,6 +95,24 @@ public abstract class MineshaftPiece extends StructurePiece {
                 return Blocks.OAK_FENCE.getDefaultState();
             case MESA:
                 return Blocks.DARK_OAK_FENCE.getDefaultState();
+            case JUNGLE:
+                return Blocks.JUNGLE_FENCE.getDefaultState();
+            case ICE:
+                return Blocks.BLUE_ICE.getDefaultState();
+        }
+    }
+
+    protected BlockState getTrapdoor() {
+        switch (this.mineshaftType) {
+            case NORMAL:
+            default:
+                return Blocks.OAK_TRAPDOOR.getDefaultState();
+            case MESA:
+                return Blocks.DARK_OAK_TRAPDOOR.getDefaultState();
+            case JUNGLE:
+                return Blocks.JUNGLE_TRAPDOOR.getDefaultState();
+            case ICE:
+                return Blocks.BIRCH_TRAPDOOR.getDefaultState();
         }
     }
 

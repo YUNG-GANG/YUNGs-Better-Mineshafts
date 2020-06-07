@@ -135,7 +135,8 @@ public class BetterMineshaftFeature extends StructureFeature<BetterMineshaftFeat
     public enum Type {
         NORMAL("normal"),
         MESA("mesa"),
-        JUNGLE("jungle");
+        JUNGLE("jungle"),
+        ICE("ice");
 
         private final String name;
 

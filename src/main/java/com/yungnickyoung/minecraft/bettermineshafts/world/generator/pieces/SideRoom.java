@@ -140,7 +140,7 @@ public class SideRoom extends MineshaftPiece {
         // Entrance to spider lair
         if (this.hasDownstairs) {
             this.addBlock(world, Blocks.LADDER.getDefaultState().with(LadderBlock.FACING, Direction.NORTH), 6, 0, 1, box);
-            this.addBlock(world, Blocks.OAK_TRAPDOOR.getDefaultState().with(TrapdoorBlock.FACING, Direction.NORTH), 6, 1, 1, box);
+            this.addBlock(world, getTrapdoor().with(TrapdoorBlock.FACING, Direction.NORTH), 6, 1, 1, box);
         }
 
         // Decorations

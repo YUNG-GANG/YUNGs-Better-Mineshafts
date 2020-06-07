@@ -248,8 +248,8 @@ public class BigTunnel extends MineshaftPiece {
 
     private void generateBigSupport(IWorld world, BlockBox box, Random random, int z) {
         // Bottom slabs
-        this.randomFill(world, box, random, .6f, 1, 1, z, 2, 1, z + 2, Blocks.OAK_SLAB.getDefaultState());
-        this.randomFill(world, box, random, .6f, LOCAL_X_END - 2, 1, z, LOCAL_X_END - 1, 1, z + 2, Blocks.OAK_SLAB.getDefaultState());
+        this.randomFill(world, box, random, .6f, 1, 1, z, 2, 1, z + 2, getMainSlab());
+        this.randomFill(world, box, random, .6f, LOCAL_X_END - 2, 1, z, LOCAL_X_END - 1, 1, z + 2, getMainSlab());
         // Main blocks
         this.addBlock(world, getMainBlock(), 1, 1, z + 1, box);
         this.addBlock(world, getMainBlock(), LOCAL_X_END - 1, 1, z + 1, box);

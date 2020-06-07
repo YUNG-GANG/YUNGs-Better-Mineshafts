@@ -7,12 +7,15 @@ import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMinesh
 import com.yungnickyoung.minecraft.bettermineshafts.util.BoxUtil;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.PoweredRailBlock;
+import net.minecraft.entity.vehicle.ChestMinecartEntity;
 import net.minecraft.entity.vehicle.TntMinecartEntity;
+import net.minecraft.loot.LootTables;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.structure.StructureManager;
 import net.minecraft.structure.StructurePiece;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -117,6 +120,7 @@ public class SmallTunnel extends MineshaftPiece {
         this.supports.forEach(z -> generateSupport(world, box, random, z));
         generateRails(world, box, random);
         generateCobwebs(world, box, random);
+        generateChestCarts(world, box, random, LootTables.ABANDONED_MINESHAFT_CHEST);
         generateTntCarts(world, box, random);
 
         return true;
@@ -127,6 +131,19 @@ public class SmallTunnel extends MineshaftPiece {
             this.randomReplaceAir(world, box, random, .15f, 1, 3, z - 3, 1, 3, z + 3, Blocks.COBWEB.getDefaultState());
             this.randomReplaceAir(world, box, random, .15f, 3, 3, z - 3, 3, 3, z + 3, Blocks.COBWEB.getDefaultState());
         });
+    }
+
+    private void generateChestCarts(IWorld world, BlockBox box, Random random, Identifier lootTableId) {
+        for (int z = 0; z <= LOCAL_Z_END; z++) {
+            if (random.nextInt(100) == 0) {
+                BlockPos blockPos = new BlockPos(this.applyXTransform(LOCAL_X_END / 2, z), applyYTransform(1), this.applyZTransform(LOCAL_X_END / 2, z));
+                if (box.contains(blockPos) && !world.getBlockState(blockPos.down()).isAir()) {
+                    ChestMinecartEntity chestMinecartEntity = new ChestMinecartEntity(world.getWorld(), ((float) blockPos.getX() + 0.5F), ((float) blockPos.getY() + 0.5F), ((float) blockPos.getZ() + 0.5F));
+                    chestMinecartEntity.setLootTable(lootTableId, random.nextLong());
+                    world.spawnEntity(chestMinecartEntity);
+                }
+            }
+        }
     }
 
     private void generateSupport(IWorld world, BlockBox box, Random random, int z) {
