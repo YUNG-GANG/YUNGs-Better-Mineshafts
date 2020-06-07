@@ -127,6 +127,16 @@ public class LayeredIntersection4 extends MineshaftPiece {
         this.replaceNonAir(world, box, 2, 0, 0, 4, 2, LOCAL_Z_END, getMainBlock());
         this.randomReplaceNonAir(world, box, random, .1f, 2, 0, 0, 4, 2, LOCAL_Z_END, Blocks.COBBLESTONE.getDefaultState());
 
+        // Sides for walking on
+        this.fill(world, box, 2, 2, 0, 2, 3, 1, getMainBlock());
+        this.randomReplaceNonAir(world, box, random, .1f, 2, 2, 0, 2, 3, 1, Blocks.COBBLESTONE.getDefaultState());
+        this.fill(world, box, 4, 2, 0, 4, 3, 1, getMainBlock());
+        this.randomReplaceNonAir(world, box, random, .1f, 4, 2, 0, 4, 3, 1, Blocks.COBBLESTONE.getDefaultState());
+        this.fill(world, box, 2, 2, 5, 2, 3, 6, getMainBlock());
+        this.randomReplaceNonAir(world, box, random, .1f, 2, 2, 5, 2, 3, 6, Blocks.COBBLESTONE.getDefaultState());
+        this.fill(world, box, 4, 2, 5, 4, 3, 6, getMainBlock());
+        this.randomReplaceNonAir(world, box, random, .1f, 4, 2, 5, 4, 3, 6, Blocks.COBBLESTONE.getDefaultState());
+
         // Bottom rails
         this.randomAddBlock(world, random, .5f, Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, RailShape.ASCENDING_SOUTH), 3, 3, 0, box);
         this.randomAddBlock(world, random, .5f, Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, RailShape.ASCENDING_SOUTH), 3, 2, 1, box);
