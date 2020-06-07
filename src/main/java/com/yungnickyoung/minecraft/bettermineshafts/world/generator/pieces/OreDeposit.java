@@ -20,24 +20,31 @@ import java.util.Random;
 
 public class OreDeposit extends MineshaftPiece {
     public enum OreType {
-        GOLD(0),
-        IRON(1),
-        COAL(2),
-        LAPIS(3),
-        REDSTONE(4),
-        EMERALD(5),
-        DIAMOND(6);
+        GOLD(0, Blocks.GOLD_ORE.getDefaultState()),
+        IRON(1, Blocks.IRON_ORE.getDefaultState()),
+        COAL(2, Blocks.COAL_ORE.getDefaultState()),
+        LAPIS(3, Blocks.LAPIS_ORE.getDefaultState()),
+        REDSTONE(4, Blocks.REDSTONE_ORE.getDefaultState()),
+        EMERALD(5, Blocks.EMERALD_ORE.getDefaultState()),
+        DIAMOND(6, Blocks.DIAMOND_ORE.getDefaultState()),
+        COBBLE(7, Blocks.COBBLESTONE.getDefaultState());
 
         private final int value;
+        private final BlockState block;
 
-        OreType(int value) {
+        OreType(int value, BlockState block) {
             this.value = value;
+            this.block = block;
         }
 
         public static OreType valueOf(int value) {
             return Arrays.stream(values())
-                .filter(dir -> dir.value == value)
+                .filter(oreType -> oreType.value == value)
                 .findFirst().get();
+        }
+
+        public BlockState getBlock() {
+            return this.block;
         }
     }
     private OreType oreType;
@@ -80,18 +87,21 @@ public class OreDeposit extends MineshaftPiece {
 
     @Override
     public void method_14918(StructurePiece structurePiece, List<StructurePiece> list, Random random) {
-        int r = random.nextInt(100);
-        if (r <= 50)
+        float r = random.nextFloat();
+
+        if (r < .3f) {
+            this.oreType = OreType.COBBLE; // Chance of cobble instead of ore
+        } else if (r <= .65f)
             this.oreType = OreType.COAL;
-        else if (r <= 70)
+        else if (r <= .79f)
             this.oreType = OreType.IRON;
-        else if (r <= 80)
+        else if (r <= .86f)
             this.oreType = OreType.REDSTONE;
-        else if (r <= 90)
+        else if (r <= .93f)
             this.oreType = OreType.GOLD;
-        else if (r <= 95)
+        else if (r <= .965f)
             this.oreType = OreType.LAPIS;
-        else if (r <= 98)
+        else if (r <= .986f)
             this.oreType = OreType.EMERALD;
         else
             this.oreType = OreType.DIAMOND;
@@ -103,37 +113,15 @@ public class OreDeposit extends MineshaftPiece {
             return false;
         }
 
-        BlockState ORE_BLOCK;
-        if (this.oreType == OreType.GOLD)
-            ORE_BLOCK = Blocks.GOLD_ORE.getDefaultState();
-        else if (this.oreType == OreType.COAL)
-            ORE_BLOCK = Blocks.COAL_ORE.getDefaultState();
-        else if (this.oreType == OreType.IRON)
-            ORE_BLOCK = Blocks.IRON_ORE.getDefaultState();
-        else if (this.oreType == OreType.LAPIS)
-            ORE_BLOCK = Blocks.LAPIS_ORE.getDefaultState();
-        else if (this.oreType == OreType.REDSTONE)
-            ORE_BLOCK = Blocks.REDSTONE_ORE.getDefaultState();
-        else if (this.oreType == OreType.EMERALD)
-            ORE_BLOCK = Blocks.EMERALD_ORE.getDefaultState();
-        else
-            ORE_BLOCK = Blocks.DIAMOND_ORE.getDefaultState();
+        BlockState COBBLE = Blocks.COBBLESTONE.getDefaultState();
+        BlockState ORE_BLOCK = this.oreType.getBlock();
 
-        // Fill with air
-        this.fill(world, box, 1, 1, 0, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END, AIR);
+        // Fill with cobble
+        this.randomReplaceNonAir(world, box, random, .9f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, COBBLE);
 
-        // Ore deposit
-        this.randomFill(world, box, random,.8f, 1, 1, 2, 3, 3, 3, ORE_BLOCK);
-        this.fill(world, box, 1, 1, 1, 1, 1 + random.nextInt(3), 1, ORE_BLOCK);
-        this.fill(world, box, 2, 1, 1, 2, 1 + random.nextInt(3), 1, ORE_BLOCK);
-        this.fill(world, box, 3, 1, 1, 3, 1 + random.nextInt(3), 1, ORE_BLOCK);
-        this.randomAddBlock(world, random, .5f, ORE_BLOCK, 1, 1, 0, box);
-        this.randomAddBlock(world, random, .5f, ORE_BLOCK, 2, 1, 0, box);
-        this.randomAddBlock(world, random, .5f, ORE_BLOCK, 3, 1, 0, box);
-
-        // Ceiling
-        this.replaceNonAir(world, box, 1, 4, 2, 3, 4, 3, ORE_BLOCK);
-        this.randomReplaceNonAir(world, box, random, .5f,1, 4, 1, 3, 4, 1, ORE_BLOCK);
+        // Ore deposit. Ore is more dense in center than edges
+        this.randomReplaceNonAir(world, box, random, .75f, 1, 1, 1, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END - 1, ORE_BLOCK);
+        this.randomReplaceNonAir(world, box, random, .25f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, ORE_BLOCK);
 
         return true;
     }
