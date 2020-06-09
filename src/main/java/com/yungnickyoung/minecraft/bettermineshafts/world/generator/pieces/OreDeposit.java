@@ -117,11 +117,11 @@ public class OreDeposit extends MineshaftPiece {
         BlockState ORE_BLOCK = this.oreType.getBlock();
 
         // Fill with cobble
-        this.randomReplaceNonAir(world, box, random, .9f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, COBBLE);
+        this.chanceReplaceNonAir(world, box, random, .9f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, COBBLE);
 
         // Ore deposit. Ore is more dense in center than edges
-        this.randomReplaceNonAir(world, box, random, .75f, 1, 1, 1, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END - 1, ORE_BLOCK);
-        this.randomReplaceNonAir(world, box, random, .25f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, ORE_BLOCK);
+        this.chanceReplaceNonAir(world, box, random, .75f, 1, 1, 1, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END - 1, ORE_BLOCK);
+        this.chanceReplaceNonAir(world, box, random, .25f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, ORE_BLOCK);
 
         return true;
     }

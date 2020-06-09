@@ -75,15 +75,15 @@ public class ZombieVillagerRoom extends MineshaftPiece {
         this.fill(world, box, 1, 0, LOCAL_Z_END, 5, 2, LOCAL_Z_END, Blocks.STONE.getDefaultState());
         // Randomize
         // Cobble
-        this.randomReplaceNonAir(world, box, random, .4f, 1, 0, 0, 5, 2, 0, Blocks.COBBLESTONE.getDefaultState());
-        this.randomReplaceNonAir(world, box, random, .4f, 0, 0, 1, 0, 2, 5, Blocks.COBBLESTONE.getDefaultState());
-        this.randomReplaceNonAir(world, box, random, .4f, LOCAL_X_END, 0, 1, LOCAL_X_END, 2, 5, Blocks.COBBLESTONE.getDefaultState());
-        this.randomReplaceNonAir(world, box, random, .4f, 1, 0, LOCAL_Z_END, 5, 2, LOCAL_Z_END, Blocks.COBBLESTONE.getDefaultState());
+        this.chanceReplaceNonAir(world, box, random, .4f, 1, 0, 0, 5, 2, 0, Blocks.COBBLESTONE.getDefaultState());
+        this.chanceReplaceNonAir(world, box, random, .4f, 0, 0, 1, 0, 2, 5, Blocks.COBBLESTONE.getDefaultState());
+        this.chanceReplaceNonAir(world, box, random, .4f, LOCAL_X_END, 0, 1, LOCAL_X_END, 2, 5, Blocks.COBBLESTONE.getDefaultState());
+        this.chanceReplaceNonAir(world, box, random, .4f, 1, 0, LOCAL_Z_END, 5, 2, LOCAL_Z_END, Blocks.COBBLESTONE.getDefaultState());
         // Stone brick
-        this.randomReplaceNonAir(world, box, random, .1f, 1, 0, 0, 5, 2, 0, Blocks.STONE_BRICKS.getDefaultState());
-        this.randomReplaceNonAir(world, box, random, .1f, 0, 0, 1, 0, 2, 5, Blocks.STONE_BRICKS.getDefaultState());
-        this.randomReplaceNonAir(world, box, random, .1f, LOCAL_X_END, 0, 1, LOCAL_X_END, 2, 5, Blocks.STONE_BRICKS.getDefaultState());
-        this.randomReplaceNonAir(world, box, random, .1f, 1, 0, LOCAL_Z_END, 5, 2, LOCAL_Z_END, Blocks.STONE_BRICKS.getDefaultState());
+        this.chanceReplaceNonAir(world, box, random, .1f, 1, 0, 0, 5, 2, 0, Blocks.STONE_BRICKS.getDefaultState());
+        this.chanceReplaceNonAir(world, box, random, .1f, 0, 0, 1, 0, 2, 5, Blocks.STONE_BRICKS.getDefaultState());
+        this.chanceReplaceNonAir(world, box, random, .1f, LOCAL_X_END, 0, 1, LOCAL_X_END, 2, 5, Blocks.STONE_BRICKS.getDefaultState());
+        this.chanceReplaceNonAir(world, box, random, .1f, 1, 0, LOCAL_Z_END, 5, 2, LOCAL_Z_END, Blocks.STONE_BRICKS.getDefaultState());
 
         // Slabs on top of outermost walls
         this.fill(world, box, 2, 3, 0, 4, 3, 0, Blocks.STONE_SLAB.getDefaultState());
@@ -91,10 +91,10 @@ public class ZombieVillagerRoom extends MineshaftPiece {
         this.fill(world, box, LOCAL_X_END, 3, 2, LOCAL_X_END, 3, 4, Blocks.STONE_SLAB.getDefaultState());
         this.fill(world, box, 2, 3, LOCAL_Z_END, 4, 3, LOCAL_Z_END, Blocks.STONE_SLAB.getDefaultState());
         // Randomize
-        this.randomFill(world, box, random, .5f, 2, 3, 0, 4, 3, 0, Blocks.COBBLESTONE_SLAB.getDefaultState());
-        this.randomFill(world, box, random, .5f, 0, 3, 2, 0, 3, 4, Blocks.COBBLESTONE_SLAB.getDefaultState());
-        this.randomFill(world, box, random, .5f, LOCAL_X_END, 3, 2, LOCAL_X_END, 3, 4, Blocks.COBBLESTONE_SLAB.getDefaultState());
-        this.randomFill(world, box, random, .5f, 2, 3, LOCAL_Z_END, 4, 3, LOCAL_Z_END, Blocks.COBBLESTONE_SLAB.getDefaultState());
+        this.chanceFill(world, box, random, .5f, 2, 3, 0, 4, 3, 0, Blocks.COBBLESTONE_SLAB.getDefaultState());
+        this.chanceFill(world, box, random, .5f, 0, 3, 2, 0, 3, 4, Blocks.COBBLESTONE_SLAB.getDefaultState());
+        this.chanceFill(world, box, random, .5f, LOCAL_X_END, 3, 2, LOCAL_X_END, 3, 4, Blocks.COBBLESTONE_SLAB.getDefaultState());
+        this.chanceFill(world, box, random, .5f, 2, 3, LOCAL_Z_END, 4, 3, LOCAL_Z_END, Blocks.COBBLESTONE_SLAB.getDefaultState());
 
         // Second wall/ceiling layer, formed with upside-down stairs
         // Cardinal directions
@@ -110,7 +110,7 @@ public class ZombieVillagerRoom extends MineshaftPiece {
 
         // Third ceiling layer, formed with bottom-half slabs
         this.fill(world, box, 2, 4, 2, 4, 4, 4, Blocks.STONE_SLAB.getDefaultState());
-        this.randomFill(world, box, random, .5f, 2, 4, 2, 4, 4, 4, Blocks.COBBLESTONE_SLAB.getDefaultState());
+        this.chanceFill(world, box, random, .5f, 2, 4, 2, 4, 4, 4, Blocks.COBBLESTONE_SLAB.getDefaultState());
         this.addBlock(world, AIR, 3, 4, 3, box);
 
         // Top middle roof block
@@ -119,8 +119,8 @@ public class ZombieVillagerRoom extends MineshaftPiece {
         // Floor
         this.fill(world, box, 1, 0, 1, 5, 0, 5, Blocks.STONE.getDefaultState());
         // Randomize
-        this.randomFill(world, box, random, .4f, 1, 0, 1, 5, 0, 5, Blocks.COBBLESTONE.getDefaultState());
-        this.randomFill(world, box, random, .1f, 1, 0, 1, 5, 0, 5, Blocks.STONE_BRICKS.getDefaultState());
+        this.chanceFill(world, box, random, .4f, 1, 0, 1, 5, 0, 5, Blocks.COBBLESTONE.getDefaultState());
+        this.chanceFill(world, box, random, .1f, 1, 0, 1, 5, 0, 5, Blocks.STONE_BRICKS.getDefaultState());
 
         // Fill with air
         this.fill(world, box, 1, 1, 1, 5, 2, 5, AIR);
@@ -170,7 +170,7 @@ public class ZombieVillagerRoom extends MineshaftPiece {
             this.addBlock(world, Blocks.BLAST_FURNACE.getDefaultState(), 2, 1, 5, box);
 
         // Cobwebs
-        this.randomFill(world, box, random, .3f, 2, 3, 2, 4, 3, 4, Blocks.COBWEB.getDefaultState());
+        this.chanceFill(world, box, random, .3f, 2, 3, 2, 4, 3, 4, Blocks.COBWEB.getDefaultState());
 
         return true;
     }

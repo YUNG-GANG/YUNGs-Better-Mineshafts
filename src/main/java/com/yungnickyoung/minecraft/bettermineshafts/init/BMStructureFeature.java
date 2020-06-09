@@ -60,6 +60,9 @@ public class BMStructureFeature {
             case TAIGA:
                 config = new BetterMineshaftFeatureConfig(SPAWN_RATE, BetterMineshaftFeature.Type.ICE);
                 break;
+            case DESERT:
+                config = new BetterMineshaftFeatureConfig(SPAWN_RATE, BetterMineshaftFeature.Type.DESERT);
+                break;
             default:
                 config = new BetterMineshaftFeatureConfig(SPAWN_RATE, BetterMineshaftFeature.Type.NORMAL);
         }

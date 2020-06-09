@@ -103,13 +103,8 @@ public class SideRoom extends MineshaftPiece {
         }
 
         // Fill with stone then clean out with air
-        this.fill(world, box, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, Blocks.STONE_BRICKS.getDefaultState());
+        this.chanceFill(world, box, random, .8f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getBrickSelector());
         this.fill(world, box, 1, 1, 1, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END, AIR);
-
-        // Randomize blocks
-        this.randomReplaceNonAir(world, box, random, .1f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, Blocks.MOSSY_STONE_BRICKS.getDefaultState());
-        this.randomReplaceNonAir(world, box, random, .1f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, Blocks.CRACKED_STONE_BRICKS.getDefaultState());
-        this.randomReplaceNonAir(world, box, random, .1f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, Blocks.STONE.getDefaultState());
 
         // Furnace 1
         if (random.nextInt(2) == 0) {
@@ -130,7 +125,7 @@ public class SideRoom extends MineshaftPiece {
         }
 
         // Crafting table
-        this.randomAddBlock(world, random, .5f, Blocks.CRAFTING_TABLE.getDefaultState(), 3, 1, 1, box);
+        this.chanceAddBlock(world, random, .5f, Blocks.CRAFTING_TABLE.getDefaultState(), 3, 1, 1, box);
 
         // Barrel with loot
         if (random.nextInt(4) == 0) {

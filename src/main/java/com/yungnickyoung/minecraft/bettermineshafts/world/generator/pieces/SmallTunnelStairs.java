@@ -86,19 +86,14 @@ public class SmallTunnelStairs extends MineshaftPiece {
         }
 
         // Randomize blocks
-        this.randomReplaceNonAir(world, box, random, .1f, 0, 1, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, Blocks.COBBLESTONE.getDefaultState());
-        this.randomReplaceNonAir(world, box, random, .1f, 0, 1, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, Blocks.STONE_BRICKS.getDefaultState());
-        this.randomReplaceNonAir(world, box, random, .1f, 0, 1, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, Blocks.MOSSY_STONE_BRICKS.getDefaultState());
-        this.randomReplaceNonAir(world, box, random, .1f, 0, 1, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, Blocks.CRACKED_STONE_BRICKS.getDefaultState());
-        this.randomReplaceNonAir(world, box, random, .2f, 0, 1, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, AIR);
+        this.chanceReplaceNonAir(world, box, random, .6f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getMainSelector());
 
         for (int i = 0; i < 5 ; i++) {
             // Fill with air
             this.fill(world, box, 1, i + 1, i, LOCAL_X_END - 1, i + 1 + 2, i, AIR);
 
             // Place floor blocks
-            this.randomReplaceNonAir(world, box, random, .4f, 1, i, i, LOCAL_X_END - 1, i, i, getMainBlock());
-            this.randomReplaceNonAir(world, box, random, .1f, 1, i, i, LOCAL_X_END - 1, i, i, Blocks.COBBLESTONE.getDefaultState());
+            this.chanceReplaceNonAir(world, box, random, .5f, 1, i, i, LOCAL_X_END - 1, i, i, getMainSelector());
 
             // Place rails
             if (i == 0) {

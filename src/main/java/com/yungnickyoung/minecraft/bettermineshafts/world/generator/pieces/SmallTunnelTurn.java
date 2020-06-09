@@ -83,7 +83,7 @@ public class SmallTunnelTurn extends MineshaftPiece {
             return;
         }
 
-        Direction nextDirection = this.turnDirection == TurnDirection.LEFT ? rotate90Left(direction) : rotate90Right(direction);
+        Direction nextDirection = this.turnDirection == TurnDirection.LEFT ? direction.rotateYCounterclockwise() : direction.rotateYClockwise();
         switch (nextDirection) {
             case NORTH:
             default:
@@ -108,38 +108,32 @@ public class SmallTunnelTurn extends MineshaftPiece {
 
         Direction direction = this.getFacing();
 
-        // Place floor
-        this.fill(world, box, 1, 0, 0, LOCAL_X_END - 1, 0, LOCAL_Z_END - 1, getMainBlock());
-        this.randomReplaceNonAir(world, box, random, .5f, 1, 0, 0, LOCAL_X_END - 1, 0, LOCAL_Z_END - 1, Blocks.STONE.getDefaultState());
-        this.randomReplaceNonAir(world, box, random, .1f, 1, 0, 0, LOCAL_X_END - 1, 0, LOCAL_Z_END - 1, Blocks.COBBLESTONE.getDefaultState());
-
         // Randomize blocks
-        this.randomReplaceNonAir(world, box, random, .1f, 0, 1, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, Blocks.COBBLESTONE.getDefaultState());
-        this.randomReplaceNonAir(world, box, random, .1f, 0, 1, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, Blocks.STONE_BRICKS.getDefaultState());
-        this.randomReplaceNonAir(world, box, random, .1f, 0, 1, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, Blocks.MOSSY_STONE_BRICKS.getDefaultState());
-        this.randomReplaceNonAir(world, box, random, .1f, 0, 1, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, Blocks.CRACKED_STONE_BRICKS.getDefaultState());
-        this.randomReplaceNonAir(world, box, random, .2f, 0, 1, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, AIR);
+        this.chanceReplaceNonAir(world, box, random, .6f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getMainSelector());
 
         // Fill with air
         this.fill(world, box, 1, 1, 0, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END - 1, AIR);
+
+        // Fill in any air in floor with main block
+        this.replaceAir(world, box, 1, 0, 0, LOCAL_X_END - 1, 0, LOCAL_Z_END, getMainBlock());
 
         // Rails
         this.fill(world, box, 2, 1, 0, 2, 1, 1, Blocks.RAIL.getDefaultState());
 
         if (this.turnDirection == TurnDirection.LEFT) {
             if (direction == Direction.NORTH || direction == Direction.EAST) {
-                generateLeftTurn(world, random, box);
+                generateLeftTurn(world, box);
             }
             else {
-                generateRightTurn(world, random, box);
+                generateRightTurn(world, box);
             }
         }
         else {
             if (direction == Direction.NORTH || direction == Direction.EAST) {
-                generateRightTurn(world, random, box);
+                generateRightTurn(world, box);
             }
             else {
-                generateLeftTurn(world, random, box);
+                generateLeftTurn(world, box);
             }
         }
 
@@ -149,45 +143,17 @@ public class SmallTunnelTurn extends MineshaftPiece {
         return true;
     }
 
-    private void generateLeftTurn(IWorld world, Random random, BlockBox box) {
+    private void generateLeftTurn(IWorld world, BlockBox box) {
         this.fill(world, box, 0, 1, 1, 0, LOCAL_Y_END - 1, LOCAL_Z_END - 1, AIR);
         this.fill(world, box, 0, 0, 0, 0, 0, LOCAL_Z_END - 1, getMainBlock());
         this.fill(world, box, 2, 1, 2, 2, 1, 2, Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, RailShape.SOUTH_WEST));
         this.fill(world, box, 0, 1, 2, 1, 1, 2, Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, RailShape.EAST_WEST));
     }
 
-    private void generateRightTurn(IWorld world, Random random, BlockBox box) {
+    private void generateRightTurn(IWorld world, BlockBox box) {
         this.fill(world, box, LOCAL_X_END, 1, 1, LOCAL_X_END, LOCAL_Y_END - 1, LOCAL_Z_END - 1, AIR);
         this.fill(world, box, LOCAL_X_END, 0, 0, LOCAL_X_END, 0, LOCAL_Z_END - 1, getMainBlock());
         this.fill(world, box, 2, 1, 2, 2, 1, 2, Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, RailShape.SOUTH_EAST));
         this.fill(world, box, LOCAL_X_END - 1, 1, 2, LOCAL_X_END, 1, 2, Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, RailShape.EAST_WEST));
-    }
-
-    private static Direction rotate90Right(Direction direction) {
-        switch (direction) {
-            case NORTH:
-                return Direction.EAST;
-            case EAST:
-                return Direction.SOUTH;
-            case SOUTH:
-                return Direction.WEST;
-            case WEST:
-            default:
-                return Direction.NORTH;
-        }
-    }
-
-    private static Direction rotate90Left(Direction direction) {
-        switch (direction) {
-            case NORTH:
-                return Direction.WEST;
-            case WEST:
-                return Direction.SOUTH;
-            case SOUTH:
-                return Direction.EAST;
-            case EAST:
-            default:
-                return Direction.NORTH;
-        }
     }
 }

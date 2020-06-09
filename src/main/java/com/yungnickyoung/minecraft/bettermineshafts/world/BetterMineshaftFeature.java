@@ -136,7 +136,8 @@ public class BetterMineshaftFeature extends StructureFeature<BetterMineshaftFeat
         NORMAL("normal"),
         MESA("mesa"),
         JUNGLE("jungle"),
-        ICE("ice");
+        ICE("ice"),
+        DESERT("desert");
 
         private final String name;
 

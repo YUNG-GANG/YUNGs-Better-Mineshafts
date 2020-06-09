@@ -7,7 +7,6 @@ import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMinesh
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.RailShape;
-import net.minecraft.block.enums.SlabType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.structure.StructureManager;
 import net.minecraft.structure.StructurePiece;
@@ -123,29 +122,22 @@ public class VerticalEntrance extends MineshaftPiece {
      * Generates the vertical shaft with a ladder.
      */
     private void generateVerticalShaft(IWorld world, Random random, BlockBox box) {
-        // Fill with stone then clean out with air
-        this.fill(world, box, SHAFT_LOCAL_XZ_START, 0, SHAFT_LOCAL_XZ_START, SHAFT_LOCAL_XZ_END, localYEnd, SHAFT_LOCAL_XZ_END, Blocks.STONE.getDefaultState());
+        // Fill
+        this.fill(world, box, random, SHAFT_LOCAL_XZ_START, 0, SHAFT_LOCAL_XZ_START, SHAFT_LOCAL_XZ_END, localYEnd, SHAFT_LOCAL_XZ_END, getMainSelector());
+
+        // Fill with air
         this.fill(world, box, SHAFT_LOCAL_XZ_START + 1, 1, SHAFT_LOCAL_XZ_START + 1, SHAFT_LOCAL_XZ_END - 1, localYEnd - 1, SHAFT_LOCAL_XZ_END - 1, AIR);
 
-        // Randomize blocks
-        this.randomReplaceNonAir(world, box, random, .1f, SHAFT_LOCAL_XZ_START, 0, SHAFT_LOCAL_XZ_START, SHAFT_LOCAL_XZ_END, localYEnd - 1, SHAFT_LOCAL_XZ_END, Blocks.COBBLESTONE.getDefaultState());
-        this.randomReplaceNonAir(world, box, random, .1f, SHAFT_LOCAL_XZ_START, 0, SHAFT_LOCAL_XZ_START, SHAFT_LOCAL_XZ_END, localYEnd - 1, SHAFT_LOCAL_XZ_END, Blocks.STONE_BRICKS.getDefaultState());
-        this.randomReplaceNonAir(world, box, random, .1f, SHAFT_LOCAL_XZ_START, 0, SHAFT_LOCAL_XZ_START, SHAFT_LOCAL_XZ_END, localYEnd - 1, SHAFT_LOCAL_XZ_END, Blocks.MOSSY_STONE_BRICKS.getDefaultState());
-        this.randomReplaceNonAir(world, box, random, .1f, SHAFT_LOCAL_XZ_START, 0, SHAFT_LOCAL_XZ_START, SHAFT_LOCAL_XZ_END, localYEnd - 1, SHAFT_LOCAL_XZ_END, Blocks.CRACKED_STONE_BRICKS.getDefaultState());
-        this.randomReplaceNonAir(world, box, random, .2f, SHAFT_LOCAL_XZ_START, 0, SHAFT_LOCAL_XZ_START, SHAFT_LOCAL_XZ_END, localYEnd - 1, SHAFT_LOCAL_XZ_END, AIR);
-
-        // Floor
+        // Fill in any air in floor with main block
         this.replaceAir(world, box, SHAFT_LOCAL_XZ_START + 1, 0, SHAFT_LOCAL_XZ_START + 1, SHAFT_LOCAL_XZ_END - 1, 0, SHAFT_LOCAL_XZ_END - 1, getMainBlock());
-        this.randomReplaceNonAir(world, box, random, .4f, SHAFT_LOCAL_XZ_START + 1, 0, SHAFT_LOCAL_XZ_START + 1, SHAFT_LOCAL_XZ_END - 1, 0, SHAFT_LOCAL_XZ_END - 1, getMainBlock());
-        this.randomReplaceNonAir(world, box, random, .4f, SHAFT_LOCAL_XZ_START + 1, 0, SHAFT_LOCAL_XZ_START + 1, SHAFT_LOCAL_XZ_END - 1, 0, SHAFT_LOCAL_XZ_END - 1, Blocks.STONE.getDefaultState());
 
         // Ladder
-        this.fill(world, box, SHAFT_LOCAL_XZ_START + 2, 1, SHAFT_LOCAL_XZ_START, SHAFT_LOCAL_XZ_START + 2, localYEnd - 4, SHAFT_LOCAL_XZ_START, Blocks.STONE_BRICKS.getDefaultState());
+        this.replaceAir(world, box, SHAFT_LOCAL_XZ_START + 2, 1, SHAFT_LOCAL_XZ_START, SHAFT_LOCAL_XZ_START + 2, localYEnd - 4, SHAFT_LOCAL_XZ_START, getMainBlock());
         this.fill(world, box, SHAFT_LOCAL_XZ_START + 2, 1, SHAFT_LOCAL_XZ_START + 1, SHAFT_LOCAL_XZ_START + 2, localYEnd - 4, SHAFT_LOCAL_XZ_START + 1, Blocks.LADDER.getDefaultState());
 
         // Doorway
-        this.fill(world, box, SHAFT_LOCAL_XZ_START + 1, 1, SHAFT_LOCAL_XZ_START + 4, SHAFT_LOCAL_XZ_START + 3, 2, SHAFT_LOCAL_XZ_START + 4, Blocks.STONE_BRICK_WALL.getDefaultState());
-        this.fill(world, box, SHAFT_LOCAL_XZ_START + 2, 3, SHAFT_LOCAL_XZ_START + 4, SHAFT_LOCAL_XZ_START + 2, 3, SHAFT_LOCAL_XZ_START + 4, Blocks.STONE_BRICK_SLAB.getDefaultState().with(SlabBlock.TYPE, SlabType.TOP));
+        this.fill(world, box, SHAFT_LOCAL_XZ_START + 1, 1, SHAFT_LOCAL_XZ_START + 4, SHAFT_LOCAL_XZ_START + 3, 2, SHAFT_LOCAL_XZ_START + 4, getMainDoorwayWall());
+        this.fill(world, box, SHAFT_LOCAL_XZ_START + 2, 3, SHAFT_LOCAL_XZ_START + 4, SHAFT_LOCAL_XZ_START + 2, 3, SHAFT_LOCAL_XZ_START + 4, getMainDoorwaySlab());
         this.fill(world, box, SHAFT_LOCAL_XZ_START + 2, 1, SHAFT_LOCAL_XZ_START + 4, SHAFT_LOCAL_XZ_START + 2, 2, SHAFT_LOCAL_XZ_START + 4, AIR);
 
         // Decorations
@@ -201,45 +193,35 @@ public class VerticalEntrance extends MineshaftPiece {
             tunnelEndZ = 26;
         }
 
-        // Tunnel
-        if (facing.getAxis() == tunnelDirection.getAxis()) {
-            // Place floor
-            this.replaceAir(world, box, tunnelStartX + 1, tunnelFloorAltitude, tunnelStartZ, tunnelEndX - 1, tunnelFloorAltitude, tunnelEndZ, getMainBlock());
-            this.randomReplaceNonAir(world, box, random, .5f, tunnelStartX + 1, tunnelFloorAltitude, tunnelStartZ, tunnelEndX - 1, tunnelFloorAltitude, tunnelEndZ, Blocks.STONE.getDefaultState());
-            this.randomReplaceNonAir(world, box, random, .1f, tunnelStartX + 1, tunnelFloorAltitude, tunnelStartZ, tunnelEndX - 1, tunnelFloorAltitude, tunnelEndZ, Blocks.COBBLESTONE.getDefaultState());
+        // ################################################################
+        // #                            Tunnel                            #
+        // ################################################################
 
-            // Randomize blocks
-            this.randomReplaceNonAir(world, box, random, .1f, tunnelStartX, tunnelFloorAltitude + 1, tunnelStartZ, tunnelEndX, tunnelFloorAltitude + 4, tunnelEndZ, Blocks.COBBLESTONE.getDefaultState());
-            this.randomReplaceNonAir(world, box, random, .1f, tunnelStartX, tunnelFloorAltitude + 1, tunnelStartZ, tunnelEndX, tunnelFloorAltitude + 4, tunnelEndZ, Blocks.STONE_BRICKS.getDefaultState());
-            this.randomReplaceNonAir(world, box, random, .1f, tunnelStartX, tunnelFloorAltitude + 1, tunnelStartZ, tunnelEndX, tunnelFloorAltitude + 4, tunnelEndZ, Blocks.MOSSY_STONE_BRICKS.getDefaultState());
-            this.randomReplaceNonAir(world, box, random, .1f, tunnelStartX, tunnelFloorAltitude + 1, tunnelStartZ, tunnelEndX, tunnelFloorAltitude + 4, tunnelEndZ, Blocks.CRACKED_STONE_BRICKS.getDefaultState());
-            this.randomReplaceNonAir(world, box, random, .2f, tunnelStartX, tunnelFloorAltitude + 1, tunnelStartZ, tunnelEndX, tunnelFloorAltitude + 4, tunnelEndZ, AIR);
+        // Randomize blocks
+        this.chanceReplaceNonAir(world, box, random, .6f, tunnelStartX, tunnelFloorAltitude, tunnelStartZ, tunnelEndX, tunnelFloorAltitude + 4, tunnelEndZ, getMainSelector());
+
+        if (facing.getAxis() == tunnelDirection.getAxis()) {
+            // Fill in any air in floor with main block
+            this.replaceAir(world, box, tunnelStartX + 1, tunnelFloorAltitude, tunnelStartZ, tunnelEndX - 1, tunnelFloorAltitude, tunnelEndZ, getMainBlock());
 
             // Fill with air
             this.fill(world, box, tunnelStartX + 1, tunnelFloorAltitude + 1, tunnelStartZ, tunnelEndX - 1, tunnelFloorAltitude + 3, tunnelEndZ, AIR);
-        } else {
-            // Place floor
-            this.replaceNonAir(world, box, tunnelStartX, tunnelFloorAltitude, tunnelStartZ + 1, tunnelEndX, tunnelFloorAltitude, tunnelEndZ - 1, getMainBlock());
-            this.randomReplaceNonAir(world, box, random, .5f, tunnelStartX, tunnelFloorAltitude, tunnelStartZ + 1, tunnelEndX, tunnelFloorAltitude, tunnelEndZ - 1, Blocks.STONE.getDefaultState());
-            this.randomReplaceNonAir(world, box, random, .1f, tunnelStartX, tunnelFloorAltitude, tunnelStartZ + 1, tunnelEndX, tunnelFloorAltitude, tunnelEndZ - 1, Blocks.COBBLESTONE.getDefaultState());
-
-            // Randomize blocks
-            this.randomReplaceNonAir(world, box, random, .1f, tunnelStartX, tunnelFloorAltitude + 1, tunnelStartZ, tunnelEndX, tunnelFloorAltitude + 4, tunnelEndZ, Blocks.COBBLESTONE.getDefaultState());
-            this.randomReplaceNonAir(world, box, random, .1f, tunnelStartX, tunnelFloorAltitude + 1, tunnelStartZ, tunnelEndX, tunnelFloorAltitude + 4, tunnelEndZ, Blocks.STONE_BRICKS.getDefaultState());
-            this.randomReplaceNonAir(world, box, random, .1f, tunnelStartX, tunnelFloorAltitude + 1, tunnelStartZ, tunnelEndX, tunnelFloorAltitude + 4, tunnelEndZ, Blocks.MOSSY_STONE_BRICKS.getDefaultState());
-            this.randomReplaceNonAir(world, box, random, .1f, tunnelStartX, tunnelFloorAltitude + 1, tunnelStartZ, tunnelEndX, tunnelFloorAltitude + 4, tunnelEndZ, Blocks.CRACKED_STONE_BRICKS.getDefaultState());
-            this.randomReplaceNonAir(world, box, random, .2f, tunnelStartX, tunnelFloorAltitude + 1, tunnelStartZ, tunnelEndX, tunnelFloorAltitude + 4, tunnelEndZ, AIR);
+        }
+        else {
+            // Fill in any air in floor with main block
+            this.replaceAir(world, box, tunnelStartX, tunnelFloorAltitude, tunnelStartZ + 1, tunnelEndX, tunnelFloorAltitude, tunnelEndZ - 1, getMainBlock());
 
             // Fill with air
             this.fill(world, box, tunnelStartX, tunnelFloorAltitude + 1, tunnelStartZ + 1, tunnelEndX, tunnelFloorAltitude + 3, tunnelEndZ - 1, AIR);
-
-            // Decorations
-            this.addVines(world, box, random, getVineChance(), tunnelStartX + 1, tunnelFloorAltitude, tunnelStartZ + 1, tunnelEndX - 1, tunnelFloorAltitude + 4, tunnelEndZ - 1);
-
         }
 
-        // Decorations
-        // Note that while normally, building (i.e. determining placement) of decorations is done before generation,
+        // Vines
+        this.addVines(world, box, random, getVineChance(), tunnelStartX + 1, tunnelFloorAltitude, tunnelStartZ + 1, tunnelEndX - 1, tunnelFloorAltitude + 4, tunnelEndZ - 1);
+
+        // ################################################################
+        // #                       Supports & Rails                       #
+        // ################################################################
+        // Note that while normally, building (i.e. determining placement) of things like supports is done before generation,
         // that is not the case here since localZEnd is not known until generation.
 
         // Mark positions where center floor block is solid
@@ -272,11 +254,11 @@ public class VerticalEntrance extends MineshaftPiece {
                     this.fill(world, box, tunnelStartX + 1, tunnelFloorAltitude + 1, z, tunnelStartX + 1, tunnelFloorAltitude + 2, z, getSupportBlock());
                     this.fill(world, box, tunnelStartX + 3, tunnelFloorAltitude + 1, z, tunnelStartX + 3, tunnelFloorAltitude + 2, z, getSupportBlock());
                     this.fill(world, box, tunnelStartX + 1, tunnelFloorAltitude + 3, z, tunnelStartX + 3, tunnelFloorAltitude + 3, z, getMainBlock());
-                    this.randomReplaceNonAir(world, box, random, .25f, tunnelStartX + 1, tunnelFloorAltitude + 3, z, tunnelStartX + 3, tunnelFloorAltitude + 3, z, getSupportBlock());
+                    this.chanceReplaceNonAir(world, box, random, .25f, tunnelStartX + 1, tunnelFloorAltitude + 3, z, tunnelStartX + 3, tunnelFloorAltitude + 3, z, getSupportBlock());
 
                     // Cobwebs
-                    this.randomReplaceAir(world, box, random, .15f, tunnelStartX + 1, tunnelFloorAltitude + 3, z - 1, tunnelStartX + 1, tunnelFloorAltitude + 3, z + 1, Blocks.COBWEB.getDefaultState());
-                    this.randomReplaceAir(world, box, random, .15f, tunnelStartX + 3, tunnelFloorAltitude + 3, z - 1, tunnelStartX + 3, tunnelFloorAltitude + 3, z + 1, Blocks.COBWEB.getDefaultState());
+                    this.chanceReplaceAir(world, box, random, .15f, tunnelStartX + 1, tunnelFloorAltitude + 3, z - 1, tunnelStartX + 1, tunnelFloorAltitude + 3, z + 1, Blocks.COBWEB.getDefaultState());
+                    this.chanceReplaceAir(world, box, random, .15f, tunnelStartX + 3, tunnelFloorAltitude + 3, z - 1, tunnelStartX + 3, tunnelFloorAltitude + 3, z + 1, Blocks.COBWEB.getDefaultState());
                     z += 3;
                 }
             }
@@ -289,11 +271,11 @@ public class VerticalEntrance extends MineshaftPiece {
                     this.fill(world, box, x, tunnelFloorAltitude + 1, tunnelStartZ + 1, x, tunnelFloorAltitude + 2, tunnelStartZ + 1, getSupportBlock());
                     this.fill(world, box, x, tunnelFloorAltitude + 1, tunnelStartZ + 3, x, tunnelFloorAltitude + 2, tunnelStartZ + 3, getSupportBlock());
                     this.fill(world, box, x, tunnelFloorAltitude + 3, tunnelStartZ + 1, x, tunnelFloorAltitude + 3, tunnelStartZ + 3, getMainBlock());
-                    this.randomReplaceNonAir(world, box, random, .25f, x, tunnelFloorAltitude + 3, tunnelStartZ + 1, x, tunnelFloorAltitude + 3, tunnelStartZ + 3, getSupportBlock());
+                    this.chanceReplaceNonAir(world, box, random, .25f, x, tunnelFloorAltitude + 3, tunnelStartZ + 1, x, tunnelFloorAltitude + 3, tunnelStartZ + 3, getSupportBlock());
 
                     // Cobwebs
-                    this.randomReplaceAir(world, box, random, .15f, x - 1, tunnelFloorAltitude + 3, tunnelStartZ + 1, x + 1, tunnelFloorAltitude + 3, tunnelStartZ + 1, Blocks.COBWEB.getDefaultState());
-                    this.randomReplaceAir(world, box, random, .15f, x - 1, tunnelFloorAltitude + 3, tunnelStartZ + 3, x + 1, tunnelFloorAltitude + 3, tunnelStartZ + 3, Blocks.COBWEB.getDefaultState());
+                    this.chanceReplaceAir(world, box, random, .15f, x - 1, tunnelFloorAltitude + 3, tunnelStartZ + 1, x + 1, tunnelFloorAltitude + 3, tunnelStartZ + 1, Blocks.COBWEB.getDefaultState());
+                    this.chanceReplaceAir(world, box, random, .15f, x - 1, tunnelFloorAltitude + 3, tunnelStartZ + 3, x + 1, tunnelFloorAltitude + 3, tunnelStartZ + 3, Blocks.COBWEB.getDefaultState());
                     x += 3;
                 }
             }

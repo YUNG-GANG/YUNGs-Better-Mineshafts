@@ -1,10 +1,11 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
+import com.yungnickyoung.minecraft.bettermineshafts.util.BlockSelector;
 import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftFeature;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BarrelBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.fluid.FluidState;
+import net.minecraft.block.enums.SlabType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.structure.StructurePiece;
 import net.minecraft.structure.StructurePieceType;
@@ -59,6 +60,44 @@ public abstract class MineshaftPiece extends StructurePiece {
         return super.method_14937(blockView, blockBox);
     }
 
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *                                     BLOCK SELECTORS                                     *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    protected BlockSelector getMainSelector() {
+        switch (this.mineshaftType) {
+            case NORMAL:
+            default:
+                return BlockSelector.NORMAL;
+            case MESA:
+                return BlockSelector.MESA;
+            case JUNGLE:
+                return BlockSelector.JUNGLE;
+            case ICE:
+                return BlockSelector.ICE;
+            case DESERT:
+                return BlockSelector.DESERT;
+        }
+    }
+
+    protected BlockSelector getBrickSelector() {
+        switch (this.mineshaftType) {
+            case NORMAL:
+            case MESA:
+            default:
+                return BlockSelector.STONE_BRICK_NORMAL;
+            case JUNGLE:
+                return BlockSelector.STONE_BRICK_JUNGLE;
+            case ICE:
+                return BlockSelector.STONE_BRICK_ICE;
+            case DESERT:
+                return BlockSelector.STONE_BRICK_DESERT;
+        }
+    }
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *                                BIOME VARIANT BLOCK GETTERS                              *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     protected BlockState getMainBlock() {
         switch (this.mineshaftType) {
@@ -70,7 +109,9 @@ public abstract class MineshaftPiece extends StructurePiece {
             case JUNGLE:
                 return Blocks.JUNGLE_PLANKS.getDefaultState();
             case ICE:
-                return Blocks.SNOW_BLOCK.getDefaultState();
+                return Blocks.SPRUCE_PLANKS.getDefaultState();
+            case DESERT:
+                return Blocks.SANDSTONE.getDefaultState();
         }
     }
 
@@ -84,7 +125,64 @@ public abstract class MineshaftPiece extends StructurePiece {
             case JUNGLE:
                 return Blocks.JUNGLE_SLAB.getDefaultState();
             case ICE:
-                return Blocks.PACKED_ICE.getDefaultState();
+                return Blocks.SPRUCE_SLAB.getDefaultState();
+            case DESERT:
+                return Blocks.SANDSTONE_SLAB.getDefaultState();
+        }
+    }
+
+    protected BlockState getBrickBlock() {
+        switch (this.mineshaftType) {
+            case NORMAL:
+            case MESA:
+            case JUNGLE:
+            default:
+                return Blocks.STONE_BRICKS.getDefaultState();
+            case ICE:
+                return Blocks.SNOW_BLOCK.getDefaultState();
+            case DESERT:
+                return Blocks.SANDSTONE.getDefaultState();
+        }
+    }
+
+    protected BlockState getGravel() {
+        switch (this.mineshaftType) {
+            case NORMAL:
+            case MESA:
+            case JUNGLE:
+            case ICE:
+            default:
+                return Blocks.GRAVEL.getDefaultState();
+            case DESERT:
+                return Blocks.SAND.getDefaultState();
+        }
+    }
+
+    protected BlockState getMainDoorwayWall() {
+        switch (this.mineshaftType) {
+            case NORMAL:
+            case MESA:
+            case JUNGLE:
+            default:
+                return Blocks.STONE_BRICK_WALL.getDefaultState();
+            case ICE:
+                return Blocks.SNOW_BLOCK.getDefaultState();
+            case DESERT:
+                return Blocks.SANDSTONE_WALL.getDefaultState();
+        }
+    }
+
+    protected BlockState getMainDoorwaySlab() {
+        switch (this.mineshaftType) {
+            case NORMAL:
+            case MESA:
+            case JUNGLE:
+            default:
+                return Blocks.STONE_BRICK_SLAB.getDefaultState().with(SlabBlock.TYPE, SlabType.TOP);
+            case ICE:
+                return Blocks.SNOW_BLOCK.getDefaultState();
+            case DESERT:
+                return Blocks.SANDSTONE_SLAB.getDefaultState().with(SlabBlock.TYPE, SlabType.TOP);
         }
     }
 
@@ -98,13 +196,16 @@ public abstract class MineshaftPiece extends StructurePiece {
             case JUNGLE:
                 return Blocks.JUNGLE_FENCE.getDefaultState();
             case ICE:
-                return Blocks.BLUE_ICE.getDefaultState();
+                return Blocks.SPRUCE_FENCE.getDefaultState();
+            case DESERT:
+                return Blocks.SANDSTONE_WALL.getDefaultState();
         }
     }
 
     protected BlockState getTrapdoor() {
         switch (this.mineshaftType) {
             case NORMAL:
+            case DESERT:
             default:
                 return Blocks.OAK_TRAPDOOR.getDefaultState();
             case MESA:
@@ -112,7 +213,7 @@ public abstract class MineshaftPiece extends StructurePiece {
             case JUNGLE:
                 return Blocks.JUNGLE_TRAPDOOR.getDefaultState();
             case ICE:
-                return Blocks.BIRCH_TRAPDOOR.getDefaultState();
+                return Blocks.SPRUCE_TRAPDOOR.getDefaultState();
         }
     }
 
@@ -183,7 +284,7 @@ public abstract class MineshaftPiece extends StructurePiece {
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     /**
-     * Fills up the given bounded area with provided block.
+     * Replaces each block in the provided area with the provided BlockState.
      */
     protected void fill(IWorld world, BlockBox blockBox, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState blockState) {
         for (int x = minX; x <= maxX; ++x) {
@@ -196,29 +297,20 @@ public abstract class MineshaftPiece extends StructurePiece {
     }
 
     /**
-     * Fills up the given bounded area with provided inside and edge blocks.
-     *
-     * @param edgeBlock BlockState for blocks along the edges of the enclosed area
-     * @param insideBlock BlockState for blocks inside the enclosed area (not along an edge or corner)
+     * Replaces each block in the provided area with blocks determined by the provided BlockSelector.
      */
-    protected void fillWithOutline(IWorld world, BlockBox blockBox, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState edgeBlock, BlockState insideBlock, boolean onlyReplaceNonAir) {
+    protected void fill(IWorld world, BlockBox blockBox, Random random, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockSelector selector) {
         for (int x = minX; x <= maxX; ++x) {
             for (int y = minY; y <= maxY; ++y) {
                 for (int z = minZ; z <= maxZ; ++z) {
-                    if (!onlyReplaceNonAir || !this.getBlockAt(world, x, y, z, blockBox).isAir()) {
-                        if (y != minY && y != maxY && x != minX && x != maxX && z != minZ && z != maxZ) {
-                            this.addBlock(world, insideBlock, x, y, z, blockBox);
-                        } else {
-                            this.addBlock(world, edgeBlock, x, y, z, blockBox);
-                        }
-                    }
+                    this.addBlock(world, selector.get(random), x, y, z, blockBox);
                 }
             }
         }
     }
 
     /**
-     * Replaces all air blocks in the given bounded area with provided block.
+     * Replaces each air block in the provided area with the provided BlockState.
      */
     protected void replaceAir(IWorld world, BlockBox blockBox, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState blockState) {
         for (int x = minX; x <= maxX; ++x) {
@@ -234,7 +326,23 @@ public abstract class MineshaftPiece extends StructurePiece {
     }
 
     /**
-     * Replaces all non-air blocks in the given bounded area with provided block.
+     * Replaces each air block in the provided area with blocks determined by the provided BlockSelector.
+     */
+    protected void replaceAir(IWorld world, BlockBox blockBox, Random random, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockSelector selector) {
+        for (int x = minX; x <= maxX; ++x) {
+            for (int y = minY; y <= maxY; ++y) {
+                for (int z = minZ; z <= maxZ; ++z) {
+                    BlockState currState = this.getBlockAtFixed(world, x, y, z, blockBox);
+                    if (currState != null && currState.isAir()) {
+                        this.addBlock(world, selector.get(random), x, y, z, blockBox);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Replaces each non-air block in the provided area with the provided BlockState.
      */
     protected void replaceNonAir(IWorld world, BlockBox blockBox, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState blockState) {
         for (int x = minX; x <= maxX; ++x) {
@@ -249,14 +357,30 @@ public abstract class MineshaftPiece extends StructurePiece {
         }
     }
 
+    /**
+     * Replaces each non-air block in the provided area with blocks determined by the provided BlockSelector.
+     */
+    protected void replaceNonAir(IWorld world, BlockBox blockBox, Random random, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockSelector selector) {
+        for (int x = minX; x <= maxX; ++x) {
+            for (int y = minY; y <= maxY; ++y) {
+                for (int z = minZ; z <= maxZ; ++z) {
+                    BlockState currState = this.getBlockAtFixed(world, x, y, z, blockBox);
+                    if (currState != null && !currState.isAir()) {
+                        this.addBlock(world, selector.get(random), x, y, z, blockBox);
+                    }
+                }
+            }
+        }
+    }
+
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *                                   RANDOM FILL METHODS                                   *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     /**
-     * Replaces each block with a given chance.
+     * Has a chance of replacing each block in the provided area with the provided BlockState.
      */
-    protected void randomFill(IWorld world, BlockBox blockBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState blockState) {
+    protected void chanceFill(IWorld world, BlockBox blockBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState blockState) {
         for (int x = minX; x <= maxX; ++x) {
             for (int y = minY; y <= maxY; ++y) {
                 for (int z = minZ; z <= maxZ; ++z) {
@@ -269,31 +393,23 @@ public abstract class MineshaftPiece extends StructurePiece {
     }
 
     /**
-     * Fills up the given bounded area with provided inside and edge blocks.
-     *
-     * @param edgeBlock BlockState for blocks along the edges of the enclosed area
-     * @param insideBlock BlockState for blocks inside the enclosed area (not along an edge or corner)
+     * Has a chance of replacing each block in the provided area with a block determined by the provided BlockSelector.
      */
-    protected void randomFillWithOutline(IWorld world, BlockBox blockBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState edgeBlock, BlockState insideBlock) {
+    protected void chanceFill(IWorld world, BlockBox blockBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockSelector selector) {
         for (int x = minX; x <= maxX; ++x) {
             for (int y = minY; y <= maxY; ++y) {
                 for (int z = minZ; z <= maxZ; ++z) {
                     if (random.nextFloat() < chance) {
-                        if (y != minY && y != maxY && x != minX && x != maxX && z != minZ && z != maxZ) {
-                            this.addBlock(world, insideBlock, x, y, z, blockBox);
-                        } else {
-                            this.addBlock(world, edgeBlock, x, y, z, blockBox);
-                        }
+                        this.addBlock(world, selector.get(random), x, y, z, blockBox);
                     }
                 }
             }
-        }
-    }
+        }    }
 
     /**
-     * Replaces each air block with a given chance.
+     * Has a chance of replacing each air block in the provided area with the provided BlockState.
      */
-    protected void randomReplaceAir(IWorld world, BlockBox blockBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState blockState) {
+    protected void chanceReplaceAir(IWorld world, BlockBox blockBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState blockState) {
         for (int x = minX; x <= maxX; ++x) {
             for (int y = minY; y <= maxY; ++y) {
                 for (int z = minZ; z <= maxZ; ++z) {
@@ -309,9 +425,26 @@ public abstract class MineshaftPiece extends StructurePiece {
     }
 
     /**
-     * Replaces all non-air blocks in the given bounded area with provided block.
+     * Has a chance of replacing each air block in the provided area with a block determined by the provided BlockSelector.
      */
-    protected void randomReplaceNonAir(IWorld world, BlockBox blockBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState blockState) {
+    protected void chanceReplaceAir(IWorld world, BlockBox blockBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockSelector selector) {
+        for (int x = minX; x <= maxX; ++x) {
+            for (int y = minY; y <= maxY; ++y) {
+                for (int z = minZ; z <= maxZ; ++z) {
+                    if (random.nextFloat() < chance) {
+                        BlockState currState = this.getBlockAtFixed(world, x, y, z, blockBox);
+                        if (currState != null && currState.isAir()) {
+                            this.addBlock(world, selector.get(random), x, y, z, blockBox);
+                        }
+                    }
+                }
+            }
+        }    }
+
+    /**
+     * Has a chance of replacing each non-air block in the provided area with the provided BlockState.
+     */
+    protected void chanceReplaceNonAir(IWorld world, BlockBox blockBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState blockState) {
         for (int x = minX; x <= maxX; ++x) {
             for (int y = minY; y <= maxY; ++y) {
                 for (int z = minZ; z <= maxZ; ++z) {
@@ -326,11 +459,29 @@ public abstract class MineshaftPiece extends StructurePiece {
         }
     }
 
+    /**
+     * Has a chance of replacing each non-air block in the provided area with a block determined by the provided BlockSelector.
+     */
+    protected void chanceReplaceNonAir(IWorld world, BlockBox blockBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockSelector selector) {
+        for (int x = minX; x <= maxX; ++x) {
+            for (int y = minY; y <= maxY; ++y) {
+                for (int z = minZ; z <= maxZ; ++z) {
+                    if (random.nextFloat() < chance) {
+                        BlockState currState = this.getBlockAtFixed(world, x, y, z, blockBox);
+                        if (currState != null && !currState.isAir()) {
+                            this.addBlock(world, selector.get(random), x, y, z, blockBox);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *                                      BLOCK SET/GET                                      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    protected void randomAddBlock(IWorld world, Random random, float chance, BlockState block, int x, int y, int z, BlockBox blockBox) {
+    protected void chanceAddBlock(IWorld world, Random random, float chance, BlockState block, int x, int y, int z, BlockBox blockBox) {
         if (random.nextFloat() < chance) {
             this.addBlock(world, block, x, y, z, blockBox);
         }
