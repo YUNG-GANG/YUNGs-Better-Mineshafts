@@ -283,13 +283,38 @@ public abstract class MineshaftPiece extends StructurePiece {
      * Add decorations specific to a biome variant, such as snow.
      */
     protected void addBiomeDecorations(IWorld world, BlockBox box, Random random, int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
-        if (mineshaftType == BetterMineshaftFeature.Type.ICE) {
-            for (int x = minX; x <= maxX; x++) {
-                for (int y = minY; y <= maxY; y++) {
-                    for (int z = minZ; z <= maxZ; z++) {
-                        BlockPos blockPos = new BlockPos(this.applyXTransform(x, z), this.applyYTransform(y), this.applyZTransform(x, z));
-                        if (this.getBlockAtFixed(world, x, y, z, box) == AIR && Blocks.SNOW.canPlaceAt(AIR, world, blockPos)) {
+        for (int x = minX; x <= maxX; x++) {
+            for (int y = minY; y <= maxY; y++) {
+                for (int z = minZ; z <= maxZ; z++) {
+                    BlockPos blockPos = new BlockPos(this.applyXTransform(x, z), this.applyYTransform(y), this.applyZTransform(x, z));
+                    // Snow layers
+                    if (mineshaftType == BetterMineshaftFeature.Type.ICE) {
+                        if (this.getBlockAt(world, x, y, z, box) == AIR && Blocks.SNOW.canPlaceAt(AIR, world, blockPos)) {
                             this.addBlock(world, Blocks.SNOW.getDefaultState().with(SnowBlock.LAYERS, random.nextInt(2) + 1), x, y, z, box);
+                        }
+                    }
+                    // Cacti and dead bushes
+                    else if (mineshaftType == BetterMineshaftFeature.Type.DESERT) {
+                        float r = random.nextFloat();
+                        if (r < .1f) {
+                            if (this.getBlockAt(world, x, y, z, box) == AIR && Blocks.CACTUS.canPlaceAt(AIR, world, blockPos)) {
+                                this.addBlock(world, Blocks.CACTUS.getDefaultState().with(CactusBlock.AGE, 0), x, y, z, box);
+                            }
+                        } else if (r < .2f) {
+                            Block floor = this.getBlockAt(world, x, y - 1, z, box).getBlock();
+                            if (this.getBlockAt(world, x, y, z, box) == AIR && (floor == Blocks.SAND || floor == Blocks.RED_SAND || floor == Blocks.TERRACOTTA || floor == Blocks.WHITE_TERRACOTTA || floor == Blocks.ORANGE_TERRACOTTA || floor == Blocks.YELLOW_TERRACOTTA || floor == Blocks.BROWN_TERRACOTTA || floor == Blocks.DIRT)) {
+                                this.addBlock(world, Blocks.DEAD_BUSH.getDefaultState(), x, y, z, box);
+                            }
+                        }
+
+                    }
+                    // Dead bushes
+                    else if (mineshaftType == BetterMineshaftFeature.Type.MESA) {
+                        if (random.nextFloat() < .1f) {
+                            Block floor = this.getBlockAt(world, x, y - 1, z, box).getBlock();
+                            if (this.getBlockAt(world, x, y, z, box) == AIR && (floor == Blocks.SAND || floor == Blocks.RED_SAND || floor == Blocks.TERRACOTTA || floor == Blocks.WHITE_TERRACOTTA || floor == Blocks.ORANGE_TERRACOTTA || floor == Blocks.YELLOW_TERRACOTTA || floor == Blocks.BROWN_TERRACOTTA || floor == Blocks.DIRT)) {
+                                this.addBlock(world, Blocks.DEAD_BUSH.getDefaultState(), x, y, z, box);
+                            }
                         }
                     }
                 }
