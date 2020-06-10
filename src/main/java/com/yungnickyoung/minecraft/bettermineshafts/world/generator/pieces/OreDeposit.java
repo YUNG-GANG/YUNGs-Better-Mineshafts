@@ -89,9 +89,9 @@ public class OreDeposit extends MineshaftPiece {
     public void method_14918(StructurePiece structurePiece, List<StructurePiece> list, Random random) {
         float r = random.nextFloat();
 
-        if (r < .3f) {
+        if (r < .5f) {
             this.oreType = OreType.COBBLE; // Chance of cobble instead of ore
-        } else if (r <= .65f)
+        } else if (r <= .7f)
             this.oreType = OreType.COAL;
         else if (r <= .79f)
             this.oreType = OreType.IRON;
@@ -101,7 +101,7 @@ public class OreDeposit extends MineshaftPiece {
             this.oreType = OreType.GOLD;
         else if (r <= .965f)
             this.oreType = OreType.LAPIS;
-        else if (r <= .986f)
+        else if (r <= .99f)
             this.oreType = OreType.EMERALD;
         else
             this.oreType = OreType.DIAMOND;
@@ -120,8 +120,8 @@ public class OreDeposit extends MineshaftPiece {
         this.chanceReplaceNonAir(world, box, random, .9f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, COBBLE);
 
         // Ore deposit. Ore is more dense in center than edges
-        this.chanceReplaceNonAir(world, box, random, .75f, 1, 1, 1, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END - 1, ORE_BLOCK);
-        this.chanceReplaceNonAir(world, box, random, .25f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, ORE_BLOCK);
+        this.chanceReplaceNonAir(world, box, random, .65f, 1, 1, 1, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END - 1, ORE_BLOCK);
+        this.chanceReplaceNonAir(world, box, random, .15f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, ORE_BLOCK);
 
         return true;
     }
