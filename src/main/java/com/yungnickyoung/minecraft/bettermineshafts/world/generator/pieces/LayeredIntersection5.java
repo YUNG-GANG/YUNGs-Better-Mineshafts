@@ -141,6 +141,7 @@ public class LayeredIntersection5 extends MineshaftPiece{
         this.fill(world, box, 2, 1, 3, 2, 5, 3, LADDER);
 
         // Decorations
+        this.addBiomeDecorations(world, box, random, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END - 1, LOCAL_Z_END);
         this.addVines(world, box, random, getVineChance(), 1, 0, 1, LOCAL_X_END - 1, LOCAL_Y_END, LOCAL_Z_END - 1);
 
         return true;

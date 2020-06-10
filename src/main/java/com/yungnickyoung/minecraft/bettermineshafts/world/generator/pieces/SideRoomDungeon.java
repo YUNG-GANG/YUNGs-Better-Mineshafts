@@ -115,6 +115,9 @@ public class SideRoomDungeon extends MineshaftPiece {
             this.addChest(world, box, random, LOCAL_X_END - 1, 1, LOCAL_Z_END - 1, LootTables.STRONGHOLD_CORRIDOR_CHEST);
         }
 
+        // Decorations
+        this.addBiomeDecorations(world, box, random, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END - 1, LOCAL_Z_END);
+
         return true;
     }
 }

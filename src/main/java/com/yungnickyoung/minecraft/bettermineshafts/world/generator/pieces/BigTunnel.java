@@ -182,6 +182,7 @@ public class BigTunnel extends MineshaftPiece {
         bigSupports.forEach(z -> generateBigSupport(world, box, random, z));
         smallSupports.forEach(z -> generateSmallSupport(world, box, random, z));
         gravelDeposits.forEach(pair -> generateGravelDeposit(world, box, random, pair.getLeft(), pair.getRight()));
+        this.addBiomeDecorations(world, box, random, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END - 1, LOCAL_Z_END);
         this.addVines(world, box, random, getVineChance(), 1, 0, 1, LOCAL_X_END - 1, LOCAL_Y_END, LOCAL_Z_END - 1);
 
         return true;

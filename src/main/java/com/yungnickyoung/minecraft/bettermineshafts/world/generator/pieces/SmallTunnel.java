@@ -116,6 +116,7 @@ public class SmallTunnel extends MineshaftPiece {
         generateCobwebs(world, box, random);
         generateChestCarts(world, box, random, LootTables.ABANDONED_MINESHAFT_CHEST);
         generateTntCarts(world, box, random);
+        this.addBiomeDecorations(world, box, random, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END - 1, LOCAL_Z_END);
         this.addVines(world, box, random, getVineChance(), 1, 0, 1, LOCAL_X_END - 1, LOCAL_Y_END, LOCAL_Z_END - 1);
 
         return true;

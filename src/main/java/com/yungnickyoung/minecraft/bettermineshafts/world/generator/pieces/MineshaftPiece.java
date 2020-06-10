@@ -279,6 +279,24 @@ public abstract class MineshaftPiece extends StructurePiece {
         this.addVines(world, boundingBox, Direction.SOUTH, random, chance, minX, minY, minZ, maxX, maxY, maxZ);
     }
 
+    /**
+     * Add decorations specific to a biome variant, such as snow.
+     */
+    protected void addBiomeDecorations(IWorld world, BlockBox box, Random random, int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
+        if (mineshaftType == BetterMineshaftFeature.Type.ICE) {
+            for (int x = minX; x <= maxX; x++) {
+                for (int y = minY; y <= maxY; y++) {
+                    for (int z = minZ; z <= maxZ; z++) {
+                        BlockPos blockPos = new BlockPos(this.applyXTransform(x, z), this.applyYTransform(y), this.applyZTransform(x, z));
+                        if (this.getBlockAtFixed(world, x, y, z, box) == AIR && Blocks.SNOW.canPlaceAt(AIR, world, blockPos)) {
+                            this.addBlock(world, Blocks.SNOW.getDefaultState().with(SnowBlock.LAYERS, random.nextInt(2) + 1), x, y, z, box);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *                                       FILL METHODS                                      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
