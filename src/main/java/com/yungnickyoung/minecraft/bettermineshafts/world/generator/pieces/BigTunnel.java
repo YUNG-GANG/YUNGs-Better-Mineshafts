@@ -156,7 +156,7 @@ public class BigTunnel extends MineshaftPiece {
     @Override
     public boolean generate(IWorld world, ChunkGenerator<?> generator, Random random, BlockBox box, ChunkPos pos) {
         // Randomize blocks
-        float chance = this.mineshaftType == BetterMineshaftFeature.Type.ICE ? .95f : .6f;
+        float chance = this.mineshaftType == BetterMineshaftFeature.Type.SNOW ? .95f : .6f;
         this.chanceReplaceNonAir(world, box, random, chance, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getMainSelector());
 
         // Fill with air
@@ -259,6 +259,10 @@ public class BigTunnel extends MineshaftPiece {
     }
 
     private void generateSmallSupport(IWorld world, BlockBox box, Random random, int z) {
+        BlockState supportBlock = getSupportBlock();
+        if (this.mineshaftType != BetterMineshaftFeature.Type.ICE)
+            supportBlock = getSupportBlock().with(WallBlock.WEST, true).with(WallBlock.EAST, true);
+
         this.addBlock(world, getMainBlock(), 2, 1, z, box);
         this.addBlock(world, getMainBlock(), LOCAL_X_END - 2, 1, z, box);
         this.addBlock(world, getSupportBlock(), 2, 2, z, box);
@@ -266,10 +270,10 @@ public class BigTunnel extends MineshaftPiece {
         this.addBlock(world, getMainBlock(), 2, 3, z, box);
         this.addBlock(world, getMainBlock(), LOCAL_X_END - 2, 3, z, box);
         this.fill(world, box, 3, 4, z, LOCAL_X_END - 3, 4, z, getMainBlock());
-        this.chanceReplaceNonAir(world, box, random, .5f, 3, 4, z, LOCAL_X_END - 3, 4, z, getSupportBlock().with(WallBlock.WEST, true).with(WallBlock.EAST, true));
-        this.chanceFill(world, box, random, .4f, 2, 3, z, LOCAL_X_END - 2, 3, z, getSupportBlock().with(WallBlock.WEST, true).with(WallBlock.EAST, true));
-        this.addBlock(world, getSupportBlock().with(WallBlock.WEST, true).with(WallBlock.EAST, true), 3, 3, z, box);
-        this.addBlock(world, getSupportBlock().with(WallBlock.WEST, true).with(WallBlock.EAST, true), LOCAL_X_END - 3, 3, z, box);
+        this.chanceReplaceNonAir(world, box, random, .5f, 3, 4, z, LOCAL_X_END - 3, 4, z, supportBlock);
+        this.chanceFill(world, box, random, .4f, 2, 3, z, LOCAL_X_END - 2, 3, z, supportBlock);
+        this.addBlock(world, supportBlock, 3, 3, z, box);
+        this.addBlock(world, supportBlock, LOCAL_X_END - 3, 3, z, box);
     }
 
     private void generateLanterns(IWorld world, BlockBox box, Random random) {

@@ -5,9 +5,7 @@ import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftFeature
 import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftFeatureConfig;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.world.biome.BadlandsBiome;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.DesertBiome;
+import net.minecraft.world.biome.*;
 import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.feature.*;
 
@@ -64,8 +62,18 @@ public class BMStructureFeature {
                 type = BetterMineshaftFeature.Type.JUNGLE;
                 break;
             case ICY:
+                if (biome instanceof IceSpikesBiome) {
+                    type = BetterMineshaftFeature.Type.ICE;
+                } else {
+                    type = BetterMineshaftFeature.Type.SNOW;
+                }
+                break;
             case TAIGA:
-                type = BetterMineshaftFeature.Type.ICE;
+                if (biome instanceof SnowyTaigaBiome || biome instanceof SnowyTaigaHillsBiome || biome instanceof SnowyTaigaMountainsBiome) {
+                    type = BetterMineshaftFeature.Type.ICE;
+                } else {
+                    type = BetterMineshaftFeature.Type.SNOW;
+                }
                 break;
             case DESERT:
                 if (biome instanceof DesertBiome) {

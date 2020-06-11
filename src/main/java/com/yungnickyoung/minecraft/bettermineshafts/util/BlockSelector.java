@@ -42,12 +42,19 @@ public class BlockSelector {
         .addBlock(Blocks.CHISELED_STONE_BRICKS.getDefaultState(), 0.05f)
         .addBlock(Blocks.CAVE_AIR.getDefaultState(), 0.2f);
 
-    public static BlockSelector ICE = new BlockSelector(Blocks.SPRUCE_PLANKS.getDefaultState())
+    public static BlockSelector SNOW = new BlockSelector(Blocks.SPRUCE_PLANKS.getDefaultState())
         .addBlock(Blocks.SNOW_BLOCK.getDefaultState(), .25f)
         .addBlock(Blocks.PACKED_ICE.getDefaultState(), .1f)
         .addBlock(Blocks.BLUE_ICE.getDefaultState(), .1f)
         .addBlock(Blocks.COBBLESTONE.getDefaultState(), 0.05f)
         .addBlock(Blocks.CRACKED_STONE_BRICKS.getDefaultState(), 0.1f)
+        .addBlock(Blocks.CAVE_AIR.getDefaultState(), 0.2f);
+
+    public static BlockSelector ICE = new BlockSelector(Blocks.PACKED_ICE.getDefaultState())
+        .addBlock(Blocks.BLUE_ICE.getDefaultState(), .4f)
+        .addBlock(Blocks.COBBLESTONE.getDefaultState(), 0.05f)
+        .addBlock(Blocks.CRACKED_STONE_BRICKS.getDefaultState(), 0.05f)
+        .addBlock(Blocks.SNOW_BLOCK.getDefaultState(), 0.1f)
         .addBlock(Blocks.CAVE_AIR.getDefaultState(), 0.2f);
 
     public static BlockSelector DESERT = new BlockSelector(Blocks.SANDSTONE.getDefaultState())
@@ -82,10 +89,14 @@ public class BlockSelector {
         .addBlock(Blocks.CRACKED_STONE_BRICKS.getDefaultState(), .25f)
         .addBlock(Blocks.CHISELED_STONE_BRICKS.getDefaultState(), .25f);
 
-    public static BlockSelector STONE_BRICK_ICE = new BlockSelector()
+    public static BlockSelector STONE_BRICK_SNOW = new BlockSelector()
         .addBlock(Blocks.SNOW_BLOCK.getDefaultState(), .5f)
         .addBlock(Blocks.PACKED_ICE.getDefaultState(), .25f)
         .addBlock(Blocks.BLUE_ICE.getDefaultState(), .25f);
+
+    public static BlockSelector STONE_BRICK_ICE = new BlockSelector()
+        .addBlock(Blocks.PACKED_ICE.getDefaultState(), .5f)
+        .addBlock(Blocks.BLUE_ICE.getDefaultState(), .5f);
 
     public static BlockSelector STONE_BRICK_DESERT = new BlockSelector()
         .addBlock(Blocks.SAND.getDefaultState(), .25f)

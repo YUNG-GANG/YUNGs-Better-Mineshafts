@@ -73,6 +73,8 @@ public abstract class MineshaftPiece extends StructurePiece {
                 return BlockSelector.MESA;
             case JUNGLE:
                 return BlockSelector.JUNGLE;
+            case SNOW:
+                return BlockSelector.SNOW;
             case ICE:
                 return BlockSelector.ICE;
             case DESERT:
@@ -90,6 +92,8 @@ public abstract class MineshaftPiece extends StructurePiece {
                 return BlockSelector.STONE_BRICK_NORMAL;
             case JUNGLE:
                 return BlockSelector.STONE_BRICK_JUNGLE;
+            case SNOW:
+                return BlockSelector.STONE_BRICK_SNOW;
             case ICE:
                 return BlockSelector.STONE_BRICK_ICE;
             case DESERT:
@@ -112,12 +116,34 @@ public abstract class MineshaftPiece extends StructurePiece {
                 return Blocks.DARK_OAK_PLANKS.getDefaultState();
             case JUNGLE:
                 return Blocks.JUNGLE_PLANKS.getDefaultState();
-            case ICE:
+            case SNOW:
                 return Blocks.SPRUCE_PLANKS.getDefaultState();
+            case ICE:
+                return Blocks.BLUE_ICE.getDefaultState();
             case DESERT:
                 return Blocks.SANDSTONE.getDefaultState();
             case RED_DESERT:
                 return Blocks.RED_SANDSTONE.getDefaultState();
+        }
+    }
+
+    protected BlockState getSupportBlock() {
+        switch (this.mineshaftType) {
+            case NORMAL:
+            default:
+                return Blocks.OAK_FENCE.getDefaultState();
+            case MESA:
+                return Blocks.DARK_OAK_FENCE.getDefaultState();
+            case JUNGLE:
+                return Blocks.JUNGLE_FENCE.getDefaultState();
+            case SNOW:
+                return Blocks.SPRUCE_FENCE.getDefaultState();
+            case ICE:
+                return Blocks.BLUE_ICE.getDefaultState();
+            case DESERT:
+                return Blocks.SANDSTONE_WALL.getDefaultState();
+            case RED_DESERT:
+                return Blocks.RED_SANDSTONE_WALL.getDefaultState();
         }
     }
 
@@ -130,8 +156,10 @@ public abstract class MineshaftPiece extends StructurePiece {
                 return Blocks.DARK_OAK_SLAB.getDefaultState();
             case JUNGLE:
                 return Blocks.JUNGLE_SLAB.getDefaultState();
-            case ICE:
+            case SNOW:
                 return Blocks.SPRUCE_SLAB.getDefaultState();
+            case ICE:
+                return Blocks.BLUE_ICE.getDefaultState();
             case DESERT:
                 return Blocks.SANDSTONE_SLAB.getDefaultState();
             case RED_DESERT:
@@ -146,8 +174,10 @@ public abstract class MineshaftPiece extends StructurePiece {
             case JUNGLE:
             default:
                 return Blocks.STONE_BRICKS.getDefaultState();
-            case ICE:
+            case SNOW:
                 return Blocks.SNOW_BLOCK.getDefaultState();
+            case ICE:
+                return Blocks.BLUE_ICE.getDefaultState();
             case DESERT:
                 return Blocks.SANDSTONE.getDefaultState();
             case RED_DESERT:
@@ -160,13 +190,15 @@ public abstract class MineshaftPiece extends StructurePiece {
             case NORMAL:
             case MESA:
             case JUNGLE:
-            case ICE:
             default:
                 return Blocks.GRAVEL.getDefaultState();
             case DESERT:
                 return Blocks.SAND.getDefaultState();
             case RED_DESERT:
                 return Blocks.RED_SAND.getDefaultState();
+            case SNOW:
+            case ICE:
+                return Blocks.SNOW_BLOCK.getDefaultState();
         }
     }
 
@@ -177,8 +209,10 @@ public abstract class MineshaftPiece extends StructurePiece {
             case JUNGLE:
             default:
                 return Blocks.STONE_BRICK_WALL.getDefaultState();
-            case ICE:
+            case SNOW:
                 return Blocks.SNOW_BLOCK.getDefaultState();
+            case ICE:
+                return Blocks.BLUE_ICE.getDefaultState();
             case DESERT:
                 return Blocks.SANDSTONE_WALL.getDefaultState();
             case RED_DESERT:
@@ -193,30 +227,14 @@ public abstract class MineshaftPiece extends StructurePiece {
             case JUNGLE:
             default:
                 return Blocks.STONE_BRICK_SLAB.getDefaultState().with(SlabBlock.TYPE, SlabType.TOP);
-            case ICE:
+            case SNOW:
                 return Blocks.SNOW_BLOCK.getDefaultState();
+            case ICE:
+                return Blocks.BLUE_ICE.getDefaultState();
             case DESERT:
                 return Blocks.SANDSTONE_SLAB.getDefaultState().with(SlabBlock.TYPE, SlabType.TOP);
             case RED_DESERT:
                 return Blocks.RED_SANDSTONE_SLAB.getDefaultState().with(SlabBlock.TYPE, SlabType.TOP);
-        }
-    }
-
-    protected BlockState getSupportBlock() {
-        switch (this.mineshaftType) {
-            case NORMAL:
-            default:
-                return Blocks.OAK_FENCE.getDefaultState();
-            case MESA:
-                return Blocks.DARK_OAK_FENCE.getDefaultState();
-            case JUNGLE:
-                return Blocks.JUNGLE_FENCE.getDefaultState();
-            case ICE:
-                return Blocks.SPRUCE_FENCE.getDefaultState();
-            case DESERT:
-                return Blocks.SANDSTONE_WALL.getDefaultState();
-            case RED_DESERT:
-                return Blocks.RED_SANDSTONE_WALL.getDefaultState();
         }
     }
 
@@ -231,6 +249,7 @@ public abstract class MineshaftPiece extends StructurePiece {
                 return Blocks.DARK_OAK_TRAPDOOR.getDefaultState();
             case JUNGLE:
                 return Blocks.JUNGLE_TRAPDOOR.getDefaultState();
+            case SNOW:
             case ICE:
                 return Blocks.SPRUCE_TRAPDOOR.getDefaultState();
         }
@@ -307,7 +326,7 @@ public abstract class MineshaftPiece extends StructurePiece {
                 for (int z = minZ; z <= maxZ; z++) {
                     BlockPos blockPos = new BlockPos(this.applyXTransform(x, z), this.applyYTransform(y), this.applyZTransform(x, z));
                     // Snow layers
-                    if (mineshaftType == BetterMineshaftFeature.Type.ICE) {
+                    if (mineshaftType == BetterMineshaftFeature.Type.SNOW) {
                         if (this.getBlockAt(world, x, y, z, box) == AIR && Blocks.SNOW.canPlaceAt(AIR, world, blockPos)) {
                             this.addBlock(world, Blocks.SNOW.getDefaultState().with(SnowBlock.LAYERS, random.nextInt(2) + 1), x, y, z, box);
                         }
