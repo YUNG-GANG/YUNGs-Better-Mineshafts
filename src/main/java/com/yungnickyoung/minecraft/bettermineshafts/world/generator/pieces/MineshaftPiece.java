@@ -80,6 +80,8 @@ public abstract class MineshaftPiece extends StructurePiece {
                 return BlockSelector.RED_DESERT;
             case MUSHROOM:
                 return BlockSelector.MUSHROOM;
+            case SAVANNA:
+                return BlockSelector.ACACIA;
             default:
                 return BlockSelector.NORMAL;
         }
@@ -124,6 +126,8 @@ public abstract class MineshaftPiece extends StructurePiece {
                 return Blocks.RED_SANDSTONE.getDefaultState();
             case MUSHROOM:
                 return Blocks.RED_MUSHROOM_BLOCK.getDefaultState();
+            case SAVANNA:
+                return Blocks.ACACIA_PLANKS.getDefaultState();
             default:
                 return Blocks.OAK_PLANKS.getDefaultState();
         }
@@ -145,6 +149,8 @@ public abstract class MineshaftPiece extends StructurePiece {
                 return Blocks.RED_SANDSTONE_WALL.getDefaultState();
             case MUSHROOM:
                 return Blocks.MUSHROOM_STEM.getDefaultState();
+            case SAVANNA:
+                return Blocks.ACACIA_FENCE.getDefaultState();
             default:
                 return Blocks.OAK_FENCE.getDefaultState();
         }
@@ -166,6 +172,8 @@ public abstract class MineshaftPiece extends StructurePiece {
                 return Blocks.RED_SANDSTONE_SLAB.getDefaultState();
             case MUSHROOM:
                 return Blocks.BROWN_MUSHROOM_BLOCK.getDefaultState();
+            case SAVANNA:
+                return Blocks.ACACIA_SLAB.getDefaultState();
             default:
                 return Blocks.OAK_SLAB.getDefaultState();
         }
@@ -246,6 +254,8 @@ public abstract class MineshaftPiece extends StructurePiece {
             case SNOW:
             case ICE:
                 return Blocks.SPRUCE_TRAPDOOR.getDefaultState();
+            case SAVANNA:
+                return Blocks.ACACIA_TRAPDOOR.getDefaultState();
             default:
                 return Blocks.OAK_TRAPDOOR.getDefaultState();
         }

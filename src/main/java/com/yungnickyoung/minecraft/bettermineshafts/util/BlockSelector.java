@@ -78,6 +78,13 @@ public class BlockSelector {
         .addBlock(Blocks.BROWN_MUSHROOM_BLOCK.getDefaultState(), .33333f)
         .addBlock(Blocks.RED_MUSHROOM_BLOCK.getDefaultState(), .33333f);
 
+    public static BlockSelector ACACIA = new BlockSelector(Blocks.ACACIA_PLANKS.getDefaultState())
+        .addBlock(Blocks.COBBLESTONE.getDefaultState(), 0.1f)
+        .addBlock(Blocks.STONE_BRICKS.getDefaultState(), 0.1f)
+        .addBlock(Blocks.MOSSY_STONE_BRICKS.getDefaultState(), 0.1f)
+        .addBlock(Blocks.CRACKED_STONE_BRICKS.getDefaultState(), 0.1f)
+        .addBlock(Blocks.CAVE_AIR.getDefaultState(), 0.2f);
+
     /**
      * Stone brick blocks.
      */
