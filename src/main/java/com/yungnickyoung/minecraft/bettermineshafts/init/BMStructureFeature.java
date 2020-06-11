@@ -93,6 +93,10 @@ public class BMStructureFeature {
 
         removeVanillaMineshafts(biome);
 
+        // No mineshafts in oceans
+        if (biome.getCategory() == Biome.Category.OCEAN)
+            return;
+
         // Add structure feature (allows spawning of new mineshaft in biome)
         biome.addStructureFeature(BETTER_MINESHAFT_FEATURE.configure(config));
 
