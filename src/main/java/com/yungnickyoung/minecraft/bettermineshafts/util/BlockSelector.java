@@ -52,6 +52,9 @@ public class BlockSelector {
 
     public static BlockSelector DESERT = new BlockSelector(Blocks.SANDSTONE.getDefaultState())
         .addBlock(Blocks.SAND.getDefaultState(), 0.3f)
+        .addBlock(Blocks.CHISELED_SANDSTONE.getDefaultState(), 0.1f)
+        .addBlock(Blocks.CUT_SANDSTONE.getDefaultState(), 0.1f)
+        .addBlock(Blocks.SMOOTH_SANDSTONE.getDefaultState(), 0.1f)
         .addBlock(Blocks.STONE_BRICKS.getDefaultState(), 0.05f)
         .addBlock(Blocks.CRACKED_STONE_BRICKS.getDefaultState(), 0.05f)
         .addBlock(Blocks.CAVE_AIR.getDefaultState(), 0.2f);
