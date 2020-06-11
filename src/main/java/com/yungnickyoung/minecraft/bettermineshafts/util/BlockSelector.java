@@ -73,6 +73,11 @@ public class BlockSelector {
         .addBlock(Blocks.CRACKED_STONE_BRICKS.getDefaultState(), 0.05f)
         .addBlock(Blocks.CAVE_AIR.getDefaultState(), 0.2f);
 
+    public static BlockSelector MUSHROOM = new BlockSelector()
+        .addBlock(Blocks.MUSHROOM_STEM.getDefaultState(), .33333f)
+        .addBlock(Blocks.BROWN_MUSHROOM_BLOCK.getDefaultState(), .33333f)
+        .addBlock(Blocks.RED_MUSHROOM_BLOCK.getDefaultState(), .33333f);
+
     /**
      * Stone brick blocks.
      */
@@ -109,6 +114,11 @@ public class BlockSelector {
         .addBlock(Blocks.SMOOTH_RED_SANDSTONE.getDefaultState(), .2f)
         .addBlock(Blocks.CUT_RED_SANDSTONE.getDefaultState(), .2f)
         .addBlock(Blocks.CHISELED_RED_SANDSTONE.getDefaultState(), .1f);
+
+    public static BlockSelector STONE_BRICK_MUSHROOM = new BlockSelector()
+        .addBlock(Blocks.MUSHROOM_STEM.getDefaultState(), .33333f)
+        .addBlock(Blocks.BROWN_MUSHROOM_BLOCK.getDefaultState(), .33333f)
+        .addBlock(Blocks.RED_MUSHROOM_BLOCK.getDefaultState(), .33333f);
 
     /**
      * List of pairs of blocks and their corresponding probabilities.

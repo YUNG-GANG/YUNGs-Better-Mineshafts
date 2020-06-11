@@ -66,9 +66,6 @@ public abstract class MineshaftPiece extends StructurePiece {
 
     protected BlockSelector getMainSelector() {
         switch (this.mineshaftType) {
-            case NORMAL:
-            default:
-                return BlockSelector.NORMAL;
             case MESA:
                 return BlockSelector.MESA;
             case JUNGLE:
@@ -81,15 +78,15 @@ public abstract class MineshaftPiece extends StructurePiece {
                 return BlockSelector.DESERT;
             case RED_DESERT:
                 return BlockSelector.RED_DESERT;
+            case MUSHROOM:
+                return BlockSelector.MUSHROOM;
+            default:
+                return BlockSelector.NORMAL;
         }
     }
 
     protected BlockSelector getBrickSelector() {
         switch (this.mineshaftType) {
-            case NORMAL:
-            case MESA:
-            default:
-                return BlockSelector.STONE_BRICK_NORMAL;
             case JUNGLE:
                 return BlockSelector.STONE_BRICK_JUNGLE;
             case SNOW:
@@ -100,6 +97,10 @@ public abstract class MineshaftPiece extends StructurePiece {
                 return BlockSelector.STONE_BRICK_DESERT;
             case RED_DESERT:
                 return BlockSelector.STONE_BRICK_RED_DESERT;
+            case MUSHROOM:
+                return BlockSelector.STONE_BRICK_MUSHROOM;
+            default:
+                return BlockSelector.STONE_BRICK_NORMAL;
         }
     }
 
@@ -109,9 +110,6 @@ public abstract class MineshaftPiece extends StructurePiece {
 
     protected BlockState getMainBlock() {
         switch (this.mineshaftType) {
-            case NORMAL:
-            default:
-                return Blocks.OAK_PLANKS.getDefaultState();
             case MESA:
                 return Blocks.DARK_OAK_PLANKS.getDefaultState();
             case JUNGLE:
@@ -124,14 +122,15 @@ public abstract class MineshaftPiece extends StructurePiece {
                 return Blocks.SANDSTONE.getDefaultState();
             case RED_DESERT:
                 return Blocks.RED_SANDSTONE.getDefaultState();
+            case MUSHROOM:
+                return Blocks.RED_MUSHROOM_BLOCK.getDefaultState();
+            default:
+                return Blocks.OAK_PLANKS.getDefaultState();
         }
     }
 
     protected BlockState getSupportBlock() {
         switch (this.mineshaftType) {
-            case NORMAL:
-            default:
-                return Blocks.OAK_FENCE.getDefaultState();
             case MESA:
                 return Blocks.DARK_OAK_FENCE.getDefaultState();
             case JUNGLE:
@@ -144,14 +143,15 @@ public abstract class MineshaftPiece extends StructurePiece {
                 return Blocks.SANDSTONE_WALL.getDefaultState();
             case RED_DESERT:
                 return Blocks.RED_SANDSTONE_WALL.getDefaultState();
+            case MUSHROOM:
+                return Blocks.MUSHROOM_STEM.getDefaultState();
+            default:
+                return Blocks.OAK_FENCE.getDefaultState();
         }
     }
 
     protected BlockState getMainSlab() {
         switch (this.mineshaftType) {
-            case NORMAL:
-            default:
-                return Blocks.OAK_SLAB.getDefaultState();
             case MESA:
                 return Blocks.DARK_OAK_SLAB.getDefaultState();
             case JUNGLE:
@@ -164,16 +164,15 @@ public abstract class MineshaftPiece extends StructurePiece {
                 return Blocks.SANDSTONE_SLAB.getDefaultState();
             case RED_DESERT:
                 return Blocks.RED_SANDSTONE_SLAB.getDefaultState();
+            case MUSHROOM:
+                return Blocks.BROWN_MUSHROOM_BLOCK.getDefaultState();
+            default:
+                return Blocks.OAK_SLAB.getDefaultState();
         }
     }
 
     protected BlockState getBrickBlock() {
         switch (this.mineshaftType) {
-            case NORMAL:
-            case MESA:
-            case JUNGLE:
-            default:
-                return Blocks.STONE_BRICKS.getDefaultState();
             case SNOW:
                 return Blocks.SNOW_BLOCK.getDefaultState();
             case ICE:
@@ -182,16 +181,15 @@ public abstract class MineshaftPiece extends StructurePiece {
                 return Blocks.SANDSTONE.getDefaultState();
             case RED_DESERT:
                 return Blocks.RED_SANDSTONE.getDefaultState();
+            case MUSHROOM:
+                return Blocks.RED_MUSHROOM_BLOCK.getDefaultState();
+            default:
+                return Blocks.STONE_BRICKS.getDefaultState();
         }
     }
 
     protected BlockState getGravel() {
         switch (this.mineshaftType) {
-            case NORMAL:
-            case MESA:
-            case JUNGLE:
-            default:
-                return Blocks.GRAVEL.getDefaultState();
             case DESERT:
                 return Blocks.SAND.getDefaultState();
             case RED_DESERT:
@@ -199,16 +197,13 @@ public abstract class MineshaftPiece extends StructurePiece {
             case SNOW:
             case ICE:
                 return Blocks.SNOW_BLOCK.getDefaultState();
+            default:
+                return Blocks.GRAVEL.getDefaultState();
         }
     }
 
     protected BlockState getMainDoorwayWall() {
         switch (this.mineshaftType) {
-            case NORMAL:
-            case MESA:
-            case JUNGLE:
-            default:
-                return Blocks.STONE_BRICK_WALL.getDefaultState();
             case SNOW:
                 return Blocks.SNOW_BLOCK.getDefaultState();
             case ICE:
@@ -217,16 +212,15 @@ public abstract class MineshaftPiece extends StructurePiece {
                 return Blocks.SANDSTONE_WALL.getDefaultState();
             case RED_DESERT:
                 return Blocks.RED_SANDSTONE_WALL.getDefaultState();
+            case MUSHROOM:
+                return Blocks.MUSHROOM_STEM.getDefaultState();
+            default:
+                return Blocks.STONE_BRICK_WALL.getDefaultState();
         }
     }
 
     protected BlockState getMainDoorwaySlab() {
         switch (this.mineshaftType) {
-            case NORMAL:
-            case MESA:
-            case JUNGLE:
-            default:
-                return Blocks.STONE_BRICK_SLAB.getDefaultState().with(SlabBlock.TYPE, SlabType.TOP);
             case SNOW:
                 return Blocks.SNOW_BLOCK.getDefaultState();
             case ICE:
@@ -235,15 +229,15 @@ public abstract class MineshaftPiece extends StructurePiece {
                 return Blocks.SANDSTONE_SLAB.getDefaultState().with(SlabBlock.TYPE, SlabType.TOP);
             case RED_DESERT:
                 return Blocks.RED_SANDSTONE_SLAB.getDefaultState().with(SlabBlock.TYPE, SlabType.TOP);
+            case MUSHROOM:
+                return Blocks.MUSHROOM_STEM.getDefaultState();
+            default:
+                return Blocks.STONE_BRICK_SLAB.getDefaultState().with(SlabBlock.TYPE, SlabType.TOP);
         }
     }
 
     protected BlockState getTrapdoor() {
         switch (this.mineshaftType) {
-            case NORMAL:
-            case DESERT:
-            default:
-                return Blocks.OAK_TRAPDOOR.getDefaultState();
             case MESA:
             case RED_DESERT:
                 return Blocks.DARK_OAK_TRAPDOOR.getDefaultState();
@@ -252,6 +246,8 @@ public abstract class MineshaftPiece extends StructurePiece {
             case SNOW:
             case ICE:
                 return Blocks.SPRUCE_TRAPDOOR.getDefaultState();
+            default:
+                return Blocks.OAK_TRAPDOOR.getDefaultState();
         }
     }
 
@@ -352,6 +348,19 @@ public abstract class MineshaftPiece extends StructurePiece {
                             Block floor = this.getBlockAt(world, x, y - 1, z, box).getBlock();
                             if (this.getBlockAt(world, x, y, z, box) == AIR && (floor == Blocks.SAND || floor == Blocks.RED_SAND || floor == Blocks.TERRACOTTA || floor == Blocks.WHITE_TERRACOTTA || floor == Blocks.ORANGE_TERRACOTTA || floor == Blocks.YELLOW_TERRACOTTA || floor == Blocks.BROWN_TERRACOTTA || floor == Blocks.DIRT)) {
                                 this.addBlock(world, Blocks.DEAD_BUSH.getDefaultState(), x, y, z, box);
+                            }
+                        }
+                    }
+                    // Mushrooms
+                    else if (mineshaftType == BetterMineshaftFeature.Type.MUSHROOM) {
+                        float r = random.nextFloat();
+                        if (r < .2f) {
+                            if (this.getBlockAt(world, x, y, z, box) == AIR && Blocks.RED_MUSHROOM.canPlaceAt(AIR, world, blockPos)) {
+                                this.addBlock(world, Blocks.RED_MUSHROOM.getDefaultState(), x, y, z, box);
+                            }
+                        } else if (r < .4f) {
+                            if (this.getBlockAt(world, x, y, z, box) == AIR && Blocks.BROWN_MUSHROOM.canPlaceAt(AIR, world, blockPos)) {
+                                this.addBlock(world, Blocks.BROWN_MUSHROOM.getDefaultState(), x, y, z, box);
                             }
                         }
                     }

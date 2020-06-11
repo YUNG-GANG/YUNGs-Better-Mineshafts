@@ -139,7 +139,8 @@ public class BetterMineshaftFeature extends StructureFeature<BetterMineshaftFeat
         SNOW("snow"),
         ICE("ice"),
         DESERT("desert"),
-        RED_DESERT("red_desert");
+        RED_DESERT("red_desert"),
+        MUSHROOM("mushroom");
 
         private final String name;
 

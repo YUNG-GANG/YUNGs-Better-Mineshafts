@@ -156,7 +156,12 @@ public class BigTunnel extends MineshaftPiece {
     @Override
     public boolean generate(IWorld world, ChunkGenerator<?> generator, Random random, BlockBox box, ChunkPos pos) {
         // Randomize blocks
-        float chance = this.mineshaftType == BetterMineshaftFeature.Type.SNOW || this.mineshaftType == BetterMineshaftFeature.Type.ICE ? .95f : .6f;
+        float chance =
+            this.mineshaftType == BetterMineshaftFeature.Type.SNOW
+                || this.mineshaftType == BetterMineshaftFeature.Type.ICE
+                || this.mineshaftType == BetterMineshaftFeature.Type.MUSHROOM
+            ? .95f
+            : .6f;
         this.chanceReplaceNonAir(world, box, random, chance, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getMainSelector());
 
         // Fill with air
@@ -166,6 +171,9 @@ public class BigTunnel extends MineshaftPiece {
 
         // Fill in any air in floor with main block
         this.replaceAir(world, box, 1, 0, 0, LOCAL_X_END - 1, 0, LOCAL_Z_END, getMainBlock());
+        // Special case - mushroom mineshafts get mycelium in floor
+        if (this.mineshaftType == BetterMineshaftFeature.Type.MUSHROOM)
+            this.chanceReplaceNonAir(world, box, random, .8f, 1, 0, 0, LOCAL_X_END - 1, 0, LOCAL_Z_END, Blocks.MYCELIUM.getDefaultState());
 
         // Small mineshaft entrances
         smallShaftLeftEntrances.forEach(entrancePos -> generateSmallShaftEntranceLeft(world, box, random, entrancePos.getX(), entrancePos.getY(), entrancePos.getZ()));

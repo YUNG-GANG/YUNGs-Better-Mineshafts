@@ -82,6 +82,9 @@ public class BMStructureFeature {
                     type = BetterMineshaftFeature.Type.DESERT;
                 }
                 break;
+            case MUSHROOM:
+                type = BetterMineshaftFeature.Type.MUSHROOM;
+                break;
             default:
                 type = BetterMineshaftFeature.Type.NORMAL;
         }
