@@ -5,7 +5,9 @@ import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftFeature
 import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftFeatureConfig;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.biome.BadlandsBiome;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.DesertBiome;
 import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.feature.*;
 
@@ -47,25 +49,36 @@ public class BMStructureFeature {
      */
     private static void addBetterMineshafts(Biome biome) {
         BetterMineshaftFeatureConfig config;
+        BetterMineshaftFeature.Type type;
 
         // Set config based on biome
         switch (biome.getCategory()) {
             case MESA:
-                config = new BetterMineshaftFeatureConfig(SPAWN_RATE, BetterMineshaftFeature.Type.MESA);
+                if (biome instanceof BadlandsBiome) {
+                    type = BetterMineshaftFeature.Type.RED_DESERT;
+                } else {
+                    type = BetterMineshaftFeature.Type.MESA;
+                }
                 break;
             case JUNGLE:
-                config = new BetterMineshaftFeatureConfig(SPAWN_RATE, BetterMineshaftFeature.Type.JUNGLE);
+                type = BetterMineshaftFeature.Type.JUNGLE;
                 break;
             case ICY:
             case TAIGA:
-                config = new BetterMineshaftFeatureConfig(SPAWN_RATE, BetterMineshaftFeature.Type.ICE);
+                type = BetterMineshaftFeature.Type.ICE;
                 break;
             case DESERT:
-                config = new BetterMineshaftFeatureConfig(SPAWN_RATE, BetterMineshaftFeature.Type.DESERT);
+                if (biome instanceof DesertBiome) {
+                    type = BetterMineshaftFeature.Type.RED_DESERT;
+                } else {
+                    type = BetterMineshaftFeature.Type.DESERT;
+                }
                 break;
             default:
-                config = new BetterMineshaftFeatureConfig(SPAWN_RATE, BetterMineshaftFeature.Type.NORMAL);
+                type = BetterMineshaftFeature.Type.NORMAL;
         }
+
+        config = new BetterMineshaftFeatureConfig(SPAWN_RATE, type);
 
         removeVanillaMineshafts(biome);
 

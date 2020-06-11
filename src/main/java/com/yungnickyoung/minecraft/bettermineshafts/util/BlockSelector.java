@@ -59,6 +59,15 @@ public class BlockSelector {
         .addBlock(Blocks.CRACKED_STONE_BRICKS.getDefaultState(), 0.05f)
         .addBlock(Blocks.CAVE_AIR.getDefaultState(), 0.2f);
 
+    public static BlockSelector RED_DESERT = new BlockSelector(Blocks.RED_SANDSTONE.getDefaultState())
+        .addBlock(Blocks.RED_SAND.getDefaultState(), 0.3f)
+        .addBlock(Blocks.CHISELED_RED_SANDSTONE.getDefaultState(), 0.1f)
+        .addBlock(Blocks.CUT_RED_SANDSTONE.getDefaultState(), 0.1f)
+        .addBlock(Blocks.SMOOTH_RED_SANDSTONE.getDefaultState(), 0.1f)
+        .addBlock(Blocks.STONE_BRICKS.getDefaultState(), 0.05f)
+        .addBlock(Blocks.CRACKED_STONE_BRICKS.getDefaultState(), 0.05f)
+        .addBlock(Blocks.CAVE_AIR.getDefaultState(), 0.2f);
+
     /**
      * Stone brick blocks.
      */
@@ -84,6 +93,13 @@ public class BlockSelector {
         .addBlock(Blocks.SMOOTH_SANDSTONE.getDefaultState(), .2f)
         .addBlock(Blocks.CUT_SANDSTONE.getDefaultState(), .2f)
         .addBlock(Blocks.CHISELED_SANDSTONE.getDefaultState(), .1f);
+
+    public static BlockSelector STONE_BRICK_RED_DESERT = new BlockSelector()
+        .addBlock(Blocks.RED_SAND.getDefaultState(), .25f)
+        .addBlock(Blocks.RED_SANDSTONE.getDefaultState(), .25f)
+        .addBlock(Blocks.SMOOTH_RED_SANDSTONE.getDefaultState(), .2f)
+        .addBlock(Blocks.CUT_RED_SANDSTONE.getDefaultState(), .2f)
+        .addBlock(Blocks.CHISELED_RED_SANDSTONE.getDefaultState(), .1f);
 
     /**
      * List of pairs of blocks and their corresponding probabilities.

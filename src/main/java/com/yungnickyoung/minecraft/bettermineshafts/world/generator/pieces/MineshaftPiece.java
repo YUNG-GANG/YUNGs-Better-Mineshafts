@@ -77,6 +77,8 @@ public abstract class MineshaftPiece extends StructurePiece {
                 return BlockSelector.ICE;
             case DESERT:
                 return BlockSelector.DESERT;
+            case RED_DESERT:
+                return BlockSelector.RED_DESERT;
         }
     }
 
@@ -92,6 +94,8 @@ public abstract class MineshaftPiece extends StructurePiece {
                 return BlockSelector.STONE_BRICK_ICE;
             case DESERT:
                 return BlockSelector.STONE_BRICK_DESERT;
+            case RED_DESERT:
+                return BlockSelector.STONE_BRICK_RED_DESERT;
         }
     }
 
@@ -112,6 +116,8 @@ public abstract class MineshaftPiece extends StructurePiece {
                 return Blocks.SPRUCE_PLANKS.getDefaultState();
             case DESERT:
                 return Blocks.SANDSTONE.getDefaultState();
+            case RED_DESERT:
+                return Blocks.RED_SANDSTONE.getDefaultState();
         }
     }
 
@@ -128,6 +134,8 @@ public abstract class MineshaftPiece extends StructurePiece {
                 return Blocks.SPRUCE_SLAB.getDefaultState();
             case DESERT:
                 return Blocks.SANDSTONE_SLAB.getDefaultState();
+            case RED_DESERT:
+                return Blocks.RED_SANDSTONE_SLAB.getDefaultState();
         }
     }
 
@@ -142,6 +150,8 @@ public abstract class MineshaftPiece extends StructurePiece {
                 return Blocks.SNOW_BLOCK.getDefaultState();
             case DESERT:
                 return Blocks.SANDSTONE.getDefaultState();
+            case RED_DESERT:
+                return Blocks.RED_SANDSTONE.getDefaultState();
         }
     }
 
@@ -155,6 +165,8 @@ public abstract class MineshaftPiece extends StructurePiece {
                 return Blocks.GRAVEL.getDefaultState();
             case DESERT:
                 return Blocks.SAND.getDefaultState();
+            case RED_DESERT:
+                return Blocks.RED_SAND.getDefaultState();
         }
     }
 
@@ -169,6 +181,8 @@ public abstract class MineshaftPiece extends StructurePiece {
                 return Blocks.SNOW_BLOCK.getDefaultState();
             case DESERT:
                 return Blocks.SANDSTONE_WALL.getDefaultState();
+            case RED_DESERT:
+                return Blocks.RED_SANDSTONE_WALL.getDefaultState();
         }
     }
 
@@ -183,6 +197,8 @@ public abstract class MineshaftPiece extends StructurePiece {
                 return Blocks.SNOW_BLOCK.getDefaultState();
             case DESERT:
                 return Blocks.SANDSTONE_SLAB.getDefaultState().with(SlabBlock.TYPE, SlabType.TOP);
+            case RED_DESERT:
+                return Blocks.RED_SANDSTONE_SLAB.getDefaultState().with(SlabBlock.TYPE, SlabType.TOP);
         }
     }
 
@@ -199,6 +215,8 @@ public abstract class MineshaftPiece extends StructurePiece {
                 return Blocks.SPRUCE_FENCE.getDefaultState();
             case DESERT:
                 return Blocks.SANDSTONE_WALL.getDefaultState();
+            case RED_DESERT:
+                return Blocks.RED_SANDSTONE_WALL.getDefaultState();
         }
     }
 
@@ -209,6 +227,7 @@ public abstract class MineshaftPiece extends StructurePiece {
             default:
                 return Blocks.OAK_TRAPDOOR.getDefaultState();
             case MESA:
+            case RED_DESERT:
                 return Blocks.DARK_OAK_TRAPDOOR.getDefaultState();
             case JUNGLE:
                 return Blocks.JUNGLE_TRAPDOOR.getDefaultState();
