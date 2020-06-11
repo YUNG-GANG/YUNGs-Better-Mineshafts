@@ -86,7 +86,8 @@ public class SmallTunnelStairs extends MineshaftPiece {
         }
 
         // Randomize blocks
-        this.chanceReplaceNonAir(world, box, random, .6f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getMainSelector());
+        float chance = this.mineshaftType == BetterMineshaftFeature.Type.ICE ? .95f : .6f;
+        this.chanceReplaceNonAir(world, box, random, chance, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getMainSelector());
 
         for (int i = 0; i < 5 ; i++) {
             // Fill with air

@@ -108,7 +108,8 @@ public class LayeredIntersection5 extends MineshaftPiece{
         }
 
         // Randomize blocks
-        this.chanceReplaceNonAir(world, box, random, .6f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getMainSelector());
+        float chance = this.mineshaftType == BetterMineshaftFeature.Type.ICE ? .95f : .6f;
+        this.chanceReplaceNonAir(world, box, random, chance, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getMainSelector());
 
         // Fill with air
         this.fill(world, box, 0, 1, 0, LOCAL_X_END, LOCAL_Y_END - 1, LOCAL_Z_END - 1, AIR);

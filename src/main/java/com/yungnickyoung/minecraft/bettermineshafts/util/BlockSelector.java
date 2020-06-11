@@ -52,10 +52,8 @@ public class BlockSelector {
 
     public static BlockSelector ICE = new BlockSelector(Blocks.PACKED_ICE.getDefaultState())
         .addBlock(Blocks.BLUE_ICE.getDefaultState(), .4f)
-        .addBlock(Blocks.COBBLESTONE.getDefaultState(), 0.05f)
-        .addBlock(Blocks.CRACKED_STONE_BRICKS.getDefaultState(), 0.05f)
         .addBlock(Blocks.SNOW_BLOCK.getDefaultState(), 0.1f)
-        .addBlock(Blocks.CAVE_AIR.getDefaultState(), 0.2f);
+        .addBlock(Blocks.CAVE_AIR.getDefaultState(), 0.1f);
 
     public static BlockSelector DESERT = new BlockSelector(Blocks.SANDSTONE.getDefaultState())
         .addBlock(Blocks.SAND.getDefaultState(), 0.3f)
