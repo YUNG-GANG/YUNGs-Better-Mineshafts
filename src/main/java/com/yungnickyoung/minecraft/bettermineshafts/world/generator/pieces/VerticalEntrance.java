@@ -122,7 +122,7 @@ public class VerticalEntrance extends MineshaftPiece {
      * Generates the vertical shaft with a ladder.
      */
     private void generateVerticalShaft(IWorld world, Random random, BlockBox box) {
-        // Fill
+        // Randomize blocks
         this.fill(world, box, random, SHAFT_LOCAL_XZ_START, 0, SHAFT_LOCAL_XZ_START, SHAFT_LOCAL_XZ_END, localYEnd, SHAFT_LOCAL_XZ_END, getMainSelector());
 
         // Fill with air

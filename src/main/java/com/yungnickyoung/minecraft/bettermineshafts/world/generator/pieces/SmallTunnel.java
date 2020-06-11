@@ -7,6 +7,7 @@ import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMinesh
 import com.yungnickyoung.minecraft.bettermineshafts.util.BoxUtil;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.PoweredRailBlock;
+import net.minecraft.block.WallBlock;
 import net.minecraft.entity.vehicle.ChestMinecartEntity;
 import net.minecraft.entity.vehicle.TntMinecartEntity;
 import net.minecraft.loot.LootTables;
@@ -146,7 +147,7 @@ public class SmallTunnel extends MineshaftPiece {
         this.fill(world, box, 1, 1, z, 1, 2, z, getSupportBlock());
         this.fill(world, box, 3, 1, z, 3, 2, z, getSupportBlock());
         this.fill(world, box, 1, 3, z, 3, 3, z, getMainBlock());
-        this.chanceReplaceNonAir(world, box, random, .25f, 1, 3, z, 3, 3, z, getSupportBlock());
+        this.chanceReplaceNonAir(world, box, random, .25f, 1, 3, z, 3, 3, z, getSupportBlock().with(WallBlock.WEST, true).with(WallBlock.EAST, true));
     }
 
     private void generateRails(IWorld world, BlockBox box, Random random) {
