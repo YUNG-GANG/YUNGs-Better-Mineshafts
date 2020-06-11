@@ -36,7 +36,7 @@ public class BetterMineshaftGenerator {
 
         // End of chain - place ore deposit or zombie villager room
         if (pieceChainLen > 7) {
-            if (rand < 5) {
+            if (rand < 2) {
                 // Need to offset by 1 since room is wider than tunnel
                 if (direction == Direction.NORTH) x -= 1;
                 else if (direction == Direction.EAST) z -= 1;

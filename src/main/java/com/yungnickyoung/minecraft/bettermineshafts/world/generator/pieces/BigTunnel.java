@@ -313,6 +313,7 @@ public class BigTunnel extends MineshaftPiece {
     }
 
     private void generateSmallShaftEntranceRight(IWorld world, BlockBox box, Random random, int x, int y, int z) {
+        this.replaceAir(world, box, x, y - 1, z, x + 1, y - 1, z + 2, getMainBlock());
         this.fill(world, box, x + 1, y, z, x + 1, y, z + 2, AIR);
         this.addBlock(world, getSupportBlock(), x + 1, y + 1, z, box);
         this.addBlock(world, getSupportBlock(), x + 1, y + 1, z + 2, box);
@@ -330,9 +331,12 @@ public class BigTunnel extends MineshaftPiece {
         this.fill(world, box, x + 1, y, z + 2, x + 1, y + 1, z + 2, getSupportBlock());
         this.chanceFill(world, box, random, .75f, x, y + 2, z, x + 1, y + 2, z + 2, getMainBlock());
         this.fill(world, box, x, y + 1, z + 1, x + 1, y + 1, z + 1, AIR);
+        this.replaceAir(world, box, x, y - 1, z, x + 1, y - 1, z + 2, getMainBlock());
     }
 
     private void generateSideRoomOpening(IWorld world, BlockBox chunkBox, BlockBox entranceBox, Random random) {
+        // Ensure floor in gap between tunnel and room
+        this.replaceAir(world, chunkBox, random, entranceBox.minX, 0, entranceBox.minZ, entranceBox.maxX, 0, entranceBox.maxZ, getBrickSelector());
         switch (random.nextInt(3)) {
             case 0:
                 // Completely open
@@ -365,7 +369,12 @@ public class BigTunnel extends MineshaftPiece {
     }
 
     private void buildSupports(Random random) {
+        int counter = 0;
+        final int MAX_COUNT = 10; // max number of blocks before force spawning a support
+
         for (int z = 0; z <= LOCAL_Z_END - 2; z++) {
+            counter++;
+
             // Make sure we arent overlapping with small shaft entrances
             boolean blockingEntrance = false;
             for (BlockPos entrancePos : smallShaftLeftEntrances) {
@@ -382,14 +391,16 @@ public class BigTunnel extends MineshaftPiece {
             }
             if (blockingEntrance) continue;
 
-            int r = random.nextInt(10);
-            if (r == 0) { // Big support
+            int r = random.nextInt(8);
+            if (r == 0 || counter >= MAX_COUNT) { // Big support
                 bigSupports.add(z);
-                z += 5;
+                counter = 0;
+                z += 3;
             }
             else if (r == 1) { // Small support
                 smallSupports.add(z);
-                z += 5;
+                counter = 0;
+                z += 3;
             }
         }
     }
