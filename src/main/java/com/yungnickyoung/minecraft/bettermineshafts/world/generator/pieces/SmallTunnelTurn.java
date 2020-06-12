@@ -1,6 +1,6 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
-import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftFeature;
+import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftStructure;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
 import com.yungnickyoung.minecraft.bettermineshafts.util.BoxUtil;
@@ -52,7 +52,7 @@ public class SmallTunnelTurn extends MineshaftPiece {
         this.turnDirection = TurnDirection.valueOf(compoundTag.getInt("TurnDirection"));
     }
 
-    public SmallTunnelTurn(int i, int chunkPieceLen, Random random, BlockBox blockBox, Direction direction, BetterMineshaftFeature.Type type) {
+    public SmallTunnelTurn(int i, int chunkPieceLen, Random random, BlockBox blockBox, Direction direction, BetterMineshaftStructure.Type type) {
         super(BetterMineshaftStructurePieceType.SMALL_TUNNEL_TURN, i, chunkPieceLen, type);
         this.setOrientation(direction);
         this.turnDirection = random.nextBoolean() ? TurnDirection.LEFT : TurnDirection.RIGHT;
@@ -110,8 +110,8 @@ public class SmallTunnelTurn extends MineshaftPiece {
 
         // Randomize blocks
         float chance =
-            this.mineshaftType == BetterMineshaftFeature.Type.ICE
-                || this.mineshaftType == BetterMineshaftFeature.Type.MUSHROOM
+            this.mineshaftType == BetterMineshaftStructure.Type.ICE
+                || this.mineshaftType == BetterMineshaftStructure.Type.MUSHROOM
             ? .95f
             : .6f;
         this.chanceReplaceNonAir(world, box, random, chance, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getMainSelector());
@@ -122,7 +122,7 @@ public class SmallTunnelTurn extends MineshaftPiece {
         // Fill in any air in floor with main block
         this.replaceAir(world, box, 1, 0, 0, LOCAL_X_END - 1, 0, LOCAL_Z_END, getMainBlock());
         // Special case - mushroom mineshafts get mycelium in floor
-        if (this.mineshaftType == BetterMineshaftFeature.Type.MUSHROOM)
+        if (this.mineshaftType == BetterMineshaftStructure.Type.MUSHROOM)
             this.chanceReplaceNonAir(world, box, random, .8f, 1, 0, 0, LOCAL_X_END - 1, 0, LOCAL_Z_END, Blocks.MYCELIUM.getDefaultState());
 
         // Rails

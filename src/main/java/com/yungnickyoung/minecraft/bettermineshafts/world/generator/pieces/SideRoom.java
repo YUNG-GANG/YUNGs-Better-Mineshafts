@@ -1,7 +1,7 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
 import com.google.common.collect.Lists;
-import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftFeature;
+import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftStructure;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
 import com.yungnickyoung.minecraft.bettermineshafts.util.BoxUtil;
@@ -43,7 +43,7 @@ public class SideRoom extends MineshaftPiece {
         this.hasDownstairs = compoundTag.getBoolean("hasDownstairs");
     }
 
-    public SideRoom(int i, int pieceChainLen, Random random, BlockBox blockBox, Direction direction, BetterMineshaftFeature.Type type) {
+    public SideRoom(int i, int pieceChainLen, Random random, BlockBox blockBox, Direction direction, BetterMineshaftStructure.Type type) {
         super(BetterMineshaftStructurePieceType.SIDE_ROOM, i, pieceChainLen, type);
         this.setOrientation(direction);
         this.boundingBox = blockBox;

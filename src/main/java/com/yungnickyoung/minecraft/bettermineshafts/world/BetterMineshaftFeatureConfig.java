@@ -3,18 +3,23 @@ package com.yungnickyoung.minecraft.bettermineshafts.world;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.Dynamic;
 import com.mojang.datafixers.types.DynamicOps;
-import net.minecraft.world.gen.feature.FeatureConfig;
+import mcp.MethodsReturnNonnullByDefault;
+import net.minecraft.world.gen.feature.IFeatureConfig;
 
-public class BetterMineshaftFeatureConfig implements FeatureConfig {
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@MethodsReturnNonnullByDefault
+public class BetterMineshaftFeatureConfig implements IFeatureConfig {
     public final double probability;
-    public final BetterMineshaftFeature.Type type;
+    public final BetterMineshaftStructure.Type type;
 
-    public BetterMineshaftFeatureConfig(double probability, BetterMineshaftFeature.Type type) {
+    public BetterMineshaftFeatureConfig(double probability, BetterMineshaftStructure.Type type) {
         this.probability = probability;
         this.type = type;
     }
 
     @Override
+    @ParametersAreNonnullByDefault
     public <T> Dynamic<T> serialize(DynamicOps<T> ops) {
         return new Dynamic<>(ops,
             ops.createMap(ImmutableMap.of(
@@ -28,7 +33,7 @@ public class BetterMineshaftFeatureConfig implements FeatureConfig {
 
     public static <T> BetterMineshaftFeatureConfig deserialize(Dynamic<T> dynamic) {
         float f = dynamic.get("probability").asFloat(0.0F);
-        BetterMineshaftFeature.Type type = BetterMineshaftFeature.Type.byName(dynamic.get("type").asString(""));
+        BetterMineshaftStructure.Type type = BetterMineshaftStructure.Type.byName(dynamic.get("type").asString(""));
         return new BetterMineshaftFeatureConfig(f, type);
     }
 }

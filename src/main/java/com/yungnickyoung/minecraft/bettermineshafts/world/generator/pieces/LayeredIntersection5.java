@@ -1,6 +1,6 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
-import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftFeature;
+import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftStructure;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
 import net.minecraft.block.BlockState;
@@ -34,7 +34,7 @@ public class LayeredIntersection5 extends MineshaftPiece{
         super(BetterMineshaftStructurePieceType.LAYERED_INTERSECTION_5, compoundTag);
     }
 
-    public LayeredIntersection5(int i, int pieceChainLen, Random random, BlockBox blockBox, Direction direction, BetterMineshaftFeature.Type type) {
+    public LayeredIntersection5(int i, int pieceChainLen, Random random, BlockBox blockBox, Direction direction, BetterMineshaftStructure.Type type) {
         super(BetterMineshaftStructurePieceType.LAYERED_INTERSECTION_5, i, pieceChainLen, type);
         this.setOrientation(direction);
         this.boundingBox = blockBox;
@@ -109,8 +109,8 @@ public class LayeredIntersection5 extends MineshaftPiece{
 
         // Randomize blocks
         float chance =
-            this.mineshaftType == BetterMineshaftFeature.Type.ICE
-                || this.mineshaftType == BetterMineshaftFeature.Type.MUSHROOM
+            this.mineshaftType == BetterMineshaftStructure.Type.ICE
+                || this.mineshaftType == BetterMineshaftStructure.Type.MUSHROOM
             ? .95f
             : .6f;
         this.chanceReplaceNonAir(world, box, random, chance, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getMainSelector());

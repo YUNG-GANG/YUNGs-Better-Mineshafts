@@ -1,6 +1,6 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
-import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftFeature;
+import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftStructure;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
 import com.yungnickyoung.minecraft.bettermineshafts.util.BoxUtil;
 import net.minecraft.block.BlockState;
@@ -62,7 +62,7 @@ public class OreDeposit extends MineshaftPiece {
         this.oreType = OreType.valueOf(compoundTag.getInt("OreType"));
     }
 
-    public OreDeposit(int i, int chunkPieceLen, Random random, BlockBox blockBox, Direction direction, BetterMineshaftFeature.Type type) {
+    public OreDeposit(int i, int chunkPieceLen, Random random, BlockBox blockBox, Direction direction, BetterMineshaftStructure.Type type) {
         super(BetterMineshaftStructurePieceType.ORE_DEPOSIT, i, chunkPieceLen, type);
         this.setOrientation(direction);
         this.boundingBox = blockBox;

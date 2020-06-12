@@ -1,7 +1,7 @@
 package com.yungnickyoung.minecraft.bettermineshafts.init;
 
 import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshafts;
-import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftFeature;
+import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftStructure;
 import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftFeatureConfig;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -11,7 +11,7 @@ import net.minecraft.world.gen.feature.*;
 
 import java.util.List;
 
-public class BMStructureFeature {
+public class BMStructure {
     // TODO - replace hardcoded spawnrates w/ config option
     public static final double SPAWN_RATE = .01; // .003
 
@@ -23,7 +23,7 @@ public class BMStructureFeature {
         BETTER_MINESHAFT_FEATURE = Registry.register(
             Registry.FEATURE,
             new Identifier(BetterMineshafts.MOD_ID, "mineshaft"),
-            new BetterMineshaftFeature(BetterMineshaftFeatureConfig::deserialize)
+            new BetterMineshaftStructure(BetterMineshaftFeatureConfig::deserialize)
         );
         Registry.register(
             Registry.STRUCTURE_FEATURE,
@@ -47,49 +47,49 @@ public class BMStructureFeature {
      */
     private static void addBetterMineshafts(Biome biome) {
         BetterMineshaftFeatureConfig config;
-        BetterMineshaftFeature.Type type;
+        BetterMineshaftStructure.Type type;
 
         // Set config based on biome
         switch (biome.getCategory()) {
             case MESA:
                 if (biome instanceof BadlandsBiome) {
-                    type = BetterMineshaftFeature.Type.RED_DESERT;
+                    type = BetterMineshaftStructure.Type.RED_DESERT;
                 } else {
-                    type = BetterMineshaftFeature.Type.MESA;
+                    type = BetterMineshaftStructure.Type.MESA;
                 }
                 break;
             case JUNGLE:
-                type = BetterMineshaftFeature.Type.JUNGLE;
+                type = BetterMineshaftStructure.Type.JUNGLE;
                 break;
             case ICY:
                 if (biome instanceof IceSpikesBiome) {
-                    type = BetterMineshaftFeature.Type.ICE;
+                    type = BetterMineshaftStructure.Type.ICE;
                 } else {
-                    type = BetterMineshaftFeature.Type.SNOW;
+                    type = BetterMineshaftStructure.Type.SNOW;
                 }
                 break;
             case TAIGA:
                 if (biome instanceof SnowyTaigaBiome || biome instanceof SnowyTaigaHillsBiome || biome instanceof SnowyTaigaMountainsBiome) {
-                    type = BetterMineshaftFeature.Type.ICE;
+                    type = BetterMineshaftStructure.Type.ICE;
                 } else {
-                    type = BetterMineshaftFeature.Type.SNOW;
+                    type = BetterMineshaftStructure.Type.SNOW;
                 }
                 break;
             case DESERT:
                 if (biome instanceof DesertBiome) {
-                    type = BetterMineshaftFeature.Type.RED_DESERT;
+                    type = BetterMineshaftStructure.Type.RED_DESERT;
                 } else {
-                    type = BetterMineshaftFeature.Type.DESERT;
+                    type = BetterMineshaftStructure.Type.DESERT;
                 }
                 break;
             case MUSHROOM:
-                type = BetterMineshaftFeature.Type.MUSHROOM;
+                type = BetterMineshaftStructure.Type.MUSHROOM;
                 break;
             case SAVANNA:
-                type = BetterMineshaftFeature.Type.SAVANNA;
+                type = BetterMineshaftStructure.Type.SAVANNA;
                 break;
             default:
-                type = BetterMineshaftFeature.Type.NORMAL;
+                type = BetterMineshaftStructure.Type.NORMAL;
         }
 
         config = new BetterMineshaftFeatureConfig(SPAWN_RATE, type);

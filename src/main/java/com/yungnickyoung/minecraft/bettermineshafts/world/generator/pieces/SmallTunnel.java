@@ -1,7 +1,7 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
 import com.google.common.collect.Lists;
-import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftFeature;
+import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftStructure;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
 import com.yungnickyoung.minecraft.bettermineshafts.util.BoxUtil;
@@ -47,7 +47,7 @@ public class SmallTunnel extends MineshaftPiece {
         }
     }
 
-    public SmallTunnel(int i, int chunkPieceLen, Random random, BlockBox blockBox, Direction direction, BetterMineshaftFeature.Type type) {
+    public SmallTunnel(int i, int chunkPieceLen, Random random, BlockBox blockBox, Direction direction, BetterMineshaftStructure.Type type) {
         super(BetterMineshaftStructurePieceType.SMALL_TUNNEL, i, chunkPieceLen, type);
         this.setOrientation(direction);
         this.boundingBox = blockBox;
@@ -105,8 +105,8 @@ public class SmallTunnel extends MineshaftPiece {
 
         // Randomize blocks
         float chance =
-            this.mineshaftType == BetterMineshaftFeature.Type.ICE
-                || this.mineshaftType == BetterMineshaftFeature.Type.MUSHROOM
+            this.mineshaftType == BetterMineshaftStructure.Type.ICE
+                || this.mineshaftType == BetterMineshaftStructure.Type.MUSHROOM
             ? .95f
             : .6f;
         this.chanceReplaceNonAir(world, box, random, chance, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getMainSelector());
@@ -117,7 +117,7 @@ public class SmallTunnel extends MineshaftPiece {
         // Fill in any air in floor with main block
         this.replaceAir(world, box, 1, 0, 0, LOCAL_X_END - 1, 0, LOCAL_Z_END, getMainBlock());
         // Special case - mushroom mineshafts get mycelium in floor
-        if (this.mineshaftType == BetterMineshaftFeature.Type.MUSHROOM)
+        if (this.mineshaftType == BetterMineshaftStructure.Type.MUSHROOM)
             this.chanceReplaceNonAir(world, box, random, .8f, 1, 0, 0, LOCAL_X_END - 1, 0, LOCAL_Z_END, Blocks.MYCELIUM.getDefaultState());
 
         // Decorations
@@ -157,7 +157,7 @@ public class SmallTunnel extends MineshaftPiece {
         this.fill(world, box, 3, 1, z, 3, 2, z, getSupportBlock());
         this.fill(world, box, 1, 3, z, 3, 3, z, getMainBlock());
         BlockState supportBlock = getSupportBlock();
-        if (this.mineshaftType != BetterMineshaftFeature.Type.ICE)
+        if (this.mineshaftType != BetterMineshaftStructure.Type.ICE)
             supportBlock = getSupportBlock().with(WallBlock.WEST, true).with(WallBlock.EAST, true);
         this.chanceReplaceNonAir(world, box, random, .25f, 1, 3, z, 3, 3, z, supportBlock);
     }

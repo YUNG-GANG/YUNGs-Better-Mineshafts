@@ -13,18 +13,18 @@ import java.util.Random;
  * Describes a set of blocks and the probability of each block in the set being chosen.
  * Includes static members used for each Better Mineshaft biome variant.
  */
-public class BlockSelector {
+public class BlockSetSelector {
     /**
      * Main theme blocks.
      */
-    public static BlockSelector NORMAL = new BlockSelector(Blocks.OAK_PLANKS.getDefaultState())
+    public static BlockSetSelector NORMAL = new BlockSetSelector(Blocks.OAK_PLANKS.getDefaultState())
         .addBlock(Blocks.COBBLESTONE.getDefaultState(), 0.1f)
         .addBlock(Blocks.STONE_BRICKS.getDefaultState(), 0.1f)
         .addBlock(Blocks.MOSSY_STONE_BRICKS.getDefaultState(), 0.1f)
         .addBlock(Blocks.CRACKED_STONE_BRICKS.getDefaultState(), 0.1f)
         .addBlock(Blocks.CAVE_AIR.getDefaultState(), 0.2f);
 
-    public static BlockSelector MESA = new BlockSelector(Blocks.DARK_OAK_PLANKS.getDefaultState())
+    public static BlockSetSelector MESA = new BlockSetSelector(Blocks.DARK_OAK_PLANKS.getDefaultState())
         .addBlock(Blocks.BROWN_TERRACOTTA.getDefaultState(), 0.05f)
         .addBlock(Blocks.ORANGE_TERRACOTTA.getDefaultState(), 0.05f)
         .addBlock(Blocks.YELLOW_TERRACOTTA.getDefaultState(), 0.05f)
@@ -34,7 +34,7 @@ public class BlockSelector {
         .addBlock(Blocks.CRACKED_STONE_BRICKS.getDefaultState(), 0.1f)
         .addBlock(Blocks.CAVE_AIR.getDefaultState(), 0.2f);
 
-    public static BlockSelector JUNGLE = new BlockSelector(Blocks.JUNGLE_PLANKS.getDefaultState())
+    public static BlockSetSelector JUNGLE = new BlockSetSelector(Blocks.JUNGLE_PLANKS.getDefaultState())
         .addBlock(Blocks.MOSSY_COBBLESTONE.getDefaultState(), 0.1f)
         .addBlock(Blocks.STONE_BRICKS.getDefaultState(), 0.05f)
         .addBlock(Blocks.MOSSY_STONE_BRICKS.getDefaultState(), 0.2f)
@@ -42,7 +42,7 @@ public class BlockSelector {
         .addBlock(Blocks.CHISELED_STONE_BRICKS.getDefaultState(), 0.05f)
         .addBlock(Blocks.CAVE_AIR.getDefaultState(), 0.2f);
 
-    public static BlockSelector SNOW = new BlockSelector(Blocks.SPRUCE_PLANKS.getDefaultState())
+    public static BlockSetSelector SNOW = new BlockSetSelector(Blocks.SPRUCE_PLANKS.getDefaultState())
         .addBlock(Blocks.SNOW_BLOCK.getDefaultState(), .25f)
         .addBlock(Blocks.PACKED_ICE.getDefaultState(), .1f)
         .addBlock(Blocks.BLUE_ICE.getDefaultState(), .1f)
@@ -50,12 +50,12 @@ public class BlockSelector {
         .addBlock(Blocks.CRACKED_STONE_BRICKS.getDefaultState(), 0.1f)
         .addBlock(Blocks.CAVE_AIR.getDefaultState(), 0.2f);
 
-    public static BlockSelector ICE = new BlockSelector(Blocks.PACKED_ICE.getDefaultState())
+    public static BlockSetSelector ICE = new BlockSetSelector(Blocks.PACKED_ICE.getDefaultState())
         .addBlock(Blocks.BLUE_ICE.getDefaultState(), .4f)
         .addBlock(Blocks.SNOW_BLOCK.getDefaultState(), 0.1f)
         .addBlock(Blocks.CAVE_AIR.getDefaultState(), 0.1f);
 
-    public static BlockSelector DESERT = new BlockSelector(Blocks.SANDSTONE.getDefaultState())
+    public static BlockSetSelector DESERT = new BlockSetSelector(Blocks.SANDSTONE.getDefaultState())
         .addBlock(Blocks.SAND.getDefaultState(), 0.3f)
         .addBlock(Blocks.CHISELED_SANDSTONE.getDefaultState(), 0.1f)
         .addBlock(Blocks.CUT_SANDSTONE.getDefaultState(), 0.1f)
@@ -64,7 +64,7 @@ public class BlockSelector {
         .addBlock(Blocks.CRACKED_STONE_BRICKS.getDefaultState(), 0.05f)
         .addBlock(Blocks.CAVE_AIR.getDefaultState(), 0.2f);
 
-    public static BlockSelector RED_DESERT = new BlockSelector(Blocks.RED_SANDSTONE.getDefaultState())
+    public static BlockSetSelector RED_DESERT = new BlockSetSelector(Blocks.RED_SANDSTONE.getDefaultState())
         .addBlock(Blocks.RED_SAND.getDefaultState(), 0.3f)
         .addBlock(Blocks.CHISELED_RED_SANDSTONE.getDefaultState(), 0.1f)
         .addBlock(Blocks.CUT_RED_SANDSTONE.getDefaultState(), 0.1f)
@@ -73,12 +73,12 @@ public class BlockSelector {
         .addBlock(Blocks.CRACKED_STONE_BRICKS.getDefaultState(), 0.05f)
         .addBlock(Blocks.CAVE_AIR.getDefaultState(), 0.2f);
 
-    public static BlockSelector MUSHROOM = new BlockSelector()
+    public static BlockSetSelector MUSHROOM = new BlockSetSelector()
         .addBlock(Blocks.MUSHROOM_STEM.getDefaultState(), .33333f)
         .addBlock(Blocks.BROWN_MUSHROOM_BLOCK.getDefaultState(), .33333f)
         .addBlock(Blocks.RED_MUSHROOM_BLOCK.getDefaultState(), .33333f);
 
-    public static BlockSelector ACACIA = new BlockSelector(Blocks.ACACIA_PLANKS.getDefaultState())
+    public static BlockSetSelector ACACIA = new BlockSetSelector(Blocks.ACACIA_PLANKS.getDefaultState())
         .addBlock(Blocks.COBBLESTONE.getDefaultState(), 0.1f)
         .addBlock(Blocks.STONE_BRICKS.getDefaultState(), 0.1f)
         .addBlock(Blocks.MOSSY_STONE_BRICKS.getDefaultState(), 0.1f)
@@ -88,41 +88,41 @@ public class BlockSelector {
     /**
      * Stone brick blocks.
      */
-    public static BlockSelector STONE_BRICK_NORMAL = new BlockSelector()
+    public static BlockSetSelector STONE_BRICK_NORMAL = new BlockSetSelector()
         .addBlock(Blocks.STONE_BRICKS.getDefaultState(), 0.33333f)
         .addBlock(Blocks.MOSSY_STONE_BRICKS.getDefaultState(), 0.33333f)
         .addBlock(Blocks.CRACKED_STONE_BRICKS.getDefaultState(), 0.33333f);
 
-    public static BlockSelector STONE_BRICK_JUNGLE = new BlockSelector()
+    public static BlockSetSelector STONE_BRICK_JUNGLE = new BlockSetSelector()
         .addBlock(Blocks.STONE_BRICKS.getDefaultState(), .25f)
         .addBlock(Blocks.MOSSY_STONE_BRICKS.getDefaultState(), .25f)
         .addBlock(Blocks.CRACKED_STONE_BRICKS.getDefaultState(), .25f)
         .addBlock(Blocks.CHISELED_STONE_BRICKS.getDefaultState(), .25f);
 
-    public static BlockSelector STONE_BRICK_SNOW = new BlockSelector()
+    public static BlockSetSelector STONE_BRICK_SNOW = new BlockSetSelector()
         .addBlock(Blocks.SNOW_BLOCK.getDefaultState(), .5f)
         .addBlock(Blocks.PACKED_ICE.getDefaultState(), .25f)
         .addBlock(Blocks.BLUE_ICE.getDefaultState(), .25f);
 
-    public static BlockSelector STONE_BRICK_ICE = new BlockSelector()
+    public static BlockSetSelector STONE_BRICK_ICE = new BlockSetSelector()
         .addBlock(Blocks.PACKED_ICE.getDefaultState(), .5f)
         .addBlock(Blocks.BLUE_ICE.getDefaultState(), .5f);
 
-    public static BlockSelector STONE_BRICK_DESERT = new BlockSelector()
+    public static BlockSetSelector STONE_BRICK_DESERT = new BlockSetSelector()
         .addBlock(Blocks.SAND.getDefaultState(), .25f)
         .addBlock(Blocks.SANDSTONE.getDefaultState(), .25f)
         .addBlock(Blocks.SMOOTH_SANDSTONE.getDefaultState(), .2f)
         .addBlock(Blocks.CUT_SANDSTONE.getDefaultState(), .2f)
         .addBlock(Blocks.CHISELED_SANDSTONE.getDefaultState(), .1f);
 
-    public static BlockSelector STONE_BRICK_RED_DESERT = new BlockSelector()
+    public static BlockSetSelector STONE_BRICK_RED_DESERT = new BlockSetSelector()
         .addBlock(Blocks.RED_SAND.getDefaultState(), .25f)
         .addBlock(Blocks.RED_SANDSTONE.getDefaultState(), .25f)
         .addBlock(Blocks.SMOOTH_RED_SANDSTONE.getDefaultState(), .2f)
         .addBlock(Blocks.CUT_RED_SANDSTONE.getDefaultState(), .2f)
         .addBlock(Blocks.CHISELED_RED_SANDSTONE.getDefaultState(), .1f);
 
-    public static BlockSelector STONE_BRICK_MUSHROOM = new BlockSelector()
+    public static BlockSetSelector STONE_BRICK_MUSHROOM = new BlockSetSelector()
         .addBlock(Blocks.MUSHROOM_STEM.getDefaultState(), .33333f)
         .addBlock(Blocks.BROWN_MUSHROOM_BLOCK.getDefaultState(), .33333f)
         .addBlock(Blocks.RED_MUSHROOM_BLOCK.getDefaultState(), .33333f);
@@ -134,14 +134,14 @@ public class BlockSelector {
     private List<Pair<BlockState, Float>> entries = new ArrayList<>();
     private BlockState defaultBlock = Blocks.CAVE_AIR.getDefaultState();
 
-    public BlockSelector() {
+    public BlockSetSelector() {
     }
 
-    public BlockSelector(BlockState defaultBlock) {
+    public BlockSetSelector(BlockState defaultBlock) {
         this.defaultBlock = defaultBlock;
     }
 
-    public BlockSelector addBlock(BlockState blockState, float chance) {
+    public BlockSetSelector addBlock(BlockState blockState, float chance) {
         // Abort if blockState already a part of this selector
         for (Pair<BlockState, Float> entry : entries) {
             if (entry.getFirst() == blockState) {
