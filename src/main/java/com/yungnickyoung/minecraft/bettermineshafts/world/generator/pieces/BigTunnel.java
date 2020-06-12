@@ -1,5 +1,6 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftFeature;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
@@ -26,6 +27,7 @@ import net.minecraft.world.gen.chunk.ChunkGenerator;
 
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 public class BigTunnel extends MineshaftPiece {
     private final List<BlockPos> smallShaftLeftEntrances = Lists.newLinkedList();
@@ -45,6 +47,7 @@ public class BigTunnel extends MineshaftPiece {
     private static final float
         SMALL_SHAFT_SPAWN_CHANCE = .07f,
         SIDE_ROOM_SPAWN_CHANCE = .025f;
+    private static final Set<Material> LIQUIDS = ImmutableSet.of(Material.LAVA, Material.WATER);
 
     public BigTunnel(StructureManager structureManager, CompoundTag compoundTag) {
         super(BetterMineshaftStructurePieceType.BIG_TUNNEL, compoundTag);
@@ -160,8 +163,8 @@ public class BigTunnel extends MineshaftPiece {
             this.mineshaftType == BetterMineshaftFeature.Type.SNOW
                 || this.mineshaftType == BetterMineshaftFeature.Type.ICE
                 || this.mineshaftType == BetterMineshaftFeature.Type.MUSHROOM
-            ? .95f
-            : .6f;
+                ? .95f
+                : .6f;
         this.chanceReplaceNonAir(world, box, random, chance, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getMainSelector());
 
         // Fill with air
@@ -182,6 +185,9 @@ public class BigTunnel extends MineshaftPiece {
         // Open up entrances to side rooms
         sideRoomEntrances.forEach(roomBox -> generateSideRoomOpening(world, box, roomBox, random));
 
+        // Generate legs below the mineshaft to support it, if the mineshaft is floating
+        generateLegs(world, box, random);
+
         // Decorations
         generateRails(world, box, random);
         generateLanterns(world, box, random);
@@ -194,6 +200,67 @@ public class BigTunnel extends MineshaftPiece {
         this.addVines(world, box, random, getVineChance(), 1, 0, 1, LOCAL_X_END - 1, LOCAL_Y_END, LOCAL_Z_END - 1);
 
         return true;
+    }
+
+    private void generateLegs(IWorld world, BlockBox box, Random random) {
+        BlockState supportBlock = getSupportBlock();
+        if (this.mineshaftType == BetterMineshaftFeature.Type.MUSHROOM)
+            supportBlock = Blocks.DIRT.getDefaultState();
+        else if (this.mineshaftType != BetterMineshaftFeature.Type.ICE)
+            supportBlock = getSupportBlock().with(WallBlock.NORTH, true).with(WallBlock.SOUTH, true);
+
+        // Left side
+        generateLeg(world, 1, 0);
+        this.replaceAir(world, box, 1, -1, 1, 1, -1, 5, supportBlock);
+        this.replaceAir(world, box, 1, -2, 1, 1, -2, 3, supportBlock);
+        this.replaceAir(world, box, 1, -3, 1, 1, -3, 2, supportBlock);
+        this.replaceAir(world, box, 1, -5, 1, 1, -4, 1, supportBlock);
+        this.replaceAir(world, box, 1, -1, 6, 1, -1, 10, supportBlock);
+        this.replaceAir(world, box, 1, -2, 8, 1, -2, 10, supportBlock);
+        this.replaceAir(world, box, 1, -3, 9, 1, -3, 10, supportBlock);
+        this.replaceAir(world, box, 1, -5, 10, 1, -4, 10, supportBlock);
+        generateLeg(world, 1, 11);
+        generateLeg(world, 1, 12);
+        this.replaceAir(world, box, 1, -1, 13, 1, -1, 17, supportBlock);
+        this.replaceAir(world, box, 1, -2, 13, 1, -2, 15, supportBlock);
+        this.replaceAir(world, box, 1, -3, 13, 1, -3, 14, supportBlock);
+        this.replaceAir(world, box, 1, -5, 13, 1, -4, 13, supportBlock);
+        this.replaceAir(world, box, 1, -1, 18, 1, -1, 22, supportBlock);
+        this.replaceAir(world, box, 1, -2, 20, 1, -2, 22, supportBlock);
+        this.replaceAir(world, box, 1, -3, 21, 1, -3, 22, supportBlock);
+        this.replaceAir(world, box, 1, -5, 22, 1, -4, 22, supportBlock);
+        generateLeg(world, 1, LOCAL_Z_END);
+
+        // Right side
+        generateLeg(world, LOCAL_X_END - 1, 0);
+        this.replaceAir(world, box, LOCAL_X_END - 1, -1, 1, LOCAL_X_END - 1, -1, 5, supportBlock);
+        this.replaceAir(world, box, LOCAL_X_END - 1, -2, 1, LOCAL_X_END - 1, -2, 3, supportBlock);
+        this.replaceAir(world, box, LOCAL_X_END - 1, -3, 1, LOCAL_X_END - 1, -3, 2, supportBlock);
+        this.replaceAir(world, box, LOCAL_X_END - 1, -5, 1, LOCAL_X_END - 1, -4, 1, supportBlock);
+        this.replaceAir(world, box, LOCAL_X_END - 1, -1, 6, LOCAL_X_END - 1, -1, 10, supportBlock);
+        this.replaceAir(world, box, LOCAL_X_END - 1, -2, 8, LOCAL_X_END - 1, -2, 10, supportBlock);
+        this.replaceAir(world, box, LOCAL_X_END - 1, -3, 9, LOCAL_X_END - 1, -3, 10, supportBlock);
+        this.replaceAir(world, box, LOCAL_X_END - 1, -5, 10, LOCAL_X_END - 1, -4, 10, supportBlock);
+        generateLeg(world, LOCAL_X_END - 1, 11);
+        generateLeg(world, LOCAL_X_END - 1, 12);
+        this.replaceAir(world, box, LOCAL_X_END - 1, -1, 13, LOCAL_X_END - 1, -1, 17, supportBlock);
+        this.replaceAir(world, box, LOCAL_X_END - 1, -2, 13, LOCAL_X_END - 1, -2, 15, supportBlock);
+        this.replaceAir(world, box, LOCAL_X_END - 1, -3, 13, LOCAL_X_END - 1, -3, 14, supportBlock);
+        this.replaceAir(world, box, LOCAL_X_END - 1, -5, 13, LOCAL_X_END - 1, -4, 13, supportBlock);
+        this.replaceAir(world, box, LOCAL_X_END - 1, -1, 18, LOCAL_X_END - 1, -1, 22, supportBlock);
+        this.replaceAir(world, box, LOCAL_X_END - 1, -2, 20, LOCAL_X_END - 1, -2, 22, supportBlock);
+        this.replaceAir(world, box, LOCAL_X_END - 1, -3, 21, LOCAL_X_END - 1, -3, 22, supportBlock);
+        this.replaceAir(world, box, LOCAL_X_END - 1, -5, 22, LOCAL_X_END - 1, -4, 22, supportBlock);
+        generateLeg(world, LOCAL_X_END - 1, LOCAL_Z_END);
+    }
+
+    private void generateLeg(IWorld world, int x, int z) {
+        BlockPos.Mutable mutable = new BlockPos.Mutable(this.applyXTransform(x, z), this.applyYTransform(-1), this.applyZTransform(x, z));
+
+        while (mutable.getY() > 0 && (world.getBlockState(mutable) == AIR || LIQUIDS.contains(world.getBlockState(mutable).getMaterial()))) {
+            world.setBlockState(mutable, getLegBlock(), 2);
+            mutable.setOffset(Direction.DOWN);
+        }
     }
 
     private void generateGravelDeposit(IWorld world, BlockBox box, Random random, int z, int side) {
