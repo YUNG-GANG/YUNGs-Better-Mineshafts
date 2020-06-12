@@ -1,5 +1,6 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
+import com.google.common.collect.ImmutableSet;
 import com.yungnickyoung.minecraft.bettermineshafts.util.BlockSelector;
 import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftFeature;
 import net.minecraft.block.*;
@@ -18,10 +19,13 @@ import net.minecraft.world.IWorld;
 
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 public abstract class MineshaftPiece extends StructurePiece {
     public BetterMineshaftFeature.Type mineshaftType;
     protected int pieceChainLen;
+
+    private static final Set<Material> LIQUIDS = ImmutableSet.of(Material.LAVA, Material.WATER);
 
     public MineshaftPiece(StructurePieceType structurePieceType, int i, int pieceChainLen, BetterMineshaftFeature.Type type) {
         super(structurePieceType, i);
@@ -293,6 +297,10 @@ public abstract class MineshaftPiece extends StructurePiece {
         }
     }
 
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *                                  GENERATION UTIL METHODS                                *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
     protected boolean addBarrel(IWorld world, BlockBox boundingBox, Random random, BlockPos pos, Identifier lootTableId) {
         if (boundingBox.contains(pos) && world.getBlockState(pos).getBlock() != Blocks.BARREL) {
             world.setBlockState(pos, Blocks.BARREL.getDefaultState().with(BarrelBlock.FACING, Direction.UP), 2);
@@ -399,6 +407,24 @@ public abstract class MineshaftPiece extends StructurePiece {
                     }
                 }
             }
+        }
+    }
+
+    protected void generateLeg(IWorld world, int x, int z, BlockState blockState) {
+        BlockPos.Mutable mutable = new BlockPos.Mutable(this.applyXTransform(x, z), this.applyYTransform(-1), this.applyZTransform(x, z));
+
+        while (mutable.getY() > 0 && (world.getBlockState(mutable) == AIR || LIQUIDS.contains(world.getBlockState(mutable).getMaterial()))) {
+            world.setBlockState(mutable, blockState, 2);
+            mutable.setOffset(Direction.DOWN);
+        }
+    }
+
+    protected void generateLeg(IWorld world, Random random, int x, int z, BlockSelector selector) {
+        BlockPos.Mutable mutable = new BlockPos.Mutable(this.applyXTransform(x, z), this.applyYTransform(-1), this.applyZTransform(x, z));
+
+        while (mutable.getY() > 0 && (world.getBlockState(mutable) == AIR || LIQUIDS.contains(world.getBlockState(mutable).getMaterial()))) {
+            world.setBlockState(mutable, selector.get(random), 2);
+            mutable.setOffset(Direction.DOWN);
         }
     }
 

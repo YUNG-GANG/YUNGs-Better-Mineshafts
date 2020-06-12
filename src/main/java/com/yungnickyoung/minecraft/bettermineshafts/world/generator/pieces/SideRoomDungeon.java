@@ -88,8 +88,10 @@ public class SideRoomDungeon extends MineshaftPiece {
     @Override
     public boolean generate(IWorld world, ChunkGenerator<?> generator, Random random, BlockBox box, ChunkPos pos) {
          // Fill with stone then clean out with air
-        this.chanceFill(world, box, random, .6f,0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getBrickSelector());
+        this.fill(world, box, random, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getBrickSelector());
         this.fill(world, box, 1, 1, 1, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END - 1, AIR);
+
+        generateLegs(world, random);
 
         // Ladders
         BlockState LADDER = Blocks.LADDER.getDefaultState().with(LadderBlock.FACING, Direction.NORTH);
@@ -119,5 +121,12 @@ public class SideRoomDungeon extends MineshaftPiece {
         this.addBiomeDecorations(world, box, random, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END - 1, LOCAL_Z_END);
 
         return true;
+    }
+
+    private void generateLegs(IWorld world, Random random) {
+        generateLeg(world, random, 1, 1, getBrickSelector());
+        generateLeg(world, random, 1, LOCAL_Z_END - 1, getBrickSelector());
+        generateLeg(world, random, LOCAL_X_END - 1, 1, getBrickSelector());
+        generateLeg(world, random, LOCAL_X_END - 1, LOCAL_Z_END - 1, getBrickSelector());
     }
 }

@@ -103,8 +103,11 @@ public class SideRoom extends MineshaftPiece {
         }
 
         // Fill with stone then clean out with air
-        this.chanceFill(world, box, random, .8f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getBrickSelector());
+        this.fill(world, box, random, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getBrickSelector());
         this.fill(world, box, 1, 1, 1, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END, AIR);
+
+        if (!hasDownstairs)
+            generateLegs(world, random);
 
         // Furnace 1
         if (random.nextInt(2) == 0) {
@@ -144,6 +147,13 @@ public class SideRoom extends MineshaftPiece {
         this.addVines(world, box, random, getVineChance(), 1, 0, 1, LOCAL_X_END - 1, LOCAL_Y_END, LOCAL_Z_END - 1);
 
         return true;
+    }
+
+    private void generateLegs(IWorld world, Random random) {
+        generateLeg(world, random, 1, 1, getBrickSelector());
+        generateLeg(world, random, 1, LOCAL_Z_END - 1, getBrickSelector());
+        generateLeg(world, random, LOCAL_X_END - 1, 1, getBrickSelector());
+        generateLeg(world, random, LOCAL_X_END - 1, LOCAL_Z_END - 1, getBrickSelector());
     }
 
     private void generateIronBarSupports(IWorld world, BlockBox box, Random random) {
