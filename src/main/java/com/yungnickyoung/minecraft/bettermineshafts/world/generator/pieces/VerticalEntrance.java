@@ -308,12 +308,12 @@ public class VerticalEntrance extends MineshaftPiece {
     }
 
     /**
-     * Determines the direction to spawn the structure in.
+     * Determines the direction to spawn the surface tunnel in.
      * Tries to find a direction in which there is a drop-off, with the goal of creating an opening
      * in the face of a mountain or hill.
      *
      * @return The direction, or null if no drop-off nearby. If null, no vertical entrance/surface opening will be
-     * made for this mineshaft.
+     * made for this mineshaft. Generation of the big tunnel and the rest of the mineshaft will proceed as normal.
      */
     private DirInfo determineDirection(IWorld world) {
         int minSurfaceHeight = 255;
@@ -338,7 +338,11 @@ public class VerticalEntrance extends MineshaftPiece {
             }
         }
 
-        // Require surface opening to be at high-ish altitude
+        if (centerPos.getX() == -206 && centerPos.getZ() == 242) {
+            BetterMineshafts.LOGGER.info("WEFEF");
+        }
+
+        // Require surface opening to be above sea level
         if (minSurfaceHeight < 60 || minSurfaceHeight == 255) return null;
 
         int ceilingHeight = minSurfaceHeight - 2;
@@ -352,25 +356,17 @@ public class VerticalEntrance extends MineshaftPiece {
 
         int radius = 8; // Number of blocks that constitutes one 'radius'
         int maxRadialDist = 3; // Number of radii to check in each direction. E.g. 3 radii * radius of 8 = 24 blocks
-        int minDistToDropoff = 2; // Minimum required distance in a given direction before reaching a drop-off.
-        // Prevents the vertical entrance itself from being partly on the edge of a drop-off,
-        // and also ensures there will be at least a tiny bit of tunnel leading to the vertical entrance.
 
         for (int radialDist = 0; radialDist < maxRadialDist; radialDist++) {
             // Check each of the four cardinal directions
             for (Direction direction : Direction.values()) {
                 if (direction == Direction.UP || direction == Direction.DOWN) continue;
 
-                mutable.set(centerPos.offset(direction, radius * radialDist));
+                mutable.set(centerPos.offset(direction, radius * radialDist + 2));
 
                 // Check altitude of each individual block along the direction.
                 for (int i = radialDist * radius; i < radialDist * radius + radius; i++) {
                     int surfaceHeight = SurfaceUtil.getSurfaceHeight(world.getChunk(mutable), new ColumnPos(mutable.getX(), mutable.getZ()));
-
-                    // Too early for a drop-off
-                    if (i < minDistToDropoff && surfaceHeight < minSurfaceHeight) {
-                        break;
-                    }
 
                     if (surfaceHeight <= floorHeight && surfaceHeight > 1) {
                         return new DirInfo(direction, i, ceilingHeight);

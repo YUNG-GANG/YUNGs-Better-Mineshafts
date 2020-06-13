@@ -14,13 +14,13 @@ public class SurfaceUtil {
 
         // Edge case: blocks go all the way up to build height
         BlockPos topPos = new BlockPos(pos.x, 255, pos.z);
-        if (chunkIn.getBlockState(topPos) != Blocks.AIR.getDefaultState() && chunkIn.getBlockState(topPos).getMaterial() != Material.WATER)
+        if (chunkIn.getBlockState(topPos) != Blocks.AIR.getDefaultState())
             return 255;
 
         for (int y = 255; y >= 0; y--) {
             BlockState blockState = chunkIn.getBlockState(blockPos);
             if (blockState != Blocks.AIR.getDefaultState())
-                return y + 1;
+                return y;
             blockPos.setOffset(Direction.DOWN);
         }
 
