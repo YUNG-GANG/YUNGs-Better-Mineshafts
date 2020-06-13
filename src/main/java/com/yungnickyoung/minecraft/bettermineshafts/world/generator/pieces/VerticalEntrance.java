@@ -99,7 +99,7 @@ public class VerticalEntrance extends MineshaftPiece {
 
     @Override
     @ParametersAreNonnullByDefault
-    public boolean func_225577_a_(IWorld world, ChunkGenerator<?> generator, Random random, MutableBoundingBox box, ChunkPos pos) {
+    public boolean create(IWorld world, ChunkGenerator<?> generator, Random random, MutableBoundingBox box, ChunkPos pos) {
         BetterMineshafts.count.incrementAndGet();
         // Only generate vertical entrance if there is valid surrounding terrain
         DirInfo dirInfo = determineDirection(world);

@@ -5,15 +5,16 @@ import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMinesh
 import com.yungnickyoung.minecraft.bettermineshafts.util.BoxUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.structure.StructureManager;
-import net.minecraft.structure.StructurePiece;
-import net.minecraft.util.math.BlockBox;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.world.IWorld;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
+import net.minecraft.world.gen.ChunkGenerator;
+import net.minecraft.world.gen.feature.structure.StructurePiece;
+import net.minecraft.world.gen.feature.template.TemplateManager;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -57,36 +58,37 @@ public class OreDeposit extends MineshaftPiece {
         LOCAL_Y_END = Y_AXIS_LEN - 1,
         LOCAL_Z_END = MAIN_AXIS_LEN - 1;
 
-    public OreDeposit(StructureManager structureManager, CompoundTag compoundTag) {
+    public OreDeposit(TemplateManager structureManager, CompoundNBT compoundTag) {
         super(BetterMineshaftStructurePieceType.ORE_DEPOSIT, compoundTag);
         this.oreType = OreType.valueOf(compoundTag.getInt("OreType"));
     }
 
-    public OreDeposit(int i, int chunkPieceLen, Random random, BlockBox blockBox, Direction direction, BetterMineshaftStructure.Type type) {
+    public OreDeposit(int i, int chunkPieceLen, Random random, MutableBoundingBox blockBox, Direction direction, BetterMineshaftStructure.Type type) {
         super(BetterMineshaftStructurePieceType.ORE_DEPOSIT, i, chunkPieceLen, type);
-        this.setOrientation(direction);
+        this.setCoordBaseMode(direction);
         this.boundingBox = blockBox;
     }
 
     @Override
-    protected void toNbt(CompoundTag tag) {
+    @ParametersAreNonnullByDefault
+    protected void readAdditional(CompoundNBT tag) {
         super.toNbt(tag);
         tag.putInt("OreType", this.oreType.value);
     }
 
-    public static BlockBox determineBoxPosition(List<StructurePiece> list, Random random, int x, int y, int z, Direction direction) {
-        BlockBox blockBox = BoxUtil.boxFromCoordsWithRotation(x, y, z, SECONDARY_AXIS_LEN, Y_AXIS_LEN, MAIN_AXIS_LEN, direction);
+    public static MutableBoundingBox determineBoxPosition(List<StructurePiece> list, Random random, int x, int y, int z, Direction direction) {
+        MutableBoundingBox blockBox = BoxUtil.boxFromCoordsWithRotation(x, y, z, SECONDARY_AXIS_LEN, Y_AXIS_LEN, MAIN_AXIS_LEN, direction);
 
         // The following func call returns null if this new blockbox does not intersect with any pieces in the list.
         // If there is an intersection, the following func call returns the piece that intersects.
-        StructurePiece intersectingPiece = StructurePiece.method_14932(list, blockBox); // findIntersecting
+        StructurePiece intersectingPiece = StructurePiece.findIntersecting(list, blockBox); // findIntersecting
 
         // Thus, this function returns null if blackBox intersects with an existing piece. Otherwise, we return blackbox
         return intersectingPiece != null ? null : blockBox;
     }
 
     @Override
-    public void method_14918(StructurePiece structurePiece, List<StructurePiece> list, Random random) {
+    public void buildComponent(StructurePiece structurePiece, List<StructurePiece> list, Random random) {
         float r = random.nextFloat();
 
         if (r < .5f) {
@@ -108,8 +110,9 @@ public class OreDeposit extends MineshaftPiece {
     }
 
     @Override
-    public boolean generate(IWorld world, ChunkGenerator<?> generator, Random random, BlockBox box, ChunkPos pos) {
-        if (this.method_14937(world, box)) {
+    @ParametersAreNonnullByDefault
+    public boolean create(IWorld world, ChunkGenerator<?> generator, Random random, MutableBoundingBox box, ChunkPos pos) {
+        if (this.isLiquidInStructureBoundingBox(world, box)) {
             return false;
         }
 

@@ -111,7 +111,7 @@ public class LayeredIntersection4 extends MineshaftPiece {
 
     @Override
     @ParametersAreNonnullByDefault
-    public boolean func_225577_a_(IWorld world, ChunkGenerator<?> generator, Random random, MutableBoundingBox box, ChunkPos pos) {
+    public boolean create(IWorld world, ChunkGenerator<?> generator, Random random, MutableBoundingBox box, ChunkPos pos) {
         if (this.isLiquidInStructureBoundingBox(world, box)) {
             return false;
         }

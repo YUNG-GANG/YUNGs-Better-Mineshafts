@@ -31,6 +31,7 @@ public class BetterMineshafts {
     public static AtomicInteger count = new AtomicInteger(0);
 
     public BetterMineshafts() {
+        LOGGER.info("TEST1");
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::registerFeature);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
     }
@@ -40,7 +41,9 @@ public class BetterMineshafts {
      * normal mineshafts with better mineshafts.
      */
     public void registerFeature(RegistryEvent.Register<Feature<?>> event) {
+        LOGGER.info("TEST2");
         if (event.getRegistry().getRegistryName().toString().equals("minecraft:feature")) {
+            LOGGER.info("TEST3");
             betterMineshaft.setRegistryName("minecraft:mineshaft");
             event.getRegistry().register(betterMineshaft);
         }
@@ -50,6 +53,7 @@ public class BetterMineshafts {
      * Adds better mineshafts structure to all biomes.
      */
     public void commonSetup(FMLCommonSetupEvent event) {
+        LOGGER.info("TEST4");
         BetterMineshaftFeatureConfig config;
         BetterMineshaftStructure.Type type;
 

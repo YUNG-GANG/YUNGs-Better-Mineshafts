@@ -1,7 +1,7 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world;
 
 import com.mojang.datafixers.Dynamic;
-import com.yungnickyoung.minecraft.bettermineshafts.init.BMStructure;
+import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshafts;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.MineshaftPiece;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.VerticalEntrance;
 import mcp.MethodsReturnNonnullByDefault;
@@ -34,13 +34,13 @@ public class BetterMineshaftStructure extends Structure<BetterMineshaftFeatureCo
      */
     @Override
     @ParametersAreNonnullByDefault
-    public boolean func_225558_a_(BiomeManager biomeManager, ChunkGenerator<?> chunkGenerator, Random random, int chunkX, int chunkZ, Biome biome) {
+    public boolean canBeGenerated(BiomeManager biomeManager, ChunkGenerator<?> chunkGenerator, Random random, int chunkX, int chunkZ, Biome biome) {
         ((SharedSeedRandom) random).setLargeFeatureSeed(chunkGenerator.getSeed(), chunkX, chunkZ);
         if (chunkGenerator.hasStructure(biome, this)) {
             BetterMineshaftFeatureConfig featureConfig = chunkGenerator.getStructureConfig(biome, this);
             // Default to normal mineshaft in case we fail to load config for this biome
             if (featureConfig == null) {
-                featureConfig = new BetterMineshaftFeatureConfig(BMStructure.SPAWN_RATE, Type.NORMAL);
+                featureConfig = new BetterMineshaftFeatureConfig(BetterMineshafts.SPAWN_RATE, Type.NORMAL);
             }
             return random.nextDouble() < featureConfig.probability;
         } else {
@@ -77,7 +77,7 @@ public class BetterMineshaftStructure extends Structure<BetterMineshaftFeatureCo
             Biome biome
         ) {
             BetterMineshaftFeatureConfig featureConfig =
-                chunkGenerator.getStructureConfig(biome, BMStructure.BETTER_MINESHAFT_FEATURE);
+                chunkGenerator.getStructureConfig(biome, BetterMineshafts.betterMineshaft);
             if (featureConfig == null) { // Default to normal mineshaft in case we fail to load config for this biome
                 featureConfig = new BetterMineshaftFeatureConfig(.003, Type.NORMAL);
             }
