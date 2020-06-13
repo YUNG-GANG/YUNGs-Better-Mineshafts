@@ -7,7 +7,7 @@ public class BoxUtil {
 
     /**
      * Generates and rotates a block box.
-     * The main axis is the longer of the x and z axes, in the direction
+     * The main axis is the primary of the x and z axes, in the direction
      * the structure should generate from the starting point.
      */
     public static BlockBox boxFromCoordsWithRotation(int x, int y, int z, int secondaryAxisLen, int yLen, int mainAxisLen, Direction mainAxis) {
@@ -19,13 +19,11 @@ public class BoxUtil {
                 blockBox.minZ = z - (mainAxisLen - 1);
                 break;
             case SOUTH:
-//                blockBox.maxX = x + (secondaryAxisLen - 1);
                 blockBox.minX = x - (secondaryAxisLen - 1);
                 blockBox.maxZ = z + (mainAxisLen - 1);
                 break;
             case WEST:
                 blockBox.minX = x - (mainAxisLen - 1);
-//                blockBox.maxZ = z + (secondaryAxisLen - 1);
                 blockBox.minZ = z - (secondaryAxisLen - 1);
                 break;
             case EAST:

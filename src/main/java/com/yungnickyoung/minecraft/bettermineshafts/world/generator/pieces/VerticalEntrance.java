@@ -26,6 +26,7 @@ public class VerticalEntrance extends MineshaftPiece {
         tunnelLength        = 0,
         tunnelFloorAltitude = 0;
     private Direction tunnelDirection = Direction.NORTH;
+    private boolean hasTunnel = false;
 
     // Vertical shaft static vars
     private static final int
@@ -46,6 +47,8 @@ public class VerticalEntrance extends MineshaftPiece {
 
         int tunnelDirInt = compoundTag.getInt("tunnelDir");
         this.tunnelDirection = tunnelDirInt == -1 ? null : Direction.fromHorizontal(tunnelDirInt);
+
+        this.hasTunnel = compoundTag.getBoolean("hasTunnel");
     }
 
     public VerticalEntrance(int i, int pieceChainLen, Random random, BlockPos.Mutable centerPos, Direction direction, BetterMineshaftFeature.Type type) {
@@ -65,6 +68,7 @@ public class VerticalEntrance extends MineshaftPiece {
         tag.putInt("tunnelLen", tunnelLength);
         tag.putInt("floorAltitude", tunnelFloorAltitude);
         tag.putInt("tunnelDir", tunnelDirection.getHorizontal());
+        tag.putBoolean("hasTunnel", hasTunnel);
     }
 
     private static BlockBox getInitialBlockBox(BlockPos centerPos) {
@@ -98,18 +102,19 @@ public class VerticalEntrance extends MineshaftPiece {
     public boolean generate(IWorld world, ChunkGenerator<?> generator, Random random, BlockBox box, ChunkPos pos) {
         BetterMineshafts.count.incrementAndGet();
         // Only generate vertical entrance if there is valid surrounding terrain
-        DirInfo dirInfo = determineDirection(world);
-        if (dirInfo != null) {
-            BetterMineshafts.surfaceEntrances.add(this.centerPos.hashCode());
-            BetterMineshafts.LOGGER.info(String.format("(%d, %d) --- %d / %d  (%f%%)", centerPos.getX(), centerPos.getZ(), BetterMineshafts.surfaceEntrances.size(), BetterMineshafts.count.get(), (float)BetterMineshafts.surfaceEntrances.size() * 100 / BetterMineshafts.count.get()));
+        if (!this.hasTunnel) {
+            determineDirection(world);
 
+            if (BetterMineshafts.DEBUG_LOG && this.hasTunnel) {
+                BetterMineshafts.surfaceEntrances.add(this.centerPos.hashCode());
+                BetterMineshafts.LOGGER.info(String.format("(%d, %d) --- %d / %d  (%f%%)", centerPos.getX(), centerPos.getZ(), BetterMineshafts.surfaceEntrances.size(), BetterMineshafts.count.get(), (float) BetterMineshafts.surfaceEntrances.size() * 100 / BetterMineshafts.count.get()));
+            }
+        }
+
+        if (this.hasTunnel) {
             generateVerticalShaft(world, random, box);
             // Build surface tunnel.
             // This must be done dynamically since its length depends on terrain.
-            this.tunnelDirection = dirInfo.direction;
-            this.tunnelFloorAltitude = dirInfo.ceilingAltitude - 4 - this.boundingBox.minY;
-            this.tunnelLength = dirInfo.horizontalLen;
-
             generateSurfaceTunnel(world, random, box);
 
             return true;
@@ -311,11 +316,8 @@ public class VerticalEntrance extends MineshaftPiece {
      * Determines the direction to spawn the surface tunnel in.
      * Tries to find a direction in which there is a drop-off, with the goal of creating an opening
      * in the face of a mountain or hill.
-     *
-     * @return The direction, or null if no drop-off nearby. If null, no vertical entrance/surface opening will be
-     * made for this mineshaft. Generation of the big tunnel and the rest of the mineshaft will proceed as normal.
      */
-    private DirInfo determineDirection(IWorld world) {
+    private void determineDirection(IWorld world) {
         int minSurfaceHeight = 255;
 
         // Set height for this, equal to 2 below the min height in the 5x5 vertical shaft piece
@@ -338,12 +340,8 @@ public class VerticalEntrance extends MineshaftPiece {
             }
         }
 
-        if (centerPos.getX() == -206 && centerPos.getZ() == 242) {
-            BetterMineshafts.LOGGER.info("WEFEF");
-        }
-
         // Require surface opening to be above sea level
-        if (minSurfaceHeight < 60 || minSurfaceHeight == 255) return null;
+        if (minSurfaceHeight < 60 || minSurfaceHeight == 255) return;
 
         int ceilingHeight = minSurfaceHeight - 2;
         int floorHeight = ceilingHeight - 4;
@@ -369,25 +367,16 @@ public class VerticalEntrance extends MineshaftPiece {
                     int surfaceHeight = SurfaceUtil.getSurfaceHeight(world.getChunk(mutable), new ColumnPos(mutable.getX(), mutable.getZ()));
 
                     if (surfaceHeight <= floorHeight && surfaceHeight > 1) {
-                        return new DirInfo(direction, i, ceilingHeight);
+                        this.hasTunnel = true;
+                        this.tunnelDirection = direction;
+                        this.tunnelFloorAltitude = ceilingHeight - 4 - this.boundingBox.minY;
+                        this.tunnelLength = i;
+                        return;
                     }
 
                     mutable.setOffset(direction);
                 }
             }
-        }
-        return null;
-    }
-
-    private static class DirInfo {
-        public Direction direction;
-        public int horizontalLen;
-        public int ceilingAltitude;
-
-        public DirInfo(Direction dir, int len, int ceilHeight) {
-            this.direction = dir;
-            this.horizontalLen = len;
-            this.ceilingAltitude = ceilHeight;
         }
     }
 }

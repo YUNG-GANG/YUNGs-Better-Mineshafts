@@ -3,7 +3,6 @@ package com.yungnickyoung.minecraft.bettermineshafts.world;
 import com.mojang.datafixers.Dynamic;
 import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshafts;
 import com.yungnickyoung.minecraft.bettermineshafts.init.BMStructureFeature;
-import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.BigTunnel;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.MineshaftPiece;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.VerticalEntrance;
 import net.minecraft.structure.StructureManager;
@@ -35,7 +34,7 @@ public class BetterMineshaftFeature extends StructureFeature<BetterMineshaftFeat
             BetterMineshaftFeatureConfig featureConfig = chunkGenerator.getStructureConfig(biome, this);
             // Default to normal mineshaft in case we fail to load config for this biome
             if (featureConfig == null) {
-                featureConfig = new BetterMineshaftFeatureConfig(BMStructureFeature.SPAWN_RATE, Type.NORMAL);
+                featureConfig = new BetterMineshaftFeatureConfig(BetterMineshafts.SPAWN_RATE, Type.NORMAL);
             }
             return random.nextDouble() < featureConfig.probability;
         } else {
@@ -80,7 +79,6 @@ public class BetterMineshaftFeature extends StructureFeature<BetterMineshaftFeat
             ChunkRandom rand = new ChunkRandom();
             rand.setSeed(chunkX, chunkZ);
             int r = rand.nextInt(4);
-//            BetterMineshafts.LOGGER.info(r);
             switch (r) {
                 case 0:
                     direction = Direction.NORTH;
@@ -94,7 +92,6 @@ public class BetterMineshaftFeature extends StructureFeature<BetterMineshaftFeat
                 case 3:
                     direction = Direction.WEST;
             }
-//            direction = Direction.NORTH;
             BlockPos.Mutable startingPos = new BlockPos.Mutable((chunkX << 4) + 2, 50, (chunkZ << 4) + 2);
 
             // Entrypoint
@@ -115,20 +112,6 @@ public class BetterMineshaftFeature extends StructureFeature<BetterMineshaftFeat
 
             // Expand bounding box to encompass all children
             this.setBoundingBoxFromChildren();
-
-            // y-coordinate adjustments
-//            if (featureConfig.type == BetterMineshaftFeature.Type.MESA) {
-//                // The following is logic to make mesa mineshafts higher up
-//                int yOffset = chunkGenerator.getSeaLevel() - this.boundingBox.maxY + this.boundingBox.getBlockCountY() / 2 + 5;
-//                this.boundingBox.offset(0, yOffset, 0);
-//                children.forEach(structurePiece -> structurePiece.translate(0, yOffset, 0));
-//            }
-//            else {
-//                // Method for adjusting y of all structure pieces (similar to above)
-//                this.method_14978(chunkGenerator.getSeaLevel(), this.random, 10);
-//            }
-            // Method for adjusting y of all structure pieces
-//            this.method_14978(chunkGenerator.getSeaLevel(), this.random, 10);
         }
     }
 

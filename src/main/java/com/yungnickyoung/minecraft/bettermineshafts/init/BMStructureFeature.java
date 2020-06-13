@@ -12,9 +12,6 @@ import net.minecraft.world.gen.feature.*;
 import java.util.List;
 
 public class BMStructureFeature {
-    // TODO - replace hardcoded spawnrates w/ config option
-    public static final double SPAWN_RATE = .01; // .003
-
     private static StructureFeature<?> VANILLA_MINESHAFT_FEATURE;
     public static StructureFeature<BetterMineshaftFeatureConfig> BETTER_MINESHAFT_FEATURE;
 
@@ -92,7 +89,7 @@ public class BMStructureFeature {
                 type = BetterMineshaftFeature.Type.NORMAL;
         }
 
-        config = new BetterMineshaftFeatureConfig(SPAWN_RATE, type);
+        config = new BetterMineshaftFeatureConfig(BetterMineshafts.SPAWN_RATE, type);
 
         removeVanillaMineshafts(biome);
 
