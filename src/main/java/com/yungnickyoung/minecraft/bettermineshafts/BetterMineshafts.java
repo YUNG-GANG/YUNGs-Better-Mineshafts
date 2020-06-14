@@ -13,13 +13,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class BetterMineshafts implements ModInitializer {
     public static final String MOD_ID = "bettermineshafts";
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
-    public static final boolean DEBUG_LOG = true;
+    public static final boolean DEBUG_LOG = false;
 
     public static ConcurrentSet<Integer> surfaceEntrances = new ConcurrentSet<>();
     public static AtomicInteger count = new AtomicInteger(0);
 
     // TODO - replace hardcoded spawnrates w/ config option
-    public static final double SPAWN_RATE = .01; // .003
+    public static final double SPAWN_RATE = .003;
 
     @Override
     public void onInitialize() {
