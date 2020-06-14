@@ -23,15 +23,17 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class BetterMineshafts {
     public static final String MOD_ID = "bettermineshafts";
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
+    public static final boolean DEBUG_LOG = true;
 
     public static final Structure<BetterMineshaftFeatureConfig> betterMineshaft = new BetterMineshaftStructure(BetterMineshaftFeatureConfig::deserialize);
-    public static final double SPAWN_RATE = .01; // .003
 
     public static ConcurrentSet<Integer> surfaceEntrances = new ConcurrentSet<>();
     public static AtomicInteger count = new AtomicInteger(0);
 
+    // TODO - replace hardcoded spawnrates w/ config option
+    public static final double SPAWN_RATE = .01; // .003
+
     public BetterMineshafts() {
-        LOGGER.info("TEST1");
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::registerFeature);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
     }
@@ -41,9 +43,7 @@ public class BetterMineshafts {
      * normal mineshafts with better mineshafts.
      */
     public void registerFeature(RegistryEvent.Register<Feature<?>> event) {
-        LOGGER.info("TEST2");
         if (event.getRegistry().getRegistryName().toString().equals("minecraft:feature")) {
-            LOGGER.info("TEST3");
             betterMineshaft.setRegistryName("minecraft:mineshaft");
             event.getRegistry().register(betterMineshaft);
         }
@@ -53,7 +53,6 @@ public class BetterMineshafts {
      * Adds better mineshafts structure to all biomes.
      */
     public void commonSetup(FMLCommonSetupEvent event) {
-        LOGGER.info("TEST4");
         BetterMineshaftFeatureConfig config;
         BetterMineshaftStructure.Type type;
 
@@ -111,9 +110,5 @@ public class BetterMineshafts {
 
             biome.addStructure(betterMineshaft.withConfiguration(config));
         }
-
-
     }
-
-
 }

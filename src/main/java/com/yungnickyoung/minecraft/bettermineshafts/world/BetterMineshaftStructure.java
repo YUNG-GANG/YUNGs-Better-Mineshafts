@@ -86,7 +86,6 @@ public class BetterMineshaftStructure extends Structure<BetterMineshaftFeatureCo
             SharedSeedRandom rand = new SharedSeedRandom();
             rand.setBaseChunkSeed(chunkX, chunkZ);
             int r = rand.nextInt(4);
-//            BetterMineshafts.LOGGER.info(r);
             switch (r) {
                 case 0:
                     direction = Direction.NORTH;
@@ -100,7 +99,6 @@ public class BetterMineshaftStructure extends Structure<BetterMineshaftFeatureCo
                 case 3:
                     direction = Direction.WEST;
             }
-//            direction = Direction.NORTH;
             BlockPos.Mutable startingPos = new BlockPos.Mutable((chunkX << 4) + 2, 50, (chunkZ << 4) + 2);
 
             // Entrypoint
@@ -121,20 +119,6 @@ public class BetterMineshaftStructure extends Structure<BetterMineshaftFeatureCo
 
             // Expand bounding box to encompass all children
             this.recalculateStructureSize();
-
-            // y-coordinate adjustments
-//            if (featureConfig.type == BetterMineshaftFeature.Type.MESA) {
-//                // The following is logic to make mesa mineshafts higher up
-//                int yOffset = chunkGenerator.getSeaLevel() - this.boundingBox.maxY + this.boundingBox.getBlockCountY() / 2 + 5;
-//                this.boundingBox.offset(0, yOffset, 0);
-//                children.forEach(structurePiece -> structurePiece.translate(0, yOffset, 0));
-//            }
-//            else {
-//                // Method for adjusting y of all structure pieces (similar to above)
-//                this.method_14978(chunkGenerator.getSeaLevel(), this.random, 10);
-//            }
-            // Method for adjusting y of all structure pieces
-//            this.method_14978(chunkGenerator.getSeaLevel(), this.random, 10);
         }
     }
 
