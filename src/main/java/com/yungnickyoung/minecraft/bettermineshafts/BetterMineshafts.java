@@ -1,5 +1,6 @@
 package com.yungnickyoung.minecraft.bettermineshafts;
 
+import com.yungnickyoung.minecraft.bettermineshafts.init.BMStructurePieces;
 import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftFeatureConfig;
 import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftStructure;
 import io.netty.util.internal.ConcurrentSet;
@@ -44,8 +45,10 @@ public class BetterMineshafts {
      */
     public void registerFeature(RegistryEvent.Register<Feature<?>> event) {
         if (event.getRegistry().getRegistryName().toString().equals("minecraft:feature")) {
+            BMStructurePieces.init();
             betterMineshaft.setRegistryName("minecraft:mineshaft");
             event.getRegistry().register(betterMineshaft);
+
         }
     }
 
