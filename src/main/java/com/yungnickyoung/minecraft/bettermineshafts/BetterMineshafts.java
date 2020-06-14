@@ -32,7 +32,7 @@ public class BetterMineshafts {
     public static AtomicInteger count = new AtomicInteger(0);
 
     // TODO - replace hardcoded spawnrates w/ config option
-    public static final double SPAWN_RATE = .01; // .003
+    public static final double SPAWN_RATE = .003; // .003
 
     public BetterMineshafts() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::registerFeature);
