@@ -24,7 +24,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class BetterMineshafts {
     public static final String MOD_ID = "bettermineshafts";
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
-    public static final boolean DEBUG_LOG = true;
+    public static final boolean DEBUG_LOG = false;
 
     public static final Structure<BetterMineshaftFeatureConfig> betterMineshaft = new BetterMineshaftStructure(BetterMineshaftFeatureConfig::deserialize);
 
@@ -32,7 +32,7 @@ public class BetterMineshafts {
     public static AtomicInteger count = new AtomicInteger(0);
 
     // TODO - replace hardcoded spawnrates w/ config option
-    public static final double SPAWN_RATE = .003; // .003
+    public static final double SPAWN_RATE = .003;
 
     public BetterMineshafts() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::registerFeature);
