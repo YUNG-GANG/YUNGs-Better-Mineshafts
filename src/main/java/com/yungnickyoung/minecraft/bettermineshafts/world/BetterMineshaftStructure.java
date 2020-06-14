@@ -1,7 +1,8 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world;
 
 import com.mojang.datafixers.Dynamic;
-import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshafts;
+import com.yungnickyoung.minecraft.bettermineshafts.config.BMConfig;
+import com.yungnickyoung.minecraft.bettermineshafts.init.BMFeature;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.MineshaftPiece;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.VerticalEntrance;
 import mcp.MethodsReturnNonnullByDefault;
@@ -40,7 +41,7 @@ public class BetterMineshaftStructure extends Structure<BetterMineshaftFeatureCo
             BetterMineshaftFeatureConfig featureConfig = chunkGenerator.getStructureConfig(biome, this);
             // Default to normal mineshaft in case we fail to load config for this biome
             if (featureConfig == null) {
-                featureConfig = new BetterMineshaftFeatureConfig(BetterMineshafts.SPAWN_RATE, Type.NORMAL);
+                featureConfig = new BetterMineshaftFeatureConfig(BMConfig.mineshaftSpawnRate, Type.NORMAL);
             }
             return random.nextDouble() < featureConfig.probability;
         } else {
@@ -77,7 +78,7 @@ public class BetterMineshaftStructure extends Structure<BetterMineshaftFeatureCo
             Biome biome
         ) {
             BetterMineshaftFeatureConfig featureConfig =
-                chunkGenerator.getStructureConfig(biome, BetterMineshafts.betterMineshaft);
+                chunkGenerator.getStructureConfig(biome, BMFeature.betterMineshaft);
             if (featureConfig == null) { // Default to normal mineshaft in case we fail to load config for this biome
                 featureConfig = new BetterMineshaftFeatureConfig(.003, Type.NORMAL);
             }
@@ -135,7 +136,7 @@ public class BetterMineshaftStructure extends Structure<BetterMineshaftFeatureCo
 
         private final String name;
 
-        private Type(String name) {
+        Type(String name) {
             this.name = name;
         }
 
