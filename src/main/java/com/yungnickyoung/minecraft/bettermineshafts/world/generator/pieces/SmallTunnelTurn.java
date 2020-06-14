@@ -107,11 +107,6 @@ public class SmallTunnelTurn extends MineshaftPiece {
     @Override
     @ParametersAreNonnullByDefault
     public boolean create(IWorld world, ChunkGenerator<?> generator, Random random, MutableBoundingBox box, ChunkPos pos) {
-        // Don't spawn pieces in oceans
-        if (world.getBiome(new BlockPos(pos.x, 1, pos.z)).getCategory() == Biome.Category.OCEAN) {
-            return false;
-        }
-
         // Don't spawn if liquid in this box
         if (this.isLiquidInStructureBoundingBox(world, box)) {
             return false;
