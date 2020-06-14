@@ -200,11 +200,13 @@ public class BigTunnel extends MineshaftPiece {
     }
 
     private void generateLegs(IWorld world, BlockBox box, Random random) {
-        BlockState supportBlock = getSupportBlock();
-        if (this.mineshaftType == BetterMineshaftFeature.Type.MUSHROOM)
-            supportBlock = Blocks.DIRT.getDefaultState();
-        else if (this.mineshaftType != BetterMineshaftFeature.Type.ICE)
-            supportBlock = getSupportBlock().with(WallBlock.NORTH, true).with(WallBlock.SOUTH, true);
+        // Ice and mushroom biome variants have different legs
+        if (this.mineshaftType == BetterMineshaftFeature.Type.ICE || this.mineshaftType == BetterMineshaftFeature.Type.MUSHROOM) {
+            generateLegsVariant(world, box, random);
+            return;
+        }
+
+        BlockState supportBlock = getSupportBlock().with(WallBlock.NORTH, true).with(WallBlock.SOUTH, true);
 
         // Left side
         generateLeg(world, 1, 0, getLegBlock());
@@ -249,6 +251,35 @@ public class BigTunnel extends MineshaftPiece {
         this.replaceAir(world, box, LOCAL_X_END - 1, -3, 21, LOCAL_X_END - 1, -3, 22, supportBlock);
         this.replaceAir(world, box, LOCAL_X_END - 1, -5, 22, LOCAL_X_END - 1, -4, 22, supportBlock);
         generateLeg(world, LOCAL_X_END - 1, LOCAL_Z_END, getLegBlock());
+    }
+
+    private void generateLegsVariant(IWorld world, BlockBox box, Random random) {
+        for (int z = 0; z <= LOCAL_Z_END; z += 7) {
+            generateLeg(world, random, 2, z + 1, getBrickSelector());
+            generateLeg(world, random, LOCAL_X_END - 2, z + 1, getBrickSelector());
+
+            this.replaceAir(world, box, random, 1, -1, z, LOCAL_X_END - 1, -1, z + 2, getBrickSelector());
+
+            this.replaceAir(world, box, random, 2, -1, z + 3, 2, -1, z + 3, getBrickSelector());
+            this.replaceAir(world, box, random, LOCAL_X_END - 2, -1, z + 3, LOCAL_X_END - 2, -1, z + 3, getBrickSelector());
+
+            this.replaceAir(world, box, random, 3, -1, z + 3, LOCAL_X_END - 3, -1, z + 6, getBrickSelector());
+
+            this.replaceAir(world, box, random, 2, -1, z + 6, 2, -1, z + 6, getBrickSelector());
+            this.replaceAir(world, box, random, LOCAL_X_END - 2, -1, z + 6, LOCAL_X_END - 2, -1, z + 6, getBrickSelector());
+
+            this.replaceAir(world, box, random, 2, -2, z, 2, -2, z, getBrickSelector());
+            this.replaceAir(world, box, random, LOCAL_X_END - 2, -2, z, LOCAL_X_END - 2, -2, z, getBrickSelector());
+
+            this.replaceAir(world, box, random, 2, -2, z + 2, 2, -2, z + 2, getBrickSelector());
+            this.replaceAir(world, box, random, LOCAL_X_END - 2, -2, z + 2, LOCAL_X_END - 2, -2, z + 2, getBrickSelector());
+
+            this.replaceAir(world, box, random, 1, -2, z + 1, 1, -2, z + 1, getBrickSelector());
+            this.replaceAir(world, box, random, LOCAL_X_END - 1, -2, z + 1, LOCAL_X_END - 1, -2, z + 1, getBrickSelector());
+
+            this.replaceAir(world, box, random, 3, -2, z + 1, 3, -2, z + 1, getBrickSelector());
+            this.replaceAir(world, box, random, LOCAL_X_END - 3, -2, z + 1, LOCAL_X_END - 3, -2, z + 1, getBrickSelector());
+        }
     }
 
     private void generateGravelDeposit(IWorld world, BlockBox box, Random random, int z, int side) {
