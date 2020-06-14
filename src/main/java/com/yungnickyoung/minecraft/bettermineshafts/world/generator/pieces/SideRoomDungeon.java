@@ -14,6 +14,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.feature.structure.StructurePiece;
 import net.minecraft.world.gen.feature.template.TemplateManager;
@@ -90,6 +91,11 @@ public class SideRoomDungeon extends MineshaftPiece {
     @Override
     @ParametersAreNonnullByDefault
     public boolean create(IWorld world, ChunkGenerator<?> generator, Random random, MutableBoundingBox box, ChunkPos pos) {
+        // Don't spawn pieces in oceans
+        if (world.getBiome(new BlockPos(pos.x, 1, pos.z)).getCategory() == Biome.Category.OCEAN) {
+            return false;
+        }
+
          // Fill with stone then clean out with air
         this.fill(world, box, random, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getBrickSelector());
         this.fill(world, box, 1, 1, 1, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END - 1, CAVE_AIR);

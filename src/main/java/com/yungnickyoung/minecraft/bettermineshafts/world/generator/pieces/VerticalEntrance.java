@@ -11,6 +11,7 @@ import net.minecraft.state.properties.RailShape;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.*;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.feature.structure.StructurePiece;
 import net.minecraft.world.gen.feature.template.TemplateManager;
@@ -107,6 +108,7 @@ public class VerticalEntrance extends MineshaftPiece {
         if (BetterMineshafts.DEBUG_LOG) {
             BetterMineshafts.count.incrementAndGet();
         }
+
         // Only generate vertical entrance if there is valid surrounding terrain
         if (!this.hasTunnel) {
             determineDirection(world);

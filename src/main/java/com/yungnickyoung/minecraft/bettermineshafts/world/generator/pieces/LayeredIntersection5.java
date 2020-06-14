@@ -10,9 +10,11 @@ import net.minecraft.block.RailBlock;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.RailShape;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.feature.structure.StructurePiece;
 import net.minecraft.world.gen.feature.template.TemplateManager;
@@ -106,6 +108,12 @@ public class LayeredIntersection5 extends MineshaftPiece{
     @Override
     @ParametersAreNonnullByDefault
     public boolean create(IWorld world, ChunkGenerator<?> generator, Random random, MutableBoundingBox box, ChunkPos pos) {
+        // Don't spawn pieces in oceans
+        if (world.getBiome(new BlockPos(pos.x, 1, pos.z)).getCategory() == Biome.Category.OCEAN) {
+            return false;
+        }
+
+        // Don't spawn if liquid in this box
         if (this.isLiquidInStructureBoundingBox(world, box)) {
             return false;
         }
