@@ -100,7 +100,10 @@ public class VerticalEntrance extends MineshaftPiece {
 
     @Override
     public boolean generate(IWorld world, ChunkGenerator<?> generator, Random random, BlockBox box, ChunkPos pos) {
-        BetterMineshafts.count.incrementAndGet();
+        if (BetterMineshafts.DEBUG_LOG) {
+            BetterMineshafts.count.incrementAndGet();
+        }
+
         // Only generate vertical entrance if there is valid surrounding terrain
         if (!this.hasTunnel) {
             determineDirection(world);
