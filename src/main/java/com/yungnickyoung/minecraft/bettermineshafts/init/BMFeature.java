@@ -1,10 +1,15 @@
 package com.yungnickyoung.minecraft.bettermineshafts.init;
 
+import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshafts;
 import com.yungnickyoung.minecraft.bettermineshafts.config.BMConfig;
 import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftFeatureConfig;
 import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftStructure;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.*;
+import net.minecraft.world.gen.GenerationStage;
+import net.minecraft.world.gen.feature.ConfiguredFeature;
+import net.minecraft.world.gen.feature.DecoratedFeature;
+import net.minecraft.world.gen.feature.DecoratedFeatureConfig;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraftforge.event.RegistryEvent;
@@ -43,8 +48,27 @@ public class BMFeature {
 
         // Set config based on biome
         Set<Map.Entry<ResourceLocation, Biome>> biomesList = ForgeRegistries.BIOMES.getEntries();
-        for (Map.Entry<ResourceLocation, Biome> e : biomesList) {
-            Biome biome = e.getValue();
+        for (Map.Entry<ResourceLocation, Biome> entry : biomesList) {
+            Biome biome = entry.getValue();
+
+            // Only operate on biomes that have mineshafts
+            boolean foundMineshaft = false;
+            for (ConfiguredFeature<?, ?> f : biome.getFeatures(GenerationStage.Decoration.UNDERGROUND_STRUCTURES)) {
+                try {
+                    if (((DecoratedFeatureConfig) f.config).feature.feature.getRegistryName().toString().equals("minecraft:mineshaft")) {
+                        foundMineshaft = true;
+                        break;
+                    }
+                } catch (Exception e) {
+                    BetterMineshafts.LOGGER.error(String.format("Encountered unexpected error when checking for vanilla mineshafts in biome %s. Please report this!", biome.getDisplayName()));
+                    BetterMineshafts.LOGGER.error(e);
+                    return;
+                }
+            }
+
+            if (!foundMineshaft)
+                continue;
+
             switch (biome.getCategory()) {
                 case MESA:
                     if (biome instanceof BadlandsBiome) {
