@@ -27,6 +27,5 @@ public class BetterMineshafts {
     private void init() {
         BMFeature.init();
         BMModConfig.init();
-        BMStructurePieces.init();
     }
 }

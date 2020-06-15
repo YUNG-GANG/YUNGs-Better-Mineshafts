@@ -46,6 +46,8 @@ public class BMFeature {
         BetterMineshaftFeatureConfig config;
         BetterMineshaftStructure.Type type;
 
+        BMStructurePieces.init();
+
         // Set config based on biome
         Set<Map.Entry<ResourceLocation, Biome>> biomesList = ForgeRegistries.BIOMES.getEntries();
         for (Map.Entry<ResourceLocation, Biome> entry : biomesList) {
