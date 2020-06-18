@@ -17,12 +17,13 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.gen.feature.structure.IStructurePieceType;
 import net.minecraft.world.gen.feature.structure.StructurePiece;
+import net.minecraft.world.gen.structure.StructureComponent;
 
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-public abstract class MineshaftPiece extends StructurePiece {
+public abstract class MineshaftPiece extends StructureComponent {
     public BetterMineshaftStructure.Type mineshaftType;
     protected int pieceChainLen;
 

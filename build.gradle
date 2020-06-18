@@ -1,187 +1,79 @@
 buildscript {
 	repositories {
-		maven { url = "http://files.minecraftforge.net/maven" }
 		jcenter()
-		mavenCentral()
+		maven { url = "https://files.minecraftforge.net/maven" }
 	}
 	dependencies {
-		classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+		classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
 	}
 }
-apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'net.minecraftforge.gradle.forge'
 //Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
-apply plugin: 'maven-publish'
-apply plugin: 'idea'
 
 // Maven info
 version = modMinecraftVersion + "-" + modVersion
 group = modGroup // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = modFileName
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
-
-repositories {
-	// Put remote maven repositories here
+sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+compileJava {
+	sourceCompatibility = targetCompatibility = '1.8'
 }
 
 minecraft {
-	// The mappings can be changed at any time, and must be in the following format.
-	// snapshot_YYYYMMDD   Snapshot are built nightly.
-	// stable_#            Stables are built at the discretion of the MCP team.
+	version = "1.12.2-14.23.5.2768"
+	runDir = "run"
+
+	// the mappings can be changed at any time, and must be in the following format.
+	// snapshot_YYYYMMDD   snapshot are built nightly.
+	// stable_#            stables are built at the discretion of the MCP team.
 	// Use non-default mappings at your own risk. they may not always work.
-	// Simply re-run your setup task after changing the mappings to update your workspace.
-	mappings channel: modMcpMappingsChannel, version: modMcpMappingsVersion
-	// makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
-
-	// accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
-
-	// Default run configurations.
-	// These can be tweaked, removed, or duplicated as needed.
-	runs {
-		client {
-			workingDirectory project.file('run')
-
-			// Recommended logging data for a userdev environment
-			property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-
-			// Recommended logging level for the console
-			property 'forge.logging.console.level', 'debug'
-
-			mods {
-				bettermineshafts {
-					source sourceSets.main
-				}
-			}
-		}
-
-		server {
-			workingDirectory project.file('run')
-
-			// Recommended logging data for a userdev environment
-			property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-
-			// Recommended logging level for the console
-			property 'forge.logging.console.level', 'debug'
-
-			mods {
-				bettermineshafts {
-					source sourceSets.main
-				}
-			}
-		}
-	}
+	// simply re-run your setup task after changing the mappings to update your workspace.
+	mappings = "snapshot_20180810"
+	makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 }
 
 dependencies {
-	// Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
-	// that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
-	// The userdev artifact is a special name and will get all sorts of transformations applied to it.
-	minecraft "net.minecraftforge:forge:" + modMinecraftVersion + "-" + modForgeVersion
+	// you may put jars on which you depend on in ./libs
+	// or you may define them like so..
+	//compile "some.group:artifact:version:classifier"
+	//compile "some.group:artifact:version"
 
-	// You may put jars on which you depend on in ./libs or you may define them like so..
-	// compile "some.group:artifact:version:classifier"
-	// compile "some.group:artifact:version"
+	// real examples
+	//compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
+	//compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
 
-	// Real examples
-	// compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
-	// compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
+	// the 'provided' configuration is for optional dependencies that exist at compile-time but might not at runtime.
+	//provided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
 
-	// The 'provided' configuration is for optional dependencies that exist at compile-time but might not at runtime.
-	// provided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
+	// the deobf configurations:  'deobfCompile' and 'deobfProvided' are the same as the normal compile and provided,
+	// except that these dependencies get remapped to your current MCP mappings
+	//deobfCompile 'com.mod-buildcraft:buildcraft:6.0.8:dev'
+	//deobfProvided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
 
-	// These dependencies get remapped to your current MCP mappings
-	// deobf 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-
-	// For more info...
+	// for more info...
 	// http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
 	// http://www.gradle.org/docs/current/userguide/dependency_management.html
 
 }
 
-// Jar Manifest
-jar {
-	manifest {
-		attributes([
-				"Specification-Title"     : modId,
-				"Specification-Vendor"    : modGroup,
-				"Specification-Version"   : "1.0", // We are version 1 of ourselves
-				"Implementation-Title"    : project.name,
-				"Implementation-Version"  : "${version}",
-				"Implementation-Vendor"   : modGroup,
-				"Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-				"Signing-Fingerprint"     : project.hasProperty('signSHA1') ? project.findProperty('signSHA1') : "unsigned"
-		],)
-	}
-}
-
-// Jar signing
-import net.minecraftforge.gradle.common.task.SignJar
-
-task signJar(type: SignJar, dependsOn: jar) {
-
-	// Skips if the keyStore property is missing.
-	onlyIf {
-		project.hasProperty('keyStore')
-	}
-
-	// findProperty allows us to reference the property without it existing.
-	// Using project.propName would cause the script to fail validation if the property did not exist.
-	keyStore = project.findProperty('keyStore')
-	alias = project.findProperty('keyStoreAlias')
-	storePass = project.findProperty('keyStorePass')
-	keyPass = project.findProperty('keyStoreKeyPass')
-	inputFile = jar.archivePath
-	outputFile = jar.archivePath
-}
-
-// Runs the signJar task automatically when build is run.
-build.dependsOn signJar
-
 processResources {
 	// this will ensure that this task is redone when any variables change
-	inputs.property "modId", modId
+	inputs.property "modid", modId
+	inputs.property "name", modName
 	inputs.property "version", project.version
-	inputs.property "modName", modName
-	inputs.property "modCredits", modCredits
-	inputs.property "modAuthor", modAuthor
-	inputs.property "modDescription", modDescription
-	inputs.property "modMinecraftVersion", modMinecraftVersion
+	inputs.property "mcversion", project.minecraft.version
+	inputs.property "description", modDescription
+	inputs.property "credits", modCredits
 
-	// Replace stuff in mods.toml, nothing else
+	// replace vars in mcmod.info
 	from(sourceSets.main.resources.srcDirs) {
-		include 'META-INF/mods.toml'
-
-		// Replace vars in mods.toml
-		expand 'modId':modId,
-				'version': project.version,
-				'modName':modName,
-				'modCredits':modCredits,
-				'modAuthor':modAuthor,
-				'modDescription':modDescription,
-				'modMinecraftVersion': modMinecraftVersion
+		include 'mcmod.info'
+		expand 'modid':modId, 'name':modName, 'description':modDescription, 'credits':modCredits,'version': project.version, 'mcversion': project.minecraft.version
 	}
 
-	// Copy everything else except the mods.toml
+	// copy everything else except the mcmod.info
 	from(sourceSets.main.resources.srcDirs) {
-		exclude 'META-INF/mods.toml'
+		exclude 'mcmod.info'
 	}
-}
-
-// Create Sources Jar
-task sourcesJar(type: Jar, dependsOn: classes) {
-	classifier = 'sources'
-	from sourceSets.main.allSource
-}
-build.dependsOn sourcesJar
-
-//// Create Javadoc Jar
-//task javadocJar(type: Jar, dependsOn: javadoc) {
-//	classifier = 'javadoc'
-//	from javadoc.destinationDir
-//}
-//build.dependsOn javadocJar
-
-artifacts {
-	archives sourcesJar
-//	archives javadocJar
 }

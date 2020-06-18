@@ -1,0 +1,12 @@
+[{
+  "modid": "${modid}",
+  "name": "${name}",
+  "description": "${description}",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateJSON": "",
+  "authorList": ["YUNGNICKYOUNG"],
+  "credits": "${credits}",
+  "logoFile": "BMLogo.png"
+}]
