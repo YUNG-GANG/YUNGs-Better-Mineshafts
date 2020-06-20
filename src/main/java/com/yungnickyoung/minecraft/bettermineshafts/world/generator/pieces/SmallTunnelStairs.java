@@ -1,23 +1,16 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
 import com.yungnickyoung.minecraft.bettermineshafts.util.BoxUtil;
-import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftStructure;
+import com.yungnickyoung.minecraft.bettermineshafts.world.MapGenBetterMineshaft;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
-import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.PoweredRailBlock;
-import net.minecraft.block.RailBlock;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.state.properties.RailShape;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.feature.structure.StructurePiece;
-import net.minecraft.world.gen.feature.template.TemplateManager;
+import net.minecraft.block.BlockRail;
+import net.minecraft.block.BlockRailBase;
+import net.minecraft.block.BlockRailPowered;
+import net.minecraft.init.Blocks;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.world.World;
+import net.minecraft.world.gen.structure.StructureBoundingBox;
+import net.minecraft.world.gen.structure.StructureComponent;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
@@ -33,36 +26,26 @@ public class SmallTunnelStairs extends MineshaftPiece {
         LOCAL_Y_END = Y_AXIS_LEN - 1,
         LOCAL_Z_END = MAIN_AXIS_LEN - 1;
 
-    public SmallTunnelStairs(TemplateManager structureManager, CompoundNBT compoundTag) {
-        super(BetterMineshaftStructurePieceType.SMALL_TUNNEL_STAIRS, compoundTag);
-    }
-
-    public SmallTunnelStairs(int i, int chunkPieceLen, Random random, MutableBoundingBox blockBox, Direction direction, BetterMineshaftStructure.Type type) {
-        super(BetterMineshaftStructurePieceType.SMALL_TUNNEL_STAIRS, i, chunkPieceLen, type);
+    public SmallTunnelStairs(int i, int chunkPieceLen, Random random, StructureBoundingBox blockBox, EnumFacing direction, MapGenBetterMineshaft.Type type) {
+        super(i, chunkPieceLen, type);
         this.setCoordBaseMode(direction);
         this.boundingBox = blockBox;
     }
 
-    @Override
-    @ParametersAreNonnullByDefault
-    protected void readAdditional(CompoundNBT tag) {
-        super.toNbt(tag);
-    }
-
-    public static MutableBoundingBox determineBoxPosition(List<StructurePiece> list, Random random, int x, int y, int z, Direction direction) {
-        MutableBoundingBox blockBox = BoxUtil.boxFromCoordsWithRotation(x, y, z, SECONDARY_AXIS_LEN, Y_AXIS_LEN, MAIN_AXIS_LEN, direction);
+    public static StructureBoundingBox determineBoxPosition(List<StructureComponent> list, Random random, int x, int y, int z, EnumFacing direction) {
+        StructureBoundingBox blockBox = BoxUtil.boxFromCoordsWithRotation(x, y, z, SECONDARY_AXIS_LEN, Y_AXIS_LEN, MAIN_AXIS_LEN, direction);
 
         // The following func call returns null if this new blockbox does not intersect with any pieces in the list.
         // If there is an intersection, the following func call returns the piece that intersects.
-        StructurePiece intersectingPiece = StructurePiece.findIntersecting(list, blockBox);
+        StructureComponent intersectingPiece = StructureComponent.findIntersecting(list, blockBox);
 
         // Thus, this function returns null if blackBox intersects with an existing piece. Otherwise, we return blackbox
         return intersectingPiece != null ? null : blockBox;
     }
 
     @Override
-    public void buildComponent(StructurePiece structurePiece, List<StructurePiece> list, Random random) {
-        Direction direction = this.getCoordBaseMode();
+    public void buildComponent(StructureComponent structurePiece, List<StructureComponent> list, Random random) {
+        EnumFacing direction = this.getCoordBaseMode();
         if (direction == null) {
             return;
         }
@@ -85,7 +68,7 @@ public class SmallTunnelStairs extends MineshaftPiece {
 
     @Override
     @ParametersAreNonnullByDefault
-    public boolean create(IWorld world, ChunkGenerator<?> generator, Random random, MutableBoundingBox box, ChunkPos pos) {
+    public boolean addComponentParts(World world, Random random, StructureBoundingBox box) {
         // Don't spawn if liquid in this box
         if (this.isLiquidInStructureBoundingBox(world, box)) {
             return false;
@@ -93,26 +76,24 @@ public class SmallTunnelStairs extends MineshaftPiece {
 
         // Randomize blocks
         float chance =
-            this.mineshaftType == BetterMineshaftStructure.Type.ICE
-                || this.mineshaftType == BetterMineshaftStructure.Type.MUSHROOM
+            this.mineshaftType == MapGenBetterMineshaft.Type.ICE
+                || this.mineshaftType == MapGenBetterMineshaft.Type.MUSHROOM
             ? .95f
             : .6f;
         this.chanceReplaceNonAir(world, box, random, chance, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getMainSelector());
 
         for (int i = 0; i < 5 ; i++) {
             // Fill with air
-            this.fill(world, box, 1, i + 1, i, LOCAL_X_END - 1, i + 1 + 2, i, CAVE_AIR);
+            this.fill(world, box, 1, i + 1, i, LOCAL_X_END - 1, i + 1 + 2, i, AIR);
 
             // Place floor blocks
             this.chanceReplaceNonAir(world, box, random, .5f, 1, i, i, LOCAL_X_END - 1, i, i, getMainSelector());
 
             // Place rails
-            if (i == 0) {
-                this.setBlockState(world, Blocks.POWERED_RAIL.getDefaultState().with(PoweredRailBlock.POWERED, true).with(PoweredRailBlock.SHAPE, RailShape.ASCENDING_NORTH), 2, i + 1, i, box);
-            } else if (i == 4) {
-                this.setBlockState(world, Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, RailShape.NORTH_SOUTH), 2, i + 1, i, box);
+            if (i == 4) {
+                this.setBlockState(world, Blocks.RAIL.getDefaultState().withProperty(BlockRail.SHAPE, BlockRail.EnumRailDirection.NORTH_SOUTH), 2, i + 1, i, box);
             } else {
-                this.setBlockState(world, Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, RailShape.ASCENDING_NORTH), 2, i + 1, i, box);
+                this.setBlockState(world, Blocks.RAIL.getDefaultState().withProperty(BlockRail.SHAPE, BlockRail.EnumRailDirection.ASCENDING_NORTH), 2, i + 1, i, box);
             }
 
             // Ensure solid block is below each rail

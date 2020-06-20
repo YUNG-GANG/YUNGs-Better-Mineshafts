@@ -1,7 +1,7 @@
 package com.yungnickyoung.minecraft.bettermineshafts.util;
 
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.MutableBoundingBox;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.world.gen.structure.StructureBoundingBox;
 
 public class BoxUtil {
 
@@ -10,8 +10,8 @@ public class BoxUtil {
      * The main axis is the primary of the x and z axes, in the direction
      * the structure should generate from the starting point.
      */
-    public static MutableBoundingBox boxFromCoordsWithRotation(int x, int y, int z, int secondaryAxisLen, int yLen, int mainAxisLen, Direction mainAxis) {
-        MutableBoundingBox blockBox = new MutableBoundingBox(x, y, z, x, y + yLen - 1, z);
+    public static StructureBoundingBox boxFromCoordsWithRotation(int x, int y, int z, int secondaryAxisLen, int yLen, int mainAxisLen, EnumFacing mainAxis) {
+        StructureBoundingBox blockBox = new StructureBoundingBox(x, y, z, x, y + yLen - 1, z);
         switch (mainAxis) {
             case NORTH:
             default:

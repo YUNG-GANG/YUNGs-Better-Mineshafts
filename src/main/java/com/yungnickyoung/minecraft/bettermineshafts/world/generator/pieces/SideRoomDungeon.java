@@ -1,24 +1,18 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
-import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftStructure;
-import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.LadderBlock;
-import net.minecraft.entity.EntityType;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.MobSpawnerTileEntity;
+import com.yungnickyoung.minecraft.bettermineshafts.world.MapGenBetterMineshaft;
+import net.minecraft.block.BlockLadder;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
+import net.minecraft.tileentity.TileEntityMobSpawner;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.feature.structure.StructurePiece;
-import net.minecraft.world.gen.feature.template.TemplateManager;
-import net.minecraft.world.storage.loot.LootTables;
+import net.minecraft.world.World;
+import net.minecraft.world.gen.structure.StructureBoundingBox;
+import net.minecraft.world.gen.structure.StructureComponent;
+import net.minecraft.world.storage.loot.LootTableList;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
@@ -34,24 +28,14 @@ public class SideRoomDungeon extends MineshaftPiece {
         LOCAL_Y_END = Y_AXIS_LEN - 1,
         LOCAL_Z_END = MAIN_AXIS_LEN - 1;
 
-    public SideRoomDungeon(TemplateManager structureManager, CompoundNBT compoundTag) {
-        super(BetterMineshaftStructurePieceType.SIDE_ROOM_DUNGEON, compoundTag);
-    }
-
-    public SideRoomDungeon(int i, int pieceChainLen, Random random, MutableBoundingBox blockBox, Direction direction, BetterMineshaftStructure.Type type) {
-        super(BetterMineshaftStructurePieceType.SIDE_ROOM_DUNGEON, i, pieceChainLen, type);
+    public SideRoomDungeon(int i, int pieceChainLen, Random random, StructureBoundingBox blockBox, EnumFacing direction, MapGenBetterMineshaft.Type type) {
+        super(i, pieceChainLen, type);
         this.setCoordBaseMode(direction);
         this.boundingBox = blockBox;
     }
 
-    @Override
-    @ParametersAreNonnullByDefault
-    protected void readAdditional(CompoundNBT tag) {
-        super.toNbt(tag);
-    }
-
-    public static MutableBoundingBox determineBoxPosition(List<StructurePiece> list, Random random, int x, int y, int z, Direction direction) {
-        MutableBoundingBox blockBox = new MutableBoundingBox(x, y, z, x, y + Y_AXIS_LEN - 1, z);
+    public static StructureBoundingBox determineBoxPosition(List<StructureComponent> list, Random random, int x, int y, int z, EnumFacing direction) {
+        StructureBoundingBox blockBox = new StructureBoundingBox(x, y, z, x, y + Y_AXIS_LEN - 1, z);
 
         switch (direction) {
             case NORTH:
@@ -78,47 +62,47 @@ public class SideRoomDungeon extends MineshaftPiece {
 
         // The following func call returns null if this new blockbox does not intersect with any pieces in the list.
         // If there is an intersection, the following func call returns the piece that intersects.
-        StructurePiece intersectingPiece = StructurePiece.findIntersecting(list, blockBox);
+        StructureComponent intersectingPiece = StructureComponent.findIntersecting(list, blockBox);
 
         // Thus, this function returns null if blackBox intersects with an existing piece. Otherwise, we return blackbox
         return intersectingPiece != null ? null : blockBox;
     }
 
     @Override
-    public void buildComponent(StructurePiece structurePiece, List<StructurePiece> list, Random random) {
+    public void buildComponent(StructureComponent structurePiece, List<StructureComponent> list, Random random) {
     }
 
     @Override
     @ParametersAreNonnullByDefault
-    public boolean create(IWorld world, ChunkGenerator<?> generator, Random random, MutableBoundingBox box, ChunkPos pos) {
+    public boolean addComponentParts(World world, Random random, StructureBoundingBox box) {
          // Fill with stone then clean out with air
         this.fill(world, box, random, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getBrickSelector());
-        this.fill(world, box, 1, 1, 1, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END - 1, CAVE_AIR);
+        this.fill(world, box, 1, 1, 1, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END - 1, AIR);
 
         generateLegs(world, random);
 
         // Ladders
-        BlockState LADDER = Blocks.LADDER.getDefaultState().with(LadderBlock.FACING, Direction.NORTH);
+        IBlockState LADDER = Blocks.LADDER.getDefaultState().withProperty(BlockLadder.FACING, EnumFacing.NORTH);
         this.fill(world, box, 4, 1, 1, 4, 3, 1, LADDER);
 
         // Spawner
         BlockPos spawnerPos = new BlockPos(this.getXWithOffset(4,5), this.getYWithOffset(1), this.getZWithOffset(4, 5));
-        world.setBlockState(spawnerPos, Blocks.SPAWNER.getDefaultState(), 2);
+        world.setBlockState(spawnerPos, Blocks.MOB_SPAWNER.getDefaultState(), 2);
         TileEntity blockEntity = world.getTileEntity(spawnerPos);
-        if (blockEntity instanceof MobSpawnerTileEntity) {
-            ((MobSpawnerTileEntity)blockEntity).getSpawnerBaseLogic().setEntityType(EntityType.CAVE_SPIDER);
+        if (blockEntity instanceof TileEntityMobSpawner) {
+            ((TileEntityMobSpawner)blockEntity).getSpawnerBaseLogic().setEntityId(new ResourceLocation("cave_spider"));
         }
 
         // Cobwebs immediately surrounding chests
-        this.chanceReplaceAir(world, box, random, .9f, 3, 1, 4, 5, 2, 6, Blocks.COBWEB.getDefaultState());
+        this.chanceReplaceAir(world, box, random, .9f, 3, 1, 4, 5, 2, 6, Blocks.WEB.getDefaultState());
 
         // Fill room randomly with cobwebs
-        this.chanceReplaceAir(world, box, random, .1f, 1, 1, 1, LOCAL_X_END - 1, 2, LOCAL_Z_END, Blocks.COBWEB.getDefaultState());
+        this.chanceReplaceAir(world, box, random, .1f, 1, 1, 1, LOCAL_X_END - 1, 2, LOCAL_Z_END, Blocks.WEB.getDefaultState());
 
         // Chests
-        this.generateChest(world, box, random, 1, 1, LOCAL_Z_END - 1, LootTables.CHESTS_ABANDONED_MINESHAFT);
+        this.generateChest(world, box, random, 1, 1, LOCAL_Z_END - 1, LootTableList.CHESTS_ABANDONED_MINESHAFT);
         if (random.nextInt(2) == 0) { // Chance of second chest
-            this.generateChest(world, box, random, LOCAL_X_END - 1, 1, LOCAL_Z_END - 1, LootTables.CHESTS_STRONGHOLD_CORRIDOR);
+            this.generateChest(world, box, random, LOCAL_X_END - 1, 1, LOCAL_Z_END - 1, LootTableList.CHESTS_STRONGHOLD_CORRIDOR);
         }
 
         // Decorations
@@ -127,7 +111,7 @@ public class SideRoomDungeon extends MineshaftPiece {
         return true;
     }
 
-    private void generateLegs(IWorld world, Random random) {
+    private void generateLegs(World world, Random random) {
         generateLeg(world, random, 1, 1, getBrickSelector());
         generateLeg(world, random, 1, LOCAL_Z_END - 1, getBrickSelector());
         generateLeg(world, random, LOCAL_X_END - 1, 1, getBrickSelector());

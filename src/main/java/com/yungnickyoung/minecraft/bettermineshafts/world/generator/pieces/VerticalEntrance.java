@@ -1,20 +1,21 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
 import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshafts;
+import com.yungnickyoung.minecraft.bettermineshafts.util.ColPos;
 import com.yungnickyoung.minecraft.bettermineshafts.util.SurfaceUtil;
-import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftStructure;
+import com.yungnickyoung.minecraft.bettermineshafts.world.MapGenBetterMineshaft;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
-import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
-import net.minecraft.block.*;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.state.properties.RailShape;
-import net.minecraft.util.Direction;
+import net.minecraft.block.BlockRail;
+import net.minecraft.block.BlockRailBase;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.*;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.feature.structure.StructurePiece;
-import net.minecraft.world.gen.feature.template.TemplateManager;
+import net.minecraft.world.World;
+import net.minecraft.world.gen.structure.StructureBoundingBox;
+import net.minecraft.world.gen.structure.StructureComponent;
+import net.minecraft.world.gen.structure.template.TemplateManager;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
@@ -28,7 +29,7 @@ public class VerticalEntrance extends MineshaftPiece {
     private int // Surface tunnel vars
         tunnelLength        = 0,
         tunnelFloorAltitude = 0;
-    private Direction tunnelDirection = Direction.NORTH;
+    private EnumFacing tunnelEnumFacing = EnumFacing.NORTH;
     private boolean hasTunnel = false;
 
     // Vertical shaft static vars
@@ -36,52 +37,54 @@ public class VerticalEntrance extends MineshaftPiece {
         SHAFT_LOCAL_XZ_START = 22,
         SHAFT_LOCAL_XZ_END = 26;
 
-    public VerticalEntrance(TemplateManager structureManager, CompoundNBT compoundTag) {
-        super(BetterMineshaftStructurePieceType.VERTICAL_ENTRANCE, compoundTag);
-        int centerPosX = compoundTag.getIntArray("centerPos")[0];
-        int centerPosY = compoundTag.getIntArray("centerPos")[1];
-        int centerPosZ = compoundTag.getIntArray("centerPos")[2];
-        this.centerPos = new BlockPos(centerPosX, centerPosY, centerPosZ);
-
-        this.yAxisLen = compoundTag.getInt("yAxisLen");
-        this.localYEnd = this.yAxisLen - 1;
-        this.tunnelLength = compoundTag.getInt("tunnelLen");
-        this.tunnelFloorAltitude = compoundTag.getInt("floorAltitude");
-
-        int tunnelDirInt = compoundTag.getInt("tunnelDir");
-        this.tunnelDirection = tunnelDirInt == -1 ? null : Direction.byHorizontalIndex(tunnelDirInt);
-
-        this.hasTunnel = compoundTag.getBoolean("hasTunnel");
-    }
-
-    public VerticalEntrance(int i, int pieceChainLen, Random random, BlockPos.Mutable centerPos, Direction direction, BetterMineshaftStructure.Type type) {
-        super(BetterMineshaftStructurePieceType.VERTICAL_ENTRANCE, i, pieceChainLen, type);
+    public VerticalEntrance(int i, int pieceChainLen, Random random, BlockPos.MutableBlockPos centerPos, EnumFacing direction, MapGenBetterMineshaft.Type type) {
+        super(i, pieceChainLen, type);
         this.setCoordBaseMode(direction);
         int y = random.nextInt(centerPos.getY() / 2) + 13;
         centerPos.setY(y);
         this.centerPos = new BlockPos(centerPos); // position passed in is center of shaft piece (unlike all other pieces, where it is a corner)
-        this.boundingBox = getInitialMutableBoundingBox(centerPos);
+        this.boundingBox = getInitialBoundingBox(centerPos);
     }
 
     @Override
     @ParametersAreNonnullByDefault
-    protected void readAdditional(CompoundNBT tag) {
-        super.toNbt(tag);
-        tag.putIntArray("centerPos", new int[]{centerPos.getX(), centerPos.getY(), centerPos.getZ()});
-        tag.putInt("yAxisLen", yAxisLen);
-        tag.putInt("tunnelLen", tunnelLength);
-        tag.putInt("floorAltitude", tunnelFloorAltitude);
-        tag.putInt("tunnelDir", tunnelDirection.getHorizontalIndex());
-        tag.putBoolean("hasTunnel", hasTunnel);
-    }
-
-    private static MutableBoundingBox getInitialMutableBoundingBox(BlockPos centerPos) {
-        return new MutableBoundingBox(centerPos.getX() - 24, centerPos.getY(), centerPos.getZ() - 24, centerPos.getX() + 24, 256, centerPos.getZ() + 24);
+    protected void writeStructureToNBT(NBTTagCompound tag) {
+        super.writeStructureToNBT(tag);
+        tag.setIntArray("centerPos", new int[]{centerPos.getX(), centerPos.getY(), centerPos.getZ()});
+        tag.setInteger("yAxisLen", yAxisLen);
+        tag.setInteger("tunnelLen", tunnelLength);
+        tag.setInteger("floorAltitude", tunnelFloorAltitude);
+        tag.setInteger("tunnelDir", tunnelEnumFacing.getHorizontalIndex());
+        tag.setBoolean("hasTunnel", hasTunnel);
     }
 
     @Override
-    public void buildComponent(StructurePiece structurePiece, List<StructurePiece> list, Random random) {
-        Direction direction = this.getCoordBaseMode();
+    @ParametersAreNonnullByDefault
+    protected void readStructureFromNBT(NBTTagCompound tag, TemplateManager templateManager) {
+        super.readStructureFromNBT(tag, templateManager);
+        int centerPosX = tag.getIntArray("centerPos")[0];
+        int centerPosY = tag.getIntArray("centerPos")[1];
+        int centerPosZ = tag.getIntArray("centerPos")[2];
+        this.centerPos = new BlockPos(centerPosX, centerPosY, centerPosZ);
+
+        this.yAxisLen = tag.getInteger("yAxisLen");
+        this.localYEnd = this.yAxisLen - 1;
+        this.tunnelLength = tag.getInteger("tunnelLen");
+        this.tunnelFloorAltitude = tag.getInteger("floorAltitude");
+
+        int tunnelDirInt = tag.getInteger("tunnelDir");
+        this.tunnelEnumFacing = tunnelDirInt == -1 ? null : EnumFacing.byHorizontalIndex(tunnelDirInt);
+
+        this.hasTunnel = tag.getBoolean("hasTunnel");
+    }
+
+    private static StructureBoundingBox getInitialBoundingBox(BlockPos centerPos) {
+        return new StructureBoundingBox(centerPos.getX() - 24, centerPos.getY(), centerPos.getZ() - 24, centerPos.getX() + 24, 256, centerPos.getZ() + 24);
+    }
+
+    @Override
+    public void buildComponent(StructureComponent structurePiece, List<StructureComponent> list, Random random) {
+        EnumFacing direction = this.getCoordBaseMode();
         if (direction == null) {
             return;
         }
@@ -104,14 +107,14 @@ public class VerticalEntrance extends MineshaftPiece {
 
     @Override
     @ParametersAreNonnullByDefault
-    public boolean create(IWorld world, ChunkGenerator<?> generator, Random random, MutableBoundingBox box, ChunkPos pos) {
+    public boolean addComponentParts(World world, Random random, StructureBoundingBox box) {
         if (BetterMineshafts.DEBUG_LOG) {
             BetterMineshafts.count.incrementAndGet();
         }
 
         // Only generate vertical entrance if there is valid surrounding terrain
         if (!this.hasTunnel) {
-            determineDirection(world);
+            determineEnumFacing(world);
 
             if (BetterMineshafts.DEBUG_LOG && this.hasTunnel) {
                 BetterMineshafts.surfaceEntrances.add(this.centerPos.hashCode());
@@ -134,17 +137,17 @@ public class VerticalEntrance extends MineshaftPiece {
     /**
      * Generates the vertical shaft with a ladder.
      */
-    private void generateVerticalShaft(IWorld world, Random random, MutableBoundingBox box) {
+    private void generateVerticalShaft(World world, Random random, StructureBoundingBox box) {
         // Randomize blocks
         this.fill(world, box, random, SHAFT_LOCAL_XZ_START, 0, SHAFT_LOCAL_XZ_START, SHAFT_LOCAL_XZ_END, localYEnd, SHAFT_LOCAL_XZ_END, getMainSelector());
 
         // Fill with air
-        this.fill(world, box, SHAFT_LOCAL_XZ_START + 1, 1, SHAFT_LOCAL_XZ_START + 1, SHAFT_LOCAL_XZ_END - 1, localYEnd - 1, SHAFT_LOCAL_XZ_END - 1, CAVE_AIR);
+        this.fill(world, box, SHAFT_LOCAL_XZ_START + 1, 1, SHAFT_LOCAL_XZ_START + 1, SHAFT_LOCAL_XZ_END - 1, localYEnd - 1, SHAFT_LOCAL_XZ_END - 1, AIR);
 
         // Fill in any air in floor with main block
         this.replaceAir(world, box, SHAFT_LOCAL_XZ_START + 1, 0, SHAFT_LOCAL_XZ_START + 1, SHAFT_LOCAL_XZ_END - 1, 0, SHAFT_LOCAL_XZ_END - 1, getMainBlock());
         // Special case - mushroom mineshafts get mycelium in floor
-        if (this.mineshaftType == BetterMineshaftStructure.Type.MUSHROOM)
+        if (this.mineshaftType == MapGenBetterMineshaft.Type.MUSHROOM)
             this.chanceReplaceNonAir(world, box, random, .8f, SHAFT_LOCAL_XZ_START + 1, 0, SHAFT_LOCAL_XZ_START + 1, SHAFT_LOCAL_XZ_END - 1, 0, SHAFT_LOCAL_XZ_END - 1, Blocks.MYCELIUM.getDefaultState());
 
         // Ladder
@@ -154,7 +157,7 @@ public class VerticalEntrance extends MineshaftPiece {
         // Doorway
         this.fill(world, box, SHAFT_LOCAL_XZ_START + 1, 1, SHAFT_LOCAL_XZ_START + 4, SHAFT_LOCAL_XZ_START + 3, 2, SHAFT_LOCAL_XZ_START + 4, getMainDoorwayWall());
         this.fill(world, box, SHAFT_LOCAL_XZ_START + 2, 3, SHAFT_LOCAL_XZ_START + 4, SHAFT_LOCAL_XZ_START + 2, 3, SHAFT_LOCAL_XZ_START + 4, getMainDoorwaySlab());
-        this.fill(world, box, SHAFT_LOCAL_XZ_START + 2, 1, SHAFT_LOCAL_XZ_START + 4, SHAFT_LOCAL_XZ_START + 2, 2, SHAFT_LOCAL_XZ_START + 4, CAVE_AIR);
+        this.fill(world, box, SHAFT_LOCAL_XZ_START + 2, 1, SHAFT_LOCAL_XZ_START + 4, SHAFT_LOCAL_XZ_START + 2, 2, SHAFT_LOCAL_XZ_START + 4, AIR);
 
         // Decorations
         this.addBiomeDecorations(world, box, random, SHAFT_LOCAL_XZ_START + 1, 0, SHAFT_LOCAL_XZ_START + 1, SHAFT_LOCAL_XZ_END - 1, 1, SHAFT_LOCAL_XZ_END - 1);
@@ -167,41 +170,41 @@ public class VerticalEntrance extends MineshaftPiece {
      * as is normally the case. Rotation logic must be handled manually for this piece because the piece's orientation
      * relies on the surrounding terrain, which can't be determined until generation time.
      */
-    private void generateSurfaceTunnel(IWorld world, Random random, MutableBoundingBox box) {
+    private void generateSurfaceTunnel(World world, Random random, StructureBoundingBox box) {
         int tunnelStartX = 0,
             tunnelStartZ = 0,
             tunnelEndX = 0,
             tunnelEndZ = 0;
-        Direction facing = this.getCoordBaseMode();
+        EnumFacing facing = this.getCoordBaseMode();
 
         // We have to account for this piece's rotation.
         // This is normally handled internally, but must be tweaked manually for surface tunnels
         // since their orientation is not determined until generation time.
-        float rotationDifference = facing.getHorizontalAngle() - tunnelDirection.getHorizontalAngle();
-        Direction relativeTunnelDir = Direction.fromAngle(Direction.NORTH.getHorizontalAngle() - rotationDifference);
-        if (relativeTunnelDir == Direction.NORTH) {
+        float rotationDifference = facing.getHorizontalAngle() - tunnelEnumFacing.getHorizontalAngle();
+        EnumFacing relativeTunnelDir = EnumFacing.fromAngle(EnumFacing.NORTH.getHorizontalAngle() - rotationDifference);
+        if (relativeTunnelDir == EnumFacing.NORTH) {
             tunnelStartX = 22;
             tunnelStartZ = 26;
             tunnelEndX = 26;
             tunnelEndZ = 26 + tunnelLength;
         }
         else if (
-            (relativeTunnelDir == Direction.WEST && !(facing == Direction.SOUTH || facing == Direction.WEST)) ||
-            (relativeTunnelDir == Direction.EAST && (facing == Direction.SOUTH || facing == Direction.WEST))
+            (relativeTunnelDir == EnumFacing.WEST && !(facing == EnumFacing.SOUTH || facing == EnumFacing.WEST)) ||
+            (relativeTunnelDir == EnumFacing.EAST && (facing == EnumFacing.SOUTH || facing == EnumFacing.WEST))
         ) {
             tunnelStartX = 22 - tunnelLength;
             tunnelStartZ = 22;
             tunnelEndX = 22;
             tunnelEndZ = 26;
         }
-        else if (relativeTunnelDir == Direction.SOUTH) {
+        else if (relativeTunnelDir == EnumFacing.SOUTH) {
             tunnelStartX = 22;
             tunnelStartZ = 22 - tunnelLength;
             tunnelEndX = 26;
             tunnelEndZ = 22;
         }
         else if (
-            relativeTunnelDir == Direction.EAST || relativeTunnelDir == Direction.WEST
+            relativeTunnelDir == EnumFacing.EAST || relativeTunnelDir == EnumFacing.WEST
         ) {
             tunnelStartX = 26;
             tunnelStartZ = 22;
@@ -216,25 +219,25 @@ public class VerticalEntrance extends MineshaftPiece {
         // Randomize blocks
         this.chanceReplaceNonAir(world, box, random, .6f, tunnelStartX, tunnelFloorAltitude, tunnelStartZ, tunnelEndX, tunnelFloorAltitude + 4, tunnelEndZ, getMainSelector());
 
-        if (facing.getAxis() == tunnelDirection.getAxis()) {
+        if (facing.getAxis() == tunnelEnumFacing.getAxis()) {
             // Fill in any air in floor with main block
             this.replaceAir(world, box, tunnelStartX + 1, tunnelFloorAltitude, tunnelStartZ, tunnelEndX - 1, tunnelFloorAltitude, tunnelEndZ, getMainBlock());
             // Special case - mushroom mineshafts get mycelium in floor
-            if (this.mineshaftType == BetterMineshaftStructure.Type.MUSHROOM)
+            if (this.mineshaftType == MapGenBetterMineshaft.Type.MUSHROOM)
                 this.chanceReplaceNonAir(world, box, random, .8f, tunnelStartX + 1, tunnelFloorAltitude, tunnelStartZ, tunnelEndX - 1, tunnelFloorAltitude, tunnelEndZ, Blocks.MYCELIUM.getDefaultState());
 
             // Fill with air
-            this.fill(world, box, tunnelStartX + 1, tunnelFloorAltitude + 1, tunnelStartZ, tunnelEndX - 1, tunnelFloorAltitude + 3, tunnelEndZ, CAVE_AIR);
+            this.fill(world, box, tunnelStartX + 1, tunnelFloorAltitude + 1, tunnelStartZ, tunnelEndX - 1, tunnelFloorAltitude + 3, tunnelEndZ, AIR);
         }
         else {
             // Fill in any air in floor with main block
             this.replaceAir(world, box, tunnelStartX, tunnelFloorAltitude, tunnelStartZ + 1, tunnelEndX, tunnelFloorAltitude, tunnelEndZ - 1, getMainBlock());
             // Special case - mushroom mineshafts get mycelium in floor
-            if (this.mineshaftType == BetterMineshaftStructure.Type.MUSHROOM)
+            if (this.mineshaftType == MapGenBetterMineshaft.Type.MUSHROOM)
                 this.chanceReplaceNonAir(world, box, random, .8f, tunnelStartX, tunnelFloorAltitude, tunnelStartZ + 1, tunnelEndX, tunnelFloorAltitude, tunnelEndZ - 1, Blocks.MYCELIUM.getDefaultState());
 
             // Fill with air
-            this.fill(world, box, tunnelStartX, tunnelFloorAltitude + 1, tunnelStartZ + 1, tunnelEndX, tunnelFloorAltitude + 3, tunnelEndZ - 1, CAVE_AIR);
+            this.fill(world, box, tunnelStartX, tunnelFloorAltitude + 1, tunnelStartZ + 1, tunnelEndX, tunnelFloorAltitude + 3, tunnelEndZ - 1, AIR);
         }
 
         // Vines
@@ -248,10 +251,10 @@ public class VerticalEntrance extends MineshaftPiece {
 
         // Mark positions where center floor block is solid
         boolean[] validPositions;
-        if (facing.getAxis() == tunnelDirection.getAxis()) {
+        if (facing.getAxis() == tunnelEnumFacing.getAxis()) {
             validPositions = new boolean[tunnelEndZ - tunnelStartZ + 1];
             for (int z = 0; z < validPositions.length; z++) {
-                BlockState floorBlock = this.getBlockStateFromPos(world, tunnelStartX + 2, tunnelFloorAltitude, tunnelStartZ + z, box);
+                IBlockState floorBlock = this.getBlockStateFromPos(world, tunnelStartX + 2, tunnelFloorAltitude, tunnelStartZ + z, box);
                 if (floorBlock.getMaterial().isSolid()) {
                     validPositions[z] = true;
                 }
@@ -259,7 +262,7 @@ public class VerticalEntrance extends MineshaftPiece {
         } else {
             validPositions = new boolean[tunnelEndX - tunnelStartX + 1];
             for (int x = 0; x < validPositions.length; x++) {
-                BlockState floorBlock = this.getBlockStateFromPos(world, tunnelStartX + x, tunnelFloorAltitude, tunnelStartZ + 2, box);
+                IBlockState floorBlock = this.getBlockStateFromPos(world, tunnelStartX + x, tunnelFloorAltitude, tunnelStartZ + 2, box);
                 if (floorBlock.getMaterial().isSolid()) {
                     validPositions[x] = true;
                 }
@@ -267,7 +270,7 @@ public class VerticalEntrance extends MineshaftPiece {
         }
 
         // Generate supports.
-        if (facing.getAxis() == tunnelDirection.getAxis()) {
+        if (facing.getAxis() == tunnelEnumFacing.getAxis()) {
             for (int z = tunnelStartZ; z <= tunnelEndZ; z++) {
                 int r = random.nextInt(4);
                 // TOOD - fix z to account for direction of shaft
@@ -279,8 +282,8 @@ public class VerticalEntrance extends MineshaftPiece {
                     this.chanceReplaceNonAir(world, box, random, .25f, tunnelStartX + 1, tunnelFloorAltitude + 3, z, tunnelStartX + 3, tunnelFloorAltitude + 3, z, getSupportBlock());
 
                     // Cobwebs
-                    this.chanceReplaceAir(world, box, random, .15f, tunnelStartX + 1, tunnelFloorAltitude + 3, z - 1, tunnelStartX + 1, tunnelFloorAltitude + 3, z + 1, Blocks.COBWEB.getDefaultState());
-                    this.chanceReplaceAir(world, box, random, .15f, tunnelStartX + 3, tunnelFloorAltitude + 3, z - 1, tunnelStartX + 3, tunnelFloorAltitude + 3, z + 1, Blocks.COBWEB.getDefaultState());
+                    this.chanceReplaceAir(world, box, random, .15f, tunnelStartX + 1, tunnelFloorAltitude + 3, z - 1, tunnelStartX + 1, tunnelFloorAltitude + 3, z + 1, Blocks.WEB.getDefaultState());
+                    this.chanceReplaceAir(world, box, random, .15f, tunnelStartX + 3, tunnelFloorAltitude + 3, z - 1, tunnelStartX + 3, tunnelFloorAltitude + 3, z + 1, Blocks.WEB.getDefaultState());
                     z += 3;
                 }
             }
@@ -296,25 +299,25 @@ public class VerticalEntrance extends MineshaftPiece {
                     this.chanceReplaceNonAir(world, box, random, .25f, x, tunnelFloorAltitude + 3, tunnelStartZ + 1, x, tunnelFloorAltitude + 3, tunnelStartZ + 3, getSupportBlock());
 
                     // Cobwebs
-                    this.chanceReplaceAir(world, box, random, .15f, x - 1, tunnelFloorAltitude + 3, tunnelStartZ + 1, x + 1, tunnelFloorAltitude + 3, tunnelStartZ + 1, Blocks.COBWEB.getDefaultState());
-                    this.chanceReplaceAir(world, box, random, .15f, x - 1, tunnelFloorAltitude + 3, tunnelStartZ + 3, x + 1, tunnelFloorAltitude + 3, tunnelStartZ + 3, Blocks.COBWEB.getDefaultState());
+                    this.chanceReplaceAir(world, box, random, .15f, x - 1, tunnelFloorAltitude + 3, tunnelStartZ + 1, x + 1, tunnelFloorAltitude + 3, tunnelStartZ + 1, Blocks.WEB.getDefaultState());
+                    this.chanceReplaceAir(world, box, random, .15f, x - 1, tunnelFloorAltitude + 3, tunnelStartZ + 3, x + 1, tunnelFloorAltitude + 3, tunnelStartZ + 3, Blocks.WEB.getDefaultState());
                     x += 3;
                 }
             }
         }
 
         // Generate rails.
-        RailShape railShape = relativeTunnelDir.getAxis() == Direction.Axis.Z ? RailShape.NORTH_SOUTH : RailShape.EAST_WEST;
-        if (facing.getAxis() == tunnelDirection.getAxis()) {
+        BlockRailBase.EnumRailDirection railShape = relativeTunnelDir.getAxis() == EnumFacing.Axis.Z ? BlockRailBase.EnumRailDirection.NORTH_SOUTH : BlockRailBase.EnumRailDirection.EAST_WEST;
+        if (facing.getAxis() == tunnelEnumFacing.getAxis()) {
             for (int z = 0; z < tunnelEndZ - tunnelStartZ + 1; z++) {
                 if (validPositions[z] && random.nextFloat() < .5) {
-                    this.setBlockState(world, Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, railShape), tunnelStartX + 2, tunnelFloorAltitude + 1, tunnelStartZ + z, box);
+                    this.setBlockState(world, Blocks.RAIL.getDefaultState().withProperty(BlockRail.SHAPE, railShape), tunnelStartX + 2, tunnelFloorAltitude + 1, tunnelStartZ + z, box);
                 }
             }
         } else {
             for (int x = 0; x < tunnelEndX - tunnelStartX + 1; x++) {
                 if (validPositions[x] && random.nextFloat() < .5) {
-                    this.setBlockState(world, Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, railShape), tunnelStartX + x, tunnelFloorAltitude + 1, tunnelStartZ + 2, box);
+                    this.setBlockState(world, Blocks.RAIL.getDefaultState().withProperty(BlockRail.SHAPE, railShape), tunnelStartX + x, tunnelFloorAltitude + 1, tunnelStartZ + 2, box);
                 }
             }
         }
@@ -325,7 +328,7 @@ public class VerticalEntrance extends MineshaftPiece {
      * Tries to find a direction in which there is a drop-off, with the goal of creating an opening
      * in the face of a mountain or hill.
      */
-    private void determineDirection(IWorld world) {
+    private void determineEnumFacing(World world) {
         int minSurfaceHeight = 255;
 
         // Set height for this, equal to 2 below the min height in the 5x5 vertical shaft piece
@@ -334,9 +337,10 @@ public class VerticalEntrance extends MineshaftPiece {
                 try {
                     int realX = centerPos.getX() + xOffset,
                         realZ = centerPos.getZ() + zOffset;
-                    int chunkX = realX >> 4,
-                        chunkZ = realZ >> 4;
-                    int surfaceHeight = SurfaceUtil.getSurfaceHeight(world.getChunk(chunkX, chunkZ), new ColumnPos(realX, realZ));
+//                    int chunkX = realX >> 4,
+//                        chunkZ = realZ >> 4;
+//                    int surfaceHeight = SurfaceUtil.getSurfaceHeight(world, new ColPos(realX, realZ));
+                    int surfaceHeight = world.getHeight(realX, realZ);
                     if (surfaceHeight > 1) {
                         minSurfaceHeight = Math.min(minSurfaceHeight, surfaceHeight);
                     }
@@ -358,25 +362,26 @@ public class VerticalEntrance extends MineshaftPiece {
         yAxisLen = ceilingHeight - centerPos.getY() + 1;
         localYEnd = yAxisLen - 1;
 
-        BlockPos.Mutable mutable = new BlockPos.Mutable(centerPos);
+        BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos(centerPos);
 
         int radius = 8; // Number of blocks that constitutes one 'radius'
         int maxRadialDist = 3; // Number of radii to check in each direction. E.g. 3 radii * radius of 8 = 24 blocks
 
         for (int radialDist = 0; radialDist < maxRadialDist; radialDist++) {
             // Check each of the four cardinal directions
-            for (Direction direction : Direction.values()) {
-                if (direction == Direction.UP || direction == Direction.DOWN) continue;
+            for (EnumFacing direction : EnumFacing.values()) {
+                if (direction == EnumFacing.UP || direction == EnumFacing.DOWN) continue;
 
                 mutable.setPos(centerPos.offset(direction, radius * radialDist + 2));
 
                 // Check altitude of each individual block along the direction.
                 for (int i = radialDist * radius; i < radialDist * radius + radius; i++) {
-                    int surfaceHeight = SurfaceUtil.getSurfaceHeight(world.getChunk(mutable), new ColumnPos(mutable.getX(), mutable.getZ()));
+//                    int surfaceHeight = SurfaceUtil.getSurfaceHeight(world, new ColPos(mutable.getX(), mutable.getZ()));
+                    int surfaceHeight = world.getHeight(mutable.getX(), mutable.getZ());
 
                     if (surfaceHeight <= floorHeight && surfaceHeight > 1) {
                         this.hasTunnel = true;
-                        this.tunnelDirection = direction;
+                        this.tunnelEnumFacing = direction;
                         this.tunnelFloorAltitude = ceilingHeight - 4 - this.boundingBox.minY;
                         this.tunnelLength = i;
                         return;

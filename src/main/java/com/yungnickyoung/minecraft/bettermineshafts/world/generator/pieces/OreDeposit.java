@@ -1,20 +1,15 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
-import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftStructure;
-import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
+import com.yungnickyoung.minecraft.bettermineshafts.world.MapGenBetterMineshaft;
+import net.minecraft.world.World;
+import net.minecraft.world.gen.structure.StructureComponent;
 import com.yungnickyoung.minecraft.bettermineshafts.util.BoxUtil;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.feature.structure.StructurePiece;
-import net.minecraft.world.gen.feature.template.TemplateManager;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.world.gen.structure.StructureBoundingBox;
+import net.minecraft.world.gen.structure.template.TemplateManager;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Arrays;
@@ -33,9 +28,9 @@ public class OreDeposit extends MineshaftPiece {
         COBBLE(7, Blocks.COBBLESTONE.getDefaultState());
 
         private final int value;
-        private final BlockState block;
+        private final IBlockState block;
 
-        OreType(int value, BlockState block) {
+        OreType(int value, IBlockState block) {
             this.value = value;
             this.block = block;
         }
@@ -46,7 +41,7 @@ public class OreDeposit extends MineshaftPiece {
                 .findFirst().get();
         }
 
-        public BlockState getBlock() {
+        public IBlockState getBlock() {
             return this.block;
         }
     }
@@ -60,37 +55,39 @@ public class OreDeposit extends MineshaftPiece {
         LOCAL_Y_END = Y_AXIS_LEN - 1,
         LOCAL_Z_END = MAIN_AXIS_LEN - 1;
 
-    public OreDeposit(TemplateManager structureManager, CompoundNBT compoundTag) {
-        super(BetterMineshaftStructurePieceType.ORE_DEPOSIT, compoundTag);
-        this.oreType = OreType.valueOf(compoundTag.getInt("OreType"));
-    }
-
-    public OreDeposit(int i, int chunkPieceLen, Random random, MutableBoundingBox blockBox, Direction direction, BetterMineshaftStructure.Type type) {
-        super(BetterMineshaftStructurePieceType.ORE_DEPOSIT, i, chunkPieceLen, type);
+    public OreDeposit(int i, int chunkPieceLen, Random random, StructureBoundingBox blockBox, EnumFacing direction, MapGenBetterMineshaft.Type type) {
+        super(i, chunkPieceLen, type);
         this.setCoordBaseMode(direction);
         this.boundingBox = blockBox;
     }
 
     @Override
     @ParametersAreNonnullByDefault
-    protected void readAdditional(CompoundNBT tag) {
-        super.toNbt(tag);
-        tag.putInt("OreType", this.oreType.value);
+    protected void writeStructureToNBT(NBTTagCompound tag) {
+        super.writeStructureToNBT(tag);
+        tag.setInteger("OreType", this.oreType.value);
     }
 
-    public static MutableBoundingBox determineBoxPosition(List<StructurePiece> list, Random random, int x, int y, int z, Direction direction) {
-        MutableBoundingBox blockBox = BoxUtil.boxFromCoordsWithRotation(x, y, z, SECONDARY_AXIS_LEN, Y_AXIS_LEN, MAIN_AXIS_LEN, direction);
+    @Override
+    @ParametersAreNonnullByDefault
+    protected void readStructureFromNBT(NBTTagCompound tag, TemplateManager templateManager) {
+        super.readStructureFromNBT(tag, templateManager);
+        this.oreType = OreType.valueOf(tag.getInteger("OreType"));
+    }
+
+    public static StructureBoundingBox determineBoxPosition(List<StructureComponent> list, Random random, int x, int y, int z, EnumFacing direction) {
+        StructureBoundingBox blockBox = BoxUtil.boxFromCoordsWithRotation(x, y, z, SECONDARY_AXIS_LEN, Y_AXIS_LEN, MAIN_AXIS_LEN, direction);
 
         // The following func call returns null if this new blockbox does not intersect with any pieces in the list.
         // If there is an intersection, the following func call returns the piece that intersects.
-        StructurePiece intersectingPiece = StructurePiece.findIntersecting(list, blockBox); // findIntersecting
+        StructureComponent intersectingPiece = StructureComponent.findIntersecting(list, blockBox); // findIntersecting
 
         // Thus, this function returns null if blackBox intersects with an existing piece. Otherwise, we return blackbox
         return intersectingPiece != null ? null : blockBox;
     }
 
     @Override
-    public void buildComponent(StructurePiece structurePiece, List<StructurePiece> list, Random random) {
+    public void buildComponent(StructureComponent structurePiece, List<StructureComponent> list, Random random) {
         float r = random.nextFloat();
 
         if (r < .5f) {
@@ -113,14 +110,14 @@ public class OreDeposit extends MineshaftPiece {
 
     @Override
     @ParametersAreNonnullByDefault
-    public boolean create(IWorld world, ChunkGenerator<?> generator, Random random, MutableBoundingBox box, ChunkPos pos) {
+    public boolean addComponentParts(World world, Random random, StructureBoundingBox box) {
         // Don't spawn if liquid in this box
         if (this.isLiquidInStructureBoundingBox(world, box)) {
             return false;
         }
 
-        BlockState COBBLE = Blocks.COBBLESTONE.getDefaultState();
-        BlockState ORE_BLOCK = this.oreType.getBlock();
+        IBlockState COBBLE = Blocks.COBBLESTONE.getDefaultState();
+        IBlockState ORE_BLOCK = this.oreType.getBlock();
 
         // Fill with cobble
         this.chanceReplaceNonAir(world, box, random, .9f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, COBBLE);

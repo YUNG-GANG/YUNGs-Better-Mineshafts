@@ -1,20 +1,15 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
-import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftStructure;
+import com.yungnickyoung.minecraft.bettermineshafts.world.MapGenBetterMineshaft;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
-import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
-import net.minecraft.block.*;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.state.properties.RailShape;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.feature.structure.StructurePiece;
-import net.minecraft.world.gen.feature.template.TemplateManager;
+import net.minecraft.block.BlockRail;
+import net.minecraft.block.BlockRailBase;
+import net.minecraft.block.BlockRailPowered;
+import net.minecraft.init.Blocks;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.world.World;
+import net.minecraft.world.gen.structure.StructureBoundingBox;
+import net.minecraft.world.gen.structure.StructureComponent;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
@@ -30,24 +25,14 @@ public class LayeredIntersection4 extends MineshaftPiece {
         LOCAL_Y_END = Y_AXIS_LEN - 1,
         LOCAL_Z_END = MAIN_AXIS_LEN - 1;
 
-    public LayeredIntersection4(TemplateManager structureManager, CompoundNBT compoundTag) {
-        super(BetterMineshaftStructurePieceType.LAYERED_INTERSECTION_4, compoundTag);
-    }
-
-    public LayeredIntersection4(int i, int pieceChainLen, Random random, MutableBoundingBox blockBox, Direction direction, BetterMineshaftStructure.Type type) {
-        super(BetterMineshaftStructurePieceType.LAYERED_INTERSECTION_4, i, pieceChainLen, type);
+    public LayeredIntersection4(int i, int pieceChainLen, Random random, StructureBoundingBox blockBox, EnumFacing direction, MapGenBetterMineshaft.Type type) {
+        super(i, pieceChainLen, type);
         this.setCoordBaseMode(direction);
         this.boundingBox = blockBox;
     }
 
-    @Override
-    @ParametersAreNonnullByDefault
-    protected void readAdditional(CompoundNBT tag) {
-        super.toNbt(tag);
-    }
-
-    public static MutableBoundingBox determineBoxPosition(List<StructurePiece> list, Random random, int x, int y, int z, Direction direction) {
-        MutableBoundingBox blockBox = new MutableBoundingBox(x, y - 3, z, x, (y - 3) + Y_AXIS_LEN - 1, z);
+    public static StructureBoundingBox determineBoxPosition(List<StructureComponent> list, Random random, int x, int y, int z, EnumFacing direction) {
+        StructureBoundingBox blockBox = new StructureBoundingBox(x, y - 3, z, x, (y - 3) + Y_AXIS_LEN - 1, z);
 
         switch (direction) {
             case NORTH:
@@ -74,15 +59,15 @@ public class LayeredIntersection4 extends MineshaftPiece {
 
         // The following func call returns null if this new blockbox does not intersect with any pieces in the list.
         // If there is an intersection, the following func call returns the piece that intersects.
-        StructurePiece intersectingPiece = StructurePiece.findIntersecting(list, blockBox);
+        StructureComponent intersectingPiece = StructureComponent.findIntersecting(list, blockBox);
 
         // Thus, this function returns null if blackBox intersects with an existing piece. Otherwise, we return blackbox
         return intersectingPiece != null ? null : blockBox;
     }
 
     @Override
-    public void buildComponent(StructurePiece structurePiece, List<StructurePiece> list, Random random) {
-        Direction direction = this.getCoordBaseMode();
+    public void buildComponent(StructureComponent structurePiece, List<StructureComponent> list, Random random) {
+        EnumFacing direction = this.getCoordBaseMode();
         if (direction == null) {
             return;
         }
@@ -90,31 +75,30 @@ public class LayeredIntersection4 extends MineshaftPiece {
         switch (direction) {
             case NORTH:
             default:
-                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.minX + 1, this.boundingBox.minY + 3, this.boundingBox.minZ - 1, Direction.NORTH, this.getComponentType(), pieceChainLen);
-                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.maxX + 1, this.boundingBox.minY + 3, this.boundingBox.maxZ - 5, Direction.EAST, this.getComponentType(), pieceChainLen);
-                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.minX - 1, this.boundingBox.minY + 3, this.boundingBox.maxZ - 1, Direction.WEST, this.getComponentType(), pieceChainLen);
+                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.minX + 1, this.boundingBox.minY + 3, this.boundingBox.minZ - 1, EnumFacing.NORTH, this.getComponentType(), pieceChainLen);
+                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.maxX + 1, this.boundingBox.minY + 3, this.boundingBox.maxZ - 5, EnumFacing.EAST, this.getComponentType(), pieceChainLen);
+                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.minX - 1, this.boundingBox.minY + 3, this.boundingBox.maxZ - 1, EnumFacing.WEST, this.getComponentType(), pieceChainLen);
                 break;
             case SOUTH:
-                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.maxX - 1, this.boundingBox.minY + 3, this.boundingBox.maxZ + 1, Direction.SOUTH, this.getComponentType(), pieceChainLen);
-                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.maxX + 1, this.boundingBox.minY + 3, this.boundingBox.minZ + 1, Direction.EAST, this.getComponentType(), pieceChainLen);
-                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.minX - 1, this.boundingBox.minY + 3, this.boundingBox.minZ + 5, Direction.WEST, this.getComponentType(), pieceChainLen);
+                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.maxX - 1, this.boundingBox.minY + 3, this.boundingBox.maxZ + 1, EnumFacing.SOUTH, this.getComponentType(), pieceChainLen);
+                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.maxX + 1, this.boundingBox.minY + 3, this.boundingBox.minZ + 1, EnumFacing.EAST, this.getComponentType(), pieceChainLen);
+                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.minX - 1, this.boundingBox.minY + 3, this.boundingBox.minZ + 5, EnumFacing.WEST, this.getComponentType(), pieceChainLen);
                 break;
             case WEST:
-                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.minX - 1, this.boundingBox.minY + 3, this.boundingBox.maxZ, Direction.WEST, this.getComponentType(), pieceChainLen);
-                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.maxX - 5, this.boundingBox.minY + 3, this.boundingBox.minZ - 1, Direction.NORTH, this.getComponentType(), pieceChainLen);
-                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.maxX - 1, this.boundingBox.minY + 3, this.boundingBox.maxZ + 1, Direction.SOUTH, this.getComponentType(), pieceChainLen);
+                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.minX - 1, this.boundingBox.minY + 3, this.boundingBox.maxZ, EnumFacing.WEST, this.getComponentType(), pieceChainLen);
+                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.maxX - 5, this.boundingBox.minY + 3, this.boundingBox.minZ - 1, EnumFacing.NORTH, this.getComponentType(), pieceChainLen);
+                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.maxX - 1, this.boundingBox.minY + 3, this.boundingBox.maxZ + 1, EnumFacing.SOUTH, this.getComponentType(), pieceChainLen);
                 break;
             case EAST:
-                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.maxX + 1, this.boundingBox.minY + 3, this.boundingBox.minZ + 1, Direction.EAST, this.getComponentType(), pieceChainLen);
-                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.minX + 5, this.boundingBox.minY + 3, this.boundingBox.maxZ + 1, Direction.SOUTH, this.getComponentType(), pieceChainLen);
-                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.minX + 1, this.boundingBox.minY + 3, this.boundingBox.minZ - 1, Direction.NORTH, this.getComponentType(), pieceChainLen);
+                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.maxX + 1, this.boundingBox.minY + 3, this.boundingBox.minZ + 1, EnumFacing.EAST, this.getComponentType(), pieceChainLen);
+                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.minX + 5, this.boundingBox.minY + 3, this.boundingBox.maxZ + 1, EnumFacing.SOUTH, this.getComponentType(), pieceChainLen);
+                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.minX + 1, this.boundingBox.minY + 3, this.boundingBox.minZ - 1, EnumFacing.NORTH, this.getComponentType(), pieceChainLen);
         }
     }
 
     @Override
     @ParametersAreNonnullByDefault
-
-    public boolean create(IWorld world, ChunkGenerator<?> generator, Random random, MutableBoundingBox box, ChunkPos pos) {
+    public boolean addComponentParts(World world, Random random, StructureBoundingBox box) {
         // Don't spawn if liquid in this box
         if (this.isLiquidInStructureBoundingBox(world, box)) {
             return false;
@@ -122,17 +106,17 @@ public class LayeredIntersection4 extends MineshaftPiece {
 
         // Randomize blocks
         float chance =
-            this.mineshaftType == BetterMineshaftStructure.Type.ICE
-                || this.mineshaftType == BetterMineshaftStructure.Type.MUSHROOM
+            this.mineshaftType == MapGenBetterMineshaft.Type.ICE
+                || this.mineshaftType == MapGenBetterMineshaft.Type.MUSHROOM
             ? .95f
             : .6f;
         this.chanceReplaceNonAir(world, box, random, chance, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getMainSelector());
 
         // Fill with air
-        this.fill(world, box, 2, 1, 2, 4, 1, 4, CAVE_AIR);
-        this.fill(world, box, 2, 2, 1, 4, 2, 5, CAVE_AIR);
-        this.fill(world, box, 2, 3, 0, 4, 6, 6, CAVE_AIR);
-        this.fill(world, box, 0, 3, 2, 6, 6, 4, CAVE_AIR);
+        this.fill(world, box, 2, 1, 2, 4, 1, 4, AIR);
+        this.fill(world, box, 2, 2, 1, 4, 2, 5, AIR);
+        this.fill(world, box, 2, 3, 0, 4, 6, 6, AIR);
+        this.fill(world, box, 0, 3, 2, 6, 6, 4, AIR);
 
         // Fill in any air in floor with main block
         this.replaceNonAir(world, box, 2, 0, 0, 4, 2, LOCAL_Z_END, getMainBlock());
@@ -148,13 +132,13 @@ public class LayeredIntersection4 extends MineshaftPiece {
         this.chanceReplaceNonAir(world, box, random, .1f, 4, 2, 5, 4, 3, 6, getBrickSelector());
 
         // Bottom rails
-        this.chanceAddBlock(world, random, .5f, Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, RailShape.ASCENDING_SOUTH), 3, 3, 0, box);
-        this.chanceAddBlock(world, random, .5f, Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, RailShape.ASCENDING_SOUTH), 3, 2, 1, box);
-        this.chanceAddBlock(world, random, .5f, Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, RailShape.ASCENDING_SOUTH), 3, 1, 2, box);
-        this.chanceAddBlock(world, random, .5f, Blocks.POWERED_RAIL.getDefaultState().with(PoweredRailBlock.SHAPE, RailShape.NORTH_SOUTH).with(PoweredRailBlock.POWERED, true), 3, 1, 3, box);
-        this.chanceAddBlock(world, random, .5f, Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, RailShape.ASCENDING_NORTH), 3, 1, 4, box);
-        this.chanceAddBlock(world, random, .5f, Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, RailShape.ASCENDING_NORTH), 3, 2, 5, box);
-        this.chanceAddBlock(world, random, .5f, Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, RailShape.ASCENDING_NORTH), 3, 3, 6, box);
+        this.chanceAddBlock(world, random, .5f, Blocks.RAIL.getDefaultState().withProperty(BlockRail.SHAPE, BlockRailBase.EnumRailDirection.ASCENDING_SOUTH), 3, 3, 0, box);
+        this.chanceAddBlock(world, random, .5f, Blocks.RAIL.getDefaultState().withProperty(BlockRail.SHAPE, BlockRailBase.EnumRailDirection.ASCENDING_SOUTH), 3, 2, 1, box);
+        this.chanceAddBlock(world, random, .5f, Blocks.RAIL.getDefaultState().withProperty(BlockRail.SHAPE, BlockRailBase.EnumRailDirection.ASCENDING_SOUTH), 3, 1, 2, box);
+        this.chanceAddBlock(world, random, .5f, Blocks.GOLDEN_RAIL.getDefaultState().withProperty(BlockRailPowered.SHAPE, BlockRailBase.EnumRailDirection.NORTH_SOUTH).withProperty(BlockRailPowered.POWERED, true), 3, 1, 3, box);
+        this.chanceAddBlock(world, random, .5f, Blocks.RAIL.getDefaultState().withProperty(BlockRail.SHAPE, BlockRailBase.EnumRailDirection.ASCENDING_NORTH), 3, 1, 4, box);
+        this.chanceAddBlock(world, random, .5f, Blocks.RAIL.getDefaultState().withProperty(BlockRail.SHAPE, BlockRailBase.EnumRailDirection.ASCENDING_NORTH), 3, 2, 5, box);
+        this.chanceAddBlock(world, random, .5f, Blocks.RAIL.getDefaultState().withProperty(BlockRail.SHAPE, BlockRailBase.EnumRailDirection.ASCENDING_NORTH), 3, 3, 6, box);
 
         // Ensure solid block is below each rail
         this.setBlockState(world, getMainBlock(), 3, 2, 0, box);
@@ -171,11 +155,11 @@ public class LayeredIntersection4 extends MineshaftPiece {
         this.fill(world, box, 5, 3, 2, 6, 3, 4, getMainBlock());
 
         // Top rails
-        this.chanceAddBlock(world, random, .5f, Blocks.POWERED_RAIL.getDefaultState().with(PoweredRailBlock.SHAPE, RailShape.EAST_WEST).with(PoweredRailBlock.POWERED, true), 0, 4, 3, box);
-        this.chanceAddBlock(world, random, .5f, Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, RailShape.ASCENDING_EAST), 1, 4, 3, box);
-        this.chanceFill(world, box, random, .5f, 2, 5, 3, 4, 5, 3, Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, RailShape.EAST_WEST));
-        this.chanceAddBlock(world, random, .5f, Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, RailShape.ASCENDING_WEST), 5, 4, 3, box);
-        this.chanceAddBlock(world, random, .5f, Blocks.POWERED_RAIL.getDefaultState().with(PoweredRailBlock.SHAPE, RailShape.EAST_WEST).with(PoweredRailBlock.POWERED, true), 6, 4, 3, box);
+        this.chanceAddBlock(world, random, .5f, Blocks.GOLDEN_RAIL.getDefaultState().withProperty(BlockRailPowered.SHAPE, BlockRailBase.EnumRailDirection.EAST_WEST).withProperty(BlockRailPowered.POWERED, true), 0, 4, 3, box);
+        this.chanceAddBlock(world, random, .5f, Blocks.RAIL.getDefaultState().withProperty(BlockRail.SHAPE, BlockRailBase.EnumRailDirection.ASCENDING_EAST), 1, 4, 3, box);
+        this.chanceFill(world, box, random, .5f, 2, 5, 3, 4, 5, 3, Blocks.RAIL.getDefaultState().withProperty(BlockRail.SHAPE, BlockRailBase.EnumRailDirection.EAST_WEST));
+        this.chanceAddBlock(world, random, .5f, Blocks.RAIL.getDefaultState().withProperty(BlockRail.SHAPE, BlockRailBase.EnumRailDirection.ASCENDING_WEST), 5, 4, 3, box);
+        this.chanceAddBlock(world, random, .5f, Blocks.GOLDEN_RAIL.getDefaultState().withProperty(BlockRailPowered.SHAPE, BlockRailBase.EnumRailDirection.EAST_WEST).withProperty(BlockRailPowered.POWERED, true), 6, 4, 3, box);
 
         // Decorations
         this.addBiomeDecorations(world, box, random, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END - 1, LOCAL_Z_END);

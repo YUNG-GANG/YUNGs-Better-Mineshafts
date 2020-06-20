@@ -1,5 +1,6 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world;
 
+import com.yungnickyoung.minecraft.bettermineshafts.config.Configuration;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.MineshaftPiece;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.VerticalEntrance;
 import mcp.MethodsReturnNonnullByDefault;
@@ -14,8 +15,6 @@ import java.util.Random;
 
 @MethodsReturnNonnullByDefault
 public class MapGenBetterMineshaft extends MapGenMineshaft {
-    private static final double SPAWN_RATE = 0.003;
-
     @Override
     protected boolean canSpawnStructureAtCoords(int chunkX, int chunkZ) {
         // No mineshafts in oceans
@@ -23,7 +22,7 @@ public class MapGenBetterMineshaft extends MapGenMineshaft {
         if (biome instanceof BiomeOcean || biome.getTempCategory() == Biome.TempCategory.OCEAN)
             return false;
 
-        return this.rand.nextDouble() < SPAWN_RATE && this.rand.nextInt(80) < Math.max(Math.abs(chunkX), Math.abs(chunkZ));
+        return this.rand.nextDouble() < Configuration.mineshaftSpawnRate;
     }
 
     protected StructureStart getStructureStart(int chunkX, int chunkZ) {
