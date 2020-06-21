@@ -5,6 +5,7 @@ import com.yungnickyoung.minecraft.bettermineshafts.util.BlockSetSelector;
 import com.yungnickyoung.minecraft.bettermineshafts.world.MapGenBetterMineshaft;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
@@ -285,11 +286,9 @@ public abstract class MineshaftPiece extends StructureComponent {
                 for (int z = minZ; z <= maxZ; z++) {
                     mutable.setPos(x, y, z);
                     EnumFacing dir = facing.getAxis() == EnumFacing.Axis.X ? facing : facing.getOpposite();
-//                    IBlockState nextBlock = this.getBlockStateFromPos(world, x + facing.getXOffset(), y + facing.getYOffset(), z + facing.getZOffset(), boundingBox);
                     if (
                         this.getBlockStateFromPos(world, x, y, z, boundingBox).getBlock() == Blocks.AIR
-                            && Blocks.VINE.canPlaceBlockOnSide(world, mutable, dir)
-//                            && nextBlock.getBlock() != Blocks.LADDER
+                            && this.getBlockStateFromPos(world, x + facing.getXOffset(), y, z + facing.getZOffset(), boundingBox).getBlockFaceShape(world, new BlockPos(x + dir.getZOffset(), y, z + dir.getZOffset()), dir.getOpposite()) == BlockFaceShape.SOLID
                     ) {
                         if (random.nextFloat() < chance) {
                             this.setBlockState(world, Blocks.VINE.getDefaultState().withProperty(BlockVine.NORTH, dir == EnumFacing.NORTH).withProperty(BlockVine.EAST, dir == EnumFacing.EAST).withProperty(BlockVine.SOUTH, dir == EnumFacing.SOUTH).withProperty(BlockVine.WEST, dir == EnumFacing.WEST), x, y, z, boundingBox);
@@ -367,12 +366,10 @@ public abstract class MineshaftPiece extends StructureComponent {
     }
 
     protected void generateLeg(World world, StructureBoundingBox box, int x, int z, IBlockState blockState) {
-//        BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos(this.getXWithOffset(x, z), this.getYWithOffset(-1), this.getZWithOffset(x, z));
         BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos(x, -1, z);
 
         while (mutable.getY() > 0 && (world.getBlockState(mutable) == AIR || LIQUIDS.contains(world.getBlockState(mutable).getMaterial()))) {
             this.setBlockState(world, blockState, x, mutable.getY(), z, box);
-//            world.setBlockState(mutable, blockState, 2);
             mutable.move(EnumFacing.DOWN);
         }
     }
@@ -605,20 +602,5 @@ public abstract class MineshaftPiece extends StructureComponent {
         int k = this.getZWithOffset(x, z);
         BlockPos blockPos = new BlockPos(i, j, k);
         return !blockBox.isVecInside(blockPos) ? null : world.getBlockState(blockPos);
-    }
-
-    /**
-     * Seems to check for air within a StructureBoundingBox at (xMin to xMax, y + 1, z).
-     * Note that getBlockAt() also returns air if the coordinate passed in is not within the blockBox passed in.
-     * Returns false if any air is found
-     */
-    protected boolean method_14719(World world, StructureBoundingBox blockBox, int xMin, int xMax, int y, int z) {
-        for (int x = xMin; x <= xMax; ++x) {
-            if (this.getBlockStateFromPos(world, x, y + 1, z, blockBox) == AIR) {
-                return false;
-            }
-        }
-
-        return true;
     }
 }

@@ -3,7 +3,6 @@ package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 import com.google.common.collect.Lists;
 import com.yungnickyoung.minecraft.bettermineshafts.world.MapGenBetterMineshaft;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
-import net.minecraft.block.BlockRailPowered;
 import net.minecraft.block.BlockWall;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityMinecartChest;
@@ -169,10 +168,6 @@ public class SmallTunnel extends MineshaftPiece {
     private void generateRails(World world, StructureBoundingBox box, Random random) {
         // Place rails in center
         this.chanceFill(world, box,  random, .5f, 2, 1, 0, 2, 1, LOCAL_Z_END, Blocks.RAIL.getDefaultState());
-        // Place powered rails
-        for (int n = 0; n <= LOCAL_Z_END; n++) {
-            this.chanceAddBlock(world, random, .07f, Blocks.GOLDEN_RAIL.getDefaultState().withProperty(BlockRailPowered.POWERED, true), 2, 1, n, box);
-        }
     }
 
     private void generateTntCarts(World world, StructureBoundingBox box, Random random) {

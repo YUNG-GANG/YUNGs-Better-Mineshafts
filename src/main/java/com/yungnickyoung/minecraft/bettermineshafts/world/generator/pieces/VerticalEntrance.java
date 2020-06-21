@@ -112,24 +112,24 @@ public class VerticalEntrance extends MineshaftPiece {
             BetterMineshafts.count.incrementAndGet();
         }
 
-        // Only generate vertical entrance if there is valid surrounding terrain
-        if (!this.hasTunnel) {
-            determineEnumFacing(world);
-
-            if (BetterMineshafts.DEBUG_LOG && this.hasTunnel) {
-                BetterMineshafts.surfaceEntrances.add(this.centerPos.hashCode());
-                BetterMineshafts.LOGGER.info(String.format("(%d, %d) --- %d / %d  (%f%%)", centerPos.getX(), centerPos.getZ(), BetterMineshafts.surfaceEntrances.size(), BetterMineshafts.count.get(), (float) BetterMineshafts.surfaceEntrances.size() * 100 / BetterMineshafts.count.get()));
-            }
-        }
-
-        if (this.hasTunnel) {
-            generateVerticalShaft(world, random, box);
-            // Build surface tunnel.
-            // This must be done dynamically since its length depends on terrain.
-            generateSurfaceTunnel(world, random, box);
-
-            return true;
-        }
+//        // Only generate vertical entrance if there is valid surrounding terrain
+//        if (!this.hasTunnel) {
+//            determineEnumFacing(world);
+//
+//            if (BetterMineshafts.DEBUG_LOG && this.hasTunnel) {
+//                BetterMineshafts.surfaceEntrances.add(this.centerPos.hashCode());
+//                BetterMineshafts.LOGGER.info(String.format("(%d, %d) --- %d / %d  (%f%%)", centerPos.getX(), centerPos.getZ(), BetterMineshafts.surfaceEntrances.size(), BetterMineshafts.count.get(), (float) BetterMineshafts.surfaceEntrances.size() * 100 / BetterMineshafts.count.get()));
+//            }
+//        }
+//
+//        if (this.hasTunnel) {
+//            generateVerticalShaft(world, random, box);
+//            // Build surface tunnel.
+//            // This must be done dynamically since its length depends on terrain.
+//            generateSurfaceTunnel(world, random, box);
+//
+//            return true;
+//        }
 
         return false;
     }
@@ -337,10 +337,7 @@ public class VerticalEntrance extends MineshaftPiece {
                 try {
                     int realX = centerPos.getX() + xOffset,
                         realZ = centerPos.getZ() + zOffset;
-//                    int chunkX = realX >> 4,
-//                        chunkZ = realZ >> 4;
-//                    int surfaceHeight = SurfaceUtil.getSurfaceHeight(world, new ColPos(realX, realZ));
-                    int surfaceHeight = world.getHeight(realX, realZ);
+                    int surfaceHeight = SurfaceUtil.getSurfaceHeight(world, new ColPos(realX, realZ));
                     if (surfaceHeight > 1) {
                         minSurfaceHeight = Math.min(minSurfaceHeight, surfaceHeight);
                     }
@@ -376,8 +373,7 @@ public class VerticalEntrance extends MineshaftPiece {
 
                 // Check altitude of each individual block along the direction.
                 for (int i = radialDist * radius; i < radialDist * radius + radius; i++) {
-//                    int surfaceHeight = SurfaceUtil.getSurfaceHeight(world, new ColPos(mutable.getX(), mutable.getZ()));
-                    int surfaceHeight = world.getHeight(mutable.getX(), mutable.getZ());
+                    int surfaceHeight = SurfaceUtil.getSurfaceHeight(world, new ColPos(mutable.getX(), mutable.getZ()));
 
                     if (surfaceHeight <= floorHeight && surfaceHeight > 1) {
                         this.hasTunnel = true;

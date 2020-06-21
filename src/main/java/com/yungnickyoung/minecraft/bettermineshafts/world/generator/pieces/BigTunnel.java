@@ -5,7 +5,6 @@ import com.yungnickyoung.minecraft.bettermineshafts.util.Pair;
 import com.yungnickyoung.minecraft.bettermineshafts.world.MapGenBetterMineshaft;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
 import com.yungnickyoung.minecraft.bettermineshafts.util.BoxUtil;
-import net.minecraft.block.BlockRailPowered;
 import net.minecraft.block.BlockWall;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityMinecartChest;
@@ -392,15 +391,6 @@ public class BigTunnel extends MineshaftPiece {
     private void generateRails(World world, StructureBoundingBox box, Random random) {
         // Place rails in center
         this.chanceFill(world, box, random, .5f, LOCAL_X_END / 2, 1, 0, LOCAL_X_END / 2, 1, LOCAL_Z_END, Blocks.RAIL.getDefaultState());
-        // Place powered rails
-        int blocksSinceLastRail = 0;
-        for (int n = 0; n <= LOCAL_Z_END; n++) {
-            blocksSinceLastRail++;
-            if (random.nextInt(20) == 0 || blocksSinceLastRail > 25) {
-                this.setBlockState(world, Blocks.GOLDEN_RAIL.getDefaultState().withProperty(BlockRailPowered.POWERED, true), LOCAL_X_END / 2, 1, n, box);
-                blocksSinceLastRail = 0; // reset counter
-            }
-        }
     }
 
     private void generateSmallShaftEntranceRight(World world, StructureBoundingBox box, Random random, int x, int y, int z) {

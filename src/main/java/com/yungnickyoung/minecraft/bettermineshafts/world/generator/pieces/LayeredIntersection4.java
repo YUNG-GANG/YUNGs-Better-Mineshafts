@@ -4,7 +4,6 @@ import com.yungnickyoung.minecraft.bettermineshafts.world.MapGenBetterMineshaft;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
 import net.minecraft.block.BlockRail;
 import net.minecraft.block.BlockRailBase;
-import net.minecraft.block.BlockRailPowered;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
@@ -135,7 +134,6 @@ public class LayeredIntersection4 extends MineshaftPiece {
         this.chanceAddBlock(world, random, .5f, Blocks.RAIL.getDefaultState().withProperty(BlockRail.SHAPE, BlockRailBase.EnumRailDirection.ASCENDING_SOUTH), 3, 3, 0, box);
         this.chanceAddBlock(world, random, .5f, Blocks.RAIL.getDefaultState().withProperty(BlockRail.SHAPE, BlockRailBase.EnumRailDirection.ASCENDING_SOUTH), 3, 2, 1, box);
         this.chanceAddBlock(world, random, .5f, Blocks.RAIL.getDefaultState().withProperty(BlockRail.SHAPE, BlockRailBase.EnumRailDirection.ASCENDING_SOUTH), 3, 1, 2, box);
-        this.chanceAddBlock(world, random, .5f, Blocks.GOLDEN_RAIL.getDefaultState().withProperty(BlockRailPowered.SHAPE, BlockRailBase.EnumRailDirection.NORTH_SOUTH).withProperty(BlockRailPowered.POWERED, true), 3, 1, 3, box);
         this.chanceAddBlock(world, random, .5f, Blocks.RAIL.getDefaultState().withProperty(BlockRail.SHAPE, BlockRailBase.EnumRailDirection.ASCENDING_NORTH), 3, 1, 4, box);
         this.chanceAddBlock(world, random, .5f, Blocks.RAIL.getDefaultState().withProperty(BlockRail.SHAPE, BlockRailBase.EnumRailDirection.ASCENDING_NORTH), 3, 2, 5, box);
         this.chanceAddBlock(world, random, .5f, Blocks.RAIL.getDefaultState().withProperty(BlockRail.SHAPE, BlockRailBase.EnumRailDirection.ASCENDING_NORTH), 3, 3, 6, box);
@@ -155,11 +153,11 @@ public class LayeredIntersection4 extends MineshaftPiece {
         this.fill(world, box, 5, 3, 2, 6, 3, 4, getMainBlock());
 
         // Top rails
-        this.chanceAddBlock(world, random, .5f, Blocks.GOLDEN_RAIL.getDefaultState().withProperty(BlockRailPowered.SHAPE, BlockRailBase.EnumRailDirection.EAST_WEST).withProperty(BlockRailPowered.POWERED, true), 0, 4, 3, box);
+        this.chanceAddBlock(world, random, .5f, Blocks.RAIL.getDefaultState().withProperty(BlockRail.SHAPE, BlockRailBase.EnumRailDirection.EAST_WEST), 0, 4, 3, box);
         this.chanceAddBlock(world, random, .5f, Blocks.RAIL.getDefaultState().withProperty(BlockRail.SHAPE, BlockRailBase.EnumRailDirection.ASCENDING_EAST), 1, 4, 3, box);
         this.chanceFill(world, box, random, .5f, 2, 5, 3, 4, 5, 3, Blocks.RAIL.getDefaultState().withProperty(BlockRail.SHAPE, BlockRailBase.EnumRailDirection.EAST_WEST));
         this.chanceAddBlock(world, random, .5f, Blocks.RAIL.getDefaultState().withProperty(BlockRail.SHAPE, BlockRailBase.EnumRailDirection.ASCENDING_WEST), 5, 4, 3, box);
-        this.chanceAddBlock(world, random, .5f, Blocks.GOLDEN_RAIL.getDefaultState().withProperty(BlockRailPowered.SHAPE, BlockRailBase.EnumRailDirection.EAST_WEST).withProperty(BlockRailPowered.POWERED, true), 6, 4, 3, box);
+        this.chanceAddBlock(world, random, .5f, Blocks.RAIL.getDefaultState().withProperty(BlockRail.SHAPE, BlockRailBase.EnumRailDirection.EAST_WEST), 6, 4, 3, box);
 
         // Decorations
         this.addBiomeDecorations(world, box, random, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END - 1, LOCAL_Z_END);
