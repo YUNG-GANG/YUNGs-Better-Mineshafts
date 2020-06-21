@@ -8,6 +8,7 @@ import net.minecraft.world.biome.*;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -38,70 +39,72 @@ public class BMFeature {
      * Adds better mineshafts structure to all applicable biomes.
      */
     public static void commonSetup(FMLCommonSetupEvent event) {
-        BetterMineshaftFeatureConfig config;
-        BetterMineshaftStructure.Type type;
+        DeferredWorkQueue.runLater(() -> {
+            BetterMineshaftFeatureConfig config;
+            BetterMineshaftStructure.Type type;
 
-        BMStructurePieces.init();
+            BMStructurePieces.init();
 
-        // Set config based on biome
-        Set<Map.Entry<ResourceLocation, Biome>> biomesList = ForgeRegistries.BIOMES.getEntries();
-        for (Map.Entry<ResourceLocation, Biome> entry : biomesList) {
-            Biome biome = entry.getValue();
+            // Set config based on biome
+            Set<Map.Entry<ResourceLocation, Biome>> biomesList = ForgeRegistries.BIOMES.getEntries();
+            for (Map.Entry<ResourceLocation, Biome> entry : biomesList) {
+                Biome biome = entry.getValue();
 
-            // Only operate on biomes that have mineshafts
-            if (!biome.hasStructure(Feature.MINESHAFT)) {
-                continue;
+                // Only operate on biomes that have mineshafts
+                if (!biome.hasStructure(Feature.MINESHAFT)) {
+                    continue;
+                }
+
+                switch (biome.getCategory()) {
+                    case MESA:
+                        if (biome instanceof BadlandsBiome) {
+                            type = BetterMineshaftStructure.Type.RED_DESERT;
+                        } else {
+                            type = BetterMineshaftStructure.Type.MESA;
+                        }
+                        break;
+                    case JUNGLE:
+                        type = BetterMineshaftStructure.Type.JUNGLE;
+                        break;
+                    case ICY:
+                        if (biome instanceof IceSpikesBiome) {
+                            type = BetterMineshaftStructure.Type.ICE;
+                        } else {
+                            type = BetterMineshaftStructure.Type.SNOW;
+                        }
+                        break;
+                    case TAIGA:
+                        if (biome instanceof SnowyTaigaBiome || biome instanceof SnowyTaigaHillsBiome || biome instanceof SnowyTaigaMountainsBiome) {
+                            type = BetterMineshaftStructure.Type.ICE;
+                        } else {
+                            type = BetterMineshaftStructure.Type.SNOW;
+                        }
+                        break;
+                    case DESERT:
+                        if (biome instanceof DesertBiome) {
+                            type = BetterMineshaftStructure.Type.RED_DESERT;
+                        } else {
+                            type = BetterMineshaftStructure.Type.DESERT;
+                        }
+                        break;
+                    case MUSHROOM:
+                        type = BetterMineshaftStructure.Type.MUSHROOM;
+                        break;
+                    case SAVANNA:
+                        type = BetterMineshaftStructure.Type.SAVANNA;
+                        break;
+                    default:
+                        type = BetterMineshaftStructure.Type.NORMAL;
+                }
+
+                config = new BetterMineshaftFeatureConfig(BMConfig.mineshaftSpawnRate, type);
+
+                // No mineshafts in oceans
+                if (biome.getCategory() == Biome.Category.OCEAN)
+                    continue;
+
+                biome.addStructure(betterMineshaft.withConfiguration(config));
             }
-
-            switch (biome.getCategory()) {
-                case MESA:
-                    if (biome instanceof BadlandsBiome) {
-                        type = BetterMineshaftStructure.Type.RED_DESERT;
-                    } else {
-                        type = BetterMineshaftStructure.Type.MESA;
-                    }
-                    break;
-                case JUNGLE:
-                    type = BetterMineshaftStructure.Type.JUNGLE;
-                    break;
-                case ICY:
-                    if (biome instanceof IceSpikesBiome) {
-                        type = BetterMineshaftStructure.Type.ICE;
-                    } else {
-                        type = BetterMineshaftStructure.Type.SNOW;
-                    }
-                    break;
-                case TAIGA:
-                    if (biome instanceof SnowyTaigaBiome || biome instanceof SnowyTaigaHillsBiome || biome instanceof SnowyTaigaMountainsBiome) {
-                        type = BetterMineshaftStructure.Type.ICE;
-                    } else {
-                        type = BetterMineshaftStructure.Type.SNOW;
-                    }
-                    break;
-                case DESERT:
-                    if (biome instanceof DesertBiome) {
-                        type = BetterMineshaftStructure.Type.RED_DESERT;
-                    } else {
-                        type = BetterMineshaftStructure.Type.DESERT;
-                    }
-                    break;
-                case MUSHROOM:
-                    type = BetterMineshaftStructure.Type.MUSHROOM;
-                    break;
-                case SAVANNA:
-                    type = BetterMineshaftStructure.Type.SAVANNA;
-                    break;
-                default:
-                    type = BetterMineshaftStructure.Type.NORMAL;
-            }
-
-            config = new BetterMineshaftFeatureConfig(BMConfig.mineshaftSpawnRate, type);
-
-            // No mineshafts in oceans
-            if (biome.getCategory() == Biome.Category.OCEAN)
-                continue;
-
-            biome.addStructure(betterMineshaft.withConfiguration(config));
-        }
+        });
     }
 }
