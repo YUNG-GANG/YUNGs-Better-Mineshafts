@@ -26,6 +26,8 @@ public class LayeredIntersection5 extends MineshaftPiece{
         LOCAL_Y_END = Y_AXIS_LEN - 1,
         LOCAL_Z_END = MAIN_AXIS_LEN - 1;
 
+    public LayeredIntersection5() {}
+
     public LayeredIntersection5(int i, int pieceChainLen, Random random, StructureBoundingBox blockBox, EnumFacing direction, MapGenBetterMineshaft.Type type) {
         super(i, pieceChainLen, type);
         this.setCoordBaseMode(direction);
@@ -102,7 +104,10 @@ public class LayeredIntersection5 extends MineshaftPiece{
                 || this.mineshaftType == MapGenBetterMineshaft.Type.MUSHROOM
             ? .95f
             : .6f;
-        this.chanceReplaceNonAir(world, box, random, chance, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getMainSelector());
+        this.chanceReplaceNonAir(world, box, random, chance, 0, 1, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getMainSelector());
+
+        // Randomize floor
+        this.chanceReplaceNonAir(world, box, random, chance, 0, 0, 0, LOCAL_X_END, 0, LOCAL_Z_END, getFloorSelector());
 
         // Fill with air
         this.fill(world, box, 0, 1, 0, LOCAL_X_END, LOCAL_Y_END - 1, LOCAL_Z_END - 1, AIR);

@@ -24,6 +24,8 @@ public class SmallTunnelStairs extends MineshaftPiece {
         LOCAL_Y_END = Y_AXIS_LEN - 1,
         LOCAL_Z_END = MAIN_AXIS_LEN - 1;
 
+    public SmallTunnelStairs() {}
+
     public SmallTunnelStairs(int i, int chunkPieceLen, Random random, StructureBoundingBox blockBox, EnumFacing direction, MapGenBetterMineshaft.Type type) {
         super(i, chunkPieceLen, type);
         this.setCoordBaseMode(direction);
@@ -78,7 +80,10 @@ public class SmallTunnelStairs extends MineshaftPiece {
                 || this.mineshaftType == MapGenBetterMineshaft.Type.MUSHROOM
             ? .95f
             : .6f;
-        this.chanceReplaceNonAir(world, box, random, chance, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getMainSelector());
+        this.chanceReplaceNonAir(world, box, random, chance, 0, 1, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getMainSelector());
+
+        // Randomize floor
+        this.chanceReplaceNonAir(world, box, random, chance, 0, 0, 0, LOCAL_X_END, 0, LOCAL_Z_END, getFloorSelector());
 
         for (int i = 0; i < 5 ; i++) {
             // Fill with air
@@ -99,7 +104,7 @@ public class SmallTunnelStairs extends MineshaftPiece {
         }
 
         // Decorations
-        this.addBiomeDecorations(world, box, random, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END - 1, LOCAL_Z_END);
+        this.addBiomeDecorations(world, box, random, 1, 0, 0, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END);
         this.addVines(world, box, random, getVineChance(), 1, 0, 1, LOCAL_X_END - 1, LOCAL_Y_END, LOCAL_Z_END - 1);
 
         return true;

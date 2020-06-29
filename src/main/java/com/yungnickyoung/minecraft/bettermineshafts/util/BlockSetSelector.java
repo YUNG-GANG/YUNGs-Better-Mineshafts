@@ -55,7 +55,6 @@ public class BlockSetSelector {
         .addBlock(Blocks.AIR.getDefaultState(), 0.1f);
 
     public static BlockSetSelector DESERT = new BlockSetSelector(Blocks.SANDSTONE.getDefaultState())
-        .addBlock(Blocks.SAND.getDefaultState(), 0.3f)
         .addBlock(Blocks.SANDSTONE.getDefaultState().withProperty(BlockSandStone.TYPE, BlockSandStone.EnumType.CHISELED), 0.1f)
         .addBlock(Blocks.SANDSTONE.getDefaultState().withProperty(BlockSandStone.TYPE, BlockSandStone.EnumType.SMOOTH), 0.1f)
         .addBlock(Blocks.STONEBRICK.getDefaultState(), 0.05f)
@@ -63,7 +62,6 @@ public class BlockSetSelector {
         .addBlock(Blocks.AIR.getDefaultState(), 0.2f);
 
     public static BlockSetSelector RED_DESERT = new BlockSetSelector(Blocks.RED_SANDSTONE.getDefaultState())
-        .addBlock(Blocks.SAND.getDefaultState().withProperty(BlockSand.VARIANT, BlockSand.EnumType.RED_SAND), 0.3f)
         .addBlock(Blocks.RED_SANDSTONE.getDefaultState().withProperty(BlockRedSandstone.TYPE, BlockRedSandstone.EnumType.CHISELED), 0.1f)
         .addBlock(Blocks.RED_SANDSTONE.getDefaultState().withProperty(BlockRedSandstone.TYPE, BlockRedSandstone.EnumType.SMOOTH), 0.1f)
         .addBlock(Blocks.STONEBRICK.getDefaultState(), 0.05f)
@@ -80,6 +78,25 @@ public class BlockSetSelector {
         .addBlock(Blocks.STONEBRICK.getDefaultState(), 0.1f)
         .addBlock(Blocks.STONEBRICK.getDefaultState().withProperty(BlockStoneBrick.VARIANT, BlockStoneBrick.EnumType.MOSSY), 0.1f)
         .addBlock(Blocks.STONEBRICK.getDefaultState().withProperty(BlockStoneBrick.VARIANT, BlockStoneBrick.EnumType.CRACKED), 0.1f)
+        .addBlock(Blocks.AIR.getDefaultState(), 0.2f);
+
+    /**
+     * Floor variants.
+     */
+    public static BlockSetSelector FLOOR_DESERT = new BlockSetSelector(Blocks.SANDSTONE.getDefaultState())
+        .addBlock(Blocks.SAND.getDefaultState(), 0.3f)
+        .addBlock(Blocks.SANDSTONE.getDefaultState().withProperty(BlockSandStone.TYPE, BlockSandStone.EnumType.CHISELED), 0.1f)
+        .addBlock(Blocks.SANDSTONE.getDefaultState().withProperty(BlockSandStone.TYPE, BlockSandStone.EnumType.SMOOTH), 0.1f)
+        .addBlock(Blocks.STONEBRICK.getDefaultState(), 0.05f)
+        .addBlock(Blocks.STONEBRICK.getDefaultState().withProperty(BlockStoneBrick.VARIANT, BlockStoneBrick.EnumType.CRACKED), 0.05f)
+        .addBlock(Blocks.AIR.getDefaultState(), 0.2f);
+
+    public static BlockSetSelector FLOOR_RED_DESERT = new BlockSetSelector(Blocks.RED_SANDSTONE.getDefaultState())
+        .addBlock(Blocks.SAND.getDefaultState().withProperty(BlockSand.VARIANT, BlockSand.EnumType.RED_SAND), 0.3f)
+        .addBlock(Blocks.RED_SANDSTONE.getDefaultState().withProperty(BlockRedSandstone.TYPE, BlockRedSandstone.EnumType.CHISELED), 0.1f)
+        .addBlock(Blocks.RED_SANDSTONE.getDefaultState().withProperty(BlockRedSandstone.TYPE, BlockRedSandstone.EnumType.SMOOTH), 0.1f)
+        .addBlock(Blocks.STONEBRICK.getDefaultState(), 0.05f)
+        .addBlock(Blocks.STONEBRICK.getDefaultState().withProperty(BlockStoneBrick.VARIANT, BlockStoneBrick.EnumType.CRACKED), 0.05f)
         .addBlock(Blocks.AIR.getDefaultState(), 0.2f);
 
     /**
@@ -105,14 +122,14 @@ public class BlockSetSelector {
         .addBlock(Blocks.SNOW.getDefaultState(), .1f);
 
     public static BlockSetSelector STONE_BRICK_DESERT = new BlockSetSelector()
-        .addBlock(Blocks.SAND.getDefaultState(), .25f)
-        .addBlock(Blocks.SANDSTONE.getDefaultState(), .35f)
+        .addBlock(Blocks.SANDSTONE.getDefaultState(), .5f)
+        .addBlock(Blocks.STONEBRICK.getDefaultState(), .1f)
         .addBlock(Blocks.SANDSTONE.getDefaultState().withProperty(BlockSandStone.TYPE, BlockSandStone.EnumType.SMOOTH), .2f)
         .addBlock(Blocks.SANDSTONE.getDefaultState().withProperty(BlockSandStone.TYPE, BlockSandStone.EnumType.CHISELED), .2f);
 
     public static BlockSetSelector STONE_BRICK_RED_DESERT = new BlockSetSelector()
-        .addBlock(Blocks.SAND.getDefaultState().withProperty(BlockSand.VARIANT, BlockSand.EnumType.RED_SAND), .25f)
-        .addBlock(Blocks.RED_SANDSTONE.getDefaultState(), .35f)
+        .addBlock(Blocks.RED_SANDSTONE.getDefaultState(), .5f)
+        .addBlock(Blocks.STONEBRICK.getDefaultState(), .1f)
         .addBlock(Blocks.RED_SANDSTONE.getDefaultState().withProperty(BlockRedSandstone.TYPE, BlockRedSandstone.EnumType.SMOOTH), .2f)
         .addBlock(Blocks.RED_SANDSTONE.getDefaultState().withProperty(BlockRedSandstone.TYPE, BlockRedSandstone.EnumType.CHISELED), .2f);
 
@@ -133,6 +150,17 @@ public class BlockSetSelector {
 
     public BlockSetSelector(IBlockState defaultBlock) {
         this.defaultBlock = defaultBlock;
+    }
+
+    public static BlockSetSelector from(IBlockState... blockStates) {
+        BlockSetSelector selector = new BlockSetSelector();
+        float chance = 1f / blockStates.length;
+
+        for (IBlockState state : blockStates) {
+            selector.addBlock(state, chance);
+        }
+
+        return selector;
     }
 
     public BlockSetSelector addBlock(IBlockState blockState, float chance) {

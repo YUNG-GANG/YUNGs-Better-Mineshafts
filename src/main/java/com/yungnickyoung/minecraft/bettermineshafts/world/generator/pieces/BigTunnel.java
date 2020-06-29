@@ -5,6 +5,8 @@ import com.yungnickyoung.minecraft.bettermineshafts.util.Pair;
 import com.yungnickyoung.minecraft.bettermineshafts.world.MapGenBetterMineshaft;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
 import com.yungnickyoung.minecraft.bettermineshafts.util.BoxUtil;
+import net.minecraft.block.BlockRail;
+import net.minecraft.block.BlockRailBase;
 import net.minecraft.block.BlockWall;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityMinecartChest;
@@ -45,6 +47,8 @@ public class BigTunnel extends MineshaftPiece {
     private static final float
         SMALL_SHAFT_SPAWN_CHANCE = .07f,
         SIDE_ROOM_SPAWN_CHANCE = .025f;
+
+    public BigTunnel() {}
 
     public BigTunnel(int i, int pieceChainLen, Random random, StructureBoundingBox blockBox, EnumFacing direction, MapGenBetterMineshaft.Type type) {
         super(i, pieceChainLen, type);
@@ -165,7 +169,10 @@ public class BigTunnel extends MineshaftPiece {
                 || this.mineshaftType == MapGenBetterMineshaft.Type.MUSHROOM
                 ? .95f
                 : .6f;
-        this.chanceReplaceNonAir(world, box, random, chance, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getMainSelector());
+        this.chanceReplaceNonAir(world, box, random, chance, 0, 1, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getMainSelector());
+
+        // Randomize floor
+        this.chanceReplaceNonAir(world, box, random, chance, 0, 0, 0, LOCAL_X_END, 0, LOCAL_Z_END, getFloorSelector());
 
         // Fill with air
         this.fill(world, box, 1, 1, 0, LOCAL_X_END - 1, LOCAL_Y_END - 3, LOCAL_Z_END, AIR);
@@ -196,7 +203,7 @@ public class BigTunnel extends MineshaftPiece {
         bigSupports.forEach(z -> generateBigSupport(world, box, random, z));
         smallSupports.forEach(z -> generateSmallSupport(world, box, random, z));
         gravelDeposits.forEach(pair -> generateGravelDeposit(world, box, random, pair.getLeft(), pair.getRight()));
-        this.addBiomeDecorations(world, box, random, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END - 1, LOCAL_Z_END);
+        this.addBiomeDecorations(world, box, random, 1, 0, 0, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END);
         this.addVines(world, box, random, getVineChance(), 1, 0, 1, LOCAL_X_END - 1, LOCAL_Y_END, LOCAL_Z_END - 1);
 
         return true;
@@ -212,7 +219,7 @@ public class BigTunnel extends MineshaftPiece {
         IBlockState supportBlock = getSupportBlock().withProperty(BlockWall.NORTH, true).withProperty(BlockWall.SOUTH, true);
 
         // Left side
-        generateLeg(world, box, 1, 0, getLegBlock());
+        generateLeg(world, random, box, 1, 0, getLegSelector());
         this.replaceAir(world, box, 1, -1, 1, 1, -1, 5, supportBlock);
         this.replaceAir(world, box, 1, -2, 1, 1, -2, 3, supportBlock);
         this.replaceAir(world, box, 1, -3, 1, 1, -3, 2, supportBlock);
@@ -221,8 +228,8 @@ public class BigTunnel extends MineshaftPiece {
         this.replaceAir(world, box, 1, -2, 8, 1, -2, 10, supportBlock);
         this.replaceAir(world, box, 1, -3, 9, 1, -3, 10, supportBlock);
         this.replaceAir(world, box, 1, -5, 10, 1, -4, 10, supportBlock);
-        generateLeg(world, box, 1, 11, getLegBlock());
-        generateLeg(world, box, 1, 12, getLegBlock());
+        generateLeg(world, random, box, 1, 11, getLegSelector());
+        generateLeg(world, random, box, 1, 12, getLegSelector());
         this.replaceAir(world, box, 1, -1, 13, 1, -1, 17, supportBlock);
         this.replaceAir(world, box, 1, -2, 13, 1, -2, 15, supportBlock);
         this.replaceAir(world, box, 1, -3, 13, 1, -3, 14, supportBlock);
@@ -231,10 +238,10 @@ public class BigTunnel extends MineshaftPiece {
         this.replaceAir(world, box, 1, -2, 20, 1, -2, 22, supportBlock);
         this.replaceAir(world, box, 1, -3, 21, 1, -3, 22, supportBlock);
         this.replaceAir(world, box, 1, -5, 22, 1, -4, 22, supportBlock);
-        generateLeg(world, box, 1, LOCAL_Z_END, getLegBlock());
+        generateLeg(world, random, box, 1, LOCAL_Z_END, getLegSelector());
 
         // Right side
-        generateLeg(world, box, LOCAL_X_END - 1, 0, getLegBlock());
+        generateLeg(world, random, box, LOCAL_X_END - 1, 0, getLegSelector());
         this.replaceAir(world, box, LOCAL_X_END - 1, -1, 1, LOCAL_X_END - 1, -1, 5, supportBlock);
         this.replaceAir(world, box, LOCAL_X_END - 1, -2, 1, LOCAL_X_END - 1, -2, 3, supportBlock);
         this.replaceAir(world, box, LOCAL_X_END - 1, -3, 1, LOCAL_X_END - 1, -3, 2, supportBlock);
@@ -243,8 +250,8 @@ public class BigTunnel extends MineshaftPiece {
         this.replaceAir(world, box, LOCAL_X_END - 1, -2, 8, LOCAL_X_END - 1, -2, 10, supportBlock);
         this.replaceAir(world, box, LOCAL_X_END - 1, -3, 9, LOCAL_X_END - 1, -3, 10, supportBlock);
         this.replaceAir(world, box, LOCAL_X_END - 1, -5, 10, LOCAL_X_END - 1, -4, 10, supportBlock);
-        generateLeg(world, box, LOCAL_X_END - 1, 11, getLegBlock());
-        generateLeg(world, box, LOCAL_X_END - 1, 12, getLegBlock());
+        generateLeg(world, random, box, LOCAL_X_END - 1, 11, getLegSelector());
+        generateLeg(world, random, box, LOCAL_X_END - 1, 12, getLegSelector());
         this.replaceAir(world, box, LOCAL_X_END - 1, -1, 13, LOCAL_X_END - 1, -1, 17, supportBlock);
         this.replaceAir(world, box, LOCAL_X_END - 1, -2, 13, LOCAL_X_END - 1, -2, 15, supportBlock);
         this.replaceAir(world, box, LOCAL_X_END - 1, -3, 13, LOCAL_X_END - 1, -3, 14, supportBlock);
@@ -253,13 +260,13 @@ public class BigTunnel extends MineshaftPiece {
         this.replaceAir(world, box, LOCAL_X_END - 1, -2, 20, LOCAL_X_END - 1, -2, 22, supportBlock);
         this.replaceAir(world, box, LOCAL_X_END - 1, -3, 21, LOCAL_X_END - 1, -3, 22, supportBlock);
         this.replaceAir(world, box, LOCAL_X_END - 1, -5, 22, LOCAL_X_END - 1, -4, 22, supportBlock);
-        generateLeg(world, box, LOCAL_X_END - 1, LOCAL_Z_END, getLegBlock());
+        generateLeg(world, random, box, LOCAL_X_END - 1, LOCAL_Z_END, getLegSelector());
     }
 
     private void generateLegsVariant(World world, StructureBoundingBox box, Random random) {
         for (int z = 0; z <= LOCAL_Z_END; z += 7) {
-            generateLeg(world, random, 2, z + 1, getBrickSelector());
-            generateLeg(world, random, LOCAL_X_END - 2, z + 1, getBrickSelector());
+            generateLeg(world, random, box, 2, z + 1, getBrickSelector());
+            generateLeg(world, random, box, LOCAL_X_END - 2, z + 1, getBrickSelector());
 
             this.replaceAir(world, box, random, 1, -1, z, LOCAL_X_END - 1, -1, z + 2, getBrickSelector());
 
@@ -357,7 +364,7 @@ public class BigTunnel extends MineshaftPiece {
 
     private void generateSmallSupport(World world, StructureBoundingBox box, Random random, int z) {
         IBlockState supportBlock = getSupportBlock();
-        if (this.mineshaftType != MapGenBetterMineshaft.Type.ICE)
+        if (this.mineshaftType != MapGenBetterMineshaft.Type.ICE && this.mineshaftType != MapGenBetterMineshaft.Type.MUSHROOM)
             supportBlock = getSupportBlock().withProperty(BlockWall.WEST, true).withProperty(BlockWall.EAST, true);
 
         this.setBlockState(world, getMainBlock(), 2, 1, z, box);
@@ -390,7 +397,12 @@ public class BigTunnel extends MineshaftPiece {
 
     private void generateRails(World world, StructureBoundingBox box, Random random) {
         // Place rails in center
-        this.chanceFill(world, box, random, .5f, LOCAL_X_END / 2, 1, 0, LOCAL_X_END / 2, 1, LOCAL_Z_END, Blocks.RAIL.getDefaultState());
+        for (int z = 0; z <= LOCAL_Z_END; z++) {
+            if (random.nextFloat() < .3f) {
+                this.fill(world, box, LOCAL_X_END / 2, 1, z, LOCAL_X_END / 2, 1, z + 1, Blocks.RAIL.getDefaultState());
+                z++;
+            }
+        }
     }
 
     private void generateSmallShaftEntranceRight(World world, StructureBoundingBox box, Random random, int x, int y, int z) {

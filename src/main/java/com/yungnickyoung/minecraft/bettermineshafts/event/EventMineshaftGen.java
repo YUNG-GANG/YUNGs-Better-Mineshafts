@@ -9,8 +9,7 @@ public class EventMineshaftGen {
     @SubscribeEvent(priority = EventPriority.NORMAL)
     public void onMineshaftGen(InitMapGenEvent event) {
         if (event.getType() == InitMapGenEvent.EventType.MINESHAFT) {
-            MapGenBetterMineshaft betterMineshaft = new MapGenBetterMineshaft();
-            event.setNewGen(betterMineshaft);
+            event.setNewGen(new MapGenBetterMineshaft());
         }
     }
 }

@@ -10,38 +10,35 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.*;
 import net.minecraft.world.gen.structure.MapGenMineshaft;
 import net.minecraft.world.gen.structure.StructureStart;
+import net.minecraftforge.common.BiomeDictionary;
 
 import java.util.Random;
 
 @MethodsReturnNonnullByDefault
 public class MapGenBetterMineshaft extends MapGenMineshaft {
-    @Override
     protected boolean canSpawnStructureAtCoords(int chunkX, int chunkZ) {
-        // No mineshafts in oceans
-        Biome biome = this.world.getBiomeForCoordsBody(new BlockPos(chunkX << 4, 64, chunkZ << 4));
-        if (biome instanceof BiomeOcean || biome.getTempCategory() == Biome.TempCategory.OCEAN)
-            return false;
-
         return this.rand.nextDouble() < Configuration.mineshaftSpawnRate;
     }
 
+    @Override
     protected StructureStart getStructureStart(int chunkX, int chunkZ) {
         Biome biome = this.world.getBiome(new BlockPos((chunkX << 4) + 8, 64, (chunkZ << 4) + 8));
-        float r = this.rand.nextFloat();
 
         // Determine mineshaft type based on biome
         Type type;
-        if (biome instanceof BiomeMesa) {
-            type = r > .25f ? Type.MESA : Type.RED_DESERT;
-        } else if (biome instanceof BiomeJungle) {
+        if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.OCEAN) || BiomeDictionary.hasType(biome, BiomeDictionary.Type.BEACH)) {
+            type = Type.NULL; // No mineshafts in or near oceans
+        } else if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.MESA) || biome instanceof BiomeMesa) {
+            type = Type.MESA;
+        } else if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.JUNGLE) || biome instanceof BiomeJungle) {
             type = Type.JUNGLE;
-        } else if (biome instanceof BiomeTaiga || biome instanceof BiomeSnow) {
-            type = r > .25f ? Type.SNOW : Type.ICE;
-        } else if (biome instanceof BiomeDesert) {
-            type = r > .25f ? Type.DESERT : Type.RED_DESERT;
-        } else if (biome instanceof BiomeMushroomIsland) {
+        } else if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.SNOWY) && !BiomeDictionary.hasType(biome, BiomeDictionary.Type.WATER)) {
+            type = BiomeDictionary.hasType(biome, BiomeDictionary.Type.RARE) ? Type.ICE : Type.SNOW;
+        } else if ((BiomeDictionary.hasType(biome, BiomeDictionary.Type.HOT) && BiomeDictionary.hasType(biome, BiomeDictionary.Type.DRY) && BiomeDictionary.hasType(biome, BiomeDictionary.Type.SANDY)) || biome instanceof BiomeDesert) {
+            type = BiomeDictionary.hasType(biome, BiomeDictionary.Type.RARE) ? Type.RED_DESERT : Type.DESERT;
+        } else if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.MUSHROOM) || biome instanceof BiomeMushroomIsland) {
             type = Type.MUSHROOM;
-        } else if (biome instanceof BiomeSavanna) {
+        } else if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.SAVANNA) || biome instanceof BiomeSavanna) {
             type = Type.SAVANNA;
         } else {
             type = Type.NORMAL;
@@ -61,10 +58,7 @@ public class MapGenBetterMineshaft extends MapGenMineshaft {
             this.mineshaftType = type;
 
             EnumFacing direction = EnumFacing.NORTH;
-            // Separate rand is necessary bc for some reason otherwise r is 0 every time
-            Random rand = new Random();
-            rand.setSeed((long)chunkX * 341873128712L + (long)chunkZ * 132897987541L);
-            int r = rand.nextInt(4);
+            int r = random.nextInt(4);
             switch (r) {
                 case 0:
                     direction = EnumFacing.NORTH;
@@ -102,6 +96,7 @@ public class MapGenBetterMineshaft extends MapGenMineshaft {
     }
 
     public enum Type {
+        NULL,
         NORMAL,
         MESA,
         JUNGLE,

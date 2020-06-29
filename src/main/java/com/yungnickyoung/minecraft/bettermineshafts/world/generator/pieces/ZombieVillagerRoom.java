@@ -30,6 +30,8 @@ public class ZombieVillagerRoom extends MineshaftPiece {
         LOCAL_Y_END = Y_AXIS_LEN - 1,
         LOCAL_Z_END = MAIN_AXIS_LEN - 1;
 
+    public ZombieVillagerRoom() {}
+
     public ZombieVillagerRoom(int i, int chunkPieceLen, Random random, StructureBoundingBox blockBox, EnumFacing direction, MapGenBetterMineshaft.Type type) {
         super(i, chunkPieceLen, type);
         this.setCoordBaseMode(direction);

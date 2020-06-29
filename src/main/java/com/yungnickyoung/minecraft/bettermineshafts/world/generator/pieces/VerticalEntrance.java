@@ -37,6 +37,8 @@ public class VerticalEntrance extends MineshaftPiece {
         SHAFT_LOCAL_XZ_START = 22,
         SHAFT_LOCAL_XZ_END = 26;
 
+    public VerticalEntrance() {}
+
     public VerticalEntrance(int i, int pieceChainLen, Random random, BlockPos.MutableBlockPos centerPos, EnumFacing direction, MapGenBetterMineshaft.Type type) {
         super(i, pieceChainLen, type);
         this.setCoordBaseMode(direction);
@@ -79,11 +81,15 @@ public class VerticalEntrance extends MineshaftPiece {
     }
 
     private static StructureBoundingBox getInitialBoundingBox(BlockPos centerPos) {
-        return new StructureBoundingBox(centerPos.getX() - 24, centerPos.getY(), centerPos.getZ() - 24, centerPos.getX() + 24, 256, centerPos.getZ() + 24);
+//        return new StructureBoundingBox(centerPos.getX() - 24, centerPos.getY(), centerPos.getZ() - 24, centerPos.getX() + 24, 256, centerPos.getZ() + 24);
+        return new StructureBoundingBox(centerPos.getX(), centerPos.getY(), centerPos.getZ(), centerPos.getX(), 256, centerPos.getZ());
     }
 
     @Override
     public void buildComponent(StructureComponent structurePiece, List<StructureComponent> list, Random random) {
+        if (this.mineshaftType == MapGenBetterMineshaft.Type.NULL)
+            return;
+
         EnumFacing direction = this.getCoordBaseMode();
         if (direction == null) {
             return;
@@ -108,6 +114,9 @@ public class VerticalEntrance extends MineshaftPiece {
     @Override
     @ParametersAreNonnullByDefault
     public boolean addComponentParts(World world, Random random, StructureBoundingBox box) {
+        if (this.mineshaftType == MapGenBetterMineshaft.Type.NULL)
+            return false;
+
         if (BetterMineshafts.DEBUG_LOG) {
             BetterMineshafts.count.incrementAndGet();
         }

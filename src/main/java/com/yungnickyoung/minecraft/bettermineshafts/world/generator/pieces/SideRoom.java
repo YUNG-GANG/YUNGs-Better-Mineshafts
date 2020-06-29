@@ -36,6 +36,8 @@ public class SideRoom extends MineshaftPiece {
         LOCAL_Y_END = Y_AXIS_LEN - 1,
         LOCAL_Z_END = MAIN_AXIS_LEN - 1;
 
+    public SideRoom() {}
+
     public SideRoom(int i, int pieceChainLen, Random random, StructureBoundingBox blockBox, EnumFacing direction, MapGenBetterMineshaft.Type type) {
         super(i, pieceChainLen, type);
         this.setCoordBaseMode(direction);
@@ -110,7 +112,7 @@ public class SideRoom extends MineshaftPiece {
         this.fill(world, box, 1, 1, 1, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END, AIR);
 
         if (!hasDownstairs)
-            generateLegs(world, random);
+            generateLegs(world, box, random);
 
         // Furnace 1
         if (random.nextInt(2) == 0) {
@@ -152,11 +154,11 @@ public class SideRoom extends MineshaftPiece {
         return true;
     }
 
-    private void generateLegs(World world, Random random) {
-        generateLeg(world, random, 1, 1, getBrickSelector());
-        generateLeg(world, random, 1, LOCAL_Z_END - 1, getBrickSelector());
-        generateLeg(world, random, LOCAL_X_END - 1, 1, getBrickSelector());
-        generateLeg(world, random, LOCAL_X_END - 1, LOCAL_Z_END - 1, getBrickSelector());
+    private void generateLegs(World world, StructureBoundingBox box, Random random) {
+        generateLeg(world, random, box, 1, 1, getBrickSelector());
+        generateLeg(world, random, box, 1, LOCAL_Z_END - 1, getBrickSelector());
+        generateLeg(world, random, box, LOCAL_X_END - 1, 1, getBrickSelector());
+        generateLeg(world, random, box, LOCAL_X_END - 1, LOCAL_Z_END - 1, getBrickSelector());
     }
 
     private void generateIronBarSupports(World world, StructureBoundingBox box, Random random) {

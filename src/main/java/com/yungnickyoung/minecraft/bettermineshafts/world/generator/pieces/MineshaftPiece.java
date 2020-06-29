@@ -28,6 +28,8 @@ public abstract class MineshaftPiece extends StructureComponent {
     protected static final IBlockState AIR = Blocks.AIR.getDefaultState();
     private static final Set<Material> LIQUIDS = ImmutableSet.of(Material.LAVA, Material.WATER);
 
+    public MineshaftPiece() {}
+
     public MineshaftPiece(int i, int pieceChainLen, MapGenBetterMineshaft.Type type) {
         super(i);
         this.mineshaftType = type;
@@ -85,6 +87,17 @@ public abstract class MineshaftPiece extends StructureComponent {
         }
     }
 
+    protected BlockSetSelector getFloorSelector() {
+        switch (this.mineshaftType) {
+            case DESERT:
+                return BlockSetSelector.FLOOR_DESERT;
+            case RED_DESERT:
+                return BlockSetSelector.FLOOR_RED_DESERT;
+            default:
+                return getMainSelector();
+        }
+    }
+
     protected BlockSetSelector getBrickSelector() {
         switch (this.mineshaftType) {
             case JUNGLE:
@@ -101,6 +114,29 @@ public abstract class MineshaftPiece extends StructureComponent {
                 return BlockSetSelector.STONE_BRICK_MUSHROOM;
             default:
                 return BlockSetSelector.STONE_BRICK_NORMAL;
+        }
+    }
+
+    protected BlockSetSelector getLegSelector() {
+        switch (this.mineshaftType) {
+            case MESA:
+                return BlockSetSelector.from(Blocks.LOG2.getDefaultState().withProperty(BlockLog.LOG_AXIS, BlockLog.EnumAxis.Y).withProperty(BlockNewLog.VARIANT, BlockPlanks.EnumType.DARK_OAK));
+            case JUNGLE:
+                return BlockSetSelector.from(Blocks.LOG.getDefaultState().withProperty(BlockLog.LOG_AXIS, BlockLog.EnumAxis.Y).withProperty(BlockOldLog.VARIANT, BlockPlanks.EnumType.JUNGLE));
+            case SNOW:
+                return BlockSetSelector.from(Blocks.LOG.getDefaultState().withProperty(BlockLog.LOG_AXIS, BlockLog.EnumAxis.Y).withProperty(BlockOldLog.VARIANT, BlockPlanks.EnumType.SPRUCE));
+            case ICE:
+                return BlockSetSelector.STONE_BRICK_ICE;
+            case DESERT:
+                return BlockSetSelector.STONE_BRICK_DESERT;
+            case RED_DESERT:
+                return BlockSetSelector.STONE_BRICK_RED_DESERT;
+            case MUSHROOM:
+                return BlockSetSelector.STONE_BRICK_MUSHROOM;
+            case SAVANNA:
+                return BlockSetSelector.from(Blocks.LOG2.getDefaultState().withProperty(BlockLog.LOG_AXIS, BlockLog.EnumAxis.Y).withProperty(BlockNewLog.VARIANT, BlockPlanks.EnumType.ACACIA));
+            default:
+                return BlockSetSelector.from(Blocks.LOG.getDefaultState().withProperty(BlockLog.LOG_AXIS, BlockLog.EnumAxis.Y).withProperty(BlockOldLog.VARIANT, BlockPlanks.EnumType.OAK));
         }
     }
 
@@ -134,7 +170,6 @@ public abstract class MineshaftPiece extends StructureComponent {
     protected IBlockState getSupportBlock() {
         switch (this.mineshaftType) {
             case MESA:
-            case RED_DESERT:
                 return Blocks.DARK_OAK_FENCE.getDefaultState();
             case JUNGLE:
                 return Blocks.JUNGLE_FENCE.getDefaultState();
@@ -148,29 +183,6 @@ public abstract class MineshaftPiece extends StructureComponent {
                 return Blocks.ACACIA_FENCE.getDefaultState();
             default:
                 return Blocks.OAK_FENCE.getDefaultState();
-        }
-    }
-
-    protected IBlockState getLegBlock() {
-        switch (this.mineshaftType) {
-            case MESA:
-                return Blocks.LOG2.getDefaultState().withProperty(BlockLog.LOG_AXIS, BlockLog.EnumAxis.Y).withProperty(BlockNewLog.VARIANT, BlockPlanks.EnumType.DARK_OAK);
-            case JUNGLE:
-                return Blocks.LOG.getDefaultState().withProperty(BlockLog.LOG_AXIS, BlockLog.EnumAxis.Y).withProperty(BlockOldLog.VARIANT, BlockPlanks.EnumType.JUNGLE);
-            case SNOW:
-                return Blocks.LOG.getDefaultState().withProperty(BlockLog.LOG_AXIS, BlockLog.EnumAxis.Y).withProperty(BlockOldLog.VARIANT, BlockPlanks.EnumType.SPRUCE);
-            case ICE:
-                return Blocks.PACKED_ICE.getDefaultState();
-            case DESERT:
-                return Blocks.SANDSTONE.getDefaultState().withProperty(BlockSandStone.TYPE, BlockSandStone.EnumType.SMOOTH);
-            case RED_DESERT:
-                return Blocks.RED_SANDSTONE.getDefaultState().withProperty(BlockRedSandstone.TYPE, BlockRedSandstone.EnumType.SMOOTH);
-            case MUSHROOM:
-                return Blocks.DIRT.getDefaultState();
-            case SAVANNA:
-                return Blocks.LOG2.getDefaultState().withProperty(BlockLog.LOG_AXIS, BlockLog.EnumAxis.Y).withProperty(BlockNewLog.VARIANT, BlockPlanks.EnumType.ACACIA);
-            default:
-                return Blocks.LOG.getDefaultState().withProperty(BlockLog.LOG_AXIS, BlockLog.EnumAxis.Y).withProperty(BlockOldLog.VARIANT, BlockPlanks.EnumType.OAK);
         }
     }
 
@@ -317,45 +329,48 @@ public abstract class MineshaftPiece extends StructureComponent {
             for (int y = minY; y <= maxY; y++) {
                 for (int z = minZ; z <= maxZ; z++) {
                     BlockPos blockPos = new BlockPos(this.getXWithOffset(x, z), this.getYWithOffset(y), this.getZWithOffset(x, z));
-                    // Snow layers
+                    IBlockState state = this.getBlockStateFromPos(world, x, y, z, box);
+                    IBlockState stateBelow = this.getBlockStateFromPos(world, x, y - 1, z, box);
+                    Block blockBelow = stateBelow.getBlock();
+
+                    // Snow variant
                     if (mineshaftType == MapGenBetterMineshaft.Type.SNOW) {
-                        if (this.getBlockStateFromPos(world, x, y, z, box) == AIR && Blocks.SNOW_LAYER.canPlaceBlockAt(world, blockPos)) {
+                        if (state == AIR && blockBelow != Blocks.ICE && blockBelow != Blocks.PACKED_ICE && blockBelow != Blocks.BARRIER && stateBelow.isSideSolid(world, blockPos.down(), EnumFacing.UP)) {
                             this.setBlockState(world, Blocks.SNOW_LAYER.getDefaultState().withProperty(BlockSnow.LAYERS, random.nextInt(2) + 1), x, y, z, box);
                         }
                     }
-                    // Cacti and dead bushes
-                    else if (mineshaftType == MapGenBetterMineshaft.Type.DESERT) {
+                    // Desert and Red Desert variants
+                    else if (mineshaftType == MapGenBetterMineshaft.Type.DESERT || mineshaftType == MapGenBetterMineshaft.Type.RED_DESERT) {
                         float r = random.nextFloat();
                         if (r < .1f) {
-                            if (this.getBlockStateFromPos(world, x, y, z, box) == AIR && Blocks.CACTUS.canPlaceBlockAt(world, blockPos)) {
+                            if (state == AIR && blockBelow == Blocks.SAND) {
                                 this.setBlockState(world, Blocks.CACTUS.getDefaultState().withProperty(BlockCactus.AGE, 0), x, y, z, box);
+                                if (random.nextFloat() < .5f && this.getBlockStateFromPos(world, x, y + 1, z, box) == AIR) {
+                                    this.setBlockState(world, Blocks.CACTUS.getDefaultState().withProperty(BlockCactus.AGE, 0), x, y + 1, z, box);
+                                }
                             }
                         } else if (r < .2f) {
-                            Block floor = this.getBlockStateFromPos(world, x, y - 1, z, box).getBlock();
-                            if (this.getBlockStateFromPos(world, x, y, z, box) == AIR && (floor == Blocks.SAND || floor == Blocks.STAINED_HARDENED_CLAY || floor == Blocks.HARDENED_CLAY || floor == Blocks.DIRT)) {
+                            if (state == AIR && (blockBelow == Blocks.SAND || blockBelow == Blocks.STAINED_HARDENED_CLAY || blockBelow == Blocks.HARDENED_CLAY || blockBelow == Blocks.DIRT)) {
                                 this.setBlockState(world, Blocks.DEADBUSH.getDefaultState(), x, y, z, box);
                             }
                         }
 
                     }
-                    // Dead bushes
+                    // Mesa variant
                     else if (mineshaftType == MapGenBetterMineshaft.Type.MESA) {
                         if (random.nextFloat() < .1f) {
-                            Block floor = this.getBlockStateFromPos(world, x, y - 1, z, box).getBlock();
-                            if (this.getBlockStateFromPos(world, x, y, z, box) == AIR && (floor == Blocks.SAND || floor == Blocks.STAINED_HARDENED_CLAY || floor == Blocks.HARDENED_CLAY || floor == Blocks.DIRT)) {
+                            if (state == AIR && (blockBelow == Blocks.SAND || blockBelow == Blocks.STAINED_HARDENED_CLAY || blockBelow == Blocks.HARDENED_CLAY || blockBelow == Blocks.DIRT)) {
                                 this.setBlockState(world, Blocks.DEADBUSH.getDefaultState(), x, y, z, box);
                             }
                         }
                     }
-                    // Mushrooms
+                    // Mushroom variant
                     else if (mineshaftType == MapGenBetterMineshaft.Type.MUSHROOM) {
-                        float r = random.nextFloat();
-                        if (r < .2f) {
-                            if (this.getBlockStateFromPos(world, x, y, z, box) == AIR && Blocks.RED_MUSHROOM.canPlaceBlockAt(world, blockPos)) {
+                        if (state == AIR && (blockBelow == Blocks.MYCELIUM || (blockBelow == Blocks.DIRT))) {
+                            float r = random.nextFloat();
+                            if (r < .2f) {
                                 this.setBlockState(world, Blocks.RED_MUSHROOM.getDefaultState(), x, y, z, box);
-                            }
-                        } else if (r < .4f) {
-                            if (this.getBlockStateFromPos(world, x, y, z, box) == AIR && Blocks.BROWN_MUSHROOM.canPlaceBlockAt(world, blockPos)) {
+                            } else if (r < .4f) {
                                 this.setBlockState(world, Blocks.BROWN_MUSHROOM.getDefaultState(), x, y, z, box);
                             }
                         }
@@ -365,20 +380,12 @@ public abstract class MineshaftPiece extends StructureComponent {
         }
     }
 
-    protected void generateLeg(World world, StructureBoundingBox box, int x, int z, IBlockState blockState) {
+    protected void generateLeg(World world, Random random, StructureBoundingBox box, int x, int z, BlockSetSelector selector) {
         BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos(x, -1, z);
+        IBlockState state = this.getBlockStateFromPos(world, mutable, box);
 
-        while (mutable.getY() > 0 && (world.getBlockState(mutable) == AIR || LIQUIDS.contains(world.getBlockState(mutable).getMaterial()))) {
-            this.setBlockState(world, blockState, x, mutable.getY(), z, box);
-            mutable.move(EnumFacing.DOWN);
-        }
-    }
-
-    protected void generateLeg(World world, Random random, int x, int z, BlockSetSelector selector) {
-        BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos(this.getXWithOffset(x, z), this.getYWithOffset(-1), this.getZWithOffset(x, z));
-
-        while (mutable.getY() > 0 && (world.getBlockState(mutable) == AIR || LIQUIDS.contains(world.getBlockState(mutable).getMaterial()))) {
-            world.setBlockState(mutable, selector.get(random), 2);
+        while (getYWithOffset(mutable.getY()) > 0 && (state == AIR || LIQUIDS.contains(state.getMaterial()))) {
+            this.setBlockState(world, selector.get(random), x, mutable.getY(), z, box);
             mutable.move(EnumFacing.DOWN);
         }
     }
@@ -602,5 +609,9 @@ public abstract class MineshaftPiece extends StructureComponent {
         int k = this.getZWithOffset(x, z);
         BlockPos blockPos = new BlockPos(i, j, k);
         return !blockBox.isVecInside(blockPos) ? null : world.getBlockState(blockPos);
+    }
+
+    protected IBlockState getBlockStateFromPos(World worldIn, BlockPos pos, StructureBoundingBox boundingboxIn) {
+        return super.getBlockStateFromPos(worldIn, pos.getX(), pos.getY(), pos.getZ(), boundingboxIn);
     }
 }

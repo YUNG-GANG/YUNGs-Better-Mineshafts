@@ -28,6 +28,8 @@ public class SideRoomDungeon extends MineshaftPiece {
         LOCAL_Y_END = Y_AXIS_LEN - 1,
         LOCAL_Z_END = MAIN_AXIS_LEN - 1;
 
+    public SideRoomDungeon() {}
+
     public SideRoomDungeon(int i, int pieceChainLen, Random random, StructureBoundingBox blockBox, EnumFacing direction, MapGenBetterMineshaft.Type type) {
         super(i, pieceChainLen, type);
         this.setCoordBaseMode(direction);
@@ -79,7 +81,7 @@ public class SideRoomDungeon extends MineshaftPiece {
         this.fill(world, box, random, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getBrickSelector());
         this.fill(world, box, 1, 1, 1, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END - 1, AIR);
 
-        generateLegs(world, random);
+        generateLegs(world, box, random);
 
         // Ladders
         IBlockState LADDER = Blocks.LADDER.getDefaultState().withProperty(BlockLadder.FACING, EnumFacing.NORTH);
@@ -111,10 +113,10 @@ public class SideRoomDungeon extends MineshaftPiece {
         return true;
     }
 
-    private void generateLegs(World world, Random random) {
-        generateLeg(world, random, 1, 1, getBrickSelector());
-        generateLeg(world, random, 1, LOCAL_Z_END - 1, getBrickSelector());
-        generateLeg(world, random, LOCAL_X_END - 1, 1, getBrickSelector());
-        generateLeg(world, random, LOCAL_X_END - 1, LOCAL_Z_END - 1, getBrickSelector());
+    private void generateLegs(World world, StructureBoundingBox box, Random random) {
+        generateLeg(world, random, box, 1, 1, getBrickSelector());
+        generateLeg(world, random, box, 1, LOCAL_Z_END - 1, getBrickSelector());
+        generateLeg(world, random, box, LOCAL_X_END - 1, 1, getBrickSelector());
+        generateLeg(world, random, box, LOCAL_X_END - 1, LOCAL_Z_END - 1, getBrickSelector());
     }
 }

@@ -5,6 +5,7 @@ import com.yungnickyoung.minecraft.bettermineshafts.init.BMStructurePieces;
 import com.yungnickyoung.minecraft.bettermineshafts.proxy.IProxy;
 import com.yungnickyoung.minecraft.bettermineshafts.world.MapGenBetterMineshaft;
 import io.netty.util.internal.ConcurrentSet;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.gen.structure.MapGenStructureIO;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
@@ -37,7 +38,7 @@ public class BetterMineshafts {
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         MinecraftForge.TERRAIN_GEN_BUS.register(new EventMineshaftGen());
-        MapGenStructureIO.registerStructure(MapGenBetterMineshaft.Start.class, "Mineshaft");
-        BMStructurePieces.init();
+        MapGenStructureIO.registerStructure(MapGenBetterMineshaft.Start.class, new ResourceLocation(MOD_ID,"BetterMineshaft").toString());
+        BMStructurePieces.register();
     }
 }
