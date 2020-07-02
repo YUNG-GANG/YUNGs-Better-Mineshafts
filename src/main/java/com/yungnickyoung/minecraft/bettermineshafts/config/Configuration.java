@@ -7,5 +7,5 @@ import net.minecraftforge.common.config.Config;
 public class Configuration {
     @Config.Name("Mineshaft Spawn Rate")
     @Config.RequiresWorldRestart
-    public static double mineshaftSpawnRate = .03;
+    public static double mineshaftSpawnRate = .003;
 }

@@ -5,7 +5,6 @@ import com.yungnickyoung.minecraft.bettermineshafts.util.ColPos;
 import com.yungnickyoung.minecraft.bettermineshafts.util.SurfaceUtil;
 import com.yungnickyoung.minecraft.bettermineshafts.world.MapGenBetterMineshaft;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
-import net.minecraft.block.BlockRail;
 import net.minecraft.block.BlockRailBase;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -81,8 +80,7 @@ public class VerticalEntrance extends MineshaftPiece {
     }
 
     private static StructureBoundingBox getInitialBoundingBox(BlockPos centerPos) {
-//        return new StructureBoundingBox(centerPos.getX() - 24, centerPos.getY(), centerPos.getZ() - 24, centerPos.getX() + 24, 256, centerPos.getZ() + 24);
-        return new StructureBoundingBox(centerPos.getX(), centerPos.getY(), centerPos.getZ(), centerPos.getX(), 256, centerPos.getZ());
+        return new StructureBoundingBox(centerPos.getX() - 12, centerPos.getY(), centerPos.getZ() - 12, centerPos.getX() + 12, 256, centerPos.getZ() + 12);
     }
 
     @Override
@@ -121,24 +119,24 @@ public class VerticalEntrance extends MineshaftPiece {
             BetterMineshafts.count.incrementAndGet();
         }
 
-//        // Only generate vertical entrance if there is valid surrounding terrain
-//        if (!this.hasTunnel) {
-//            determineEnumFacing(world);
-//
-//            if (BetterMineshafts.DEBUG_LOG && this.hasTunnel) {
-//                BetterMineshafts.surfaceEntrances.add(this.centerPos.hashCode());
-//                BetterMineshafts.LOGGER.info(String.format("(%d, %d) --- %d / %d  (%f%%)", centerPos.getX(), centerPos.getZ(), BetterMineshafts.surfaceEntrances.size(), BetterMineshafts.count.get(), (float) BetterMineshafts.surfaceEntrances.size() * 100 / BetterMineshafts.count.get()));
-//            }
-//        }
-//
-//        if (this.hasTunnel) {
-//            generateVerticalShaft(world, random, box);
-//            // Build surface tunnel.
-//            // This must be done dynamically since its length depends on terrain.
-//            generateSurfaceTunnel(world, random, box);
-//
-//            return true;
-//        }
+        // Only generate vertical entrance if there is valid surrounding terrain
+        if (!this.hasTunnel) {
+            determineEnumFacing(world);
+
+            if (BetterMineshafts.DEBUG_LOG && this.hasTunnel) {
+                BetterMineshafts.surfaceEntrances.add(this.centerPos.hashCode());
+                BetterMineshafts.LOGGER.info(String.format("(%d, %d) --- %d / %d  (%f%%)", centerPos.getX(), centerPos.getZ(), BetterMineshafts.surfaceEntrances.size(), BetterMineshafts.count.get(), (float) BetterMineshafts.surfaceEntrances.size() * 100 / BetterMineshafts.count.get()));
+            }
+        }
+
+        if (this.hasTunnel) {
+            generateVerticalShaft(world, random, box);
+            // Build surface tunnel.
+            // This must be done dynamically since its length depends on terrain.
+            generateSurfaceTunnel(world, random, box);
+
+            return true;
+        }
 
         return false;
     }
@@ -282,7 +280,6 @@ public class VerticalEntrance extends MineshaftPiece {
         if (facing.getAxis() == tunnelEnumFacing.getAxis()) {
             for (int z = tunnelStartZ; z <= tunnelEndZ; z++) {
                 int r = random.nextInt(4);
-                // TOOD - fix z to account for direction of shaft
                 if (r == 0 && validPositions[z - tunnelStartZ]) {
                     // Support
                     this.fill(world, box, tunnelStartX + 1, tunnelFloorAltitude + 1, z, tunnelStartX + 1, tunnelFloorAltitude + 2, z, getSupportBlock());
@@ -299,7 +296,6 @@ public class VerticalEntrance extends MineshaftPiece {
         } else {
             for (int x = tunnelStartX; x <= tunnelEndX; x++) {
                 int r = random.nextInt(4);
-                // TOOD - fix z to account for direction of shaft
                 if (r == 0 && validPositions[x - tunnelStartX]) {
                     // Support
                     this.fill(world, box, x, tunnelFloorAltitude + 1, tunnelStartZ + 1, x, tunnelFloorAltitude + 2, tunnelStartZ + 1, getSupportBlock());
@@ -319,14 +315,16 @@ public class VerticalEntrance extends MineshaftPiece {
         BlockRailBase.EnumRailDirection railShape = relativeTunnelDir.getAxis() == EnumFacing.Axis.Z ? BlockRailBase.EnumRailDirection.NORTH_SOUTH : BlockRailBase.EnumRailDirection.EAST_WEST;
         if (facing.getAxis() == tunnelEnumFacing.getAxis()) {
             for (int z = 0; z < tunnelEndZ - tunnelStartZ + 1; z++) {
-                if (validPositions[z] && random.nextFloat() < .5) {
-                    this.setBlockState(world, Blocks.RAIL.getDefaultState().withProperty(BlockRail.SHAPE, railShape), tunnelStartX + 2, tunnelFloorAltitude + 1, tunnelStartZ + z, box);
+                if (validPositions[z] && random.nextFloat() < .3f) {
+                    this.fill(world, box, tunnelStartX + 2, tunnelFloorAltitude + 1, tunnelStartZ + z, tunnelStartX + 2, tunnelFloorAltitude + 1, tunnelStartZ + z + 1, Blocks.RAIL.getDefaultState());
+                    z++;
                 }
             }
         } else {
             for (int x = 0; x < tunnelEndX - tunnelStartX + 1; x++) {
-                if (validPositions[x] && random.nextFloat() < .5) {
-                    this.setBlockState(world, Blocks.RAIL.getDefaultState().withProperty(BlockRail.SHAPE, railShape), tunnelStartX + x, tunnelFloorAltitude + 1, tunnelStartZ + 2, box);
+                if (validPositions[x] && random.nextFloat() < .3f) {
+                    this.fill(world, box, tunnelStartX + x, tunnelFloorAltitude + 1, tunnelStartZ + 2, tunnelStartX + x + 1, tunnelFloorAltitude + 1, tunnelStartZ + 2, Blocks.RAIL.getDefaultState());
+                    x++;
                 }
             }
         }
@@ -370,13 +368,13 @@ public class VerticalEntrance extends MineshaftPiece {
 
         BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos(centerPos);
 
-        int radius = 8; // Number of blocks that constitutes one 'radius'
-        int maxRadialDist = 3; // Number of radii to check in each direction. E.g. 3 radii * radius of 8 = 24 blocks
+        int radius = 5; // Number of blocks that constitutes one 'radius'
+        int maxRadialDist = 2; // Number of radii to check in each direction. E.g. 3 radii * radius of 8 = 24 blocks
 
         for (int radialDist = 0; radialDist < maxRadialDist; radialDist++) {
             // Check each of the four cardinal directions
             for (EnumFacing direction : EnumFacing.values()) {
-                if (direction == EnumFacing.UP || direction == EnumFacing.DOWN) continue;
+                if (direction != EnumFacing.EAST && direction != EnumFacing.SOUTH) continue;
 
                 mutable.setPos(centerPos.offset(direction, radius * radialDist + 2));
 
