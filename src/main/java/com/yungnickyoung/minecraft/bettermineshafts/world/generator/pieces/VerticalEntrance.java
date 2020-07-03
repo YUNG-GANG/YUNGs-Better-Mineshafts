@@ -80,7 +80,7 @@ public class VerticalEntrance extends MineshaftPiece {
     }
 
     private static StructureBoundingBox getInitialBoundingBox(BlockPos centerPos) {
-        return new StructureBoundingBox(centerPos.getX() - 12, centerPos.getY(), centerPos.getZ() - 12, centerPos.getX() + 12, 256, centerPos.getZ() + 12);
+        return new StructureBoundingBox(centerPos.getX() - 2, centerPos.getY(), centerPos.getZ() - 2, centerPos.getX() + 12, 256, centerPos.getZ() + 12);
     }
 
     @Override
