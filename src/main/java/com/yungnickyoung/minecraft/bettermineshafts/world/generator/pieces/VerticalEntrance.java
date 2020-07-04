@@ -31,11 +31,6 @@ public class VerticalEntrance extends MineshaftPiece {
     private EnumFacing tunnelEnumFacing = EnumFacing.NORTH;
     private boolean hasTunnel = false;
 
-    // Vertical shaft static vars
-    private static final int
-        SHAFT_LOCAL_XZ_START = 22,
-        SHAFT_LOCAL_XZ_END = 26;
-
     public VerticalEntrance() {}
 
     public VerticalEntrance(int i, int pieceChainLen, Random random, BlockPos.MutableBlockPos centerPos, EnumFacing direction, MapGenBetterMineshaft.Type type) {
@@ -145,30 +140,42 @@ public class VerticalEntrance extends MineshaftPiece {
      * Generates the vertical shaft with a ladder.
      */
     private void generateVerticalShaft(World world, Random random, StructureBoundingBox box) {
+        int shaftStartX = 0,
+            shaftStartZ = 0,
+            shaftEndX = 4,
+            shaftEndZ = 4;
+        EnumFacing facing = this.getCoordBaseMode();
+
+        // Adjust shaft position
+        if (facing == EnumFacing.NORTH || facing == EnumFacing.WEST) {
+            shaftStartZ = 10;
+            shaftEndZ = 14;
+        }
+
         // Randomize blocks
-        this.fill(world, box, random, SHAFT_LOCAL_XZ_START, 0, SHAFT_LOCAL_XZ_START, SHAFT_LOCAL_XZ_END, localYEnd, SHAFT_LOCAL_XZ_END, getMainSelector());
+        this.fill(world, box, random, shaftStartX, 0, shaftStartZ, shaftEndX, localYEnd, shaftEndZ, getMainSelector());
 
         // Fill with air
-        this.fill(world, box, SHAFT_LOCAL_XZ_START + 1, 1, SHAFT_LOCAL_XZ_START + 1, SHAFT_LOCAL_XZ_END - 1, localYEnd - 1, SHAFT_LOCAL_XZ_END - 1, AIR);
+        this.fill(world, box, shaftStartX + 1, 1, shaftStartZ + 1, shaftEndX - 1, localYEnd - 1, shaftEndZ - 1, AIR);
 
         // Fill in any air in floor with main block
-        this.replaceAir(world, box, SHAFT_LOCAL_XZ_START + 1, 0, SHAFT_LOCAL_XZ_START + 1, SHAFT_LOCAL_XZ_END - 1, 0, SHAFT_LOCAL_XZ_END - 1, getMainBlock());
+        this.replaceAir(world, box, shaftStartX + 1, 0, shaftStartZ + 1, shaftEndX - 1, 0, shaftEndZ - 1, getMainBlock());
         // Special case - mushroom mineshafts get mycelium in floor
         if (this.mineshaftType == MapGenBetterMineshaft.Type.MUSHROOM)
-            this.chanceReplaceNonAir(world, box, random, .8f, SHAFT_LOCAL_XZ_START + 1, 0, SHAFT_LOCAL_XZ_START + 1, SHAFT_LOCAL_XZ_END - 1, 0, SHAFT_LOCAL_XZ_END - 1, Blocks.MYCELIUM.getDefaultState());
+            this.chanceReplaceNonAir(world, box, random, .8f, shaftStartX + 1, 0, shaftStartZ + 1, shaftEndX - 1, 0, shaftEndZ - 1, Blocks.MYCELIUM.getDefaultState());
 
         // Ladder
-        this.replaceAir(world, box, SHAFT_LOCAL_XZ_START + 2, 1, SHAFT_LOCAL_XZ_START, SHAFT_LOCAL_XZ_START + 2, localYEnd - 4, SHAFT_LOCAL_XZ_START, getMainBlock());
-        this.fill(world, box, SHAFT_LOCAL_XZ_START + 2, 1, SHAFT_LOCAL_XZ_START + 1, SHAFT_LOCAL_XZ_START + 2, localYEnd - 4, SHAFT_LOCAL_XZ_START + 1, Blocks.LADDER.getDefaultState());
+        this.replaceAir(world, box, shaftStartX + 2, 1, shaftStartZ, shaftStartX + 2, localYEnd - 4, shaftStartZ, getMainBlock());
+        this.fill(world, box, shaftStartX + 2, 1, shaftStartZ + 1, shaftStartX + 2, localYEnd - 4, shaftStartZ + 1, Blocks.LADDER.getDefaultState());
 
         // Doorway
-        this.fill(world, box, SHAFT_LOCAL_XZ_START + 1, 1, SHAFT_LOCAL_XZ_START + 4, SHAFT_LOCAL_XZ_START + 3, 2, SHAFT_LOCAL_XZ_START + 4, getMainDoorwayWall());
-        this.fill(world, box, SHAFT_LOCAL_XZ_START + 2, 3, SHAFT_LOCAL_XZ_START + 4, SHAFT_LOCAL_XZ_START + 2, 3, SHAFT_LOCAL_XZ_START + 4, getMainDoorwaySlab());
-        this.fill(world, box, SHAFT_LOCAL_XZ_START + 2, 1, SHAFT_LOCAL_XZ_START + 4, SHAFT_LOCAL_XZ_START + 2, 2, SHAFT_LOCAL_XZ_START + 4, AIR);
+        this.fill(world, box, shaftStartX + 1, 1, shaftStartZ + 4, shaftStartX + 3, 2, shaftStartZ + 4, getMainDoorwayWall());
+        this.fill(world, box, shaftStartX + 2, 3, shaftStartZ + 4, shaftStartX + 2, 3, shaftStartZ + 4, getMainDoorwaySlab());
+        this.fill(world, box, shaftStartX + 2, 1, shaftStartZ + 4, shaftStartX + 2, 2, shaftStartZ + 4, AIR);
 
         // Decorations
-        this.addBiomeDecorations(world, box, random, SHAFT_LOCAL_XZ_START + 1, 0, SHAFT_LOCAL_XZ_START + 1, SHAFT_LOCAL_XZ_END - 1, 1, SHAFT_LOCAL_XZ_END - 1);
-        this.addVines(world, box, random, getVineChance(), SHAFT_LOCAL_XZ_START + 1, 0, SHAFT_LOCAL_XZ_START + 1, SHAFT_LOCAL_XZ_END - 1, localYEnd - 4, SHAFT_LOCAL_XZ_END - 1);
+        this.addBiomeDecorations(world, box, random, shaftStartX + 1, 0, shaftStartZ + 1, shaftEndX - 1, 1, shaftEndZ - 1);
+        this.addVines(world, box, random, getVineChance(), shaftStartX + 1, 0, shaftStartZ + 1, shaftEndX - 1, localYEnd - 4, shaftEndZ - 1);
     }
 
     /**
@@ -190,33 +197,38 @@ public class VerticalEntrance extends MineshaftPiece {
         float rotationDifference = facing.getHorizontalAngle() - tunnelEnumFacing.getHorizontalAngle();
         EnumFacing relativeTunnelDir = EnumFacing.fromAngle(EnumFacing.NORTH.getHorizontalAngle() - rotationDifference);
         if (relativeTunnelDir == EnumFacing.NORTH) {
-            tunnelStartX = 22;
-            tunnelStartZ = 26;
-            tunnelEndX = 26;
-            tunnelEndZ = 26 + tunnelLength;
+            tunnelStartX = 0;
+            tunnelStartZ = 4;
+            tunnelEndX = 4;
+            tunnelEndZ = 4 + tunnelLength;
         }
         else if (
             (relativeTunnelDir == EnumFacing.WEST && !(facing == EnumFacing.SOUTH || facing == EnumFacing.WEST)) ||
             (relativeTunnelDir == EnumFacing.EAST && (facing == EnumFacing.SOUTH || facing == EnumFacing.WEST))
         ) {
-            tunnelStartX = 22 - tunnelLength;
-            tunnelStartZ = 22;
-            tunnelEndX = 22;
-            tunnelEndZ = 26;
+            tunnelStartX = 10 - tunnelLength;
+            tunnelStartZ = 0;
+            tunnelEndX = 10;
+            tunnelEndZ = 4;
         }
         else if (relativeTunnelDir == EnumFacing.SOUTH) {
-            tunnelStartX = 22;
-            tunnelStartZ = 22 - tunnelLength;
-            tunnelEndX = 26;
-            tunnelEndZ = 22;
+            tunnelStartX = 0;
+            tunnelStartZ = 10 - tunnelLength;
+            tunnelEndX = 4;
+            tunnelEndZ = 10;
         }
         else if (
             relativeTunnelDir == EnumFacing.EAST || relativeTunnelDir == EnumFacing.WEST
         ) {
-            tunnelStartX = 26;
-            tunnelStartZ = 22;
-            tunnelEndX = 26 + tunnelLength;
-            tunnelEndZ = 26;
+            tunnelStartX = 4;
+            tunnelStartZ = 0;
+            tunnelEndX = 4 + tunnelLength;
+            tunnelEndZ = 4;
+            // Adjust position
+            if (facing == EnumFacing.NORTH || facing == EnumFacing.WEST) {
+                tunnelStartZ = 10;
+                tunnelEndZ = 14;
+            }
         }
 
         // ################################################################
@@ -312,7 +324,6 @@ public class VerticalEntrance extends MineshaftPiece {
         }
 
         // Generate rails.
-        BlockRailBase.EnumRailDirection railShape = relativeTunnelDir.getAxis() == EnumFacing.Axis.Z ? BlockRailBase.EnumRailDirection.NORTH_SOUTH : BlockRailBase.EnumRailDirection.EAST_WEST;
         if (facing.getAxis() == tunnelEnumFacing.getAxis()) {
             for (int z = 0; z < tunnelEndZ - tunnelStartZ + 1; z++) {
                 if (validPositions[z] && random.nextFloat() < .3f) {

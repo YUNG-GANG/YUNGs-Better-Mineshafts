@@ -26,7 +26,7 @@ public class BetterMineshafts {
     public static IProxy proxy;
 
     // Debug variables used in development
-    public static final boolean DEBUG_LOG = false;
+    public static final boolean DEBUG_LOG = true;
     public static ConcurrentSet<Integer> surfaceEntrances = new ConcurrentSet<>();
     public static AtomicInteger count = new AtomicInteger(0);
 
