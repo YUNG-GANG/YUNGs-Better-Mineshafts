@@ -6,7 +6,7 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class EventMineshaftGen {
-    @SubscribeEvent(priority = EventPriority.NORMAL)
+    @SubscribeEvent(priority = EventPriority.LOW)
     public void onMineshaftGen(InitMapGenEvent event) {
         if (event.getType() == InitMapGenEvent.EventType.MINESHAFT) {
             event.setNewGen(new MapGenBetterMineshaft());
