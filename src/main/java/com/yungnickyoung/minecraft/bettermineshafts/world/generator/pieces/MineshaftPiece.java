@@ -36,7 +36,7 @@ public abstract class MineshaftPiece extends StructurePiece {
 
     public MineshaftPiece(IStructurePieceType structurePieceType, CompoundNBT compoundTag) {
         super(structurePieceType, compoundTag);
-        this.mineshaftType = BetterMineshaftStructure.Type.byIndex(compoundTag.getInt("MST"));
+        this.mineshaftType = BetterMineshaftStructure.Type.byId(compoundTag.getInt("MST"));
     }
 
     protected void toNbt(CompoundNBT tag) {
@@ -155,11 +155,11 @@ public abstract class MineshaftPiece extends StructurePiece {
     protected BlockState getLegBlock() {
         switch (this.mineshaftType) {
             case MESA:
-                return Blocks.STRIPPED_DARK_OAK_LOG.getDefaultState().with(LogBlock.AXIS, Direction.Axis.Y);
+                return Blocks.STRIPPED_DARK_OAK_LOG.getDefaultState().with(RotatedPillarBlock.AXIS, Direction.Axis.Y);
             case JUNGLE:
-                return Blocks.STRIPPED_JUNGLE_LOG.getDefaultState().with(LogBlock.AXIS, Direction.Axis.Y);
+                return Blocks.STRIPPED_JUNGLE_LOG.getDefaultState().with(RotatedPillarBlock.AXIS, Direction.Axis.Y);
             case SNOW:
-                return Blocks.STRIPPED_SPRUCE_LOG.getDefaultState().with(LogBlock.AXIS, Direction.Axis.Y);
+                return Blocks.STRIPPED_SPRUCE_LOG.getDefaultState().with(RotatedPillarBlock.AXIS, Direction.Axis.Y);
             case ICE:
                 return Blocks.BLUE_ICE.getDefaultState();
             case DESERT:
@@ -169,9 +169,9 @@ public abstract class MineshaftPiece extends StructurePiece {
             case MUSHROOM:
                 return Blocks.DIRT.getDefaultState();
             case SAVANNA:
-                return Blocks.STRIPPED_ACACIA_LOG.getDefaultState().with(LogBlock.AXIS, Direction.Axis.Y);
+                return Blocks.STRIPPED_ACACIA_LOG.getDefaultState().with(RotatedPillarBlock.AXIS, Direction.Axis.Y);
             default:
-                return Blocks.STRIPPED_OAK_LOG.getDefaultState().with(LogBlock.AXIS, Direction.Axis.Y);
+                return Blocks.STRIPPED_OAK_LOG.getDefaultState().with(RotatedPillarBlock.AXIS, Direction.Axis.Y);
         }
     }
 

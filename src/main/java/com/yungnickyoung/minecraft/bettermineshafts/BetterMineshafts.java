@@ -1,8 +1,7 @@
 package com.yungnickyoung.minecraft.bettermineshafts;
 
-import com.yungnickyoung.minecraft.bettermineshafts.init.BMFeature;
+import com.yungnickyoung.minecraft.bettermineshafts.init.BMStructureFeature;
 import com.yungnickyoung.minecraft.bettermineshafts.init.BMModConfig;
-import com.yungnickyoung.minecraft.bettermineshafts.init.BMStructurePieces;
 import io.netty.util.internal.ConcurrentSet;
 import net.minecraftforge.fml.common.Mod;
 import org.apache.logging.log4j.LogManager;
@@ -25,7 +24,7 @@ public class BetterMineshafts {
     }
 
     private void init() {
-        BMFeature.init();
+        BMStructureFeature.init();
         BMModConfig.init();
     }
 }

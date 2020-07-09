@@ -10,9 +10,10 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.RailShape;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.*;
+import net.minecraft.world.ISeedReader;
 import net.minecraft.world.IWorld;
-import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.ChunkGenerator;
+import net.minecraft.world.gen.feature.structure.StructureManager;
 import net.minecraft.world.gen.feature.structure.StructurePiece;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
@@ -104,7 +105,7 @@ public class VerticalEntrance extends MineshaftPiece {
 
     @Override
     @ParametersAreNonnullByDefault
-    public boolean create(IWorld world, ChunkGenerator<?> generator, Random random, MutableBoundingBox box, ChunkPos pos) {
+    public boolean func_230383_a_(ISeedReader world, StructureManager structureManager, ChunkGenerator generator, Random random, MutableBoundingBox box, ChunkPos pos, BlockPos blockPos) {
         if (BetterMineshafts.DEBUG_LOG) {
             BetterMineshafts.count.incrementAndGet();
         }
@@ -358,7 +359,7 @@ public class VerticalEntrance extends MineshaftPiece {
         yAxisLen = ceilingHeight - centerPos.getY() + 1;
         localYEnd = yAxisLen - 1;
 
-        BlockPos.Mutable mutable = new BlockPos.Mutable(centerPos);
+        BlockPos.Mutable mutable = centerPos.func_239590_i_();
 
         int radius = 8; // Number of blocks that constitutes one 'radius'
         int maxRadialDist = 3; // Number of radii to check in each direction. E.g. 3 radii * radius of 8 = 24 blocks

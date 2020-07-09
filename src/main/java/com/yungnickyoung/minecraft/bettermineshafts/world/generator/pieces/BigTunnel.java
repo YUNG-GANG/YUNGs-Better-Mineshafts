@@ -9,6 +9,7 @@ import com.yungnickyoung.minecraft.bettermineshafts.util.BoxUtil;
 import net.minecraft.block.*;
 import net.minecraft.entity.item.minecart.ChestMinecartEntity;
 import net.minecraft.entity.item.minecart.TNTMinecartEntity;
+import net.minecraft.loot.LootTables;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.IntArrayNBT;
 import net.minecraft.nbt.IntNBT;
@@ -19,12 +20,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 
 import net.minecraft.util.math.MutableBoundingBox;
+import net.minecraft.world.ISeedReader;
 import net.minecraft.world.IWorld;
-import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.ChunkGenerator;
+import net.minecraft.world.gen.feature.structure.StructureManager;
 import net.minecraft.world.gen.feature.structure.StructurePiece;
 import net.minecraft.world.gen.feature.template.TemplateManager;
-import net.minecraft.world.storage.loot.LootTables;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
@@ -159,7 +160,7 @@ public class BigTunnel extends MineshaftPiece {
 
     @Override
     @ParametersAreNonnullByDefault
-    public boolean create(IWorld world, ChunkGenerator<?> generator, Random random, MutableBoundingBox box, ChunkPos pos) {
+    public boolean func_230383_a_(ISeedReader world, StructureManager structureManager, ChunkGenerator generator, Random random, MutableBoundingBox box, ChunkPos pos, BlockPos blockPos) {
         // Randomize blocks
         float chance =
             this.mineshaftType == BetterMineshaftStructure.Type.SNOW
@@ -211,7 +212,7 @@ public class BigTunnel extends MineshaftPiece {
             return;
         }
 
-        BlockState supportBlock = getSupportBlock().with(WallBlock.NORTH, true).with(WallBlock.SOUTH, true);
+        BlockState supportBlock = getSupportBlock().with(WallBlock.field_235612_b_, WallHeight.TALL).with(WallBlock.field_235615_e_, WallHeight.TALL);
 
         // Left side
         generateLeg(world, 1, 0, getLegBlock());
@@ -360,7 +361,7 @@ public class BigTunnel extends MineshaftPiece {
     private void generateSmallSupport(IWorld world, MutableBoundingBox box, Random random, int z) {
         BlockState supportBlock = getSupportBlock();
         if (this.mineshaftType != BetterMineshaftStructure.Type.ICE)
-            supportBlock = getSupportBlock().with(WallBlock.WEST, true).with(WallBlock.EAST, true);
+            supportBlock = getSupportBlock().with(WallBlock.field_235613_c_, WallHeight.TALL).with(WallBlock.field_235614_d_, WallHeight.TALL);
 
         this.setBlockState(world, getMainBlock(), 2, 1, z, box);
         this.setBlockState(world, getMainBlock(), LOCAL_X_END - 2, 1, z, box);

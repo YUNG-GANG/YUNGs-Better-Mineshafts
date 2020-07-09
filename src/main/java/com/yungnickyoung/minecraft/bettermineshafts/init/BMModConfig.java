@@ -9,7 +9,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 public class BMModConfig {
     public static void init() {
-        ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.COMMON, BMForgeConfig.SPEC, "bettermineshafts-forge-1_15_2.toml");
+        ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.COMMON, BMForgeConfig.SPEC, "bettermineshafts-forge-1_16.toml");
         FMLJavaModLoadingContext.get().getModEventBus().addListener(BMModConfig::configChanged);
     }
 

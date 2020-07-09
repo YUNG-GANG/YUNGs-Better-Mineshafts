@@ -1,17 +1,17 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world;
 
-import com.mojang.datafixers.Dynamic;
-import com.yungnickyoung.minecraft.bettermineshafts.config.BMConfig;
-import com.yungnickyoung.minecraft.bettermineshafts.init.BMFeature;
+import com.mojang.serialization.Codec;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.MineshaftPiece;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.VerticalEntrance;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.util.Direction;
+import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.SharedSeedRandom;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.BiomeManager;
+import net.minecraft.world.biome.provider.BiomeProvider;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.structure.StructureStart;
@@ -20,37 +20,44 @@ import net.minecraft.world.gen.feature.template.TemplateManager;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.Random;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @MethodsReturnNonnullByDefault
-public class BetterMineshaftStructure extends Structure<BetterMineshaftFeatureConfig> {
-    public BetterMineshaftStructure(Function<Dynamic<?>, ? extends BetterMineshaftFeatureConfig> configFactory) {
-        super(configFactory);
+public class BetterMineshaftStructure extends Structure<BetterMineshaftConfig> {
+    public BetterMineshaftStructure(Codec<BetterMineshaftConfig> codec) {
+        super(codec);
+    }
+
+    /**
+     * canBeGenerated
+     */
+    @Override
+    protected boolean func_230363_a_(ChunkGenerator chunkGenerator, BiomeProvider biomeProvider, long seed, SharedSeedRandom random, int x, int z, Biome biome, ChunkPos chunkPos, BetterMineshaftConfig config) {
+        random.setLargeFeatureSeed(seed, x, z);
+        return random.nextDouble() < config.probability;
     }
 
     /**
      * shouldStartAt
      */
-    @Override
-    @ParametersAreNonnullByDefault
-    public boolean canBeGenerated(BiomeManager biomeManager, ChunkGenerator<?> chunkGenerator, Random random, int chunkX, int chunkZ, Biome biome) {
-        ((SharedSeedRandom) random).setLargeFeatureSeed(chunkGenerator.getSeed(), chunkX, chunkZ);
-        if (chunkGenerator.hasStructure(biome, this)) {
-            BetterMineshaftFeatureConfig featureConfig = chunkGenerator.getStructureConfig(biome, this);
-            // Default to normal mineshaft in case we fail to load config for this biome
-            if (featureConfig == null) {
-                featureConfig = new BetterMineshaftFeatureConfig(BMConfig.mineshaftSpawnRate, Type.NORMAL);
-            }
-            return random.nextDouble() < featureConfig.probability;
-        } else {
-            return false;
-        }
-    }
+//    @Override
+//    @ParametersAreNonnullByDefault
+//    public boolean canBeGenerated(BiomeManager biomeManager, ChunkGenerator<?> chunkGenerator, Random random, int chunkX, int chunkZ, Biome biome) {
+//        ((SharedSeedRandom) random).setLargeFeatureSeed(chunkGenerator.getSeed(), chunkX, chunkZ);
+//        if (chunkGenerator.hasStructure(biome, this)) {
+//            BetterMineshaftConfig featureConfig = chunkGenerator.getStructureConfig(biome, this);
+//            // Default to normal mineshaft in case we fail to load config for this biome
+//            if (featureConfig == null) {
+//                featureConfig = new BetterMineshaftConfig(BMConfig.mineshaftSpawnRate, Type.NORMAL);
+//            }
+//            return random.nextDouble() < featureConfig.probability;
+//        } else {
+//            return false;
+//        }
+//    }
 
     @Override
-    public IStartFactory getStartFactory() {
+    public IStartFactory<BetterMineshaftConfig> getStartFactory() {
         return Start::new;
     }
 
@@ -59,29 +66,20 @@ public class BetterMineshaftStructure extends Structure<BetterMineshaftFeatureCo
         return "Mineshaft";
     }
 
-    @Override
-    public int getSize() {
-        return 12;
-    }
-
-    public static class Start extends StructureStart {
-        public Start(Structure<?> structureFeature, int chunkX, int chunkZ, MutableBoundingBox blockBox, int i, long l) {
+    public static class Start extends StructureStart<BetterMineshaftConfig> {
+        public Start(Structure<BetterMineshaftConfig> structureFeature, int chunkX, int chunkZ, MutableBoundingBox blockBox, int i, long l) {
             super(structureFeature, chunkX, chunkZ, blockBox, i, l);
         }
 
         @ParametersAreNonnullByDefault
-        public void init(
-            ChunkGenerator<?> chunkGenerator,
+        public void func_230364_a_(
+            ChunkGenerator chunkGenerator,
             TemplateManager structureManager,
             int chunkX,
             int chunkZ,
-            Biome biome
+            Biome biome,
+            BetterMineshaftConfig config
         ) {
-            BetterMineshaftFeatureConfig featureConfig =
-                chunkGenerator.getStructureConfig(biome, BMFeature.betterMineshaft);
-            if (featureConfig == null) { // Default to normal mineshaft in case we fail to load config for this biome
-                featureConfig = new BetterMineshaftFeatureConfig(.003, Type.NORMAL);
-            }
             Direction direction = Direction.NORTH;
             // Separate rand is necessary bc for some reason otherwise r is 0 every time
             SharedSeedRandom rand = new SharedSeedRandom();
@@ -109,7 +107,7 @@ public class BetterMineshaftStructure extends Structure<BetterMineshaftFeatureCo
                 this.rand,
                 startingPos,
                 direction,
-                featureConfig.type
+                config.type
             );
 
             this.components.add(entryPoint);
@@ -123,7 +121,7 @@ public class BetterMineshaftStructure extends Structure<BetterMineshaftFeatureCo
         }
     }
 
-    public enum Type {
+    public enum Type implements IStringSerializable {
         NORMAL("normal"),
         MESA("mesa"),
         JUNGLE("jungle"),
@@ -134,25 +132,29 @@ public class BetterMineshaftStructure extends Structure<BetterMineshaftFeatureCo
         SAVANNA("savanna"),
         MUSHROOM("mushroom");
 
+        public static final Codec<BetterMineshaftStructure.Type> field_236324_c_ = IStringSerializable.func_233023_a_(BetterMineshaftStructure.Type::values, BetterMineshaftStructure.Type::byName);
+        private static final Map<String, BetterMineshaftStructure.Type> BY_NAME = Arrays.stream(values()).collect(Collectors.toMap(BetterMineshaftStructure.Type::getName, type -> type));
+
         private final String name;
 
         Type(String name) {
             this.name = name;
         }
 
-        private static final Map<String, Type> nameMap = Arrays.stream(values())
-            .collect(Collectors.toMap(Type::getName, type -> type));
-
         public String getName() {
             return this.name;
         }
 
-        public static Type byName(String name) {
-            return nameMap.get(name);
+        private static BetterMineshaftStructure.Type byName(String p_214715_0_) {
+            return BY_NAME.get(p_214715_0_);
         }
 
-        public static Type byIndex(int index) {
-            return index >= 0 && index < values().length ? values()[index] : NORMAL;
+        public static BetterMineshaftStructure.Type byId(int id) {
+            return id >= 0 && id < values().length ? values()[id] : NORMAL;
+        }
+
+        public String func_176610_l() {
+            return this.name;
         }
     }
 }
