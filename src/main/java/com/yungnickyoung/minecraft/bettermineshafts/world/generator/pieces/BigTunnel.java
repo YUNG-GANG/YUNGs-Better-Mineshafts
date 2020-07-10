@@ -212,7 +212,12 @@ public class BigTunnel extends MineshaftPiece {
             return;
         }
 
-        BlockState supportBlock = getSupportBlock().with(WallBlock.field_235612_b_, WallHeight.TALL).with(WallBlock.field_235615_e_, WallHeight.TALL);
+        BlockState supportBlock = getSupportBlock();
+        if (supportBlock.getBlock() instanceof WallBlock) {
+            supportBlock = supportBlock.with(WallBlock.field_235612_b_, WallHeight.TALL).with(WallBlock.field_235615_e_, WallHeight.TALL);
+        } else if (supportBlock.getBlock() instanceof FourWayBlock) {
+            supportBlock = supportBlock.with(FourWayBlock.NORTH, true).with(FourWayBlock.SOUTH, true);
+        }
 
         // Left side
         generateLeg(world, 1, 0, getLegBlock());
@@ -360,8 +365,11 @@ public class BigTunnel extends MineshaftPiece {
 
     private void generateSmallSupport(IWorld world, MutableBoundingBox box, Random random, int z) {
         BlockState supportBlock = getSupportBlock();
-        if (this.mineshaftType != BetterMineshaftStructure.Type.ICE)
-            supportBlock = getSupportBlock().with(WallBlock.field_235613_c_, WallHeight.TALL).with(WallBlock.field_235614_d_, WallHeight.TALL);
+        if (supportBlock.getBlock() instanceof WallBlock) {
+            supportBlock = supportBlock.with(WallBlock.field_235613_c_, WallHeight.TALL).with(WallBlock.field_235614_d_, WallHeight.TALL);
+        } else if (supportBlock.getBlock() instanceof FourWayBlock) {
+            supportBlock = supportBlock.with(FourWayBlock.EAST, true).with(FourWayBlock.WEST, true);
+        }
 
         this.setBlockState(world, getMainBlock(), 2, 1, z, box);
         this.setBlockState(world, getMainBlock(), LOCAL_X_END - 2, 1, z, box);

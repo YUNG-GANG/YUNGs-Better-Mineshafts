@@ -8,7 +8,7 @@ import net.minecraft.util.registry.Registry;
 
 import java.util.Locale;
 
-public class BMStructurePieces {
+public class ModStructurePieces {
     public static void init() {
         BetterMineshaftStructurePieceType.VERTICAL_ENTRANCE = Registry.register(Registry.STRUCTURE_PIECE, new ResourceLocation(BetterMineshafts.MOD_ID, "BMSVerticalEntrance".toLowerCase(Locale.ROOT)), VerticalEntrance::new);
         BetterMineshaftStructurePieceType.BIG_TUNNEL = Registry.register(Registry.STRUCTURE_PIECE, new ResourceLocation(BetterMineshafts.MOD_ID, "BMSBigTunnel".toLowerCase(Locale.ROOT)), BigTunnel::new);

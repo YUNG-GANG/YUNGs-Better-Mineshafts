@@ -161,8 +161,12 @@ public class SmallTunnel extends MineshaftPiece {
         this.fill(world, box, 3, 1, z, 3, 2, z, getSupportBlock());
         this.fill(world, box, 1, 3, z, 3, 3, z, getMainBlock());
         BlockState supportBlock = getSupportBlock();
-        if (this.mineshaftType != BetterMineshaftStructure.Type.ICE)
-            supportBlock = getSupportBlock().with(WallBlock.field_235613_c_, WallHeight.TALL).with(WallBlock.field_235614_d_, WallHeight.TALL);
+        if (supportBlock.getBlock() instanceof WallBlock) {
+            supportBlock = supportBlock.with(WallBlock.field_235613_c_, WallHeight.TALL).with(WallBlock.field_235614_d_, WallHeight.TALL);
+        } else if (supportBlock.getBlock() instanceof FourWayBlock) {
+            supportBlock = supportBlock.with(FourWayBlock.EAST, true).with(FourWayBlock.WEST, true);
+        }
+
         this.chanceReplaceNonAir(world, box, random, .25f, 1, 3, z, 3, 3, z, supportBlock);
     }
 
