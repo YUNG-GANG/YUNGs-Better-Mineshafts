@@ -15,7 +15,7 @@ public class BetterMineshafts {
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 
     // Debug variables used in development
-    public static final boolean DEBUG_LOG = true;
+    public static final boolean DEBUG_LOG = false;
     public static ConcurrentSet<Integer> surfaceEntrances = new ConcurrentSet<>();
     public static AtomicInteger count = new AtomicInteger(0);
 
