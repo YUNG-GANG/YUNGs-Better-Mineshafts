@@ -102,6 +102,29 @@ public abstract class MineshaftPiece extends StructurePiece {
         }
     }
 
+    protected BlockSetSelector getLegSelector() {
+        switch (this.mineshaftType) {
+            case MESA:
+                return BlockSetSelector.from(Blocks.STRIPPED_DARK_OAK_LOG.getDefaultState().with(RotatedPillarBlock.AXIS, Direction.Axis.Y));
+            case JUNGLE:
+                return BlockSetSelector.from(Blocks.STRIPPED_JUNGLE_LOG.getDefaultState().with(RotatedPillarBlock.AXIS, Direction.Axis.Y));
+            case SNOW:
+                return BlockSetSelector.from(Blocks.STRIPPED_SPRUCE_LOG.getDefaultState().with(RotatedPillarBlock.AXIS, Direction.Axis.Y));
+            case ICE:
+                return BlockSetSelector.STONE_BRICK_ICE;
+            case DESERT:
+                return BlockSetSelector.STONE_BRICK_DESERT;
+            case RED_DESERT:
+                return BlockSetSelector.STONE_BRICK_RED_DESERT;
+            case MUSHROOM:
+                return BlockSetSelector.STONE_BRICK_MUSHROOM;
+            case SAVANNA:
+                return BlockSetSelector.from(Blocks.STRIPPED_ACACIA_LOG.getDefaultState().with(RotatedPillarBlock.AXIS, Direction.Axis.Y));
+            default:
+                return BlockSetSelector.from(Blocks.STRIPPED_OAK_LOG.getDefaultState().with(RotatedPillarBlock.AXIS, Direction.Axis.Y));
+        }
+    }
+
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *                                BIOME VARIANT BLOCK GETTERS                              *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -149,29 +172,6 @@ public abstract class MineshaftPiece extends StructurePiece {
                 return Blocks.ACACIA_FENCE.getDefaultState();
             default:
                 return Blocks.OAK_FENCE.getDefaultState();
-        }
-    }
-
-    protected BlockState getLegBlock() {
-        switch (this.mineshaftType) {
-            case MESA:
-                return Blocks.STRIPPED_DARK_OAK_LOG.getDefaultState().with(RotatedPillarBlock.AXIS, Direction.Axis.Y);
-            case JUNGLE:
-                return Blocks.STRIPPED_JUNGLE_LOG.getDefaultState().with(RotatedPillarBlock.AXIS, Direction.Axis.Y);
-            case SNOW:
-                return Blocks.STRIPPED_SPRUCE_LOG.getDefaultState().with(RotatedPillarBlock.AXIS, Direction.Axis.Y);
-            case ICE:
-                return Blocks.BLUE_ICE.getDefaultState();
-            case DESERT:
-                return Blocks.SMOOTH_SANDSTONE.getDefaultState();
-            case RED_DESERT:
-                return Blocks.SMOOTH_RED_SANDSTONE.getDefaultState();
-            case MUSHROOM:
-                return Blocks.DIRT.getDefaultState();
-            case SAVANNA:
-                return Blocks.STRIPPED_ACACIA_LOG.getDefaultState().with(RotatedPillarBlock.AXIS, Direction.Axis.Y);
-            default:
-                return Blocks.STRIPPED_OAK_LOG.getDefaultState().with(RotatedPillarBlock.AXIS, Direction.Axis.Y);
         }
     }
 
@@ -361,7 +361,7 @@ public abstract class MineshaftPiece extends StructurePiece {
                         }
                     }
                     // Cacti and dead bushes
-                    else if (mineshaftType == BetterMineshaftStructure.Type.DESERT) {
+                    else if (mineshaftType == BetterMineshaftStructure.Type.DESERT || mineshaftType == BetterMineshaftStructure.Type.RED_DESERT) {
                         float r = random.nextFloat();
                         if (r < .1f) {
                             if (this.getBlockStateFromPos(world, x, y, z, box) == CAVE_AIR && Blocks.CACTUS.isValidPosition(CAVE_AIR, world, blockPos)) {
@@ -399,15 +399,6 @@ public abstract class MineshaftPiece extends StructurePiece {
                     }
                 }
             }
-        }
-    }
-
-    protected void generateLeg(IWorld world, int x, int z, BlockState blockState) {
-        BlockPos.Mutable mutable = new BlockPos.Mutable(this.getXWithOffset(x, z), this.getYWithOffset(-1), this.getZWithOffset(x, z));
-
-        while (mutable.getY() > 0 && (world.getBlockState(mutable) == CAVE_AIR || LIQUIDS.contains(world.getBlockState(mutable).getMaterial()))) {
-            world.setBlockState(mutable, blockState, 2);
-            mutable.move(Direction.DOWN);
         }
     }
 

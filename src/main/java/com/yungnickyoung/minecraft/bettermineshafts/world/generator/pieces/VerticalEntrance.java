@@ -269,15 +269,20 @@ public class VerticalEntrance extends MineshaftPiece {
 
         // Generate supports.
         if (facing.getAxis() == tunnelDirection.getAxis()) {
+            BlockState supportBlock = getSupportBlock();
+            if (supportBlock.getBlock() instanceof WallBlock) {
+                supportBlock = supportBlock.with(WallBlock.field_235612_b_, WallHeight.TALL).with(WallBlock.field_235615_e_, WallHeight.TALL);
+            } else if (supportBlock.getBlock() instanceof FourWayBlock) {
+                supportBlock = supportBlock.with(FourWayBlock.EAST, true).with(FourWayBlock.WEST, true);
+            }
             for (int z = tunnelStartZ; z <= tunnelEndZ; z++) {
                 int r = random.nextInt(4);
-                // TOOD - fix z to account for direction of shaft
                 if (r == 0 && validPositions[z - tunnelStartZ]) {
                     // Support
                     this.fill(world, box, tunnelStartX + 1, tunnelFloorAltitude + 1, z, tunnelStartX + 1, tunnelFloorAltitude + 2, z, getSupportBlock());
                     this.fill(world, box, tunnelStartX + 3, tunnelFloorAltitude + 1, z, tunnelStartX + 3, tunnelFloorAltitude + 2, z, getSupportBlock());
                     this.fill(world, box, tunnelStartX + 1, tunnelFloorAltitude + 3, z, tunnelStartX + 3, tunnelFloorAltitude + 3, z, getMainBlock());
-                    this.chanceReplaceNonAir(world, box, random, .25f, tunnelStartX + 1, tunnelFloorAltitude + 3, z, tunnelStartX + 3, tunnelFloorAltitude + 3, z, getSupportBlock());
+                    this.chanceReplaceNonAir(world, box, random, .25f, tunnelStartX + 1, tunnelFloorAltitude + 3, z, tunnelStartX + 3, tunnelFloorAltitude + 3, z, supportBlock);
 
                     // Cobwebs
                     this.chanceReplaceAir(world, box, random, .15f, tunnelStartX + 1, tunnelFloorAltitude + 3, z - 1, tunnelStartX + 1, tunnelFloorAltitude + 3, z + 1, Blocks.COBWEB.getDefaultState());
@@ -286,6 +291,12 @@ public class VerticalEntrance extends MineshaftPiece {
                 }
             }
         } else {
+            BlockState supportBlock = getSupportBlock();
+            if (supportBlock.getBlock() instanceof WallBlock) {
+                supportBlock = supportBlock.with(WallBlock.field_235613_c_, WallHeight.TALL).with(WallBlock.field_235614_d_, WallHeight.TALL);
+            } else if (supportBlock.getBlock() instanceof FourWayBlock) {
+                supportBlock = supportBlock.with(FourWayBlock.NORTH, true).with(FourWayBlock.SOUTH, true);
+            }
             for (int x = tunnelStartX; x <= tunnelEndX; x++) {
                 int r = random.nextInt(4);
                 // TOOD - fix z to account for direction of shaft
@@ -294,7 +305,7 @@ public class VerticalEntrance extends MineshaftPiece {
                     this.fill(world, box, x, tunnelFloorAltitude + 1, tunnelStartZ + 1, x, tunnelFloorAltitude + 2, tunnelStartZ + 1, getSupportBlock());
                     this.fill(world, box, x, tunnelFloorAltitude + 1, tunnelStartZ + 3, x, tunnelFloorAltitude + 2, tunnelStartZ + 3, getSupportBlock());
                     this.fill(world, box, x, tunnelFloorAltitude + 3, tunnelStartZ + 1, x, tunnelFloorAltitude + 3, tunnelStartZ + 3, getMainBlock());
-                    this.chanceReplaceNonAir(world, box, random, .25f, x, tunnelFloorAltitude + 3, tunnelStartZ + 1, x, tunnelFloorAltitude + 3, tunnelStartZ + 3, getSupportBlock());
+                    this.chanceReplaceNonAir(world, box, random, .25f, x, tunnelFloorAltitude + 3, tunnelStartZ + 1, x, tunnelFloorAltitude + 3, tunnelStartZ + 3, supportBlock);
 
                     // Cobwebs
                     this.chanceReplaceAir(world, box, random, .15f, x - 1, tunnelFloorAltitude + 3, tunnelStartZ + 1, x + 1, tunnelFloorAltitude + 3, tunnelStartZ + 1, Blocks.COBWEB.getDefaultState());

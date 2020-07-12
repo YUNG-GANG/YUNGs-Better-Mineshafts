@@ -141,6 +141,17 @@ public class BlockSetSelector {
         this.defaultBlock = defaultBlock;
     }
 
+    public static BlockSetSelector from(BlockState... blockStates) {
+        BlockSetSelector selector = new BlockSetSelector();
+        float chance = 1f / blockStates.length;
+
+        for (BlockState state : blockStates) {
+            selector.addBlock(state, chance);
+        }
+
+        return selector;
+    }
+
     public BlockSetSelector addBlock(BlockState blockState, float chance) {
         // Abort if blockState already a part of this selector
         for (Pair<BlockState, Float> entry : entries) {
