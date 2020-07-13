@@ -361,7 +361,7 @@ public abstract class MineshaftPiece extends StructurePiece {
                         }
                     }
                     // Cacti and dead bushes
-                    else if (mineshaftType == BetterMineshaftStructure.Type.DESERT) {
+                    else if (mineshaftType == BetterMineshaftStructure.Type.DESERT || mineshaftType == BetterMineshaftStructure.Type.RED_DESERT) {
                         float r = random.nextFloat();
                         if (r < .1f) {
                             if (this.getBlockStateFromPos(world, x, y, z, box) == CAVE_AIR && Blocks.CACTUS.isValidPosition(CAVE_AIR, world, blockPos)) {
@@ -399,15 +399,6 @@ public abstract class MineshaftPiece extends StructurePiece {
                     }
                 }
             }
-        }
-    }
-
-    protected void generateLeg(IWorld world, int x, int z, BlockState blockState) {
-        BlockPos.Mutable mutable = new BlockPos.Mutable(this.getXWithOffset(x, z), this.getYWithOffset(-1), this.getZWithOffset(x, z));
-
-        while (mutable.getY() > 0 && (world.getBlockState(mutable) == CAVE_AIR || LIQUIDS.contains(world.getBlockState(mutable).getMaterial()))) {
-            world.setBlockState(mutable, blockState, 2);
-            mutable.move(Direction.DOWN);
         }
     }
 

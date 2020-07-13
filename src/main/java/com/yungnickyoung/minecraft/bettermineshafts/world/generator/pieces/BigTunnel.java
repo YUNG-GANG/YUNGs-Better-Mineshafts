@@ -211,7 +211,10 @@ public class BigTunnel extends MineshaftPiece {
             return;
         }
 
-        BlockState supportBlock = getSupportBlock().with(WallBlock.NORTH, true).with(WallBlock.SOUTH, true);
+        BlockState supportBlock = getSupportBlock();
+        if (supportBlock.getBlock() instanceof FourWayBlock) {
+            supportBlock = supportBlock.with(FourWayBlock.NORTH, true).with(FourWayBlock.SOUTH, true);
+        }
         BlockSetSelector selector = getLegSelector();
 
         // Left side
@@ -342,6 +345,11 @@ public class BigTunnel extends MineshaftPiece {
     }
 
     private void generateBigSupport(IWorld world, MutableBoundingBox box, Random random, int z) {
+        BlockState supportBlock = getSupportBlock();
+        if (supportBlock.getBlock() instanceof FourWayBlock) {
+            supportBlock = supportBlock.with(FourWayBlock.EAST, true).with(FourWayBlock.WEST, true);
+        }
+
         // Bottom slabs
         this.chanceFill(world, box, random, .6f, 1, 1, z, 2, 1, z + 2, getMainSlab());
         this.chanceFill(world, box, random, .6f, LOCAL_X_END - 2, 1, z, LOCAL_X_END - 1, 1, z + 2, getMainSlab());
@@ -354,15 +362,15 @@ public class BigTunnel extends MineshaftPiece {
         // Supports
         this.fill(world, box, 1, 2, z + 1, 1, 3, z + 1, getSupportBlock());
         this.fill(world, box, LOCAL_X_END - 1, 2, z + 1, LOCAL_X_END - 1, 3, z + 1, getSupportBlock());
-        if (this.mineshaftType != BetterMineshaftStructure.Type.DESERT) {
-            this.chanceReplaceNonAir(world, box, random, .4f, 2, 5, z + 1, LOCAL_X_END - 2, 5, z + 1, getSupportBlock());
-        }
+        this.chanceReplaceNonAir(world, box, random, .4f, 2, 5, z + 1, LOCAL_X_END - 2, 5, z + 1, supportBlock);
+
     }
 
     private void generateSmallSupport(IWorld world, MutableBoundingBox box, Random random, int z) {
         BlockState supportBlock = getSupportBlock();
-        if (this.mineshaftType != BetterMineshaftStructure.Type.ICE)
-            supportBlock = getSupportBlock().with(WallBlock.WEST, true).with(WallBlock.EAST, true);
+        if (supportBlock.getBlock() instanceof FourWayBlock) {
+            supportBlock = supportBlock.with(WallBlock.EAST, true).with(WallBlock.WEST, true);
+        }
 
         this.setBlockState(world, getMainBlock(), 2, 1, z, box);
         this.setBlockState(world, getMainBlock(), LOCAL_X_END - 2, 1, z, box);
@@ -373,8 +381,8 @@ public class BigTunnel extends MineshaftPiece {
         this.fill(world, box, 3, 4, z, LOCAL_X_END - 3, 4, z, getMainBlock());
         this.chanceReplaceNonAir(world, box, random, .5f, 3, 4, z, LOCAL_X_END - 3, 4, z, supportBlock);
         this.chanceFill(world, box, random, .4f, 2, 3, z, LOCAL_X_END - 2, 3, z, supportBlock);
-        this.setBlockState(world, supportBlock, 3, 3, z, box);
-        this.setBlockState(world, supportBlock, LOCAL_X_END - 3, 3, z, box);
+        this.setBlockState(world, getSupportBlock(), 3, 3, z, box);
+        this.setBlockState(world, getSupportBlock(), LOCAL_X_END - 3, 3, z, box);
     }
 
     private void generateLanterns(IWorld world, MutableBoundingBox box, Random random) {
