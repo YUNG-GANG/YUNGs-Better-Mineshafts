@@ -381,8 +381,8 @@ public class BigTunnel extends MineshaftPiece {
         this.fill(world, box, 3, 4, z, LOCAL_X_END - 3, 4, z, getMainBlock());
         this.chanceReplaceNonAir(world, box, random, .5f, 3, 4, z, LOCAL_X_END - 3, 4, z, supportBlock);
         this.chanceFill(world, box, random, .4f, 2, 3, z, LOCAL_X_END - 2, 3, z, supportBlock);
-        this.setBlockState(world, getSupportBlock(), 3, 3, z, box);
-        this.setBlockState(world, getSupportBlock(), LOCAL_X_END - 3, 3, z, box);
+        this.setBlockState(world, supportBlock, 3, 3, z, box);
+        this.setBlockState(world, supportBlock, LOCAL_X_END - 3, 3, z, box);
     }
 
     private void generateLanterns(IWorld world, MutableBoundingBox box, Random random) {
