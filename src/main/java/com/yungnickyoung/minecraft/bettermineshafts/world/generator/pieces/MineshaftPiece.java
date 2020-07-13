@@ -246,8 +246,6 @@ public abstract class MineshaftPiece extends StructureComponent {
                 return Blocks.SNOW.getDefaultState();
             case ICE:
                 return Blocks.PACKED_ICE.getDefaultState();
-            case RED_DESERT:
-                return Blocks.DARK_OAK_FENCE.getDefaultState();
             case MUSHROOM:
                 return Blocks.BROWN_MUSHROOM_BLOCK.getDefaultState().withProperty(BlockHugeMushroom.VARIANT, BlockHugeMushroom.EnumType.STEM);
             default:
