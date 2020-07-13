@@ -32,7 +32,7 @@ public class MapGenBetterMineshaft extends MapGenMineshaft {
             type = Type.MESA;
         } else if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.JUNGLE) || biome instanceof BiomeJungle) {
             type = Type.JUNGLE;
-        } else if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.SNOWY) && !BiomeDictionary.hasType(biome, BiomeDictionary.Type.WATER)) {
+        } else if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.SNOWY)) {
             type = BiomeDictionary.hasType(biome, BiomeDictionary.Type.RARE) ? Type.ICE : Type.SNOW;
         } else if ((BiomeDictionary.hasType(biome, BiomeDictionary.Type.HOT) && BiomeDictionary.hasType(biome, BiomeDictionary.Type.DRY) && BiomeDictionary.hasType(biome, BiomeDictionary.Type.SANDY)) || biome instanceof BiomeDesert) {
             type = BiomeDictionary.hasType(biome, BiomeDictionary.Type.RARE) ? Type.RED_DESERT : Type.DESERT;

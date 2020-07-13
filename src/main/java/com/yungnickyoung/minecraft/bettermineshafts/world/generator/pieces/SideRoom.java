@@ -7,6 +7,7 @@ import com.yungnickyoung.minecraft.bettermineshafts.util.BoxUtil;
 import net.minecraft.block.BlockFurnace;
 import net.minecraft.block.BlockLadder;
 import net.minecraft.block.BlockTrapDoor;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -107,9 +108,20 @@ public class SideRoom extends MineshaftPiece {
             return false;
         }
 
-        // Fill with stone then clean out with air
-        this.fill(world, box, random, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getBrickSelector());
+        // Fill with stone then clean out with air. Track ceiling positions to see where we can place iron bar supports
+        this.fill(world, box, random, 0, 0, 0, LOCAL_X_END, 1, LOCAL_Z_END, getBrickSelector());
+        this.replaceNonAir(world, box, random, 0, 2, 0, LOCAL_X_END, LOCAL_Y_END - 1, LOCAL_Z_END, getBrickSelector());
         this.fill(world, box, 1, 1, 1, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END, AIR);
+        boolean[][] ceiling = new boolean[SECONDARY_AXIS_LEN][MAIN_AXIS_LEN];
+        for (int x = 0; x <= LOCAL_X_END; ++x) {
+            for (int z = 0; z <= LOCAL_Z_END; ++z) {
+                IBlockState currState = this.getBlockStateFromPosFixed(world, x, LOCAL_Y_END, z, box);
+                if (currState != null && currState != AIR) {
+                    this.setBlockState(world, getBrickSelector().get(random), x, LOCAL_Y_END, z, box);
+                    ceiling[x][z] = true;
+                }
+            }
+        }
 
         if (!hasDownstairs)
             generateLegs(world, box, random);
@@ -147,7 +159,7 @@ public class SideRoom extends MineshaftPiece {
         }
 
         // Decorations
-        generateIronBarSupports(world, box, random);
+        generateIronBarSupports(world, box, random,ceiling);
         this.addBiomeDecorations(world, box, random, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END - 1, LOCAL_Z_END);
         this.addVines(world, box, random, getVineChance(), 1, 0, 1, LOCAL_X_END - 1, LOCAL_Y_END, LOCAL_Z_END - 1);
 
@@ -161,13 +173,12 @@ public class SideRoom extends MineshaftPiece {
         generateLeg(world, random, box, LOCAL_X_END - 1, LOCAL_Z_END - 1, getBrickSelector());
     }
 
-    private void generateIronBarSupports(World world, StructureBoundingBox box, Random random) {
+    private void generateIronBarSupports(World world, StructureBoundingBox box, Random random, boolean[][] ceiling) {
         List<Integer> invalidXs = Lists.newLinkedList(); // Prevent columns of bars from spawning adjacent to eachother
         for (int z = 2; z <= 3; z++) {
             for (int x = 2; x <= 7; x++) {
-                if (invalidXs.contains(x)) {
-                    continue;
-                }
+                if (invalidXs.contains(x)) continue;
+                if (!ceiling[x][z]) continue;
                 if (random.nextInt(5) == 0) {
                     this.fill(world, box, x, 1, z, x, 3, z, Blocks.IRON_BARS.getDefaultState());
                     invalidXs.add(x);
