@@ -385,6 +385,7 @@ public abstract class MineshaftPiece extends StructureComponent {
         while (getYWithOffset(mutable.getY()) > 0 && (state == AIR || LIQUIDS.contains(state.getMaterial()))) {
             this.setBlockState(world, selector.get(random), x, mutable.getY(), z, box);
             mutable.move(EnumFacing.DOWN);
+            state = this.getBlockStateFromPos(world, mutable, box);
         }
     }
 
