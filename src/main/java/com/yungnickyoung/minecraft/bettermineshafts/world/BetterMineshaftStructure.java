@@ -100,7 +100,8 @@ public class BetterMineshaftStructure extends Structure<BetterMineshaftFeatureCo
                 case 3:
                     direction = Direction.WEST;
             }
-            BlockPos.Mutable startingPos = new BlockPos.Mutable((chunkX << 4) + 2, 50, (chunkZ << 4) + 2);
+            int y = this.rand.nextInt(BMConfig.maxY - BMConfig.minY + 1) + BMConfig.minY; // rand(25) + 13 -> 13 - 37
+            BlockPos.Mutable startingPos = new BlockPos.Mutable((chunkX << 4) + 2, y, (chunkZ << 4) + 2);
 
             // Entrypoint
             MineshaftPiece entryPoint = new VerticalEntrance(
