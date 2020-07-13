@@ -35,8 +35,6 @@ public class VerticalEntrance extends MineshaftPiece {
     public VerticalEntrance(int i, int pieceChainLen, Random random, BlockPos.MutableBlockPos centerPos, EnumFacing direction, MapGenBetterMineshaft.Type type) {
         super(i, pieceChainLen, type);
         this.setCoordBaseMode(direction);
-        int y = random.nextInt(centerPos.getY() / 2) + 13;
-        centerPos.setY(y);
         this.centerPos = new BlockPos(centerPos); // position passed in is center of shaft piece (unlike all other pieces, where it is a corner)
         this.boundingBox = getInitialBoundingBox(centerPos);
     }

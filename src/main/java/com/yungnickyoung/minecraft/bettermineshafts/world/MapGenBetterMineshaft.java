@@ -4,6 +4,7 @@ import com.yungnickyoung.minecraft.bettermineshafts.config.Configuration;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.MineshaftPiece;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.VerticalEntrance;
 import mcp.MethodsReturnNonnullByDefault;
+import net.minecraft.init.Biomes;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -28,23 +29,67 @@ public class MapGenBetterMineshaft extends MapGenMineshaft {
         Type type;
         if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.OCEAN) || BiomeDictionary.hasType(biome, BiomeDictionary.Type.BEACH)) {
             type = Type.NULL; // No mineshafts in or near oceans
-        } else if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.MESA) || biome instanceof BiomeMesa) {
-            type = Type.MESA;
-        } else if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.JUNGLE) || biome instanceof BiomeJungle) {
-            type = Type.JUNGLE;
+        } else if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.MESA)) {
+            if (biome == Biomes.MESA || isRare(biome)) {
+                type = getType(Type.RED_DESERT);
+            } else {
+                type = getType(Type.MESA);
+            }
+        } else if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.JUNGLE)) {
+            type = getType(Type.JUNGLE);
         } else if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.SNOWY)) {
-            type = BiomeDictionary.hasType(biome, BiomeDictionary.Type.RARE) ? Type.ICE : Type.SNOW;
+            if (biome == Biomes.MUTATED_ICE_FLATS || isRare(biome)) {
+                type = getType(Type.ICE);
+            } else {
+                type = getType(Type.SNOW);
+            }
         } else if ((BiomeDictionary.hasType(biome, BiomeDictionary.Type.HOT) && BiomeDictionary.hasType(biome, BiomeDictionary.Type.DRY) && BiomeDictionary.hasType(biome, BiomeDictionary.Type.SANDY)) || biome instanceof BiomeDesert) {
-            type = BiomeDictionary.hasType(biome, BiomeDictionary.Type.RARE) ? Type.RED_DESERT : Type.DESERT;
+            if (biome == Biomes.MUTATED_DESERT || isRare(biome)) {
+                type = getType(Type.RED_DESERT);
+            } else {
+                type = getType(Type.DESERT);
+            }
         } else if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.MUSHROOM) || biome instanceof BiomeMushroomIsland) {
-            type = Type.MUSHROOM;
+            type = getType(Type.MUSHROOM);
         } else if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.SAVANNA) || biome instanceof BiomeSavanna) {
-            type = Type.SAVANNA;
+            type = getType(Type.SAVANNA);
         } else {
             type = Type.NORMAL;
         }
 
         return new Start(this.world, this.rand, chunkX, chunkZ, type);
+    }
+
+    /**
+     * Returns the given type if its mineshaft variant is enabled.
+     * Otherwise returns a backup type that is enabled.
+     */
+    private static Type getType(Type type) {
+        if (type == Type.RED_DESERT) {
+            if (Configuration.redDesertEnabled) return Type.RED_DESERT;
+            if (Configuration.desertEnabled) return Type.DESERT;
+        } else if (type == Type.DESERT) {
+            if (Configuration.desertEnabled) return Type.DESERT;
+        } else if (type == Type.MESA) {
+            if (Configuration.mesaEnabled) return Type.MESA;
+            if (Configuration.redDesertEnabled) return Type.RED_DESERT;
+        } else if (type == Type.ICE) {
+            if (Configuration.iceEnabled) return Type.ICE;
+            if (Configuration.snowEnabled) return Type.SNOW;
+        } else if (type == Type.SNOW) {
+            if (Configuration.snowEnabled) return Type.SNOW;
+        } else if (type == Type.JUNGLE) {
+            if (Configuration.jungleEnabled) return Type.JUNGLE;
+        } else if (type == Type.SAVANNA) {
+            if (Configuration.savannaEnabled) return Type.SAVANNA;
+        } else if (type == Type.MUSHROOM) {
+            if (Configuration.mushroomEnabled) return Type.MUSHROOM;
+        }
+        return Type.NORMAL;
+    }
+
+    private static boolean isRare(Biome biome) {
+        return BiomeDictionary.hasType(biome, BiomeDictionary.Type.RARE);
     }
 
     public static class Start extends StructureStart {
@@ -72,7 +117,8 @@ public class MapGenBetterMineshaft extends MapGenMineshaft {
                 case 3:
                     direction = EnumFacing.WEST;
             }
-            BlockPos.MutableBlockPos startingPos = new BlockPos.MutableBlockPos((chunkX << 4) + 2, 50, (chunkZ << 4) + 2);
+            int y = random.nextInt(Configuration.maxY - Configuration.minY + 1) + Configuration.minY;
+            BlockPos.MutableBlockPos startingPos = new BlockPos.MutableBlockPos((chunkX << 4) + 2, y, (chunkZ << 4) + 2);
 
             // Entrypoint
             MineshaftPiece entryPoint = new VerticalEntrance(
