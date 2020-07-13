@@ -1,6 +1,7 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world;
 
 import com.mojang.serialization.Codec;
+import com.yungnickyoung.minecraft.bettermineshafts.config.BMConfig;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.MineshaftPiece;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.VerticalEntrance;
 import mcp.MethodsReturnNonnullByDefault;
@@ -98,7 +99,8 @@ public class BetterMineshaftStructure extends Structure<BetterMineshaftConfig> {
                 case 3:
                     direction = Direction.WEST;
             }
-            BlockPos.Mutable startingPos = new BlockPos.Mutable((chunkX << 4) + 2, 50, (chunkZ << 4) + 2);
+            int y = this.rand.nextInt(BMConfig.maxY - BMConfig.minY + 1) + BMConfig.minY;
+            BlockPos.Mutable startingPos = new BlockPos.Mutable((chunkX << 4) + 2, y, (chunkZ << 4) + 2);
 
             // Entrypoint
             MineshaftPiece entryPoint = new VerticalEntrance(
