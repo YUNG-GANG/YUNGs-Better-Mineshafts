@@ -50,4 +50,14 @@ public class Configuration {
     @Config.Name("Enable Mushroom Variant")
     @Config.RequiresWorldRestart
     public static boolean mushroomEnabled = true;
+
+    @Config.Name("Mod Compatibility")
+    public static ModCompat modCompat = new ModCompat();
+
+    public static class ModCompat {
+        @Config.Name("Use Rustic Lanterns")
+        @Config.Comment("If Rustic is installed, mineshafts will occasionally have lanterns hanging from the ceiling.")
+        @Config.RequiresWorldRestart
+        public boolean rusticLanternsEnabled = true;
+    }
 }

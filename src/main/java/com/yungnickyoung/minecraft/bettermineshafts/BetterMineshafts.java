@@ -1,13 +1,11 @@
 package com.yungnickyoung.minecraft.bettermineshafts;
 
 import com.yungnickyoung.minecraft.bettermineshafts.event.EventMineshaftGen;
-import com.yungnickyoung.minecraft.bettermineshafts.init.BMStructurePieces;
+import com.yungnickyoung.minecraft.bettermineshafts.init.ModCompat;
+import com.yungnickyoung.minecraft.bettermineshafts.init.ModStructure;
+import com.yungnickyoung.minecraft.bettermineshafts.init.ModStructurePieces;
 import com.yungnickyoung.minecraft.bettermineshafts.proxy.IProxy;
-import com.yungnickyoung.minecraft.bettermineshafts.world.MapGenBetterMineshaft;
 import io.netty.util.internal.ConcurrentSet;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.gen.structure.MapGenStructureIO;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -26,7 +24,7 @@ public class BetterMineshafts {
     public static IProxy proxy;
 
     // Debug variables used in development
-    public static final boolean DEBUG_LOG = true;
+    public static final boolean DEBUG_LOG = false;
     public static ConcurrentSet<Integer> surfaceEntrances = new ConcurrentSet<>();
     public static AtomicInteger count = new AtomicInteger(0);
 
@@ -37,8 +35,8 @@ public class BetterMineshafts {
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
-        MinecraftForge.TERRAIN_GEN_BUS.register(new EventMineshaftGen());
-        MapGenStructureIO.registerStructure(MapGenBetterMineshaft.Start.class, new ResourceLocation(MOD_ID,"BetterMineshaft").toString());
-        BMStructurePieces.register();
+        ModStructure.init();
+        ModStructurePieces.init();
+        ModCompat.init();
     }
 }

@@ -20,6 +20,15 @@ compileJava {
 	sourceCompatibility = targetCompatibility = '1.8'
 }
 
+repositories {
+	maven {
+		url = "https://www.cursemaven.com"
+	}
+	maven {
+		url "https://minecraft.curseforge.com/api/maven/"
+	}
+}
+
 minecraft {
 	version = "1.12.2-14.23.5.2838"
 	runDir = "run"
@@ -38,6 +47,8 @@ dependencies {
 	// or you may define them like so..
 	//compile "some.group:artifact:version:classifier"
 	//compile "some.group:artifact:version"
+
+	provided 'curse.maven:rustic:2966295'
 
 	// real examples
 	//compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
@@ -77,3 +88,10 @@ processResources {
 		exclude 'mcmod.info'
 	}
 }
+
+//task deobfJar(type: Jar) {
+//	from sourceSets.main.output
+//	classifier = 'deobf'
+//}
+//
+//tasks.build.dependsOn deobfJar

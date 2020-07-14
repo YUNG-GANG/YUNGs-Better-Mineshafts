@@ -1,6 +1,7 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
 import com.google.common.collect.Lists;
+import com.yungnickyoung.minecraft.bettermineshafts.integration.rustic.RusticCompat;
 import com.yungnickyoung.minecraft.bettermineshafts.util.Pair;
 import com.yungnickyoung.minecraft.bettermineshafts.world.MapGenBetterMineshaft;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
@@ -379,18 +380,17 @@ public class BigTunnel extends MineshaftPiece {
     }
 
     private void generateLanterns(World world, StructureBoundingBox box, Random random) {
-        // TODO - check for lanterns from mods
-//        BlockState LANTERN = Blocks.LANTERN.getDefaultState().with(LanternBlock.HANGING, true);
-//        for (int z = 0; z <= LOCAL_Z_END; z++) {
-//            for (int x = 3; x <= LOCAL_X_END - 3; x++) {
-//                if (random.nextInt(150) == 0) {
-//                    if (!this.getBlockStateFromPos(world, x, LOCAL_Y_END, z, box).isAir()) {
-//                        this.setBlockState(world, LANTERN, x, LOCAL_Y_END - 1, z, box);
-//                        z += 20;
-//                    }
-//                }
-//            }
-//        }
+        if (!RusticCompat.ENABLED) return;
+        for (int z = 0; z <= LOCAL_Z_END; z++) {
+            for (int x = 3; x <= LOCAL_X_END - 3; x++) {
+                if (random.nextInt(150) == 0) {
+                    if (this.getBlockStateFromPos(world, x, LOCAL_Y_END, z, box) != AIR) {
+                        this.setBlockState(world, RusticCompat.getLantern(random), x, LOCAL_Y_END - 1, z, box);
+                        z += 20;
+                    }
+                }
+            }
+        }
     }
 
     private void generateRails(World world, StructureBoundingBox box, Random random) {
