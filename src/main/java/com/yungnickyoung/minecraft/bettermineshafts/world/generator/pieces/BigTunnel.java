@@ -1,7 +1,7 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
 import com.google.common.collect.Lists;
-import com.yungnickyoung.minecraft.bettermineshafts.integration.rustic.RusticCompat;
+import com.yungnickyoung.minecraft.bettermineshafts.integration.Integrations;
 import com.yungnickyoung.minecraft.bettermineshafts.util.Pair;
 import com.yungnickyoung.minecraft.bettermineshafts.world.MapGenBetterMineshaft;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
@@ -380,12 +380,13 @@ public class BigTunnel extends MineshaftPiece {
     }
 
     private void generateLanterns(World world, StructureBoundingBox box, Random random) {
-        if (!RusticCompat.ENABLED) return;
+        IBlockState LANTERN = Integrations.getLantern(random);
+        if (LANTERN == null) return;
         for (int z = 0; z <= LOCAL_Z_END; z++) {
             for (int x = 3; x <= LOCAL_X_END - 3; x++) {
                 if (random.nextInt(150) == 0) {
                     if (this.getBlockStateFromPos(world, x, LOCAL_Y_END, z, box) != AIR) {
-                        this.setBlockState(world, RusticCompat.getLantern(random), x, LOCAL_Y_END - 1, z, box);
+                        this.setBlockState(world, LANTERN, x, LOCAL_Y_END - 1, z, box);
                         z += 20;
                     }
                 }

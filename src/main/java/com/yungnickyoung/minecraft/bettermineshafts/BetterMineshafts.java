@@ -1,6 +1,5 @@
 package com.yungnickyoung.minecraft.bettermineshafts;
 
-import com.yungnickyoung.minecraft.bettermineshafts.event.EventMineshaftGen;
 import com.yungnickyoung.minecraft.bettermineshafts.init.ModCompat;
 import com.yungnickyoung.minecraft.bettermineshafts.init.ModStructure;
 import com.yungnickyoung.minecraft.bettermineshafts.init.ModStructurePieces;
@@ -9,6 +8,7 @@ import io.netty.util.internal.ConcurrentSet;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,6 +37,10 @@ public class BetterMineshafts {
     public void init(FMLInitializationEvent event) {
         ModStructure.init();
         ModStructurePieces.init();
-        ModCompat.init();
+    }
+
+    @Mod.EventHandler
+    public void postInit(FMLPostInitializationEvent event) {
+        ModCompat.postInit();
     }
 }

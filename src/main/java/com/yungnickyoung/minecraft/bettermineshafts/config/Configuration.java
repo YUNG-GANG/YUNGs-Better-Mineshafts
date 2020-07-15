@@ -56,8 +56,13 @@ public class Configuration {
 
     public static class ModCompat {
         @Config.Name("Use Rustic Lanterns")
-        @Config.Comment("If Rustic is installed, mineshafts will occasionally have lanterns hanging from the ceiling.")
+        @Config.Comment("If Rustic is installed, mineshafts will occasionally have Rustic lanterns hanging from the ceiling.")
         @Config.RequiresWorldRestart
         public boolean rusticLanternsEnabled = true;
+
+        @Config.Name("Use Charm Lanterns")
+        @Config.Comment("If Charm is installed, mineshafts will occasionally have Charm lanterns hanging from the ceiling.")
+        @Config.RequiresWorldRestart
+        public boolean charmLanternsEnabled = true;
     }
 }
