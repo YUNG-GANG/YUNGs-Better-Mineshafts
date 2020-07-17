@@ -13,11 +13,14 @@ public class BMConfig {
         jungleEnabled = BMForgeConfig.jungleEnabled.get();
         savannaEnabled = BMForgeConfig.savannaEnabled.get();
         mushroomEnabled = BMForgeConfig.mushroomEnabled.get();
+        vineFreq = BMForgeConfig.vines.vineFreq.get();
+        vineFreqJungle = BMForgeConfig.vines.vineFreqJungle.get();
     }
 
     public static double mineshaftSpawnRate;
     public static int minY;
     public static int maxY;
+
     public static boolean mesaEnabled;
     public static boolean desertEnabled;
     public static boolean redDesertEnabled;
@@ -26,5 +29,8 @@ public class BMConfig {
     public static boolean jungleEnabled;
     public static boolean savannaEnabled;
     public static boolean mushroomEnabled;
+
+    public static double vineFreq;
+    public static double vineFreqJungle;
 
 }
