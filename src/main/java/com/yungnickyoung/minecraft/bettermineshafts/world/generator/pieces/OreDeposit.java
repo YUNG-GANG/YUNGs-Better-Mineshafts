@@ -1,5 +1,7 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
+import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshafts;
+import com.yungnickyoung.minecraft.bettermineshafts.config.Configuration;
 import com.yungnickyoung.minecraft.bettermineshafts.world.MapGenBetterMineshaft;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.StructureComponent;
@@ -18,21 +20,23 @@ import java.util.Random;
 
 public class OreDeposit extends MineshaftPiece {
     public enum OreType {
-        GOLD(0, Blocks.GOLD_ORE.getDefaultState()),
-        IRON(1, Blocks.IRON_ORE.getDefaultState()),
-        COAL(2, Blocks.COAL_ORE.getDefaultState()),
-        LAPIS(3, Blocks.LAPIS_ORE.getDefaultState()),
-        REDSTONE(4, Blocks.REDSTONE_ORE.getDefaultState()),
-        EMERALD(5, Blocks.EMERALD_ORE.getDefaultState()),
-        DIAMOND(6, Blocks.DIAMOND_ORE.getDefaultState()),
-        COBBLE(7, Blocks.COBBLESTONE.getDefaultState());
+        COBBLE(0, Blocks.COBBLESTONE.getDefaultState(), Configuration.ores.cobble),
+        COAL(1, Blocks.COAL_ORE.getDefaultState(), Configuration.ores.coal + COBBLE.threshold),
+        IRON(2, Blocks.IRON_ORE.getDefaultState(), Configuration.ores.iron + COAL.threshold),
+        REDSTONE(3, Blocks.REDSTONE_ORE.getDefaultState(), Configuration.ores.redstone + IRON.threshold),
+        GOLD(4, Blocks.GOLD_ORE.getDefaultState(), Configuration.ores.gold + REDSTONE.threshold),
+        LAPIS(5, Blocks.LAPIS_ORE.getDefaultState(), Configuration.ores.lapis + GOLD.threshold),
+        EMERALD(6, Blocks.EMERALD_ORE.getDefaultState(), Configuration.ores.emerald + LAPIS.threshold),
+        DIAMOND(7, Blocks.DIAMOND_ORE.getDefaultState(), Configuration.ores.diamond + EMERALD.threshold);
 
         private final int value;
         private final IBlockState block;
+        private int threshold;
 
-        OreType(int value, IBlockState block) {
+        OreType(int value, IBlockState block, int threshold) {
             this.value = value;
             this.block = block;
+            this.threshold = threshold;
         }
 
         public static OreType valueOf(int value) {
@@ -45,6 +49,7 @@ public class OreDeposit extends MineshaftPiece {
             return this.block;
         }
     }
+
     private OreType oreType;
     private static final int
         SECONDARY_AXIS_LEN = 5,
@@ -55,7 +60,8 @@ public class OreDeposit extends MineshaftPiece {
         LOCAL_Y_END = Y_AXIS_LEN - 1,
         LOCAL_Z_END = MAIN_AXIS_LEN - 1;
 
-    public OreDeposit() {}
+    public OreDeposit() {
+    }
 
     public OreDeposit(int i, int chunkPieceLen, Random random, StructureBoundingBox blockBox, EnumFacing direction, MapGenBetterMineshaft.Type type) {
         super(i, chunkPieceLen, type);
@@ -90,24 +96,21 @@ public class OreDeposit extends MineshaftPiece {
 
     @Override
     public void buildComponent(StructureComponent structurePiece, List<StructureComponent> list, Random random) {
-        float r = random.nextFloat();
+        int r = random.nextInt(100);
 
-        if (r < .5f) {
-            this.oreType = OreType.COBBLE; // Chance of cobble instead of ore
-        } else if (r <= .7f)
-            this.oreType = OreType.COAL;
-        else if (r <= .79f)
-            this.oreType = OreType.IRON;
-        else if (r <= .86f)
-            this.oreType = OreType.REDSTONE;
-        else if (r <= .93f)
-            this.oreType = OreType.GOLD;
-        else if (r <= .965f)
-            this.oreType = OreType.LAPIS;
-        else if (r <= .99f)
-            this.oreType = OreType.EMERALD;
-        else
-            this.oreType = OreType.DIAMOND;
+        // Determine ore type
+        for (OreType oreType : OreType.values()) {
+            if (r < oreType.threshold) {
+                this.oreType = oreType;
+                break;
+            }
+        }
+
+        // Double check sum to see if user messed up spawn chances
+        if (OreType.DIAMOND.threshold != 100)
+            BetterMineshafts.LOGGER.error("Your ore spawn chances don't add up to 100! Ores won't spawn as you intend!");
+        if (this.oreType == null)
+            this.oreType = OreType.COBBLE;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator;
 
+import com.yungnickyoung.minecraft.bettermineshafts.config.Configuration;
 import com.yungnickyoung.minecraft.bettermineshafts.world.MapGenBetterMineshaft;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.*;
 import net.minecraft.util.EnumFacing;
@@ -51,6 +52,7 @@ public class BetterMineshaftGenerator {
                 }
             }
             else {
+                if (!Configuration.ores.enabled) return null;
                 blockBox = OreDeposit.determineBoxPosition(list, random, x, y, z, direction);
                 if (blockBox != null) {
                     MineshaftPiece newPiece = new OreDeposit(l + 1, pieceChainLen + 1, random, blockBox, direction, type);
