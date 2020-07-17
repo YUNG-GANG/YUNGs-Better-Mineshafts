@@ -51,6 +51,9 @@ public class Configuration {
     @Config.RequiresWorldRestart
     public static boolean mushroomEnabled = true;
 
+    @Config.Name("Vines")
+    public static Vines vines = new Vines();
+
     @Config.Name("Mod Compatibility")
     public static ModCompat modCompat = new ModCompat();
 
@@ -64,5 +67,17 @@ public class Configuration {
         @Config.Comment("If Charm is installed, mineshafts will occasionally have Charm lanterns hanging from the ceiling.")
         @Config.RequiresWorldRestart
         public boolean charmLanternsEnabled = true;
+    }
+
+    public static class Vines {
+        @Config.Name("Vine frequency")
+        @Config.Comment("How often vines spawn in all variants except jungle.")
+        @Config.RequiresWorldRestart
+        public float vineFreq = .25f;
+
+        @Config.Name("Jungle  Mineshaft Vine Frequency")
+        @Config.Comment("How often vines spawn in jungle mineshafts.")
+        @Config.RequiresWorldRestart
+        public float vineFreqJungle = .6f;
     }
 }

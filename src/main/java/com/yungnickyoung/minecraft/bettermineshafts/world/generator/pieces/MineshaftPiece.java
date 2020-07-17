@@ -1,6 +1,7 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
 import com.google.common.collect.ImmutableSet;
+import com.yungnickyoung.minecraft.bettermineshafts.config.Configuration;
 import com.yungnickyoung.minecraft.bettermineshafts.util.BlockSetSelector;
 import com.yungnickyoung.minecraft.bettermineshafts.world.MapGenBetterMineshaft;
 import net.minecraft.block.*;
@@ -277,9 +278,9 @@ public abstract class MineshaftPiece extends StructureComponent {
     protected float getVineChance() {
         switch (this.mineshaftType) {
             case JUNGLE:
-                return .6f;
+                return Configuration.vines.vineFreqJungle;
             default:
-                return .25f;
+                return Configuration.vines.vineFreq;
         }
     }
 
