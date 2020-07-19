@@ -17,7 +17,7 @@ logoFile="BMLogo.png"
     mandatory=true
     versionRange="[31,)"
     ordering="NONE"
-    side="BOTH"
+    side="SERVER"
 
 [[dependencies.bettermineshafts]]
     modId="minecraft"
