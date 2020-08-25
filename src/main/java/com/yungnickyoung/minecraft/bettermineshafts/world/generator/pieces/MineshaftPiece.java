@@ -16,8 +16,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.feature.structure.IStructurePieceType;
 import net.minecraft.world.gen.feature.structure.StructurePiece;
+import net.minecraftforge.common.BiomeDictionary;
 
 import java.util.List;
 import java.util.Random;
@@ -690,5 +692,14 @@ public abstract class MineshaftPiece extends StructurePiece {
         }
 
         return true;
+    }
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *                                  PLACEMENT METHODS                                      *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    protected boolean isInOcean(IWorld world, int localX, int localZ) {
+        BlockPos pos = new BlockPos.Mutable(getXWithOffset(localX, localZ), 1, getZWithOffset(localX, localZ));
+        return world.getBiome(pos).getCategory() == Biome.Category.OCEAN || BiomeDictionary.hasType(world.getBiome(pos), BiomeDictionary.Type.OCEAN);
     }
 }

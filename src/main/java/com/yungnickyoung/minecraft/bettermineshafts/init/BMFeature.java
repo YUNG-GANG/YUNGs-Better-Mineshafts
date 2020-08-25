@@ -56,8 +56,11 @@ public class BMFeature {
                     continue;
                 }
 
-                // No mineshafts in oceans
-                if (biome.getCategory() == Biome.Category.OCEAN || BiomeDictionary.hasType(biome, BiomeDictionary.Type.OCEAN))
+                // No mineshafts in oceans or beaches
+                if (
+                    biome.getCategory() == Biome.Category.OCEAN || BiomeDictionary.hasType(biome, BiomeDictionary.Type.OCEAN) ||
+                    biome.getCategory() == Biome.Category.BEACH || BiomeDictionary.hasType(biome, BiomeDictionary.Type.BEACH)
+                )
                     continue;
 
                 // Determine mineshaft variant based on biome
@@ -97,7 +100,6 @@ public class BMFeature {
                 } else {
                     type = BetterMineshaftStructure.Type.NORMAL;
                 }
-                type = BetterMineshaftStructure.Type.SNOW;
 
                 config = new BetterMineshaftFeatureConfig(BMConfig.mineshaftSpawnRate, type);
                 biome.addStructure(betterMineshaft.withConfiguration(config));
