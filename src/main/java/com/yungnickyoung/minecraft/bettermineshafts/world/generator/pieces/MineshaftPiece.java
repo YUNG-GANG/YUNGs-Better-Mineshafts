@@ -16,6 +16,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.StructureBoundingBox;
 import net.minecraft.world.gen.structure.StructureComponent;
 import net.minecraft.world.gen.structure.template.TemplateManager;
+import net.minecraftforge.common.BiomeDictionary;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
@@ -613,5 +614,14 @@ public abstract class MineshaftPiece extends StructureComponent {
 
     protected IBlockState getBlockStateFromPos(World worldIn, BlockPos pos, StructureBoundingBox boundingboxIn) {
         return super.getBlockStateFromPos(worldIn, pos.getX(), pos.getY(), pos.getZ(), boundingboxIn);
+    }
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *                                  PLACEMENT METHODS                                      *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    protected boolean isInOcean(World world, int localX, int localZ) {
+        BlockPos pos = new BlockPos.MutableBlockPos(getXWithOffset(localX, localZ), 1, getZWithOffset(localX, localZ));
+        return BiomeDictionary.hasType(world.getBiome(pos), BiomeDictionary.Type.OCEAN);
     }
 }

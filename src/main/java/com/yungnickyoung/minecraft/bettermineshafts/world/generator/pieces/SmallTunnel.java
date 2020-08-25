@@ -3,7 +3,6 @@ package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 import com.google.common.collect.Lists;
 import com.yungnickyoung.minecraft.bettermineshafts.world.MapGenBetterMineshaft;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
-import net.minecraft.block.BlockRail;
 import net.minecraft.block.BlockWall;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityMinecartChest;
@@ -104,10 +103,9 @@ public class SmallTunnel extends MineshaftPiece {
     @Override
     @ParametersAreNonnullByDefault
     public boolean addComponentParts(World world, Random random, StructureBoundingBox box) {
-        // Don't spawn if liquid in this box
-        if (this.isLiquidInStructureBoundingBox(world, box)) {
-            return false;
-        }
+        // Don't spawn if liquid in this box or if in ocean biome
+        if (this.isLiquidInStructureBoundingBox(world, box)) return false;
+        if (this.isInOcean(world, 0, 0) || this.isInOcean(world, LOCAL_X_END, LOCAL_Z_END)) return false;
 
         // Randomize blocks
         float chance =

@@ -105,10 +105,9 @@ public class SmallTunnelTurn extends MineshaftPiece {
     @Override
     @ParametersAreNonnullByDefault
     public boolean addComponentParts(World world, Random random, StructureBoundingBox box) {
-        // Don't spawn if liquid in this box
-        if (this.isLiquidInStructureBoundingBox(world, box)) {
-            return false;
-        }
+        // Don't spawn if liquid in this box or if in ocean biome
+        if (this.isLiquidInStructureBoundingBox(world, box)) return false;
+        if (this.isInOcean(world, 0, 0) || this.isInOcean(world, LOCAL_X_END, LOCAL_Z_END)) return false;
 
         EnumFacing direction = this.getCoordBaseMode();
 

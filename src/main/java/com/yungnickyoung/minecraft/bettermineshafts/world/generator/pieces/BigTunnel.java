@@ -161,6 +161,9 @@ public class BigTunnel extends MineshaftPiece {
     @Override
     @ParametersAreNonnullByDefault
     public boolean addComponentParts(World world, Random random, StructureBoundingBox box) {
+        // Don't spawn if in ocean biome
+        if (this.isInOcean(world, 0, 0) || this.isInOcean(world, LOCAL_X_END, LOCAL_Z_END)) return false;
+
         // Randomize blocks
         float chance =
             this.mineshaftType == MapGenBetterMineshaft.Type.SNOW

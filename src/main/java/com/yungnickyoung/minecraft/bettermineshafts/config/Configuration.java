@@ -14,8 +14,8 @@ public class Configuration {
     @Config.RequiresWorldRestart
     @Config.Comment(
         "The lowest the floor of a mineshaft can be.\n" +
-        "Default: 13")
-    public static int minY = 13;
+        "Default: 17")
+    public static int minY = 17;
 
     @Config.Name("Maximum y-coordinate")
     @Config.RequiresWorldRestart
