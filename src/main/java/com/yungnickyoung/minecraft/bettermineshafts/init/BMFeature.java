@@ -97,6 +97,7 @@ public class BMFeature {
                 } else {
                     type = BetterMineshaftStructure.Type.NORMAL;
                 }
+                type = BetterMineshaftStructure.Type.SNOW;
 
                 config = new BetterMineshaftFeatureConfig(BMConfig.mineshaftSpawnRate, type);
                 biome.addStructure(betterMineshaft.withConfiguration(config));
