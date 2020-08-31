@@ -191,14 +191,14 @@ public class BigTunnel extends MineshaftPiece {
         generateSmallShaftEntrances(world, box, random);
         generateSideRoomOpenings(world, box, random);
         generateLegs(world, box, random);
+        generateBigSupports(world, box, random);
+        generateSmallSupports(world, box, random);
 
         // Decorations
         generateRails(world, box, random);
         generateLanterns(world, box, random);
         generateChestCarts(world, box, random, LootTableList.CHESTS_ABANDONED_MINESHAFT);
         generateTntCarts(world, box, random);
-        generateBigSupports(world, box, random);
-        generateSmallSupports(world, box, random);
         generateGravelDeposits(world, box, random);
         this.addBiomeDecorations(world, box, random, 1, 0, 0, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END);
         this.addVines(world, box, random, getVineChance(), 1, 0, 1, LOCAL_X_END - 1, LOCAL_Y_END, LOCAL_Z_END - 1);
@@ -328,11 +328,11 @@ public class BigTunnel extends MineshaftPiece {
         });
 
         bigSupports.forEach(z -> {
-            this.chanceReplaceAir(world, box, random, .15f, 1, 1, z - 1, 1,  4, z + 1, Blocks.WEB.getDefaultState());
-            this.chanceReplaceAir(world, box, random, .15f, LOCAL_X_END - 1, 1, z - 1, LOCAL_X_END - 1,  4, z + 1, Blocks.WEB.getDefaultState());
-            this.chanceReplaceAir(world, box, random, .15f, 2, 5, z - 1, LOCAL_X_END - 2,  5, z + 1, Blocks.WEB.getDefaultState());
-            this.chanceReplaceAir(world, box, random, .15f, 2, 4, z, LOCAL_X_END - 2,  4, z, Blocks.WEB.getDefaultState());
-            this.chanceReplaceAir(world, box, random, .15f, 3, 6, z, LOCAL_X_END - 3,  6, z, Blocks.WEB.getDefaultState());
+            this.chanceReplaceAir(world, box, random, .15f, 1, 1, z, 1,  4, z + 2, Blocks.WEB.getDefaultState());
+            this.chanceReplaceAir(world, box, random, .15f, LOCAL_X_END - 1, 1, z, LOCAL_X_END - 1,  4, z + 2, Blocks.WEB.getDefaultState());
+            this.chanceReplaceAir(world, box, random, .15f, 2, 5, z, LOCAL_X_END - 2,  5, z + 2, Blocks.WEB.getDefaultState());
+            this.chanceReplaceAir(world, box, random, .15f, 2, 4, z + 1, LOCAL_X_END - 2,  4, z + 1, Blocks.WEB.getDefaultState());
+            this.chanceReplaceAir(world, box, random, .15f, 3, 6, z + 1, LOCAL_X_END - 3,  6, z + 1, Blocks.WEB.getDefaultState());
         });
     }
 
