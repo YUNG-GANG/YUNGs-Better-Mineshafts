@@ -90,6 +90,7 @@ public class SmallTunnelStairs extends MineshaftPiece {
 
             // Place floor blocks
             this.chanceReplaceNonAir(world, box, random, .5f, 1, i, i, LOCAL_X_END - 1, i, i, getMainSelector());
+            this.replaceAir(world, box, 1, i, i, LOCAL_X_END - 1, i, i, getMainBlock());
 
             // Place rails
             if (i == 4) {
@@ -97,9 +98,6 @@ public class SmallTunnelStairs extends MineshaftPiece {
             } else {
                 this.setBlockState(world, Blocks.RAIL.getDefaultState().withProperty(BlockRail.SHAPE, BlockRail.EnumRailDirection.ASCENDING_NORTH), 2, i + 1, i, box);
             }
-
-            // Ensure solid block is below each rail
-            this.setBlockState(world, getMainBlock(), 2, i, i, box);
         }
 
         // Decorations
