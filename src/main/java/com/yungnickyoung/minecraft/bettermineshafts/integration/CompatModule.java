@@ -26,6 +26,13 @@ public abstract class CompatModule {
     public List<IBlockState> lanterns = new ArrayList<>();
 
     /**
+     * Lists of torches this mod provides, if applicable.
+     * Two different lists are kept for torches that should go on the left/right sides of a corridor.
+     */
+    public List<IBlockState> leftTorches = new ArrayList<>();
+    public List<IBlockState> rightTorches = new ArrayList<>();
+
+    /**
      * @return true if this mod is successfully loaded and ready for use
      */
     public boolean isEnabled() {

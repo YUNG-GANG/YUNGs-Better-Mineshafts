@@ -279,9 +279,9 @@ public abstract class MineshaftPiece extends StructureComponent {
     protected float getVineChance() {
         switch (this.mineshaftType) {
             case JUNGLE:
-                return Configuration.vines.vineFreqJungle;
+                return Configuration.spawnRates.vines.vineFreqJungle;
             default:
-                return Configuration.vines.vineFreq;
+                return Configuration.spawnRates.vines.vineFreq;
         }
     }
 

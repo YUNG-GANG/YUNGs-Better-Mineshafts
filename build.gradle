@@ -50,6 +50,7 @@ dependencies {
 
 	provided 'curse.maven:rustic:2966295'
 	provided 'curse.maven:charm:2934951'
+	provided 'curse.maven:variedcommodities:2830501'
 
 	// real examples
 	//compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env

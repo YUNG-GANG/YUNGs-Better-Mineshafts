@@ -1,9 +1,10 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
 import com.google.common.collect.Lists;
+import com.yungnickyoung.minecraft.bettermineshafts.config.Configuration;
+import com.yungnickyoung.minecraft.bettermineshafts.integration.Integrations;
 import com.yungnickyoung.minecraft.bettermineshafts.world.MapGenBetterMineshaft;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
-import net.minecraft.block.BlockTorch;
 import net.minecraft.block.BlockWall;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityMinecartChest;
@@ -143,14 +144,14 @@ public class SmallTunnel extends MineshaftPiece {
 
     private void generateCobwebs(World world, StructureBoundingBox box, Random random) {
         supports.forEach(z -> {
-            this.chanceReplaceAir(world, box, random, .15f, 1, 3, z - 1, 1, 3, z + 1, Blocks.WEB.getDefaultState());
-            this.chanceReplaceAir(world, box, random, .15f, 3, 3, z - 1, 3, 3, z + 1, Blocks.WEB.getDefaultState());
+            this.chanceReplaceAir(world, box, random, Configuration.spawnRates.cobwebSpawnRate, 1, 3, z - 1, 1, 3, z + 1, Blocks.WEB.getDefaultState());
+            this.chanceReplaceAir(world, box, random, Configuration.spawnRates.cobwebSpawnRate, 3, 3, z - 1, 3, 3, z + 1, Blocks.WEB.getDefaultState());
         });
     }
 
     private void generateChestCarts(World world, StructureBoundingBox box, Random random, ResourceLocation lootTableId) {
         for (int z = 0; z <= LOCAL_Z_END; z++) {
-            if (random.nextInt(800) == 0) {
+            if (random.nextFloat() < Configuration.spawnRates.smallShaftChestMinecartSpawnRate) {
                 BlockPos blockPos = new BlockPos(this.getXWithOffset(LOCAL_X_END / 2, z), this.getYWithOffset(1), this.getZWithOffset(LOCAL_X_END / 2, z));
                 if (box.isVecInside(blockPos) && world.getBlockState(blockPos.down()) != AIR) {
                     EntityMinecartChest chestMinecartEntity = new EntityMinecartChest(world, ((float) blockPos.getX() + 0.5F), ((float) blockPos.getY() + 0.5F), ((float) blockPos.getZ() + 0.5F));
@@ -186,7 +187,7 @@ public class SmallTunnel extends MineshaftPiece {
 
     private void generateTntCarts(World world, StructureBoundingBox box, Random random) {
         for (int z = 0; z <= LOCAL_Z_END; z++) {
-            if (random.nextInt(400) == 0) {
+            if (random.nextFloat() < Configuration.spawnRates.smallShaftTntMinecartSpawnRate) {
                 BlockPos blockPos = new BlockPos(this.getXWithOffset(LOCAL_X_END / 2, z), this.getYWithOffset(1), this.getZWithOffset(LOCAL_X_END / 2, z));
                 if (box.isVecInside(blockPos) && world.getBlockState(blockPos.down()) != AIR) {
                     EntityMinecartTNT tntMinecartEntity = new EntityMinecartTNT(world, ((float) blockPos.getX() + 0.5F), ((float) blockPos.getY() + 0.5F), ((float) blockPos.getZ() + 0.5F));
@@ -197,17 +198,19 @@ public class SmallTunnel extends MineshaftPiece {
     }
 
     private void generateTorches(World world, StructureBoundingBox box, Random random) {
+        IBlockState leftTorch = Integrations.getLeftTorch(random);
+        IBlockState rightTorch = Integrations.getRightTorch(random);
         float r;
         for (int z = 0; z <= LOCAL_Z_END; z++) {
             if (this.supports.contains(z)) continue;
             r = random.nextFloat();
-            if (r < .1f) {
+            if (r < Configuration.spawnRates.torchSpawnRate / 2) {
                 if (this.getBlockStateFromPos(world, 0, 2, z, box) != Blocks.AIR.getDefaultState()) {
-                    this.replaceAir(world, box, 1, 2, z, 1, 2, z, Blocks.TORCH.getDefaultState().withProperty(BlockTorch.FACING, EnumFacing.EAST));
+                    this.replaceAir(world, box, 1, 2, z, 1, 2, z, leftTorch);
                 }
-            } else if (r < .2f) {
+            } else if (r < Configuration.spawnRates.torchSpawnRate) {
                 if (this.getBlockStateFromPos(world, LOCAL_X_END, 2, z, box) != Blocks.AIR.getDefaultState()) {
-                    this.replaceAir(world, box, LOCAL_X_END - 1, 2, z, LOCAL_X_END - 1, 2, z, Blocks.TORCH.getDefaultState().withProperty(BlockTorch.FACING, EnumFacing.WEST));
+                    this.replaceAir(world, box, LOCAL_X_END - 1, 2, z, LOCAL_X_END - 1, 2, z, rightTorch);
                 }
             }
         }

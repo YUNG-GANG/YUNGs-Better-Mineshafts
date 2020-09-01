@@ -36,8 +36,8 @@ public class BetterMineshaftGenerator {
         MapGenBetterMineshaft.Type type = ((MineshaftPiece) structurePiece).mineshaftType;
 
         // End of chain - place ore deposit or zombie villager room
-        if (pieceChainLen > 7) {
-            if (rand < 2) {
+        if (pieceChainLen > Configuration.spawnRates.smallShaftPieceChainLength - 2) {
+            if (rand < Configuration.spawnRates.zombieVillagerRoomSpawnRate) {
                 // Need to offset by 1 since room is wider than tunnel
                 if (direction == EnumFacing.NORTH) x -= 1;
                 else if (direction == EnumFacing.EAST) z -= 1;
@@ -65,7 +65,7 @@ public class BetterMineshaftGenerator {
         }
 
         // Add new piece.
-        if (rand >= 90 && pieceChainLen > 2 && pieceChainLen < 7) { // Intersection can't be placed early on or at the very end
+        if (rand >= 90 && pieceChainLen > 2 && pieceChainLen < Configuration.spawnRates.smallShaftPieceChainLength - 2) { // Intersection can't be placed early on or at the very end
             blockBox = LayeredIntersection4.determineBoxPosition(list, random, x, y, z, direction);
             if (blockBox != null) {
                 MineshaftPiece newPiece = new LayeredIntersection4(l + 1, pieceChainLen + 1, random, blockBox, direction, type);
@@ -74,7 +74,7 @@ public class BetterMineshaftGenerator {
                 return newPiece;
             }
         }
-        else if (rand >= 80 && pieceChainLen < 7) { // Stairs can't be placed at the very end
+        else if (rand >= 80 && pieceChainLen < Configuration.spawnRates.smallShaftPieceChainLength - 2) { // Stairs can't be placed at the very end
             blockBox = SmallTunnelStairs.determineBoxPosition(list, random, x, y, z, direction);
             if (blockBox != null) {
                 MineshaftPiece newPiece = new SmallTunnelStairs(l + 1, pieceChainLen + 1, random, blockBox, direction, type);
@@ -92,7 +92,7 @@ public class BetterMineshaftGenerator {
                 return newPiece;
             }
         }
-        else if (rand >= 60 && pieceChainLen > 2 && pieceChainLen < 7) { // Intersection can't be placed early on or at the very end
+        else if (rand >= 60 && pieceChainLen > 2 && pieceChainLen < Configuration.spawnRates.smallShaftPieceChainLength - 2) { // Intersection can't be placed early on or at the very end
             blockBox = LayeredIntersection5.determineBoxPosition(list, random, x, y, z, direction);
             if (blockBox != null) {
                 MineshaftPiece newPiece = new LayeredIntersection5(l + 1, pieceChainLen + 1, random, blockBox, direction, type);

@@ -66,24 +66,24 @@ public class MapGenBetterMineshaft extends MapGenMineshaft {
      */
     private static Type getType(Type type) {
         if (type == Type.RED_DESERT) {
-            if (Configuration.redDesertEnabled) return Type.RED_DESERT;
-            if (Configuration.desertEnabled) return Type.DESERT;
+            if (Configuration.biomeVariants.redDesertEnabled) return Type.RED_DESERT;
+            if (Configuration.biomeVariants.desertEnabled) return Type.DESERT;
         } else if (type == Type.DESERT) {
-            if (Configuration.desertEnabled) return Type.DESERT;
+            if (Configuration.biomeVariants.desertEnabled) return Type.DESERT;
         } else if (type == Type.MESA) {
-            if (Configuration.mesaEnabled) return Type.MESA;
-            if (Configuration.redDesertEnabled) return Type.RED_DESERT;
+            if (Configuration.biomeVariants.mesaEnabled) return Type.MESA;
+            if (Configuration.biomeVariants.redDesertEnabled) return Type.RED_DESERT;
         } else if (type == Type.ICE) {
-            if (Configuration.iceEnabled) return Type.ICE;
-            if (Configuration.snowEnabled) return Type.SNOW;
+            if (Configuration.biomeVariants.iceEnabled) return Type.ICE;
+            if (Configuration.biomeVariants.snowEnabled) return Type.SNOW;
         } else if (type == Type.SNOW) {
-            if (Configuration.snowEnabled) return Type.SNOW;
+            if (Configuration.biomeVariants.snowEnabled) return Type.SNOW;
         } else if (type == Type.JUNGLE) {
-            if (Configuration.jungleEnabled) return Type.JUNGLE;
+            if (Configuration.biomeVariants.jungleEnabled) return Type.JUNGLE;
         } else if (type == Type.SAVANNA) {
-            if (Configuration.savannaEnabled) return Type.SAVANNA;
+            if (Configuration.biomeVariants.savannaEnabled) return Type.SAVANNA;
         } else if (type == Type.MUSHROOM) {
-            if (Configuration.mushroomEnabled) return Type.MUSHROOM;
+            if (Configuration.biomeVariants.mushroomEnabled) return Type.MUSHROOM;
         }
         return Type.NORMAL;
     }

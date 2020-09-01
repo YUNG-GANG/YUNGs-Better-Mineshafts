@@ -1,6 +1,7 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
 import com.google.common.collect.Lists;
+import com.yungnickyoung.minecraft.bettermineshafts.config.Configuration;
 import com.yungnickyoung.minecraft.bettermineshafts.integration.Integrations;
 import com.yungnickyoung.minecraft.bettermineshafts.util.Pair;
 import com.yungnickyoung.minecraft.bettermineshafts.world.MapGenBetterMineshaft;
@@ -43,9 +44,6 @@ public class BigTunnel extends MineshaftPiece {
         LOCAL_X_END = SECONDARY_AXIS_LEN - 1,
         LOCAL_Y_END = Y_AXIS_LEN - 1,
         LOCAL_Z_END = MAIN_AXIS_LEN - 1;
-    private static final float
-        SMALL_SHAFT_SPAWN_CHANCE = .07f,
-        SIDE_ROOM_SPAWN_CHANCE = .025f;
 
     public BigTunnel() {}
 
@@ -323,22 +321,22 @@ public class BigTunnel extends MineshaftPiece {
 
     private void generateCobwebs(World world, StructureBoundingBox box, Random random) {
         smallSupports.forEach(z -> {
-            this.chanceReplaceAir(world, box, random, .15f, 2, 3, z - 1, LOCAL_X_END - 2,  4, z + 1, Blocks.WEB.getDefaultState());
-            this.chanceReplaceAir(world, box, random, .15f, 3, 5, z, LOCAL_X_END - 3,  5, z, Blocks.WEB.getDefaultState());
+            this.chanceReplaceAir(world, box, random, Configuration.spawnRates.cobwebSpawnRate, 2, 3, z - 1, LOCAL_X_END - 2,  4, z + 1, Blocks.WEB.getDefaultState());
+            this.chanceReplaceAir(world, box, random, Configuration.spawnRates.cobwebSpawnRate, 3, 5, z, LOCAL_X_END - 3,  5, z, Blocks.WEB.getDefaultState());
         });
 
         bigSupports.forEach(z -> {
-            this.chanceReplaceAir(world, box, random, .15f, 1, 1, z, 1,  4, z + 2, Blocks.WEB.getDefaultState());
-            this.chanceReplaceAir(world, box, random, .15f, LOCAL_X_END - 1, 1, z, LOCAL_X_END - 1,  4, z + 2, Blocks.WEB.getDefaultState());
-            this.chanceReplaceAir(world, box, random, .15f, 2, 5, z, LOCAL_X_END - 2,  5, z + 2, Blocks.WEB.getDefaultState());
-            this.chanceReplaceAir(world, box, random, .15f, 2, 4, z + 1, LOCAL_X_END - 2,  4, z + 1, Blocks.WEB.getDefaultState());
-            this.chanceReplaceAir(world, box, random, .15f, 3, 6, z + 1, LOCAL_X_END - 3,  6, z + 1, Blocks.WEB.getDefaultState());
+            this.chanceReplaceAir(world, box, random, Configuration.spawnRates.cobwebSpawnRate, 1, 1, z, 1,  4, z + 2, Blocks.WEB.getDefaultState());
+            this.chanceReplaceAir(world, box, random, Configuration.spawnRates.cobwebSpawnRate, LOCAL_X_END - 1, 1, z, LOCAL_X_END - 1,  4, z + 2, Blocks.WEB.getDefaultState());
+            this.chanceReplaceAir(world, box, random, Configuration.spawnRates.cobwebSpawnRate, 2, 5, z, LOCAL_X_END - 2,  5, z + 2, Blocks.WEB.getDefaultState());
+            this.chanceReplaceAir(world, box, random, Configuration.spawnRates.cobwebSpawnRate, 2, 4, z + 1, LOCAL_X_END - 2,  4, z + 1, Blocks.WEB.getDefaultState());
+            this.chanceReplaceAir(world, box, random, Configuration.spawnRates.cobwebSpawnRate, 3, 6, z + 1, LOCAL_X_END - 3,  6, z + 1, Blocks.WEB.getDefaultState());
         });
     }
 
     private void generateChestCarts(World world, StructureBoundingBox box, Random random, ResourceLocation lootTableId) {
         for (int z = 0; z <= LOCAL_Z_END; z++) {
-            if (random.nextInt(100) == 0) {
+            if (random.nextFloat() < Configuration.spawnRates.mainShaftChestMinecartSpawnRate) {
                 BlockPos blockPos = new BlockPos(this.getXWithOffset(LOCAL_X_END / 2, z), getYWithOffset(1), this.getZWithOffset(LOCAL_X_END / 2, z));
                 if (box.isVecInside(blockPos) && world.getBlockState(blockPos.down()) != AIR) {
                     EntityMinecartChest chestMinecartEntity = new EntityMinecartChest(world, ((float) blockPos.getX() + 0.5F), ((float) blockPos.getY() + 0.5F), ((float) blockPos.getZ() + 0.5F));
@@ -351,7 +349,7 @@ public class BigTunnel extends MineshaftPiece {
 
     private void generateTntCarts(World world, StructureBoundingBox box, Random random) {
         for (int z = 0; z <= LOCAL_Z_END; z++) {
-            if (random.nextInt(400) == 0) {
+            if (random.nextFloat() < Configuration.spawnRates.mainShaftTntMinecartSpawnRate) {
                 BlockPos blockPos = new BlockPos(this.getXWithOffset(LOCAL_X_END / 2, z), getYWithOffset(1), this.getZWithOffset(LOCAL_X_END / 2, z));
                 if (box.isVecInside(blockPos) && world.getBlockState(blockPos.down()) != AIR) {
                     EntityMinecartTNT tntMinecartEntity = new EntityMinecartTNT(world, ((float) blockPos.getX() + 0.5F), ((float) blockPos.getY() + 0.5F), ((float) blockPos.getZ() + 0.5F));
@@ -406,7 +404,7 @@ public class BigTunnel extends MineshaftPiece {
         if (LANTERN == null) return;
         for (int z = 0; z <= LOCAL_Z_END; z++) {
             for (int x = 3; x <= LOCAL_X_END - 3; x++) {
-                if (random.nextInt(150) == 0) {
+                if (random.nextFloat() < Configuration.spawnRates.lanternSpawnRate) {
                     if (this.getBlockStateFromPos(world, x, LOCAL_Y_END, z, box) != AIR) {
                         this.setBlockState(world, LANTERN, x, LOCAL_Y_END - 1, z, box);
                         z += 20;
@@ -535,7 +533,7 @@ public class BigTunnel extends MineshaftPiece {
         EnumFacing nextPieceDirection;
         StructureComponent newPiece;
         for (int n = 0; n < (pieceLen - 1) - 10; n++) {
-            if (random.nextFloat() < SIDE_ROOM_SPAWN_CHANCE) {
+            if (random.nextFloat() < Configuration.spawnRates.workstationSpawnRate) {
                 switch (direction) {
                     case NORTH:
                     default:
@@ -576,7 +574,7 @@ public class BigTunnel extends MineshaftPiece {
         EnumFacing nextPieceDirection;
         StructureComponent newPiece;
         for (int n = 0; n < (pieceLen - 1) - 10; n++) {
-            if (random.nextFloat() < SIDE_ROOM_SPAWN_CHANCE) {
+            if (random.nextFloat() < Configuration.spawnRates.workstationSpawnRate) {
                 switch (direction) {
                     case NORTH:
                     default:
@@ -617,7 +615,7 @@ public class BigTunnel extends MineshaftPiece {
         EnumFacing nextPieceDirection;
         StructureComponent newPiece;
         for (int n = 0; n < (pieceLen - 1) - 4; n++) {
-            if (random.nextFloat() < SMALL_SHAFT_SPAWN_CHANCE) {
+            if (random.nextFloat() < Configuration.spawnRates.smallShaftSpawnRate) {
                 switch (direction) {
                     case NORTH:
                     default:
@@ -659,7 +657,7 @@ public class BigTunnel extends MineshaftPiece {
         EnumFacing nextPieceDirection;
         StructureComponent newPiece;
         for (int n = 5; n < pieceLen; n++) {
-            if (random.nextFloat() < SMALL_SHAFT_SPAWN_CHANCE) {
+            if (random.nextFloat() < Configuration.spawnRates.smallShaftSpawnRate) {
                 switch (direction) {
                     case NORTH:
                     default:
