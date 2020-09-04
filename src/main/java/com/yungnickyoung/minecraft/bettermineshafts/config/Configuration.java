@@ -3,7 +3,7 @@ package com.yungnickyoung.minecraft.bettermineshafts.config;
 import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshafts;
 import net.minecraftforge.common.config.Config;
 
-@Config(modid = BetterMineshafts.MOD_ID, name = "bettermineshafts-1_12_2")
+@Config(modid = BMSettings.MOD_ID, name = "bettermineshafts-1_12_2")
 public class Configuration {
     @Config.Name("Mineshaft Spawn Rate")
     @Config.RequiresWorldRestart
@@ -27,7 +27,7 @@ public class Configuration {
     @Config.RangeInt(min = 0, max = 255)
     public static int maxY = 37;
 
-    @Config.Name("Spawn Rates")
+    @Config.Name("Spawn Rates & More")
     @Config.Comment("Customize the spawn rates for various mineshaft parts and decorations.")
     public static SpawnRatesConfig spawnRates = new SpawnRatesConfig();
 

@@ -52,6 +52,8 @@ dependencies {
 	provided 'curse.maven:charm:2934951'
 	provided 'curse.maven:variedcommodities:2830501'
 
+	implementation 'com.google.code.gson:gson:2.8.6'
+
 	// real examples
 	//compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
 	//compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env

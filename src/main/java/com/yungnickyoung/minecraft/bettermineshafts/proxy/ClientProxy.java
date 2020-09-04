@@ -1,7 +1,6 @@
 package com.yungnickyoung.minecraft.bettermineshafts.proxy;
 
-import com.yungnickyoung.minecraft.bettermineshafts.event.EventConfigReload;
-import net.minecraftforge.common.MinecraftForge;
+import com.yungnickyoung.minecraft.bettermineshafts.init.ModConfig;
 
 /**
  * Proxy for client-only code.
@@ -9,6 +8,6 @@ import net.minecraftforge.common.MinecraftForge;
 public class ClientProxy implements IProxy {
     @Override
     public void preInit() {
-        MinecraftForge.EVENT_BUS.register(new EventConfigReload());
+        ModConfig.preInit();
     }
 }

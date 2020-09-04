@@ -1,6 +1,7 @@
 package com.yungnickyoung.minecraft.bettermineshafts.init;
 
 import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshafts;
+import com.yungnickyoung.minecraft.bettermineshafts.config.BMSettings;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.*;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.gen.structure.MapGenStructureIO;
@@ -26,6 +27,6 @@ public class ModStructurePieces {
     }
 
     private static void register(Class<? extends StructureComponent> clazz, String pieceName) {
-        MapGenStructureIO.registerStructureComponent(clazz, new ResourceLocation(BetterMineshafts.MOD_ID, pieceName).toString());
+        MapGenStructureIO.registerStructureComponent(clazz, new ResourceLocation(BMSettings.MOD_ID, pieceName).toString());
     }
 }

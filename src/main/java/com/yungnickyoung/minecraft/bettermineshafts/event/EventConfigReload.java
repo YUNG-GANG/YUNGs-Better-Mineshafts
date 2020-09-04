@@ -1,6 +1,7 @@
 package com.yungnickyoung.minecraft.bettermineshafts.event;
 
 import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshafts;
+import com.yungnickyoung.minecraft.bettermineshafts.config.BMSettings;
 import com.yungnickyoung.minecraft.bettermineshafts.integration.Integrations;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
@@ -18,8 +19,8 @@ public class EventConfigReload {
     @SubscribeEvent
     public void onConfigReload(ConfigChangedEvent.OnConfigChangedEvent event) {
         // Only mess with config syncing if it is this mod being changed
-        if (BetterMineshafts.MOD_ID.equals(event.getModID())) {
-            ConfigManager.sync(BetterMineshafts.MOD_ID, Config.Type.INSTANCE);
+        if (BMSettings.MOD_ID.equals(event.getModID())) {
+            ConfigManager.sync(BMSettings.MOD_ID, Config.Type.INSTANCE);
             Integrations.update();
         }
     }

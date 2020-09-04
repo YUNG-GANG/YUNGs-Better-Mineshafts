@@ -1,5 +1,6 @@
 package com.yungnickyoung.minecraft.bettermineshafts;
 
+import com.yungnickyoung.minecraft.bettermineshafts.config.BMSettings;
 import com.yungnickyoung.minecraft.bettermineshafts.init.ModCompat;
 import com.yungnickyoung.minecraft.bettermineshafts.init.ModStructure;
 import com.yungnickyoung.minecraft.bettermineshafts.init.ModStructurePieces;
@@ -27,12 +28,11 @@ import java.util.concurrent.atomic.AtomicInteger;
  * I recommend looking into Jigsaw or other structure API's that can abstract away logic dealing with rotation
  * and orientation. It will save you a LOT of headache and frustration down the line.
  */
-@Mod(modid = "bettermineshafts", useMetadata = true, acceptableRemoteVersions = "*")
+@Mod(modid = BMSettings.MOD_ID, useMetadata = true, acceptableRemoteVersions = "*")
 public class BetterMineshafts {
-    public static final String MOD_ID = "bettermineshafts";
-    public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
+    public static final Logger LOGGER = LogManager.getLogger(BMSettings.MOD_ID);
 
-    @SidedProxy(clientSide = "com.yungnickyoung.minecraft.bettermineshafts.proxy.ClientProxy", serverSide = "com.yungnickyoung.minecraft.bettermineshafts.proxy.ServerProxy")
+    @SidedProxy(clientSide = BMSettings.CLIENT_PROXY, serverSide = BMSettings.SERVER_PROXY)
     public static IProxy proxy;
 
     // Debug variables used in development

@@ -3,6 +3,7 @@ package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 import com.google.common.collect.ImmutableSet;
 import com.yungnickyoung.minecraft.bettermineshafts.config.Configuration;
 import com.yungnickyoung.minecraft.bettermineshafts.util.BlockSetSelector;
+import com.yungnickyoung.minecraft.bettermineshafts.util.BlockSetSelectors;
 import com.yungnickyoung.minecraft.bettermineshafts.world.MapGenBetterMineshaft;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
@@ -69,32 +70,32 @@ public abstract class MineshaftPiece extends StructureComponent {
     protected BlockSetSelector getMainSelector() {
         switch (this.mineshaftType) {
             case MESA:
-                return BlockSetSelector.MESA;
+                return BlockSetSelectors.get().MESA;
             case JUNGLE:
-                return BlockSetSelector.JUNGLE;
+                return BlockSetSelectors.get().JUNGLE;
             case SNOW:
-                return BlockSetSelector.SNOW;
+                return BlockSetSelectors.get().SNOW;
             case ICE:
-                return BlockSetSelector.ICE;
+                return BlockSetSelectors.get().ICE;
             case DESERT:
-                return BlockSetSelector.DESERT;
+                return BlockSetSelectors.get().DESERT;
             case RED_DESERT:
-                return BlockSetSelector.RED_DESERT;
+                return BlockSetSelectors.get().RED_DESERT;
             case MUSHROOM:
-                return BlockSetSelector.MUSHROOM;
+                return BlockSetSelectors.get().MUSHROOM;
             case SAVANNA:
-                return BlockSetSelector.ACACIA;
+                return BlockSetSelectors.get().ACACIA;
             default:
-                return BlockSetSelector.NORMAL;
+                return BlockSetSelectors.get().NORMAL;
         }
     }
 
     protected BlockSetSelector getFloorSelector() {
         switch (this.mineshaftType) {
             case DESERT:
-                return BlockSetSelector.FLOOR_DESERT;
+                return BlockSetSelectors.get().FLOOR_DESERT;
             case RED_DESERT:
-                return BlockSetSelector.FLOOR_RED_DESERT;
+                return BlockSetSelectors.get().FLOOR_RED_DESERT;
             default:
                 return getMainSelector();
         }
@@ -103,19 +104,19 @@ public abstract class MineshaftPiece extends StructureComponent {
     protected BlockSetSelector getBrickSelector() {
         switch (this.mineshaftType) {
             case JUNGLE:
-                return BlockSetSelector.STONE_BRICK_JUNGLE;
+                return BlockSetSelectors.get().STONE_BRICK_JUNGLE;
             case SNOW:
-                return BlockSetSelector.STONE_BRICK_SNOW;
+                return BlockSetSelectors.get().STONE_BRICK_SNOW;
             case ICE:
-                return BlockSetSelector.STONE_BRICK_ICE;
+                return BlockSetSelectors.get().STONE_BRICK_ICE;
             case DESERT:
-                return BlockSetSelector.STONE_BRICK_DESERT;
+                return BlockSetSelectors.get().STONE_BRICK_DESERT;
             case RED_DESERT:
-                return BlockSetSelector.STONE_BRICK_RED_DESERT;
+                return BlockSetSelectors.get().STONE_BRICK_RED_DESERT;
             case MUSHROOM:
-                return BlockSetSelector.STONE_BRICK_MUSHROOM;
+                return BlockSetSelectors.get().STONE_BRICK_MUSHROOM;
             default:
-                return BlockSetSelector.STONE_BRICK_NORMAL;
+                return BlockSetSelectors.get().STONE_BRICK_NORMAL;
         }
     }
 
@@ -128,13 +129,13 @@ public abstract class MineshaftPiece extends StructureComponent {
             case SNOW:
                 return BlockSetSelector.from(Blocks.LOG.getDefaultState().withProperty(BlockLog.LOG_AXIS, BlockLog.EnumAxis.Y).withProperty(BlockOldLog.VARIANT, BlockPlanks.EnumType.SPRUCE));
             case ICE:
-                return BlockSetSelector.STONE_BRICK_ICE;
+                return BlockSetSelectors.get().STONE_BRICK_ICE;
             case DESERT:
-                return BlockSetSelector.STONE_BRICK_DESERT;
+                return BlockSetSelectors.get().STONE_BRICK_DESERT;
             case RED_DESERT:
-                return BlockSetSelector.STONE_BRICK_RED_DESERT;
+                return BlockSetSelectors.get().STONE_BRICK_RED_DESERT;
             case MUSHROOM:
-                return BlockSetSelector.STONE_BRICK_MUSHROOM;
+                return BlockSetSelectors.get().STONE_BRICK_MUSHROOM;
             case SAVANNA:
                 return BlockSetSelector.from(Blocks.LOG2.getDefaultState().withProperty(BlockLog.LOG_AXIS, BlockLog.EnumAxis.Y).withProperty(BlockNewLog.VARIANT, BlockPlanks.EnumType.ACACIA));
             default:
