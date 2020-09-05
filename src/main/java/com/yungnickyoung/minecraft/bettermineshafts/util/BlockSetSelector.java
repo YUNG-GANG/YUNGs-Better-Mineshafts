@@ -1,10 +1,8 @@
 package com.yungnickyoung.minecraft.bettermineshafts.util;
 
 import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshafts;
-import net.minecraft.block.*;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.EnumDyeColor;
 
 import java.util.*;
 
@@ -18,6 +16,12 @@ public class BlockSetSelector {
      * The total sum of all the probabilities cannot exceed 1.
      */
     private Map<IBlockState, Float> entries = new HashMap<>();
+
+    /**
+     * The default block is used for any leftover probability ranges.
+     * For example, if the total sum of all the probabilities of the entries is 0.6, then
+     * there is a 0.4 chance of the defaultBlock being selected.
+     */
     private IBlockState defaultBlock = Blocks.AIR.getDefaultState();
 
     public BlockSetSelector(IBlockState defaultBlock) {
@@ -73,5 +77,9 @@ public class BlockSetSelector {
 
         // No match found
         return this.defaultBlock;
+    }
+
+    public void setDefaultBlock(IBlockState blockState) {
+        this.defaultBlock = blockState;
     }
 }

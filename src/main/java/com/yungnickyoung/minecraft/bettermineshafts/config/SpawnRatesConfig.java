@@ -86,7 +86,7 @@ public class SpawnRatesConfig {
     @Config.Name("Abandoned Miners' Outpost Spawn Chance")
     @Config.Comment(
         "Percent chance of an Abandoned Miners' Outpost to spawn at the end of a small mineshaft tunnel.\n" +
-            "Default: 2")
+        "Default: 2")
     @Config.RequiresWorldRestart
     @Config.RangeInt(min = 0, max = 100)
     public int zombieVillagerRoomSpawnRate = 2;
@@ -99,7 +99,4 @@ public class SpawnRatesConfig {
     @Config.RequiresWorldRestart
     @Config.RangeInt(min = 0)
     public int smallShaftPieceChainLength = 9;
-
-    @Config.Name("Vines")
-    public VinesConfig vines = new VinesConfig();
 }

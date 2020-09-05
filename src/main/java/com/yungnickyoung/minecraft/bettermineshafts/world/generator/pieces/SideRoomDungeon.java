@@ -1,6 +1,7 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
 import com.yungnickyoung.minecraft.bettermineshafts.world.MapGenBetterMineshaft;
+import com.yungnickyoung.minecraft.bettermineshafts.world.generator.MineshaftVariantSettings;
 import net.minecraft.block.BlockLadder;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -30,8 +31,8 @@ public class SideRoomDungeon extends MineshaftPiece {
 
     public SideRoomDungeon() {}
 
-    public SideRoomDungeon(int i, int pieceChainLen, Random random, StructureBoundingBox blockBox, EnumFacing direction, MapGenBetterMineshaft.Type type) {
-        super(i, pieceChainLen, type);
+    public SideRoomDungeon(int i, int pieceChainLen, Random random, StructureBoundingBox blockBox, EnumFacing direction, MineshaftVariantSettings settings) {
+        super(i, pieceChainLen, settings);
         this.setCoordBaseMode(direction);
         this.boundingBox = blockBox;
     }

@@ -5,6 +5,8 @@ import com.yungnickyoung.minecraft.bettermineshafts.config.Configuration;
 import com.yungnickyoung.minecraft.bettermineshafts.integration.Integrations;
 import com.yungnickyoung.minecraft.bettermineshafts.world.MapGenBetterMineshaft;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
+import com.yungnickyoung.minecraft.bettermineshafts.world.generator.MineshaftVariantSettings;
+import net.minecraft.block.BlockFence;
 import net.minecraft.block.BlockWall;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityMinecartChest;
@@ -40,8 +42,8 @@ public class SmallTunnel extends MineshaftPiece {
 
     public SmallTunnel() {}
 
-    public SmallTunnel(int i, int chunkPieceLen, Random random, StructureBoundingBox blockBox, EnumFacing direction, MapGenBetterMineshaft.Type type) {
-        super(i, chunkPieceLen, type);
+    public SmallTunnel(int i, int chunkPieceLen, Random random, StructureBoundingBox blockBox, EnumFacing direction, MineshaftVariantSettings settings) {
+        super(i, chunkPieceLen, settings);
         this.setCoordBaseMode(direction);
         this.boundingBox = blockBox;
     }
@@ -110,24 +112,21 @@ public class SmallTunnel extends MineshaftPiece {
         if (this.isInOcean(world, 0, 0) || this.isInOcean(world, LOCAL_X_END, LOCAL_Z_END)) return false;
 
         // Randomize blocks
-        float chance =
-            this.mineshaftType == MapGenBetterMineshaft.Type.ICE
-                || this.mineshaftType == MapGenBetterMineshaft.Type.MUSHROOM
-            ? .95f
-            : .6f;
-        this.chanceReplaceNonAir(world, box, random, chance, 0, 1, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getMainSelector());
+//        float chance =
+//            this.mineshaftType == MapGenBetterMineshaft.Type.ICE
+//                || this.mineshaftType == MapGenBetterMineshaft.Type.MUSHROOM
+//            ? .95f
+//            : .6f;
+        this.chanceReplaceNonAir(world, box, random, settings.replacementRate, 0, 1, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getMainSelector());
 
         // Randomize floor
-        this.chanceReplaceNonAir(world, box, random, chance, 0, 0, 0, LOCAL_X_END, 0, LOCAL_Z_END, getFloorSelector());
+        this.chanceReplaceNonAir(world, box, random, settings.replacementRate, 0, 0, 0, LOCAL_X_END, 0, LOCAL_Z_END, getFloorSelector());
 
         // Fill with air
         this.fill(world, box, 1, 1, 0, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END, AIR);
 
         // Fill in any air in floor with main block
         this.replaceAir(world, box, 1, 0, 0, LOCAL_X_END - 1, 0, LOCAL_Z_END, getMainBlock());
-        // Special case - mushroom mineshafts get mycelium in floor
-        if (this.mineshaftType == MapGenBetterMineshaft.Type.MUSHROOM)
-            this.chanceReplaceNonAir(world, box, random, .8f, 1, 0, 0, LOCAL_X_END - 1, 0, LOCAL_Z_END, Blocks.MYCELIUM.getDefaultState());
 
         // Decorations
         generateSupports(world, box, random);
@@ -137,7 +136,7 @@ public class SmallTunnel extends MineshaftPiece {
         generateTntCarts(world, box, random);
         generateTorches(world, box, random);
         this.addBiomeDecorations(world, box, random, 1, 0, 0, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END);
-        this.addVines(world, box, random, getVineChance(), 1, 0, 1, LOCAL_X_END - 1, LOCAL_Y_END, LOCAL_Z_END - 1);
+        this.addVines(world, box, random, 1, 0, 1, LOCAL_X_END - 1, LOCAL_Y_END, LOCAL_Z_END - 1);
 
         return true;
     }
@@ -164,8 +163,11 @@ public class SmallTunnel extends MineshaftPiece {
 
     private void generateSupports(World world, StructureBoundingBox box, Random random) {
         IBlockState supportBlock = getSupportBlock();
-        if (this.mineshaftType != MapGenBetterMineshaft.Type.ICE && this.mineshaftType != MapGenBetterMineshaft.Type.MUSHROOM)
-            supportBlock = getSupportBlock().withProperty(BlockWall.WEST, true).withProperty(BlockWall.EAST, true);
+        if (supportBlock.getBlock() instanceof BlockFence) {
+            supportBlock = supportBlock.withProperty(BlockFence.WEST, true).withProperty(BlockFence.EAST, true);
+        } else if (supportBlock.getBlock() instanceof BlockWall) {
+            supportBlock = supportBlock.withProperty(BlockWall.WEST, true).withProperty(BlockWall.EAST, true);
+        }
 
         for (int z : this.supports) {
             this.fill(world, box, 1, 1, z, 1, 2, z, getSupportBlock());

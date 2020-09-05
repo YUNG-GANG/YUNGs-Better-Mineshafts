@@ -106,6 +106,9 @@ public class BlockSetSelectors {
         .addBlock(Blocks.STONEBRICK.getDefaultState().withProperty(BlockStoneBrick.VARIANT, BlockStoneBrick.EnumType.CRACKED), 0.05f)
         .addBlock(Blocks.AIR.getDefaultState(), 0.2f);
 
+    public BlockSetSelector FLOOR_MUSHROOM = new BlockSetSelector()
+        .addBlock(Blocks.MYCELIUM.getDefaultState(), 1);
+
     /**
      * Stone brick blocks.
      */

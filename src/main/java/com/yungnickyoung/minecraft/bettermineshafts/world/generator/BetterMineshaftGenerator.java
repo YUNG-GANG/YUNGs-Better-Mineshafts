@@ -17,11 +17,11 @@ public class BetterMineshaftGenerator {
         }
 
         int rand = random.nextInt(100);
-        MapGenBetterMineshaft.Type type = ((MineshaftPiece) structurePiece).mineshaftType;
+        MineshaftVariantSettings settings = ((MineshaftPiece) structurePiece).settings;
 
         if (rand >= 10 || pieceChainLen < 1) {
             StructureBoundingBox blockBox = BigTunnel.determineBoxPosition(x, y, z, direction);
-            MineshaftPiece newPiece = new BigTunnel(l + 1, pieceChainLen + 1, random, blockBox, direction, type);
+            MineshaftPiece newPiece = new BigTunnel(l + 1, pieceChainLen + 1, random, blockBox, direction, settings);
             list.add(newPiece);
             newPiece.buildComponent(structurePiece, list, random);
             return newPiece;
@@ -33,7 +33,7 @@ public class BetterMineshaftGenerator {
     public static MineshaftPiece generateAndAddSmallTunnelPiece(StructureComponent structurePiece, List<StructureComponent> list, Random random, int x, int y, int z, EnumFacing direction, int l, int pieceChainLen) {
         StructureBoundingBox blockBox;
         int rand = random.nextInt(100);
-        MapGenBetterMineshaft.Type type = ((MineshaftPiece) structurePiece).mineshaftType;
+        MineshaftVariantSettings settings = ((MineshaftPiece) structurePiece).settings;
 
         // End of chain - place ore deposit or zombie villager room
         if (pieceChainLen > Configuration.spawnRates.smallShaftPieceChainLength - 2) {
@@ -45,7 +45,7 @@ public class BetterMineshaftGenerator {
                 else if (direction == EnumFacing.WEST) z += 1;
                 blockBox = ZombieVillagerRoom.determineBoxPosition(list, random, x, y, z, direction);
                 if (blockBox != null) {
-                    MineshaftPiece newPiece = new ZombieVillagerRoom(l + 1, pieceChainLen + 1, random, blockBox, direction, type);
+                    MineshaftPiece newPiece = new ZombieVillagerRoom(l + 1, pieceChainLen + 1, random, blockBox, direction, settings);
                     list.add(newPiece);
                     newPiece.buildComponent(structurePiece, list, random);
                     return newPiece;
@@ -55,7 +55,7 @@ public class BetterMineshaftGenerator {
                 if (!Configuration.ores.enabled) return null;
                 blockBox = OreDeposit.determineBoxPosition(list, random, x, y, z, direction);
                 if (blockBox != null) {
-                    MineshaftPiece newPiece = new OreDeposit(l + 1, pieceChainLen + 1, random, blockBox, direction, type);
+                    MineshaftPiece newPiece = new OreDeposit(l + 1, pieceChainLen + 1, random, blockBox, direction, settings);
                     list.add(newPiece);
                     newPiece.buildComponent(structurePiece, list, random);
                     return newPiece;
@@ -68,7 +68,7 @@ public class BetterMineshaftGenerator {
         if (rand >= 90 && pieceChainLen > 2 && pieceChainLen < Configuration.spawnRates.smallShaftPieceChainLength - 2) { // Intersection can't be placed early on or at the very end
             blockBox = LayeredIntersection4.determineBoxPosition(list, random, x, y, z, direction);
             if (blockBox != null) {
-                MineshaftPiece newPiece = new LayeredIntersection4(l + 1, pieceChainLen + 1, random, blockBox, direction, type);
+                MineshaftPiece newPiece = new LayeredIntersection4(l + 1, pieceChainLen + 1, random, blockBox, direction, settings);
                 list.add(newPiece);
                 newPiece.buildComponent(structurePiece, list, random);
                 return newPiece;
@@ -77,7 +77,7 @@ public class BetterMineshaftGenerator {
         else if (rand >= 80 && pieceChainLen < Configuration.spawnRates.smallShaftPieceChainLength - 2) { // Stairs can't be placed at the very end
             blockBox = SmallTunnelStairs.determineBoxPosition(list, random, x, y, z, direction);
             if (blockBox != null) {
-                MineshaftPiece newPiece = new SmallTunnelStairs(l + 1, pieceChainLen + 1, random, blockBox, direction, type);
+                MineshaftPiece newPiece = new SmallTunnelStairs(l + 1, pieceChainLen + 1, random, blockBox, direction, settings);
                 list.add(newPiece);
                 newPiece.buildComponent(structurePiece, list, random); // buildComponent
                 return newPiece;
@@ -86,7 +86,7 @@ public class BetterMineshaftGenerator {
         else if (rand >= 70 && pieceChainLen > 2) { // Turns can't be placed early on
             blockBox = SmallTunnelTurn.determineBoxPosition(list, random, x, y, z, direction);
             if (blockBox != null) {
-                MineshaftPiece newPiece = new SmallTunnelTurn(l + 1, pieceChainLen + 1, random, blockBox, direction, type);
+                MineshaftPiece newPiece = new SmallTunnelTurn(l + 1, pieceChainLen + 1, random, blockBox, direction, settings);
                 list.add(newPiece);
                 newPiece.buildComponent(structurePiece, list, random);
                 return newPiece;
@@ -95,7 +95,7 @@ public class BetterMineshaftGenerator {
         else if (rand >= 60 && pieceChainLen > 2 && pieceChainLen < Configuration.spawnRates.smallShaftPieceChainLength - 2) { // Intersection can't be placed early on or at the very end
             blockBox = LayeredIntersection5.determineBoxPosition(list, random, x, y, z, direction);
             if (blockBox != null) {
-                MineshaftPiece newPiece = new LayeredIntersection5(l + 1, pieceChainLen + 1, random, blockBox, direction, type);
+                MineshaftPiece newPiece = new LayeredIntersection5(l + 1, pieceChainLen + 1, random, blockBox, direction, settings);
                 list.add(newPiece);
                 newPiece.buildComponent(structurePiece, list, random);
                 return newPiece;
@@ -104,7 +104,7 @@ public class BetterMineshaftGenerator {
         else {
             blockBox = SmallTunnel.determineBoxPosition(list, random, x, y, z, direction);
             if (blockBox != null) {
-                MineshaftPiece newPiece = new SmallTunnel(l + 1, pieceChainLen + 1, random, blockBox, direction, type);
+                MineshaftPiece newPiece = new SmallTunnel(l + 1, pieceChainLen + 1, random, blockBox, direction, settings);
                 list.add(newPiece);
                 newPiece.buildComponent(structurePiece, list, random);
                 return newPiece;
@@ -115,11 +115,11 @@ public class BetterMineshaftGenerator {
     }
 
     public static MineshaftPiece generateAndAddSideRoomPiece(StructureComponent structurePiece, List<StructureComponent> list, Random random, int x, int y, int z, EnumFacing direction, int l, int pieceChainLen) {
-        MapGenBetterMineshaft.Type type = ((MineshaftPiece) structurePiece).mineshaftType;
+        MineshaftVariantSettings settings = ((MineshaftPiece) structurePiece).settings;
 
         StructureBoundingBox blockBox = SideRoom.determineBoxPosition(list, random, x, y, z, direction);
         if (blockBox != null) {
-            MineshaftPiece newPiece = new SideRoom(l + 1, pieceChainLen + 1, random, blockBox, direction, type);
+            MineshaftPiece newPiece = new SideRoom(l + 1, pieceChainLen + 1, random, blockBox, direction, settings);
             list.add(newPiece);
             newPiece.buildComponent(structurePiece, list, random);
             return newPiece;
@@ -129,11 +129,11 @@ public class BetterMineshaftGenerator {
     }
 
     public static MineshaftPiece generateAndAddSideRoomDungeonPiece(StructureComponent structurePiece, List<StructureComponent> list, Random random, int x, int y, int z, EnumFacing direction, int l, int pieceChainLen) {
-        MapGenBetterMineshaft.Type type = ((MineshaftPiece) structurePiece).mineshaftType;
+        MineshaftVariantSettings settings = ((MineshaftPiece) structurePiece).settings;
 
         StructureBoundingBox blockBox = SideRoomDungeon.determineBoxPosition(list, random, x, y, z, direction);
         if (blockBox != null) {
-            MineshaftPiece newPiece = new SideRoomDungeon(l + 1, pieceChainLen + 1, random, blockBox, direction, type);
+            MineshaftPiece newPiece = new SideRoomDungeon(l + 1, pieceChainLen + 1, random, blockBox, direction, settings);
             list.add(newPiece);
             newPiece.buildComponent(structurePiece, list, random); // buildComponent
             return newPiece;

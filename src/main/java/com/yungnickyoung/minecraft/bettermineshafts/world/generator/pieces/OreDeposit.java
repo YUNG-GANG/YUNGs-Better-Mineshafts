@@ -3,6 +3,7 @@ package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshafts;
 import com.yungnickyoung.minecraft.bettermineshafts.config.Configuration;
 import com.yungnickyoung.minecraft.bettermineshafts.world.MapGenBetterMineshaft;
+import com.yungnickyoung.minecraft.bettermineshafts.world.generator.MineshaftVariantSettings;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.StructureComponent;
 import com.yungnickyoung.minecraft.bettermineshafts.util.BoxUtil;
@@ -63,8 +64,8 @@ public class OreDeposit extends MineshaftPiece {
     public OreDeposit() {
     }
 
-    public OreDeposit(int i, int chunkPieceLen, Random random, StructureBoundingBox blockBox, EnumFacing direction, MapGenBetterMineshaft.Type type) {
-        super(i, chunkPieceLen, type);
+    public OreDeposit(int i, int chunkPieceLen, Random random, StructureBoundingBox blockBox, EnumFacing direction, MineshaftVariantSettings settings) {
+        super(i, chunkPieceLen, settings);
         this.setCoordBaseMode(direction);
         this.boundingBox = blockBox;
     }

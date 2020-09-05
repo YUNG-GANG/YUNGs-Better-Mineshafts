@@ -7,6 +7,8 @@ import com.yungnickyoung.minecraft.bettermineshafts.util.Pair;
 import com.yungnickyoung.minecraft.bettermineshafts.world.MapGenBetterMineshaft;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
 import com.yungnickyoung.minecraft.bettermineshafts.util.BoxUtil;
+import com.yungnickyoung.minecraft.bettermineshafts.world.generator.MineshaftVariantSettings;
+import net.minecraft.block.BlockFence;
 import net.minecraft.block.BlockWall;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityMinecartChest;
@@ -47,8 +49,8 @@ public class BigTunnel extends MineshaftPiece {
 
     public BigTunnel() {}
 
-    public BigTunnel(int i, int pieceChainLen, Random random, StructureBoundingBox blockBox, EnumFacing direction, MapGenBetterMineshaft.Type type) {
-        super(i, pieceChainLen, type);
+    public BigTunnel(int i, int pieceChainLen, Random random, StructureBoundingBox blockBox, EnumFacing direction, MineshaftVariantSettings settings) {
+        super(i, pieceChainLen, settings);
         this.setCoordBaseMode(direction);
         this.boundingBox = blockBox;
     }
@@ -163,16 +165,16 @@ public class BigTunnel extends MineshaftPiece {
         if (this.isInOcean(world, 0, 0) || this.isInOcean(world, LOCAL_X_END, LOCAL_Z_END)) return false;
 
         // Randomize blocks
-        float chance =
-            this.mineshaftType == MapGenBetterMineshaft.Type.SNOW
-                || this.mineshaftType == MapGenBetterMineshaft.Type.ICE
-                || this.mineshaftType == MapGenBetterMineshaft.Type.MUSHROOM
-                ? .95f
-                : .6f;
-        this.chanceReplaceNonAir(world, box, random, chance, 0, 1, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getMainSelector());
+//        float chance =
+//            this.mineshaftType == MapGenBetterMineshaft.Type.SNOW
+//                || this.mineshaftType == MapGenBetterMineshaft.Type.ICE
+//                || this.mineshaftType == MapGenBetterMineshaft.Type.MUSHROOM
+//                ? .95f
+//                : .6f;
+        this.chanceReplaceNonAir(world, box, random, settings.replacementRate, 0, 1, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getMainSelector());
 
         // Randomize floor
-        this.chanceReplaceNonAir(world, box, random, chance, 0, 0, 0, LOCAL_X_END, 0, LOCAL_Z_END, getFloorSelector());
+        this.chanceReplaceNonAir(world, box, random, settings.replacementRate, 0, 0, 0, LOCAL_X_END, 0, LOCAL_Z_END, getFloorSelector());
 
         // Fill with air
         this.fill(world, box, 1, 1, 0, LOCAL_X_END - 1, LOCAL_Y_END - 3, LOCAL_Z_END, AIR);
@@ -181,9 +183,6 @@ public class BigTunnel extends MineshaftPiece {
 
         // Fill in any air in floor with main block
         this.replaceAir(world, box, 1, 0, 0, LOCAL_X_END - 1, 0, LOCAL_Z_END, getMainBlock());
-        // Special case - mushroom mineshafts get mycelium in floor
-        if (this.mineshaftType == MapGenBetterMineshaft.Type.MUSHROOM)
-            this.chanceReplaceNonAir(world, box, random, .8f, 1, 0, 0, LOCAL_X_END - 1, 0, LOCAL_Z_END, Blocks.MYCELIUM.getDefaultState());
 
         // Core structure
         generateSmallShaftEntrances(world, box, random);
@@ -199,7 +198,7 @@ public class BigTunnel extends MineshaftPiece {
         generateTntCarts(world, box, random);
         generateGravelDeposits(world, box, random);
         this.addBiomeDecorations(world, box, random, 1, 0, 0, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END);
-        this.addVines(world, box, random, getVineChance(), 1, 0, 1, LOCAL_X_END - 1, LOCAL_Y_END, LOCAL_Z_END - 1);
+        this.addVines(world, box, random, 1, 0, 1, LOCAL_X_END - 1, LOCAL_Y_END, LOCAL_Z_END - 1);
         generateCobwebs(world, box, random);
 
         return true;
@@ -207,12 +206,21 @@ public class BigTunnel extends MineshaftPiece {
 
     private void generateLegs(World world, StructureBoundingBox box, Random random) {
         // Ice and mushroom biome variants have different legs
-        if (this.mineshaftType == MapGenBetterMineshaft.Type.ICE || this.mineshaftType == MapGenBetterMineshaft.Type.MUSHROOM) {
-            generateLegsVariant(world, box, random);
-            return;
+//        if (this.mineshaftType == MapGenBetterMineshaft.Type.ICE || this.mineshaftType == MapGenBetterMineshaft.Type.MUSHROOM) {
+        if (settings.legVariant == 1) {
+            generateLegsVariant1(world, box, random);
+        } else {
+            generateLegsVariant2(world, box, random);
         }
+    }
 
-        IBlockState supportBlock = getSupportBlock().withProperty(BlockWall.NORTH, true).withProperty(BlockWall.SOUTH, true);
+    private void generateLegsVariant1(World world, StructureBoundingBox box, Random random) {
+        IBlockState supportBlock = getSupportBlock();
+        if (supportBlock.getBlock() instanceof BlockFence) {
+            supportBlock = supportBlock.withProperty(BlockFence.NORTH, true).withProperty(BlockFence.SOUTH, true);
+        } else if (supportBlock.getBlock() instanceof BlockWall) {
+            supportBlock = supportBlock.withProperty(BlockWall.NORTH, true).withProperty(BlockWall.SOUTH, true);
+        }
 
         // Left side
         generateLeg(world, random, box, 1, 0, getLegSelector());
@@ -259,7 +267,7 @@ public class BigTunnel extends MineshaftPiece {
         generateLeg(world, random, box, LOCAL_X_END - 1, LOCAL_Z_END, getLegSelector());
     }
 
-    private void generateLegsVariant(World world, StructureBoundingBox box, Random random) {
+    private void generateLegsVariant2(World world, StructureBoundingBox box, Random random) {
         for (int z = 0; z <= LOCAL_Z_END; z += 7) {
             generateLeg(world, random, box, 2, z + 1, getLegSelector());
             generateLeg(world, random, box, LOCAL_X_END - 2, z + 1, getLegSelector());
@@ -373,15 +381,16 @@ public class BigTunnel extends MineshaftPiece {
             // Supports
             this.fill(world, box, 1, 2, z + 1, 1, 3, z + 1, getSupportBlock());
             this.fill(world, box, LOCAL_X_END - 1, 2, z + 1, LOCAL_X_END - 1, 3, z + 1, getSupportBlock());
-            if (this.mineshaftType != MapGenBetterMineshaft.Type.DESERT) {
-                this.chanceReplaceNonAir(world, box, random, .4f, 2, 5, z + 1, LOCAL_X_END - 2, 5, z + 1, getSupportBlock());
-            }
+            this.chanceReplaceNonAir(world, box, random, .4f, 2, 5, z + 1, LOCAL_X_END - 2, 5, z + 1, getSupportBlock());
         });
     }
 
     private void generateSmallSupports(World world, StructureBoundingBox box, Random random) {
         IBlockState supportBlock = getSupportBlock();
-        if (this.mineshaftType != MapGenBetterMineshaft.Type.ICE && this.mineshaftType != MapGenBetterMineshaft.Type.MUSHROOM)
+//        if (this.mineshaftType != MapGenBetterMineshaft.Type.ICE && this.mineshaftType != MapGenBetterMineshaft.Type.MUSHROOM)
+        if (supportBlock.getBlock() instanceof BlockFence)
+            supportBlock = getSupportBlock().withProperty(BlockFence.WEST, true).withProperty(BlockFence.EAST, true);
+        else if (supportBlock.getBlock() instanceof BlockWall)
             supportBlock = getSupportBlock().withProperty(BlockWall.WEST, true).withProperty(BlockWall.EAST, true);
 
         for (int z : smallSupports) {
