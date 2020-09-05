@@ -109,7 +109,7 @@ public class SideRoomDungeon extends MineshaftPiece {
         // Chests
         this.generateChest(world, box, random, 1, 1, LOCAL_Z_END - 1, LootTableList.CHESTS_ABANDONED_MINESHAFT);
         if (random.nextInt(2) == 0) { // Chance of second chest
-            this.generateChest(world, box, random, LOCAL_X_END - 1, 1, LOCAL_Z_END - 1, LootTableList.CHESTS_STRONGHOLD_CORRIDOR);
+            this.generateChest(world, box, random, LOCAL_X_END - 1, 1, LOCAL_Z_END - 1, LootTableList.CHESTS_ABANDONED_MINESHAFT);
         }
 
         // Decorations

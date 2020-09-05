@@ -1,7 +1,6 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
 import com.yungnickyoung.minecraft.bettermineshafts.util.BoxUtil;
-import com.yungnickyoung.minecraft.bettermineshafts.world.MapGenBetterMineshaft;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.MineshaftVariantSettings;
 import net.minecraft.block.BlockRail;
@@ -75,11 +74,6 @@ public class SmallTunnelStairs extends MineshaftPiece {
         if (this.isInOcean(world, 0, 0) || this.isInOcean(world, LOCAL_X_END, LOCAL_Z_END)) return false;
 
         // Randomize blocks
-//        float chance =
-//            this.mineshaftType == MapGenBetterMineshaft.Type.ICE
-//                || this.mineshaftType == MapGenBetterMineshaft.Type.MUSHROOM
-//            ? .95f
-//            : .6f;
         this.chanceReplaceNonAir(world, box, random, settings.replacementRate, 0, 1, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getMainSelector());
 
         // Randomize floor

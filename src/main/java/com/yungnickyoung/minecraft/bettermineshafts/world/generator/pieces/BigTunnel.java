@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import com.yungnickyoung.minecraft.bettermineshafts.config.Configuration;
 import com.yungnickyoung.minecraft.bettermineshafts.integration.Integrations;
 import com.yungnickyoung.minecraft.bettermineshafts.util.Pair;
-import com.yungnickyoung.minecraft.bettermineshafts.world.MapGenBetterMineshaft;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
 import com.yungnickyoung.minecraft.bettermineshafts.util.BoxUtil;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.MineshaftVariantSettings;
@@ -165,12 +164,6 @@ public class BigTunnel extends MineshaftPiece {
         if (this.isInOcean(world, 0, 0) || this.isInOcean(world, LOCAL_X_END, LOCAL_Z_END)) return false;
 
         // Randomize blocks
-//        float chance =
-//            this.mineshaftType == MapGenBetterMineshaft.Type.SNOW
-//                || this.mineshaftType == MapGenBetterMineshaft.Type.ICE
-//                || this.mineshaftType == MapGenBetterMineshaft.Type.MUSHROOM
-//                ? .95f
-//                : .6f;
         this.chanceReplaceNonAir(world, box, random, settings.replacementRate, 0, 1, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getMainSelector());
 
         // Randomize floor
@@ -206,7 +199,6 @@ public class BigTunnel extends MineshaftPiece {
 
     private void generateLegs(World world, StructureBoundingBox box, Random random) {
         // Ice and mushroom biome variants have different legs
-//        if (this.mineshaftType == MapGenBetterMineshaft.Type.ICE || this.mineshaftType == MapGenBetterMineshaft.Type.MUSHROOM) {
         if (settings.legVariant == 1) {
             generateLegsVariant1(world, box, random);
         } else {
@@ -387,7 +379,6 @@ public class BigTunnel extends MineshaftPiece {
 
     private void generateSmallSupports(World world, StructureBoundingBox box, Random random) {
         IBlockState supportBlock = getSupportBlock();
-//        if (this.mineshaftType != MapGenBetterMineshaft.Type.ICE && this.mineshaftType != MapGenBetterMineshaft.Type.MUSHROOM)
         if (supportBlock.getBlock() instanceof BlockFence)
             supportBlock = getSupportBlock().withProperty(BlockFence.WEST, true).withProperty(BlockFence.EAST, true);
         else if (supportBlock.getBlock() instanceof BlockWall)

@@ -3,7 +3,6 @@ package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshafts;
 import com.yungnickyoung.minecraft.bettermineshafts.util.ColPos;
 import com.yungnickyoung.minecraft.bettermineshafts.util.SurfaceUtil;
-import com.yungnickyoung.minecraft.bettermineshafts.world.MapGenBetterMineshaft;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.MineshaftVariantSettings;
 import net.minecraft.block.state.IBlockState;

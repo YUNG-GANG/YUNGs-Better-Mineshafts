@@ -1,7 +1,6 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator;
 
 import com.yungnickyoung.minecraft.bettermineshafts.config.Configuration;
-import com.yungnickyoung.minecraft.bettermineshafts.world.MapGenBetterMineshaft;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.*;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.gen.structure.StructureBoundingBox;
@@ -17,7 +16,7 @@ public class BetterMineshaftGenerator {
         }
 
         int rand = random.nextInt(100);
-        MineshaftVariantSettings settings = ((MineshaftPiece) structurePiece).settings;
+        MineshaftVariantSettings settings = ((MineshaftPiece) structurePiece).getSettings();
 
         if (rand >= 10 || pieceChainLen < 1) {
             StructureBoundingBox blockBox = BigTunnel.determineBoxPosition(x, y, z, direction);
@@ -33,7 +32,7 @@ public class BetterMineshaftGenerator {
     public static MineshaftPiece generateAndAddSmallTunnelPiece(StructureComponent structurePiece, List<StructureComponent> list, Random random, int x, int y, int z, EnumFacing direction, int l, int pieceChainLen) {
         StructureBoundingBox blockBox;
         int rand = random.nextInt(100);
-        MineshaftVariantSettings settings = ((MineshaftPiece) structurePiece).settings;
+        MineshaftVariantSettings settings = ((MineshaftPiece) structurePiece).getSettings();
 
         // End of chain - place ore deposit or zombie villager room
         if (pieceChainLen > Configuration.spawnRates.smallShaftPieceChainLength - 2) {
@@ -115,7 +114,7 @@ public class BetterMineshaftGenerator {
     }
 
     public static MineshaftPiece generateAndAddSideRoomPiece(StructureComponent structurePiece, List<StructureComponent> list, Random random, int x, int y, int z, EnumFacing direction, int l, int pieceChainLen) {
-        MineshaftVariantSettings settings = ((MineshaftPiece) structurePiece).settings;
+        MineshaftVariantSettings settings = ((MineshaftPiece) structurePiece).getSettings();
 
         StructureBoundingBox blockBox = SideRoom.determineBoxPosition(list, random, x, y, z, direction);
         if (blockBox != null) {
@@ -129,7 +128,7 @@ public class BetterMineshaftGenerator {
     }
 
     public static MineshaftPiece generateAndAddSideRoomDungeonPiece(StructureComponent structurePiece, List<StructureComponent> list, Random random, int x, int y, int z, EnumFacing direction, int l, int pieceChainLen) {
-        MineshaftVariantSettings settings = ((MineshaftPiece) structurePiece).settings;
+        MineshaftVariantSettings settings = ((MineshaftPiece) structurePiece).getSettings();
 
         StructureBoundingBox blockBox = SideRoomDungeon.determineBoxPosition(list, random, x, y, z, direction);
         if (blockBox != null) {

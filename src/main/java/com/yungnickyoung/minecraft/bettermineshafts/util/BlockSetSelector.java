@@ -8,12 +8,11 @@ import java.util.*;
 
 /**
  * Describes a set of blocks and the probability of each block in the set being chosen.
- * Includes static members used for each Better Mineshaft biome variant.
  */
 public class BlockSetSelector {
     /**
      * Map of block to its corresponding probability.
-     * The total sum of all the probabilities cannot exceed 1.
+     * The total sum of all the probabilities should not exceed 1.
      */
     private Map<IBlockState, Float> entries = new HashMap<>();
 

@@ -25,7 +25,7 @@ public class MineshaftVariantSettings {
     public float cactusChance;
     public float deadBushChance;
     public float mushroomChance;
-    public int legVariant; // TODO - change to type?
+    public int legVariant;
     public float replacementRate;
 
     /** Builder-style setters to make it more obvious which settings are being set when creating a new object **/

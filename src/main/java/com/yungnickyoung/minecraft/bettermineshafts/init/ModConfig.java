@@ -5,7 +5,6 @@ import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshafts;
 import com.yungnickyoung.minecraft.bettermineshafts.config.BMSettings;
 import com.yungnickyoung.minecraft.bettermineshafts.event.EventConfigReload;
 import com.yungnickyoung.minecraft.bettermineshafts.json.BiomeDictionaryTypeAdapter;
-import com.yungnickyoung.minecraft.bettermineshafts.util.BlockSetSelectors;
 import com.yungnickyoung.minecraft.bettermineshafts.json.BlockStateAdapter;
 import com.yungnickyoung.minecraft.bettermineshafts.json.BlockStateContainerAdapter;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.MineshaftVariants;
@@ -26,7 +25,7 @@ public class ModConfig {
     public static void preInit() {
         createDirectory();
         createReadMe();
-        loadBlockJSON();
+        loadVariantsJSON();
         MinecraftForge.EVENT_BUS.register(new EventConfigReload());
     }
 
@@ -63,11 +62,11 @@ public class ModConfig {
     }
 
     /**
-     * If the block selector JSON file already exists, it loads its contents into BlockSetSelectors.
-     * Otherwise, it creates a default JSON and uses it for the BlockSetSelectors.
+     * If the variants JSON file already exists, it loads its contents into MineshaftVariants.
+     * Otherwise, it creates a default JSON and from the default options in MineshaftVariants.
      */
-    private static void loadBlockJSON() {
-        Path jsonPath = Paths.get(Loader.instance().getConfigDir().toString(), BMSettings.CUSTOM_CONFIG_PATH, BMSettings.VERSION_PATH, "blockSetSelectors.json");
+    private static void loadVariantsJSON() {
+        Path jsonPath = Paths.get(Loader.instance().getConfigDir().toString(), BMSettings.CUSTOM_CONFIG_PATH, BMSettings.VERSION_PATH, "variants.json");
         File jsonFile = new File(jsonPath.toString());
 
         GsonBuilder gsonBuilder = new GsonBuilder();
@@ -80,7 +79,6 @@ public class ModConfig {
 
         if (!jsonFile.exists()) {
             // Create default file if JSON file doesn't already exist
-//            String jsonString = gson.toJson(BlockSetSelectors.get());
             String jsonString = gson.toJson(MineshaftVariants.get());
 
             try {
@@ -91,15 +89,14 @@ public class ModConfig {
         } else {
             // If file already exists, load data into BlockSetSelectors' singleton instance
             if (!jsonFile.canRead()) {
-                BetterMineshafts.LOGGER.error("Better Mineshafts block selectors JSON file not readable! Using default configuration...");
+                BetterMineshafts.LOGGER.error("Better Mineshafts variants.json file not readable! Using default configuration...");
                 return;
             }
 
             try (Reader reader = Files.newBufferedReader(jsonPath)) {
-//                BlockSetSelectors.instance = gson.fromJson(reader, BlockSetSelectors.class);
                 MineshaftVariants.instance = gson.fromJson(reader, MineshaftVariants.class);
             } catch (Exception e) {
-                BetterMineshafts.LOGGER.error("Error loading Better Mineshafts block selectors JSON file: {}", e.toString());
+                BetterMineshafts.LOGGER.error("Error loading Better Mineshafts variants.json file: {}", e.toString());
                 BetterMineshafts.LOGGER.error("Using default configuration...");
             }
         }

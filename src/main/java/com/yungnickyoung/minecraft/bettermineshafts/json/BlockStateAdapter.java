@@ -38,7 +38,7 @@ public class BlockStateAdapter extends TypeAdapter<IBlockState> {
         if (startIndex != -1) {
             blockString = fullString.substring(0, startIndex);
             if (stopIndex < startIndex) {
-                BetterMineshafts.LOGGER.error("Better Mineshafts JSON: Malformed property {}. Missing a bracket?", fullString);
+                BetterMineshafts.LOGGER.error("variants.json: Malformed property {}. Missing a bracket?", fullString);
                 BetterMineshafts.LOGGER.error("Using air instead...");
                 return Blocks.AIR.getDefaultState();
             }
@@ -67,13 +67,13 @@ public class BlockStateAdapter extends TypeAdapter<IBlockState> {
         try {
             blockState = Block.getBlockFromName(blockString).getDefaultState();
         } catch (Exception e) {
-            BetterMineshafts.LOGGER.error("Better Mineshafts JSON: Unable to read block '{}': {}", blockString, e.toString());
+            BetterMineshafts.LOGGER.error("variants.json: Unable to read block '{}': {}", blockString, e.toString());
             BetterMineshafts.LOGGER.error("Using air instead...");
             return Blocks.AIR.getDefaultState();
         }
 
         if (blockState == null) {
-            BetterMineshafts.LOGGER.error("Better Mineshafts JSON: Unable to read block '{}': null block returned.", blockString);
+            BetterMineshafts.LOGGER.error("variants.json: Unable to read block '{}': null block returned.", blockString);
             BetterMineshafts.LOGGER.error("Using air instead...");
             return Blocks.AIR.getDefaultState();
         }
@@ -96,57 +96,12 @@ public class BlockStateAdapter extends TypeAdapter<IBlockState> {
     private <T extends Enum<T> & IStringSerializable> IBlockState getConfiguredBlockState(IBlockState blockState, Map<String, String> properties) {
         // Convert string property name/val into actual stuff that I can somehow apply to the blockstate
         Block block = blockState.getBlock();
-//        Class<T> blockEnumClass = (Class<T>) Arrays.stream(blockClass.getDeclaredClasses()).filter(Class::isEnum).findFirst().orElse(null);
 
         for (Map.Entry<String, String> entry : properties.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
 
-//            // Colored variants are an exception - the "color" property is located in BlockColored and uses EnumDyeColor
-//            if (key.equals("color")) {
-//                if (block instanceof BlockColored) {
-//                    if (BlockColored.COLOR.parseValue(value).isPresent()) {
-//                        blockState = blockState.withProperty(BlockColored.COLOR, BlockColored.COLOR.parseValue(value).get());
-//                        continue;
-//                    } else {
-//                        BetterMineshafts.LOGGER.warn("Advanced Options - Unrecognized color '{}' for block '{}'", value, blockState.getBlock().getLocalizedName());
-//                    }
-//                } else {
-//                    BetterMineshafts.LOGGER.warn("Advanced Options - Unable to read block '{}' for property 'color'", blockState.getBlock().getLocalizedName());
-//                    BetterMineshafts.LOGGER.warn("This block is probably a modded block that Better Mineshafts can't fully support. Ignoring 'color' property...");
-//                    continue;
-//                }
-//            }
-//
-//            // Logs are another exception for their "variant" and "axis" properties.
-//            // Logs in 1.12.2 are split into two types, OldLog and NewLog, so we must process them separately for the 'variant' property
-//            if (block instanceof BlockOldLog && key.equals("variant")) {
-//                if (BlockOldLog.VARIANT.parseValue(value).isPresent()) {
-//                    blockState = blockState.withProperty(BlockOldLog.VARIANT, BlockOldLog.VARIANT.parseValue(value).get());
-//                    continue;
-//                } else {
-//                    BetterMineshafts.LOGGER.warn("Advanced Options - Unrecognized variant '{}' for block '{}'", value, blockState.getBlock().getLocalizedName());
-//                }
-//            } else if (block instanceof BlockNewLog && key.equals("variant")) {
-//                if (BlockNewLog.VARIANT.parseValue(value).isPresent()) {
-//                    blockState = blockState.withProperty(BlockNewLog.VARIANT, BlockNewLog.VARIANT.parseValue(value).get());
-//                    continue;
-//                } else {
-//                    BetterMineshafts.LOGGER.warn("Advanced Options - Unrecognized variant '{}' for block '{}'", value, blockState.getBlock().getLocalizedName());
-//                }
-//            }
-//
-//            // Log block 'axis' property is shared between the two log types
-//            if (block instanceof BlockLog && key.equals("axis")) {
-//                if (BlockLog.LOG_AXIS.parseValue(value).isPresent()) {
-//                    blockState = blockState.withProperty(BlockLog.LOG_AXIS, BlockLog.LOG_AXIS.parseValue(value).get());
-//                    continue;
-//                } else {
-//                    BetterMineshafts.LOGGER.warn("Advanced Options - Unrecognized axis '{}' for block '{}'", value, blockState.getBlock().getLocalizedName());
-//                }
-//            }
-
-            // Main logic - iterate class fields, searching for property
+            // Iterate class and superclass fields, searching for property
             try {
                 boolean found = false;
                 Class<?> blockClass = block.getClass();
@@ -170,9 +125,12 @@ public class BlockStateAdapter extends TypeAdapter<IBlockState> {
                     }
                     blockClass = blockClass.getSuperclass();
                 }
+                if (!found) {
+                    BetterMineshafts.LOGGER.error("variants.json: Unable to find property {} for block {}", key, block.getLocalizedName());
+                }
             } catch (Exception e) {
-                BetterMineshafts.LOGGER.error("Advanced Options - Encountered error while attempting to apply property {}={} to block {}: {}",
-                    key, value, blockState.getBlock().getLocalizedName(), e.toString());
+                BetterMineshafts.LOGGER.error("variants.json: Encountered error while attempting to apply property {}={} to block {}: {}",
+                    key, value, block.getLocalizedName(), e.toString());
             }
         }
 

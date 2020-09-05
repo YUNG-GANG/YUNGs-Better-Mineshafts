@@ -34,13 +34,13 @@ public class BlockStateContainerAdapter extends TypeAdapter<BlockStateContainer.
         try {
             blockState = Block.getBlockFromName(blockString).getDefaultState();
         } catch (Exception e) {
-            BetterMineshafts.LOGGER.warn("Advanced Options - Unable to read block '{}': {}", blockString, e.toString());
+            BetterMineshafts.LOGGER.warn("variants.json: Unable to read block '{}': {}", blockString, e.toString());
             BetterMineshafts.LOGGER.warn("Using air instead...");
             blockState = Blocks.AIR.getDefaultState();
         }
 
         if (blockState == null) {
-            BetterMineshafts.LOGGER.warn("Unable to read block '{}': null block returned.", blockString);
+            BetterMineshafts.LOGGER.warn("variants.json: Unable to read block '{}': null block returned.", blockString);
             BetterMineshafts.LOGGER.warn("Using air instead...");
             blockState = Blocks.AIR.getDefaultState();
         }

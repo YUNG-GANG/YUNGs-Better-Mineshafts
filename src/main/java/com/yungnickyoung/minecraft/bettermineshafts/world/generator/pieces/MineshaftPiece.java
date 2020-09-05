@@ -24,8 +24,7 @@ import java.util.Random;
 import java.util.Set;
 
 public abstract class MineshaftPiece extends StructureComponent {
-//    public MapGenBetterMineshaft.Type mineshaftType;
-    public MineshaftVariantSettings settings;
+    protected MineshaftVariantSettings settings;
     protected int pieceChainLen;
 
     protected static final IBlockState AIR = Blocks.AIR.getDefaultState();
@@ -41,7 +40,6 @@ public abstract class MineshaftPiece extends StructureComponent {
 
     @Override
     protected void writeStructureToNBT(NBTTagCompound tag) {
-//        tag.setInteger("MST", this.mineshaftType.ordinal());
         int index = MineshaftVariants.get().getVariants().indexOf(this.settings);
         tag.setInteger("MST", index);
     }
@@ -49,7 +47,6 @@ public abstract class MineshaftPiece extends StructureComponent {
     @Override
     @ParametersAreNonnullByDefault
     protected void readStructureFromNBT(NBTTagCompound tagCompound, TemplateManager p_143011_2_) {
-//        this.mineshaftType = MapGenBetterMineshaft.Type.byId(tagCompound.getInteger("MST"));
         int index = tagCompound.getInteger("MST");
         this.settings = index < MineshaftVariants.get().getVariants().size() && index >= 0
             ? MineshaftVariants.get().getVariants().get(index)
@@ -58,6 +55,10 @@ public abstract class MineshaftPiece extends StructureComponent {
 
     public void setBoundingBox(StructureBoundingBox boundingBox) {
         this.boundingBox = boundingBox;
+    }
+
+    public MineshaftVariantSettings getSettings() {
+        return settings;
     }
 
     /**
@@ -75,84 +76,18 @@ public abstract class MineshaftPiece extends StructureComponent {
 
     protected BlockSetSelector getMainSelector() {
         return settings.selector;
-//        switch (this.mineshaftType) {
-//            case MESA:
-//                return BlockSetSelectors.get().MESA;
-//            case JUNGLE:
-//                return BlockSetSelectors.get().JUNGLE;
-//            case SNOW:
-//                return BlockSetSelectors.get().SNOW;
-//            case ICE:
-//                return BlockSetSelectors.get().ICE;
-//            case DESERT:
-//                return BlockSetSelectors.get().DESERT;
-//            case RED_DESERT:
-//                return BlockSetSelectors.get().RED_DESERT;
-//            case MUSHROOM:
-//                return BlockSetSelectors.get().MUSHROOM;
-//            case SAVANNA:
-//                return BlockSetSelectors.get().ACACIA;
-//            default:
-//                return BlockSetSelectors.get().NORMAL;
-//        }
     }
 
     protected BlockSetSelector getFloorSelector() {
         return settings.floorSelector;
-//        switch (this.mineshaftType) {
-//            case DESERT:
-//                return BlockSetSelectors.get().FLOOR_DESERT;
-//            case RED_DESERT:
-//                return BlockSetSelectors.get().FLOOR_RED_DESERT;
-//            case MUSHROOM:
-//                return BlockSetSelectors.get().FLOOR_MUSHROOM;
-//            default:
-//                return getMainSelector();
-//        }
     }
 
     protected BlockSetSelector getBrickSelector() {
         return settings.brickSelector;
-//        switch (this.mineshaftType) {
-//            case JUNGLE:
-//                return BlockSetSelectors.get().STONE_BRICK_JUNGLE;
-//            case SNOW:
-//                return BlockSetSelectors.get().STONE_BRICK_SNOW;
-//            case ICE:
-//                return BlockSetSelectors.get().STONE_BRICK_ICE;
-//            case DESERT:
-//                return BlockSetSelectors.get().STONE_BRICK_DESERT;
-//            case RED_DESERT:
-//                return BlockSetSelectors.get().STONE_BRICK_RED_DESERT;
-//            case MUSHROOM:
-//                return BlockSetSelectors.get().STONE_BRICK_MUSHROOM;
-//            default:
-//                return BlockSetSelectors.get().STONE_BRICK_NORMAL;
-//        }
     }
 
     protected BlockSetSelector getLegSelector() {
         return settings.legSelector;
-//        switch (this.mineshaftType) {
-//            case MESA:
-//                return BlockSetSelector.from(Blocks.LOG2.getDefaultState().withProperty(BlockLog.LOG_AXIS, BlockLog.EnumAxis.Y).withProperty(BlockNewLog.VARIANT, BlockPlanks.EnumType.DARK_OAK));
-//            case JUNGLE:
-//                return BlockSetSelector.from(Blocks.LOG.getDefaultState().withProperty(BlockLog.LOG_AXIS, BlockLog.EnumAxis.Y).withProperty(BlockOldLog.VARIANT, BlockPlanks.EnumType.JUNGLE));
-//            case SNOW:
-//                return BlockSetSelector.from(Blocks.LOG.getDefaultState().withProperty(BlockLog.LOG_AXIS, BlockLog.EnumAxis.Y).withProperty(BlockOldLog.VARIANT, BlockPlanks.EnumType.SPRUCE));
-//            case ICE:
-//                return BlockSetSelectors.get().STONE_BRICK_ICE;
-//            case DESERT:
-//                return BlockSetSelectors.get().STONE_BRICK_DESERT;
-//            case RED_DESERT:
-//                return BlockSetSelectors.get().STONE_BRICK_RED_DESERT;
-//            case MUSHROOM:
-//                return BlockSetSelectors.get().STONE_BRICK_MUSHROOM;
-//            case SAVANNA:
-//                return BlockSetSelector.from(Blocks.LOG2.getDefaultState().withProperty(BlockLog.LOG_AXIS, BlockLog.EnumAxis.Y).withProperty(BlockNewLog.VARIANT, BlockPlanks.EnumType.ACACIA));
-//            default:
-//                return BlockSetSelector.from(Blocks.LOG.getDefaultState().withProperty(BlockLog.LOG_AXIS, BlockLog.EnumAxis.Y).withProperty(BlockOldLog.VARIANT, BlockPlanks.EnumType.OAK));
-//        }
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -161,131 +96,30 @@ public abstract class MineshaftPiece extends StructureComponent {
 
     protected IBlockState getMainBlock() {
         return settings.mainBlock;
-//        switch (this.mineshaftType) {
-//            case MESA:
-//                return Blocks.PLANKS.getDefaultState().withProperty(BlockPlanks.VARIANT, BlockPlanks.EnumType.DARK_OAK);
-//            case JUNGLE:
-//                return Blocks.PLANKS.getDefaultState().withProperty(BlockPlanks.VARIANT, BlockPlanks.EnumType.JUNGLE);
-//            case SNOW:
-//                return Blocks.PLANKS.getDefaultState().withProperty(BlockPlanks.VARIANT, BlockPlanks.EnumType.SPRUCE);
-//            case ICE:
-//                return Blocks.PACKED_ICE.getDefaultState();
-//            case DESERT:
-//                return Blocks.SANDSTONE.getDefaultState();
-//            case RED_DESERT:
-//                return Blocks.RED_SANDSTONE.getDefaultState();
-//            case MUSHROOM:
-//                return Blocks.RED_MUSHROOM_BLOCK.getDefaultState();
-//            case SAVANNA:
-//                return Blocks.PLANKS.getDefaultState().withProperty(BlockPlanks.VARIANT, BlockPlanks.EnumType.ACACIA);
-//            default:
-//                return Blocks.PLANKS.getDefaultState().withProperty(BlockPlanks.VARIANT, BlockPlanks.EnumType.OAK);
-//        }
     }
 
     protected IBlockState getSupportBlock() {
         return settings.supportBlock;
-//        switch (this.mineshaftType) {
-//            case MESA:
-//                return Blocks.DARK_OAK_FENCE.getDefaultState();
-//            case JUNGLE:
-//                return Blocks.JUNGLE_FENCE.getDefaultState();
-//            case SNOW:
-//                return Blocks.SPRUCE_FENCE.getDefaultState();
-//            case ICE:
-//                return Blocks.PACKED_ICE.getDefaultState();
-//            case MUSHROOM:
-//                return Blocks.BROWN_MUSHROOM_BLOCK.getDefaultState().withProperty(BlockHugeMushroom.VARIANT, BlockHugeMushroom.EnumType.STEM);
-//            case SAVANNA:
-//                return Blocks.ACACIA_FENCE.getDefaultState();
-//            default:
-//                return Blocks.OAK_FENCE.getDefaultState();
-//        }
     }
 
     protected IBlockState getMainSlab() {
         return settings.slabBlock;
-//        switch (this.mineshaftType) {
-//            case MESA:
-//                return Blocks.WOODEN_SLAB.getDefaultState().withProperty(BlockWoodSlab.VARIANT, BlockPlanks.EnumType.DARK_OAK);
-//            case JUNGLE:
-//                return Blocks.WOODEN_SLAB.getDefaultState().withProperty(BlockWoodSlab.VARIANT, BlockPlanks.EnumType.JUNGLE);
-//            case SNOW:
-//                return Blocks.WOODEN_SLAB.getDefaultState().withProperty(BlockWoodSlab.VARIANT, BlockPlanks.EnumType.SPRUCE);
-//            case ICE:
-//                return Blocks.PACKED_ICE.getDefaultState();
-//            case DESERT:
-//                return Blocks.STONE_SLAB.getDefaultState().withProperty(BlockStoneSlab.VARIANT, BlockStoneSlab.EnumType.SAND);
-//            case RED_DESERT:
-//                return Blocks.STONE_SLAB2.getDefaultState().withProperty(BlockStoneSlabNew.VARIANT, BlockStoneSlabNew.EnumType.RED_SANDSTONE);
-//            case MUSHROOM:
-//                return Blocks.BROWN_MUSHROOM_BLOCK.getDefaultState();
-//            case SAVANNA:
-//                return Blocks.WOODEN_SLAB.getDefaultState().withProperty(BlockWoodSlab.VARIANT, BlockPlanks.EnumType.ACACIA);
-//            default:
-//                return Blocks.WOODEN_SLAB.getDefaultState().withProperty(BlockWoodSlab.VARIANT, BlockPlanks.EnumType.OAK);
-//        }
     }
 
     protected IBlockState getGravel() {
         return settings.gravelBlock;
-//        switch (this.mineshaftType) {
-//            case DESERT:
-//                return Blocks.SAND.getDefaultState();
-//            case RED_DESERT:
-//                return Blocks.SAND.getDefaultState().withProperty(BlockSand.VARIANT, BlockSand.EnumType.RED_SAND);
-//            case SNOW:
-//            case ICE:
-//                return Blocks.SNOW.getDefaultState();
-//            default:
-//                return Blocks.GRAVEL.getDefaultState();
-//        }
     }
 
     protected IBlockState getMainDoorwayWall() {
         return settings.stoneWallBlock;
-//        switch (this.mineshaftType) {
-//            case SNOW:
-//                return Blocks.SNOW.getDefaultState();
-//            case ICE:
-//                return Blocks.PACKED_ICE.getDefaultState();
-//            case MUSHROOM:
-//                return Blocks.BROWN_MUSHROOM_BLOCK.getDefaultState().withProperty(BlockHugeMushroom.VARIANT, BlockHugeMushroom.EnumType.STEM);
-//            default:
-//                return Blocks.COBBLESTONE_WALL.getDefaultState();
-//        }
     }
 
     protected IBlockState getMainDoorwaySlab() {
         return settings.stoneSlabBlock;
-//        switch (this.mineshaftType) {
-//            case SNOW:
-//                return Blocks.SNOW.getDefaultState();
-//            case ICE:
-//                return Blocks.PACKED_ICE.getDefaultState();
-//            case DESERT:
-//                return Blocks.STONE_SLAB.getDefaultState().withProperty(BlockStoneSlab.VARIANT, BlockStoneSlab.EnumType.SAND).withProperty(BlockSlab.HALF, BlockSlab.EnumBlockHalf.TOP);
-//            case RED_DESERT:
-//                return Blocks.STONE_SLAB2.getDefaultState().withProperty(BlockStoneSlabNew.VARIANT, BlockStoneSlabNew.EnumType.RED_SANDSTONE).withProperty(BlockSlab.HALF, BlockSlab.EnumBlockHalf.TOP);
-//            case MUSHROOM:
-//                return Blocks.BROWN_MUSHROOM_BLOCK.getDefaultState().withProperty(BlockHugeMushroom.VARIANT, BlockHugeMushroom.EnumType.STEM);
-//            default:
-//                return Blocks.STONE_SLAB.getDefaultState().withProperty(BlockStoneSlab.VARIANT, BlockStoneSlab.EnumType.SMOOTHBRICK).withProperty(BlockSlab.HALF, BlockSlab.EnumBlockHalf.TOP);
-//        }
     }
 
     protected IBlockState getTrapdoor() {
         return Blocks.TRAPDOOR.getDefaultState();
-    }
-
-    protected float getVineChance() {
-        return settings.vineChance;
-//        switch (this.mineshaftType) {
-//            case JUNGLE:
-//                return Configuration.spawnRates.vines.vineFreqJungle;
-//            default:
-//                return Configuration.spawnRates.vines.vineFreq;
-//        }
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -338,14 +172,13 @@ public abstract class MineshaftPiece extends StructureComponent {
                     Block blockBelow = stateBelow.getBlock();
 
                     // Snow layers
-//                    if (mineshaftType == MapGenBetterMineshaft.Type.SNOW) {
                     if (settings.snowChance > 0) {
                         if (random.nextFloat() < settings.snowChance && state == AIR && blockBelow != Blocks.ICE && blockBelow != Blocks.PACKED_ICE && blockBelow != Blocks.BARRIER && stateBelow.isSideSolid(world, blockPos.down(), EnumFacing.UP)) {
                             this.setBlockState(world, Blocks.SNOW_LAYER.getDefaultState().withProperty(BlockSnow.LAYERS, random.nextInt(2) + 1), x, y, z, box);
                         }
                     }
+
                     // Cactus
-//                    else if (mineshaftType == MapGenBetterMineshaft.Type.DESERT || mineshaftType == MapGenBetterMineshaft.Type.RED_DESERT) {
                     if (settings.cactusChance > 0) {
                         if (random.nextFloat() < settings.cactusChance) {
                             if (state == AIR && blockBelow == Blocks.SAND) {
@@ -356,8 +189,8 @@ public abstract class MineshaftPiece extends StructureComponent {
                             }
                         }
                     }
+
                     // Deadbush
-//                    else if (mineshaftType == MapGenBetterMineshaft.Type.MESA) {
                     if (settings.deadBushChance > 0) {
                         if (random.nextFloat() < settings.deadBushChance) {
                             if (state == AIR && (blockBelow == Blocks.SAND || blockBelow == Blocks.STAINED_HARDENED_CLAY || blockBelow == Blocks.HARDENED_CLAY || blockBelow == Blocks.DIRT)) {
@@ -365,8 +198,8 @@ public abstract class MineshaftPiece extends StructureComponent {
                             }
                         }
                     }
+
                     // Mushrooms
-//                    else if (mineshaftType == MapGenBetterMineshaft.Type.MUSHROOM) {
                     if (settings.mushroomChance > 0) {
                         if (state == AIR && (blockBelow == Blocks.MYCELIUM || (blockBelow == Blocks.DIRT))) {
                             float r = random.nextFloat();

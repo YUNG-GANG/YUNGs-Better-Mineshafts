@@ -2,7 +2,6 @@ package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
 import com.google.common.collect.Lists;
 import com.yungnickyoung.minecraft.bettermineshafts.config.Configuration;
-import com.yungnickyoung.minecraft.bettermineshafts.world.MapGenBetterMineshaft;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
 import com.yungnickyoung.minecraft.bettermineshafts.util.BoxUtil;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.MineshaftVariantSettings;
