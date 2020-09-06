@@ -75,7 +75,7 @@ public abstract class MineshaftPiece extends StructureComponent {
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     protected BlockSetSelector getMainSelector() {
-        return settings.selector;
+        return settings.mainSelector;
     }
 
     protected BlockSetSelector getFloorSelector() {
@@ -201,7 +201,7 @@ public abstract class MineshaftPiece extends StructureComponent {
 
                     // Mushrooms
                     if (settings.mushroomChance > 0) {
-                        if (state == AIR && (blockBelow == Blocks.MYCELIUM || (blockBelow == Blocks.DIRT))) {
+                        if (state == AIR && (blockBelow == Blocks.MYCELIUM || blockBelow == Blocks.DIRT)) {
                             float r = random.nextFloat();
                             if (r < settings.mushroomChance / 2) {
                                 this.setBlockState(world, Blocks.RED_MUSHROOM.getDefaultState(), x, y, z, box);

@@ -37,7 +37,7 @@ public class MineshaftVariants {
             .setBiomeTags(new ArrayList<>(Arrays.asList(
                 new ArrayList<>(Arrays.asList(BiomeDictionary.Type.HOT, BiomeDictionary.Type.DRY, BiomeDictionary.Type.SANDY, BiomeDictionary.Type.RARE)),
                 new ArrayList<>(Arrays.asList(BiomeDictionary.Type.MESA, BiomeDictionary.Type.RARE)))))
-            .setSelector(
+            .setMainSelector(
                 new BlockSetSelector()
                     .addBlock(Blocks.RED_SANDSTONE.getDefaultState().withProperty(BlockRedSandstone.TYPE, BlockRedSandstone.EnumType.CHISELED), 0.1f)
                     .addBlock(Blocks.RED_SANDSTONE.getDefaultState().withProperty(BlockRedSandstone.TYPE, BlockRedSandstone.EnumType.SMOOTH), 0.1f)
@@ -83,7 +83,7 @@ public class MineshaftVariants {
         variants.add(new MineshaftVariantSettings()
             .setBiomeTags(new ArrayList<>(Arrays.asList(
                 new ArrayList<>(Arrays.asList(BiomeDictionary.Type.SNOWY, BiomeDictionary.Type.RARE)))))
-            .setSelector(
+            .setMainSelector(
                 new BlockSetSelector()
                     .addBlock(Blocks.SNOW.getDefaultState(), 0.1f)
                     .addBlock(Blocks.AIR.getDefaultState(), 0.1f))
@@ -118,7 +118,7 @@ public class MineshaftVariants {
         variants.add(new MineshaftVariantSettings()
             .setBiomeTags(new ArrayList<>(Arrays.asList(
                 new ArrayList<>(Arrays.asList(BiomeDictionary.Type.MESA)))))
-            .setSelector(
+            .setMainSelector(
                 new BlockSetSelector()
                     .addBlock(Blocks.STAINED_HARDENED_CLAY.getDefaultState().withProperty(BlockColored.COLOR, EnumDyeColor.BROWN), 0.1f)
                     .addBlock(Blocks.STAINED_HARDENED_CLAY.getDefaultState().withProperty(BlockColored.COLOR, EnumDyeColor.ORANGE), 0.1f)
@@ -161,7 +161,7 @@ public class MineshaftVariants {
         variants.add(new MineshaftVariantSettings()
             .setBiomeTags(new ArrayList<>(Arrays.asList(
                 new ArrayList<>(Arrays.asList(BiomeDictionary.Type.JUNGLE)))))
-            .setSelector(
+            .setMainSelector(
                 new BlockSetSelector()
                     .addBlock(Blocks.MOSSY_COBBLESTONE.getDefaultState(), 0.1f)
                     .addBlock(Blocks.STONEBRICK.getDefaultState(), 0.05f)
@@ -204,7 +204,7 @@ public class MineshaftVariants {
         variants.add(new MineshaftVariantSettings()
             .setBiomeTags(new ArrayList<>(Arrays.asList(
                 new ArrayList<>(Arrays.asList(BiomeDictionary.Type.SNOWY)))))
-            .setSelector(
+            .setMainSelector(
                 new BlockSetSelector()
                     .addBlock(Blocks.SNOW.getDefaultState(), .25f)
                     .addBlock(Blocks.PACKED_ICE.getDefaultState(), .2f)
@@ -243,7 +243,7 @@ public class MineshaftVariants {
         variants.add(new MineshaftVariantSettings()
             .setBiomeTags(new ArrayList<>(Arrays.asList(
                 new ArrayList<>(Arrays.asList(BiomeDictionary.Type.HOT, BiomeDictionary.Type.DRY, BiomeDictionary.Type.SANDY)))))
-            .setSelector(
+            .setMainSelector(
                 new BlockSetSelector()
                     .addBlock(Blocks.SANDSTONE.getDefaultState().withProperty(BlockSandStone.TYPE, BlockSandStone.EnumType.CHISELED), 0.1f)
                     .addBlock(Blocks.SANDSTONE.getDefaultState().withProperty(BlockSandStone.TYPE, BlockSandStone.EnumType.SMOOTH), 0.1f)
@@ -289,7 +289,7 @@ public class MineshaftVariants {
         variants.add(new MineshaftVariantSettings()
             .setBiomeTags(new ArrayList<>(Arrays.asList(
                 new ArrayList<>(Arrays.asList(BiomeDictionary.Type.SAVANNA)))))
-            .setSelector(
+            .setMainSelector(
                 new BlockSetSelector()
                     .addBlock(Blocks.COBBLESTONE.getDefaultState(), 0.1f)
                     .addBlock(Blocks.STONEBRICK.getDefaultState(), 0.1f)
@@ -329,7 +329,7 @@ public class MineshaftVariants {
         variants.add(new MineshaftVariantSettings()
             .setBiomeTags(new ArrayList<>(Arrays.asList(
                 new ArrayList<>(Arrays.asList(BiomeDictionary.Type.MUSHROOM)))))
-            .setSelector(
+            .setMainSelector(
                 new BlockSetSelector()
                     .addBlock(Blocks.BROWN_MUSHROOM_BLOCK.getDefaultState().withProperty(BlockHugeMushroom.VARIANT, BlockHugeMushroom.EnumType.STEM), .33333f)
                     .addBlock(Blocks.BROWN_MUSHROOM_BLOCK.getDefaultState(), .33333f)
@@ -365,7 +365,7 @@ public class MineshaftVariants {
         // Set default for biomes that don't match any of the biome tag lists
         this.defaultVariant = new MineshaftVariantSettings()
             .setBiomeTags(Lists.newArrayList()) // TODO - ensure this list can only be empty if this variant is named default
-            .setSelector(
+            .setMainSelector(
                 new BlockSetSelector()
                     .addBlock(Blocks.COBBLESTONE.getDefaultState(), 0.1f)
                     .addBlock(Blocks.STONEBRICK.getDefaultState(), 0.1f)

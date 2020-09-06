@@ -10,7 +10,7 @@ public class MineshaftVariantSettings {
     public MineshaftVariantSettings() {}
 
     public List<List<BiomeDictionary.Type>> biomeTags;
-    public BlockSetSelector selector;
+    public BlockSetSelector mainSelector;
     public BlockSetSelector floorSelector;
     public BlockSetSelector brickSelector;
     public BlockSetSelector legSelector;
@@ -35,9 +35,9 @@ public class MineshaftVariantSettings {
         return this;
     }
 
-    public MineshaftVariantSettings setSelector(BlockSetSelector selector) {
-        this.selector = selector;
-        if (this.mainBlock != null) this.selector.setDefaultBlock(mainBlock);
+    public MineshaftVariantSettings setMainSelector(BlockSetSelector mainSelector) {
+        this.mainSelector = mainSelector;
+        if (this.mainBlock != null) this.mainSelector.setDefaultBlock(mainBlock);
         return this;
     }
 
@@ -61,7 +61,7 @@ public class MineshaftVariantSettings {
 
     public MineshaftVariantSettings setMainBlock(IBlockState mainBlock) {
         this.mainBlock = mainBlock;
-        if (this.selector != null) this.selector.setDefaultBlock(mainBlock);
+        if (this.mainSelector != null) this.mainSelector.setDefaultBlock(mainBlock);
         if (this.floorSelector != null) this.floorSelector.setDefaultBlock(mainBlock);
         if (this.brickSelector != null) this.brickSelector.setDefaultBlock(mainBlock);
         if (this.legSelector != null) this.legSelector.setDefaultBlock(mainBlock);
