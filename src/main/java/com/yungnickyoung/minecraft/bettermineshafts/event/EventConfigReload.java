@@ -1,6 +1,5 @@
 package com.yungnickyoung.minecraft.bettermineshafts.event;
 
-import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshafts;
 import com.yungnickyoung.minecraft.bettermineshafts.config.BMSettings;
 import com.yungnickyoung.minecraft.bettermineshafts.integration.Integrations;
 import net.minecraftforge.common.config.Config;
