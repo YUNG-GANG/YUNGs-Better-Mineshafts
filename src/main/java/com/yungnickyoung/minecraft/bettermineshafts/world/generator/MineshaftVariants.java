@@ -50,8 +50,7 @@ public class MineshaftVariants {
                     .addBlock(Blocks.RED_SANDSTONE.getDefaultState().withProperty(BlockRedSandstone.TYPE, BlockRedSandstone.EnumType.CHISELED), 0.1f)
                     .addBlock(Blocks.RED_SANDSTONE.getDefaultState().withProperty(BlockRedSandstone.TYPE, BlockRedSandstone.EnumType.SMOOTH), 0.1f)
                     .addBlock(Blocks.STONEBRICK.getDefaultState(), 0.05f)
-                    .addBlock(Blocks.STONEBRICK.getDefaultState().withProperty(BlockStoneBrick.VARIANT, BlockStoneBrick.EnumType.CRACKED), 0.05f)
-                    .addBlock(Blocks.AIR.getDefaultState(), 0.2f))
+                    .addBlock(Blocks.STONEBRICK.getDefaultState().withProperty(BlockStoneBrick.VARIANT, BlockStoneBrick.EnumType.CRACKED), 0.05f))
             .setBrickSelector(
                 new BlockSetSelector()
                     .addBlock(Blocks.RED_SANDSTONE.getDefaultState(), .5f)
@@ -79,7 +78,7 @@ public class MineshaftVariants {
             .setReplacementRate(.6f)
         );
 
-        // SNOW (SPRUCE)
+        // ICE
         variants.add(new MineshaftVariantSettings()
             .setBiomeTags(new ArrayList<>(Arrays.asList(
                 new ArrayList<>(Arrays.asList(BiomeDictionary.Type.SNOWY, BiomeDictionary.Type.RARE)))))
@@ -89,8 +88,7 @@ public class MineshaftVariants {
                     .addBlock(Blocks.AIR.getDefaultState(), 0.1f))
             .setFloorSelector(
                 new BlockSetSelector()
-                    .addBlock(Blocks.SNOW.getDefaultState(), 0.1f)
-                    .addBlock(Blocks.AIR.getDefaultState(), 0.1f))
+                    .addBlock(Blocks.SNOW.getDefaultState(), 0.1f))
             .setBrickSelector(
                 new BlockSetSelector()
                     .addBlock(Blocks.PACKED_ICE.getDefaultState(), .9f)
@@ -133,8 +131,7 @@ public class MineshaftVariants {
                     .addBlock(Blocks.STAINED_HARDENED_CLAY.getDefaultState().withProperty(BlockColored.COLOR, EnumDyeColor.WHITE), 0.05f)
                     .addBlock(Blocks.STONEBRICK.getDefaultState(), 0.1f)
                     .addBlock(Blocks.STONEBRICK.getDefaultState().withProperty(BlockStoneBrick.VARIANT, BlockStoneBrick.EnumType.MOSSY), 0.1f)
-                    .addBlock(Blocks.STONEBRICK.getDefaultState().withProperty(BlockStoneBrick.VARIANT, BlockStoneBrick.EnumType.CHISELED), 0.1f)
-                    .addBlock(Blocks.AIR.getDefaultState(), 0.2f))
+                    .addBlock(Blocks.STONEBRICK.getDefaultState().withProperty(BlockStoneBrick.VARIANT, BlockStoneBrick.EnumType.CHISELED), 0.1f))
             .setBrickSelector(
                 new BlockSetSelector()
                     .addBlock(Blocks.STONEBRICK.getDefaultState(), 0.33333f)
@@ -175,8 +172,7 @@ public class MineshaftVariants {
                     .addBlock(Blocks.STONEBRICK.getDefaultState(), 0.05f)
                     .addBlock(Blocks.STONEBRICK.getDefaultState().withProperty(BlockStoneBrick.VARIANT, BlockStoneBrick.EnumType.MOSSY), 0.2f)
                     .addBlock(Blocks.STONEBRICK.getDefaultState().withProperty(BlockStoneBrick.VARIANT, BlockStoneBrick.EnumType.CRACKED), 0.05f)
-                    .addBlock(Blocks.STONEBRICK.getDefaultState().withProperty(BlockStoneBrick.VARIANT, BlockStoneBrick.EnumType.CHISELED), 0.05f)
-                    .addBlock(Blocks.AIR.getDefaultState(), 0.2f))
+                    .addBlock(Blocks.STONEBRICK.getDefaultState().withProperty(BlockStoneBrick.VARIANT, BlockStoneBrick.EnumType.CHISELED), 0.05f))
             .setBrickSelector(
                 new BlockSetSelector()
                     .addBlock(Blocks.STONEBRICK.getDefaultState(), .25f)
@@ -200,7 +196,7 @@ public class MineshaftVariants {
             .setReplacementRate(.6f)
         );
 
-        // SNOW (SPRUCE)
+        // SNOWY SPRUCE
         variants.add(new MineshaftVariantSettings()
             .setBiomeTags(new ArrayList<>(Arrays.asList(
                 new ArrayList<>(Arrays.asList(BiomeDictionary.Type.SNOWY)))))
@@ -216,8 +212,7 @@ public class MineshaftVariants {
                     .addBlock(Blocks.SNOW.getDefaultState(), .25f)
                     .addBlock(Blocks.PACKED_ICE.getDefaultState(), .2f)
                     .addBlock(Blocks.COBBLESTONE.getDefaultState(), 0.05f)
-                    .addBlock(Blocks.STONEBRICK.getDefaultState().withProperty(BlockStoneBrick.VARIANT, BlockStoneBrick.EnumType.CRACKED), 0.1f)
-                    .addBlock(Blocks.AIR.getDefaultState(), 0.2f))
+                    .addBlock(Blocks.STONEBRICK.getDefaultState().withProperty(BlockStoneBrick.VARIANT, BlockStoneBrick.EnumType.CRACKED), 0.1f))
             .setBrickSelector(
                 new BlockSetSelector()
                     .addBlock(Blocks.SNOW.getDefaultState(), .5f)
@@ -239,6 +234,45 @@ public class MineshaftVariants {
             .setReplacementRate(.9f)
         );
 
+        // SPRUCE (NO SNOW)
+        variants.add(new MineshaftVariantSettings()
+            .setBiomeTags(new ArrayList<>(Arrays.asList(
+                new ArrayList<>(Arrays.asList(BiomeDictionary.Type.COLD, BiomeDictionary.Type.CONIFEROUS, BiomeDictionary.Type.FOREST)))))
+            .setMainSelector(
+                new BlockSetSelector()
+                    .addBlock(Blocks.COBBLESTONE.getDefaultState(), 0.1f)
+                    .addBlock(Blocks.STONEBRICK.getDefaultState(), 0.1f)
+                    .addBlock(Blocks.STONEBRICK.getDefaultState().withProperty(BlockStoneBrick.VARIANT, BlockStoneBrick.EnumType.MOSSY), 0.1f)
+                    .addBlock(Blocks.STONEBRICK.getDefaultState().withProperty(BlockStoneBrick.VARIANT, BlockStoneBrick.EnumType.CRACKED), 0.1f)
+                    .addBlock(Blocks.AIR.getDefaultState(), 0.2f))
+            .setFloorSelector(
+                new BlockSetSelector()
+                    .addBlock(Blocks.COBBLESTONE.getDefaultState(), 0.1f)
+                    .addBlock(Blocks.STONEBRICK.getDefaultState(), 0.1f)
+                    .addBlock(Blocks.STONEBRICK.getDefaultState().withProperty(BlockStoneBrick.VARIANT, BlockStoneBrick.EnumType.MOSSY), 0.1f)
+                    .addBlock(Blocks.STONEBRICK.getDefaultState().withProperty(BlockStoneBrick.VARIANT, BlockStoneBrick.EnumType.CRACKED), 0.1f))
+            .setBrickSelector(
+                new BlockSetSelector()
+                    .addBlock(Blocks.STONEBRICK.getDefaultState(), 0.33333f)
+                    .addBlock(Blocks.STONEBRICK.getDefaultState().withProperty(BlockStoneBrick.VARIANT, BlockStoneBrick.EnumType.MOSSY), 0.33333f)
+                    .addBlock(Blocks.STONEBRICK.getDefaultState().withProperty(BlockStoneBrick.VARIANT, BlockStoneBrick.EnumType.CRACKED), 0.33333f))
+            .setLegSelector(BlockSetSelector.from(
+                Blocks.LOG.getDefaultState().withProperty(BlockLog.LOG_AXIS, BlockLog.EnumAxis.Y).withProperty(BlockOldLog.VARIANT, BlockPlanks.EnumType.SPRUCE)))
+            .setMainBlock(Blocks.PLANKS.getDefaultState().withProperty(BlockPlanks.VARIANT, BlockPlanks.EnumType.SPRUCE))
+            .setSupportBlock(Blocks.SPRUCE_FENCE.getDefaultState())
+            .setSlabBlock(Blocks.WOODEN_SLAB.getDefaultState().withProperty(BlockWoodSlab.VARIANT, BlockPlanks.EnumType.SPRUCE))
+            .setGravelBlock(Blocks.GRAVEL.getDefaultState())
+            .setStoneWallBlock(Blocks.COBBLESTONE_WALL.getDefaultState())
+            .setStoneSlabBlock(Blocks.STONE_SLAB.getDefaultState().withProperty(BlockStoneSlab.VARIANT, BlockStoneSlab.EnumType.SMOOTHBRICK).withProperty(BlockSlab.HALF, BlockSlab.EnumBlockHalf.TOP))
+            .setVineChance(.25f)
+            .setSnowChance(0)
+            .setCactusChance(0)
+            .setDeadBushChance(0)
+            .setMushroomChance(0)
+            .setLegVariant(1)
+            .setReplacementRate(.6f)
+        );
+
         // DESERT
         variants.add(new MineshaftVariantSettings()
             .setBiomeTags(new ArrayList<>(Arrays.asList(
@@ -256,8 +290,7 @@ public class MineshaftVariants {
                     .addBlock(Blocks.SANDSTONE.getDefaultState().withProperty(BlockSandStone.TYPE, BlockSandStone.EnumType.CHISELED), 0.1f)
                     .addBlock(Blocks.SANDSTONE.getDefaultState().withProperty(BlockSandStone.TYPE, BlockSandStone.EnumType.SMOOTH), 0.1f)
                     .addBlock(Blocks.STONEBRICK.getDefaultState(), 0.05f)
-                    .addBlock(Blocks.STONEBRICK.getDefaultState().withProperty(BlockStoneBrick.VARIANT, BlockStoneBrick.EnumType.CRACKED), 0.05f)
-                    .addBlock(Blocks.AIR.getDefaultState(), 0.2f))
+                    .addBlock(Blocks.STONEBRICK.getDefaultState().withProperty(BlockStoneBrick.VARIANT, BlockStoneBrick.EnumType.CRACKED), 0.05f))
             .setBrickSelector(
                 new BlockSetSelector()
                     .addBlock(Blocks.SANDSTONE.getDefaultState(), .5f)
@@ -301,8 +334,7 @@ public class MineshaftVariants {
                     .addBlock(Blocks.COBBLESTONE.getDefaultState(), 0.1f)
                     .addBlock(Blocks.STONEBRICK.getDefaultState(), 0.1f)
                     .addBlock(Blocks.STONEBRICK.getDefaultState().withProperty(BlockStoneBrick.VARIANT, BlockStoneBrick.EnumType.MOSSY), 0.1f)
-                    .addBlock(Blocks.STONEBRICK.getDefaultState().withProperty(BlockStoneBrick.VARIANT, BlockStoneBrick.EnumType.CRACKED), 0.1f)
-                    .addBlock(Blocks.AIR.getDefaultState(), 0.2f))
+                    .addBlock(Blocks.STONEBRICK.getDefaultState().withProperty(BlockStoneBrick.VARIANT, BlockStoneBrick.EnumType.CRACKED), 0.1f))
             .setBrickSelector(
                 new BlockSetSelector()
                     .addBlock(Blocks.STONEBRICK.getDefaultState(), 0.33333f)
@@ -377,8 +409,7 @@ public class MineshaftVariants {
                     .addBlock(Blocks.COBBLESTONE.getDefaultState(), 0.1f)
                     .addBlock(Blocks.STONEBRICK.getDefaultState(), 0.1f)
                     .addBlock(Blocks.STONEBRICK.getDefaultState().withProperty(BlockStoneBrick.VARIANT, BlockStoneBrick.EnumType.MOSSY), 0.1f)
-                    .addBlock(Blocks.STONEBRICK.getDefaultState().withProperty(BlockStoneBrick.VARIANT, BlockStoneBrick.EnumType.CRACKED), 0.1f)
-                    .addBlock(Blocks.AIR.getDefaultState(), 0.2f))
+                    .addBlock(Blocks.STONEBRICK.getDefaultState().withProperty(BlockStoneBrick.VARIANT, BlockStoneBrick.EnumType.CRACKED), 0.1f))
             .setBrickSelector(
                 new BlockSetSelector()
                     .addBlock(Blocks.STONEBRICK.getDefaultState(), 0.33333f)

@@ -23,12 +23,16 @@ import java.nio.file.Paths;
 
 public class ModConfig {
     public static void preInit() {
+        initCustomFiles();
+        MinecraftForge.EVENT_BUS.register(new EventConfigReload());
+    }
+
+    public static void initCustomFiles() {
         createDirectory();
         createBaseReadMe();
         createJsonReadMe();
         createBiomeTagsTxt();
         loadVariantsJSON();
-        MinecraftForge.EVENT_BUS.register(new EventConfigReload());
     }
 
     private static void createDirectory() {
@@ -73,7 +77,7 @@ public class ModConfig {
                 " - variants: a list of all the biome-dependent Variant Settings objects (see below)\n" +
                 "      * NOTE - order is important! The list will be searched in order, and searching will be stopped at the first match.\n" +
                 "      For example, if you have a rare mesa variant that uses the RARE and MESA biomeTags, as well as a normal mesa variant that only uses the MESA biomeTag,\n" +
-                "      you will have to put the rare mesa variant BEFORE the normal mesa variant, or else all mesa biomes will match the normal mesa variant before they can check for the rare mesa variant." +
+                "      you will have to put the rare mesa variant BEFORE the normal mesa variant, or else all mesa biomes will match the normal mesa variant before they can check for the rare mesa variant.\n" +
                 " - defaultVariant: a Variant Settings object to use for biomes that don't match the biomeTags for any of the Variant Settings in the \"variants\" list.\n" +
                 "      This serves as the go-to/default mineshaft - think plain ol' oak planks mineshafts\n" +
                 "\n" +
@@ -186,7 +190,7 @@ public class ModConfig {
      * If the variants JSON file already exists, it loads its contents into MineshaftVariants.
      * Otherwise, it creates a default JSON and from the default options in MineshaftVariants.
      */
-    public static void loadVariantsJSON() {
+    private static void loadVariantsJSON() {
         Path jsonPath = Paths.get(Loader.instance().getConfigDir().toString(), BMSettings.CUSTOM_CONFIG_PATH, BMSettings.VERSION_PATH, "variants.json");
         File jsonFile = new File(jsonPath.toString());
 
@@ -205,7 +209,7 @@ public class ModConfig {
             try {
                 Files.write(jsonPath, jsonString.getBytes());
             } catch (IOException e) {
-                BetterMineshafts.LOGGER.error("Unable to create JSON file!");
+                BetterMineshafts.LOGGER.error("Unable to create JSON file! - {}", e.toString());
             }
         } else {
             // If file already exists, load data into BlockSetSelectors' singleton instance

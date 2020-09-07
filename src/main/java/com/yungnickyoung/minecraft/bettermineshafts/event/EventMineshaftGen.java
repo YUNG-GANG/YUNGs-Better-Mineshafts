@@ -10,7 +10,7 @@ public class EventMineshaftGen {
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onMineshaftGen(InitMapGenEvent event) {
         if (event.getType() == InitMapGenEvent.EventType.MINESHAFT) {
-            ModConfig.loadVariantsJSON();
+            ModConfig.initCustomFiles();
             event.setNewGen(new MapGenBetterMineshaft());
         }
     }
