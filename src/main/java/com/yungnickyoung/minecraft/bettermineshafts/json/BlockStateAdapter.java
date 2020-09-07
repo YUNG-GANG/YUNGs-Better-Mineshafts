@@ -137,11 +137,6 @@ public class BlockStateAdapter extends TypeAdapter<IBlockState> {
         return blockState;
     }
 
-    /**
-     * This method probably won't be called.
-     * It's only here because it's necessary for the override, and so I've duplicated the write logic just in case.
-     * Instead, see {@link BlockStateContainerAdapter#write}.
-     */
     public void write(JsonWriter writer, IBlockState blockState) throws IOException {
         if (blockState == null) {
             writer.nullValue();

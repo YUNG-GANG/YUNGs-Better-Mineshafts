@@ -17,5 +17,5 @@ public class ModCompatConfig {
     @Config.Name("Use Varied Commodities Candles")
     @Config.Comment("If Varied Commodities is installed, mineshafts will occasionally have Varied Commodities candles on the walls.")
     @Config.RequiresWorldRestart
-    public boolean variedcommoditiesCandlesEnabled = true;
+    public boolean variedcommoditiesCandlesEnabled = false;
 }

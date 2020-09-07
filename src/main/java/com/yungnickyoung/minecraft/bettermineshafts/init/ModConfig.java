@@ -6,9 +6,7 @@ import com.yungnickyoung.minecraft.bettermineshafts.config.BMSettings;
 import com.yungnickyoung.minecraft.bettermineshafts.event.EventConfigReload;
 import com.yungnickyoung.minecraft.bettermineshafts.json.BiomeDictionaryTypeAdapter;
 import com.yungnickyoung.minecraft.bettermineshafts.json.BlockStateAdapter;
-import com.yungnickyoung.minecraft.bettermineshafts.json.BlockStateContainerAdapter;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.MineshaftVariants;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.MinecraftForge;
@@ -195,8 +193,7 @@ public class ModConfig {
         File jsonFile = new File(jsonPath.toString());
 
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(BlockStateContainer.StateImplementation.class, new BlockStateContainerAdapter());
-        gsonBuilder.registerTypeAdapter(IBlockState.class, new BlockStateAdapter());
+        gsonBuilder.registerTypeHierarchyAdapter(IBlockState.class, new BlockStateAdapter());
         gsonBuilder.registerTypeAdapter(BiomeDictionary.Type.class, new BiomeDictionaryTypeAdapter());
         gsonBuilder.setPrettyPrinting();
         gsonBuilder.disableHtmlEscaping();
