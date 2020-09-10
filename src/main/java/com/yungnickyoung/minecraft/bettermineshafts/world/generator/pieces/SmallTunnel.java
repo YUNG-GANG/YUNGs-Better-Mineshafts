@@ -128,9 +128,9 @@ public class SmallTunnel extends MineshaftPiece {
         generateCobwebs(world, box, random);
         generateChestCarts(world, box, random, LootTableList.CHESTS_ABANDONED_MINESHAFT);
         generateTntCarts(world, box, random);
-        generateTorches(world, box, random);
-        this.addBiomeDecorations(world, box, random, 1, 0, 0, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END);
         this.addVines(world, box, random, 1, 0, 1, LOCAL_X_END - 1, LOCAL_Y_END, LOCAL_Z_END - 1);
+        this.addBiomeDecorations(world, box, random, 1, 0, 0, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END);
+        generateTorches(world, box, random);
 
         return true;
     }
@@ -201,12 +201,52 @@ public class SmallTunnel extends MineshaftPiece {
             if (this.supports.contains(z)) continue;
             r = random.nextFloat();
             if (r < Configuration.spawnRates.torchSpawnRate / 2) {
-                if (this.getBlockStateFromPos(world, 0, 2, z, box) != Blocks.AIR.getDefaultState()) {
+                BlockPos pos = new BlockPos(getXWithOffset(1, z), getYWithOffset(2), getZWithOffset(1, z));
+                BlockPos adjPos = new BlockPos(getXWithOffset(0, z), getYWithOffset(2), getZWithOffset(0, z));
+                boolean canPlace = leftTorch != null && leftTorch.getBlock().canPlaceBlockAt(world, pos) && world.getBlockState(adjPos) != AIR;
+                if (canPlace) {
                     this.replaceAir(world, box, 1, 2, z, 1, 2, z, leftTorch);
+                    if (Integrations.VARIED_COMMODITIES.isTorchVariedCommoditiesCandle(leftTorch)) {
+                        EnumFacing direction = this.getCoordBaseMode();
+                        if (direction == null) direction = EnumFacing.NORTH;
+                        int rotation;
+                        switch (direction) {
+                            case EAST:
+                            case WEST:
+                                rotation = 4;
+                                break;
+                            default:
+                            case NORTH:
+                            case SOUTH:
+                                rotation = 2;
+                                break;
+                        }
+                        Integrations.VARIED_COMMODITIES.spawnCandleTorchEntity(world, getXWithOffset(1, z), getYWithOffset(2), getZWithOffset(1, z), rotation);
+                    }
                 }
             } else if (r < Configuration.spawnRates.torchSpawnRate) {
-                if (this.getBlockStateFromPos(world, LOCAL_X_END, 2, z, box) != Blocks.AIR.getDefaultState()) {
+                BlockPos pos = new BlockPos(getXWithOffset(LOCAL_X_END - 1, z), getYWithOffset(2), getZWithOffset(LOCAL_X_END - 1, z));
+                BlockPos adjPos = new BlockPos(getXWithOffset(LOCAL_X_END , z), getYWithOffset(2), getZWithOffset(LOCAL_X_END, z));
+                boolean canPlace = rightTorch != null && rightTorch.getBlock().canPlaceBlockAt(world, pos) && world.getBlockState(adjPos) != AIR;
+                if (canPlace) {
                     this.replaceAir(world, box, LOCAL_X_END - 1, 2, z, LOCAL_X_END - 1, 2, z, rightTorch);
+                    if (Integrations.VARIED_COMMODITIES.isTorchVariedCommoditiesCandle(rightTorch)) {
+                        EnumFacing direction = this.getCoordBaseMode();
+                        if (direction == null) direction = EnumFacing.NORTH;
+                        int rotation;
+                        switch (direction) {
+                            case EAST:
+                            case WEST:
+                                rotation = 0;
+                                break;
+                            default:
+                            case NORTH:
+                            case SOUTH:
+                                rotation = 6;
+                                break;
+                        }
+                        Integrations.VARIED_COMMODITIES.spawnCandleTorchEntity(world, getXWithOffset(LOCAL_X_END - 1, z), getYWithOffset(2), getZWithOffset(LOCAL_X_END - 1 , z), rotation);
+                    }
                 }
             }
         }

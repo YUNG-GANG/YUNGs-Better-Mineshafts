@@ -186,12 +186,12 @@ public class BigTunnel extends MineshaftPiece {
 
         // Decorations
         generateRails(world, box, random);
-        generateLanterns(world, box, random);
         generateChestCarts(world, box, random, LootTableList.CHESTS_ABANDONED_MINESHAFT);
         generateTntCarts(world, box, random);
         generateGravelDeposits(world, box, random);
         this.addBiomeDecorations(world, box, random, 1, 0, 0, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END);
         this.addVines(world, box, random, 1, 0, 1, LOCAL_X_END - 1, LOCAL_Y_END, LOCAL_Z_END - 1);
+        generateLanterns(world, box, random);
         generateCobwebs(world, box, random);
 
         return true;
@@ -400,15 +400,19 @@ public class BigTunnel extends MineshaftPiece {
     }
 
     private void generateLanterns(World world, StructureBoundingBox box, Random random) {
-        IBlockState LANTERN = Integrations.getLantern(random);
-        if (LANTERN == null) return;
+        IBlockState lantern = Integrations.getLantern(random);
+        if (lantern == null) return;
         for (int z = 0; z <= LOCAL_Z_END; z++) {
-            for (int x = 3; x <= LOCAL_X_END - 3; x++) {
-                if (random.nextFloat() < Configuration.spawnRates.lanternSpawnRate) {
-                    if (this.getBlockStateFromPos(world, x, LOCAL_Y_END, z, box) != AIR) {
-                        this.setBlockState(world, LANTERN, x, LOCAL_Y_END - 1, z, box);
-                        z += 20;
+            // check rate * 3 because this used to spawn in any of the 3 middle blocks, so the * 3 matches the spawn rate for the previous logic
+            if (random.nextFloat() < Configuration.spawnRates.lanternSpawnRate * 3) {
+                if (this.getBlockStateFromPos(world, 4, LOCAL_Y_END, z, box) != AIR) {
+                    this.setBlockState(world, lantern, 4, LOCAL_Y_END - 1, z, box);
+                    if (Integrations.VARIED_COMMODITIES.isLanternVariedCommoditiesCandle(lantern)) {
+                        Integrations.VARIED_COMMODITIES.spawnCandleLanternEntity(world, getXWithOffset(4, z), getYWithOffset(LOCAL_Y_END - 1), getZWithOffset(4 , z));
+                    } else if (Integrations.VARIED_COMMODITIES.isLanternVariedCommoditiesLamp(lantern)) {
+                        Integrations.VARIED_COMMODITIES.spawnLampLanternEntity(world, getXWithOffset(4, z), getYWithOffset(LOCAL_Y_END - 1), getZWithOffset(4 , z));
                     }
+                    z += 20;
                 }
             }
         }
