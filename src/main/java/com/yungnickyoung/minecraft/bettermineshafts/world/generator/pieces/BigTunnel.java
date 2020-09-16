@@ -22,7 +22,6 @@ import net.minecraft.util.math.ChunkPos;
 
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.world.ISeedReader;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.feature.structure.StructureManager;
 import net.minecraft.world.gen.feature.structure.StructurePiece;
@@ -206,7 +205,7 @@ public class BigTunnel extends MineshaftPiece {
         return true;
     }
 
-    private void generateLegs(IWorld world, MutableBoundingBox box, Random random) {
+    private void generateLegs(ISeedReader world, MutableBoundingBox box, Random random) {
         // Ice and mushroom biome variants have different legs
         if (this.mineshaftType == BetterMineshaftStructure.Type.ICE || this.mineshaftType == BetterMineshaftStructure.Type.MUSHROOM) {
             generateLegsVariant(world, box, random);
@@ -215,7 +214,7 @@ public class BigTunnel extends MineshaftPiece {
 
         BlockState supportBlock = getSupportBlock();
         if (supportBlock.getBlock() instanceof WallBlock) {
-            supportBlock = supportBlock.with(WallBlock.field_235613_c_, WallHeight.TALL).with(WallBlock.field_235614_d_, WallHeight.TALL);
+            supportBlock = supportBlock.with(WallBlock.WALL_HEIGHT_NORTH, WallHeight.TALL).with(WallBlock.WALL_HEIGHT_SOUTH, WallHeight.TALL);
         } else if (supportBlock.getBlock() instanceof FourWayBlock) {
             supportBlock = supportBlock.with(FourWayBlock.NORTH, true).with(FourWayBlock.SOUTH, true);
         }
@@ -265,7 +264,7 @@ public class BigTunnel extends MineshaftPiece {
         generateLeg(world, random, LOCAL_X_END - 1, LOCAL_Z_END, getLegSelector());
     }
 
-    private void generateLegsVariant(IWorld world, MutableBoundingBox box, Random random) {
+    private void generateLegsVariant(ISeedReader world, MutableBoundingBox box, Random random) {
         BlockSetSelector selector = getLegSelector();
         for (int z = 0; z <= LOCAL_Z_END; z += 7) {
             generateLeg(world, random, 2, z + 1, selector);
@@ -295,7 +294,7 @@ public class BigTunnel extends MineshaftPiece {
         }
     }
 
-    private void generateGravelDeposit(IWorld world, MutableBoundingBox box, Random random, int z, int side) {
+    private void generateGravelDeposit(ISeedReader world, MutableBoundingBox box, Random random, int z, int side) {
         switch (side) {
             case 0: // Left side
             default:
@@ -322,7 +321,7 @@ public class BigTunnel extends MineshaftPiece {
         }
     }
 
-    private void generateChestCarts(IWorld world, MutableBoundingBox box, Random random, ResourceLocation lootTableId) {
+    private void generateChestCarts(ISeedReader world, MutableBoundingBox box, Random random, ResourceLocation lootTableId) {
         for (int z = 0; z <= LOCAL_Z_END; z++) {
             if (random.nextInt(100) == 0) {
                 BlockPos blockPos = new BlockPos(this.getXWithOffset(LOCAL_X_END / 2, z), getYWithOffset(1), this.getZWithOffset(LOCAL_X_END / 2, z));
@@ -335,7 +334,7 @@ public class BigTunnel extends MineshaftPiece {
         }
     }
 
-    private void generateTntCarts(IWorld world, MutableBoundingBox box, Random random) {
+    private void generateTntCarts(ISeedReader world, MutableBoundingBox box, Random random) {
         for (int z = 0; z <= LOCAL_Z_END; z++) {
             if (random.nextInt(400) == 0) {
                 BlockPos blockPos = new BlockPos(this.getXWithOffset(LOCAL_X_END / 2, z), getYWithOffset(1), this.getZWithOffset(LOCAL_X_END / 2, z));
@@ -347,10 +346,10 @@ public class BigTunnel extends MineshaftPiece {
         }
     }
 
-    private void generateBigSupport(IWorld world, MutableBoundingBox box, Random random, int z) {
+    private void generateBigSupport(ISeedReader world, MutableBoundingBox box, Random random, int z) {
         BlockState supportBlock = getSupportBlock();
         if (supportBlock.getBlock() instanceof WallBlock) {
-            supportBlock = supportBlock.with(WallBlock.field_235612_b_, WallHeight.TALL).with(WallBlock.field_235615_e_, WallHeight.TALL);
+            supportBlock = supportBlock.with(WallBlock.WALL_HEIGHT_EAST, WallHeight.TALL).with(WallBlock.WALL_HEIGHT_WEST, WallHeight.TALL);
         } else if (supportBlock.getBlock() instanceof FourWayBlock) {
             supportBlock = supportBlock.with(FourWayBlock.EAST, true).with(FourWayBlock.WEST, true);
         }
@@ -370,10 +369,10 @@ public class BigTunnel extends MineshaftPiece {
         this.chanceReplaceNonAir(world, box, random, .4f, 2, 5, z + 1, LOCAL_X_END - 2, 5, z + 1, supportBlock);
     }
 
-    private void generateSmallSupport(IWorld world, MutableBoundingBox box, Random random, int z) {
+    private void generateSmallSupport(ISeedReader world, MutableBoundingBox box, Random random, int z) {
         BlockState supportBlock = getSupportBlock();
         if (supportBlock.getBlock() instanceof WallBlock) {
-            supportBlock = supportBlock.with(WallBlock.field_235612_b_, WallHeight.TALL).with(WallBlock.field_235615_e_, WallHeight.TALL);
+            supportBlock = supportBlock.with(WallBlock.WALL_HEIGHT_EAST, WallHeight.TALL).with(WallBlock.WALL_HEIGHT_WEST, WallHeight.TALL);
         } else if (supportBlock.getBlock() instanceof FourWayBlock) {
             supportBlock = supportBlock.with(FourWayBlock.EAST, true).with(FourWayBlock.WEST, true);
         }
@@ -391,7 +390,7 @@ public class BigTunnel extends MineshaftPiece {
         this.setBlockState(world, supportBlock, LOCAL_X_END - 3, 3, z, box);
     }
 
-    private void generateLanterns(IWorld world, MutableBoundingBox box, Random random) {
+    private void generateLanterns(ISeedReader world, MutableBoundingBox box, Random random) {
         BlockState LANTERN = Blocks.LANTERN.getDefaultState().with(LanternBlock.HANGING, true);
         for (int z = 0; z <= LOCAL_Z_END; z++) {
             for (int x = 3; x <= LOCAL_X_END - 3; x++) {
@@ -405,7 +404,7 @@ public class BigTunnel extends MineshaftPiece {
         }
     }
 
-    private void generateRails(IWorld world, MutableBoundingBox box, Random random) {
+    private void generateRails(ISeedReader world, MutableBoundingBox box, Random random) {
         // Place rails in center
         this.chanceFill(world, box, random, .5f, LOCAL_X_END / 2, 1, 0, LOCAL_X_END / 2, 1, LOCAL_Z_END, Blocks.RAIL.getDefaultState());
         // Place powered rails
@@ -419,7 +418,7 @@ public class BigTunnel extends MineshaftPiece {
         }
     }
 
-    private void generateSmallShaftEntranceRight(IWorld world, MutableBoundingBox box, Random random, int x, int y, int z) {
+    private void generateSmallShaftEntranceRight(ISeedReader world, MutableBoundingBox box, Random random, int x, int y, int z) {
         this.replaceAir(world, box, x, y - 1, z, x + 1, y - 1, z + 2, getMainBlock());
         this.fill(world, box, x + 1, y, z, x + 1, y, z + 2, CAVE_AIR);
         this.setBlockState(world, getSupportBlock(), x + 1, y + 1, z, box);
@@ -430,7 +429,7 @@ public class BigTunnel extends MineshaftPiece {
         this.fill(world, box, x, y + 1, z + 1, x + 1, y + 1, z + 1, CAVE_AIR);
     }
 
-    private void generateSmallShaftEntranceLeft(IWorld world, MutableBoundingBox box, Random random, int x, int y, int z) {
+    private void generateSmallShaftEntranceLeft(ISeedReader world, MutableBoundingBox box, Random random, int x, int y, int z) {
         this.fill(world, box, x, y, z, x, y, z + 2, CAVE_AIR);
         this.setBlockState(world, getSupportBlock(), x, y + 1, z, box);
         this.setBlockState(world, getSupportBlock(), x, y + 1, z + 2, box);
@@ -441,7 +440,7 @@ public class BigTunnel extends MineshaftPiece {
         this.replaceAir(world, box, x, y - 1, z, x + 1, y - 1, z + 2, getMainBlock());
     }
 
-    private void generateSideRoomOpening(IWorld world, MutableBoundingBox chunkBox, MutableBoundingBox entranceBox, Random random) {
+    private void generateSideRoomOpening(ISeedReader world, MutableBoundingBox chunkBox, MutableBoundingBox entranceBox, Random random) {
         // Ensure floor in gap between tunnel and room
         this.replaceAir(world, chunkBox, random, entranceBox.minX, 0, entranceBox.minZ, entranceBox.maxX, 0, entranceBox.maxZ, getBrickSelector());
         switch (random.nextInt(3)) {

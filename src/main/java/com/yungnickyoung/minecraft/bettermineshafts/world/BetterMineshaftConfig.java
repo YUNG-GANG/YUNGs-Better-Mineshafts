@@ -13,7 +13,7 @@ public class BetterMineshaftConfig implements IFeatureConfig {
             BetterMineshaftStructure.Type.field_236324_c_.fieldOf("type").forGetter(config -> config.type)
         ).apply(builder, BetterMineshaftConfig::new));
 
-    public final double probability;
+    public double probability;
     public final BetterMineshaftStructure.Type type;
 
     public BetterMineshaftConfig(double probability, BetterMineshaftStructure.Type type) {

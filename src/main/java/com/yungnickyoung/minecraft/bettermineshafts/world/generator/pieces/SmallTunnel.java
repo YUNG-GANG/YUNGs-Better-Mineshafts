@@ -18,7 +18,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.world.ISeedReader;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.feature.structure.StructureManager;
 import net.minecraft.world.gen.feature.structure.StructurePiece;
@@ -136,14 +135,14 @@ public class SmallTunnel extends MineshaftPiece {
         return true;
     }
 
-    private void generateCobwebs(IWorld world, MutableBoundingBox box, Random random) {
+    private void generateCobwebs(ISeedReader world, MutableBoundingBox box, Random random) {
         supports.forEach(z -> {
             this.chanceReplaceAir(world, box, random, .15f, 1, 3, z - 3, 1, 3, z + 3, Blocks.COBWEB.getDefaultState());
             this.chanceReplaceAir(world, box, random, .15f, 3, 3, z - 3, 3, 3, z + 3, Blocks.COBWEB.getDefaultState());
         });
     }
 
-    private void generateChestCarts(IWorld world, MutableBoundingBox box, Random random, ResourceLocation lootTableId) {
+    private void generateChestCarts(ISeedReader world, MutableBoundingBox box, Random random, ResourceLocation lootTableId) {
         for (int z = 0; z <= LOCAL_Z_END; z++) {
             if (random.nextInt(800) == 0) {
                 BlockPos blockPos = new BlockPos(this.getXWithOffset(LOCAL_X_END / 2, z), this.getYWithOffset(1), this.getZWithOffset(LOCAL_X_END / 2, z));
@@ -156,20 +155,20 @@ public class SmallTunnel extends MineshaftPiece {
         }
     }
 
-    private void generateSupport(IWorld world, MutableBoundingBox box, Random random, int z) {
+    private void generateSupport(ISeedReader world, MutableBoundingBox box, Random random, int z) {
         this.fill(world, box, 1, 1, z, 1, 2, z, getSupportBlock());
         this.fill(world, box, 3, 1, z, 3, 2, z, getSupportBlock());
         this.fill(world, box, 1, 3, z, 3, 3, z, getMainBlock());
         BlockState supportBlock = getSupportBlock();
         if (supportBlock.getBlock() instanceof WallBlock) {
-            supportBlock = supportBlock.with(WallBlock.field_235612_b_, WallHeight.TALL).with(WallBlock.field_235615_e_, WallHeight.TALL);
+            supportBlock = supportBlock.with(WallBlock.WALL_HEIGHT_EAST, WallHeight.TALL).with(WallBlock.WALL_HEIGHT_WEST, WallHeight.TALL);
         } else if (supportBlock.getBlock() instanceof FourWayBlock) {
             supportBlock = supportBlock.with(FourWayBlock.EAST, true).with(FourWayBlock.WEST, true);
         }
         this.chanceReplaceNonAir(world, box, random, .25f, 1, 3, z, 3, 3, z, supportBlock);
     }
 
-    private void generateRails(IWorld world, MutableBoundingBox box, Random random) {
+    private void generateRails(ISeedReader world, MutableBoundingBox box, Random random) {
         // Place rails in center
         this.chanceFill(world, box,  random, .5f, 2, 1, 0, 2, 1, LOCAL_Z_END, Blocks.RAIL.getDefaultState());
         // Place powered rails
@@ -178,7 +177,7 @@ public class SmallTunnel extends MineshaftPiece {
         }
     }
 
-    private void generateTntCarts(IWorld world, MutableBoundingBox box, Random random) {
+    private void generateTntCarts(ISeedReader world, MutableBoundingBox box, Random random) {
         for (int z = 0; z <= LOCAL_Z_END; z++) {
             if (random.nextInt(400) == 0) {
                 BlockPos blockPos = new BlockPos(this.getXWithOffset(LOCAL_X_END / 2, z), this.getYWithOffset(1), this.getZWithOffset(LOCAL_X_END / 2, z));

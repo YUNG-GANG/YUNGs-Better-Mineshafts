@@ -24,7 +24,7 @@ public class BetterMineshafts {
     }
 
     private void init() {
-        ModStructures.init();
         ModConfig.init();
+        ModStructures.init();
     }
 }

@@ -15,7 +15,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.world.ISeedReader;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.feature.structure.StructureManager;
 import net.minecraft.world.gen.feature.structure.StructurePiece;
@@ -128,7 +127,7 @@ public class SideRoomDungeon extends MineshaftPiece {
         return true;
     }
 
-    private void generateLegs(IWorld world, Random random) {
+    private void generateLegs(ISeedReader world, Random random) {
         generateLeg(world, random, 1, 1, getBrickSelector());
         generateLeg(world, random, 1, LOCAL_Z_END - 1, getBrickSelector());
         generateLeg(world, random, LOCAL_X_END - 1, 1, getBrickSelector());

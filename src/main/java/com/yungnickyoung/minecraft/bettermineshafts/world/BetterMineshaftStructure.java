@@ -11,6 +11,7 @@ import net.minecraft.util.SharedSeedRandom;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MutableBoundingBox;
+import net.minecraft.util.registry.DynamicRegistries;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.provider.BiomeProvider;
 import net.minecraft.world.gen.ChunkGenerator;
@@ -74,6 +75,7 @@ public class BetterMineshaftStructure extends Structure<BetterMineshaftConfig> {
 
         @ParametersAreNonnullByDefault
         public void func_230364_a_(
+            DynamicRegistries p_230364_1_,
             ChunkGenerator chunkGenerator,
             TemplateManager structureManager,
             int chunkX,
@@ -134,7 +136,7 @@ public class BetterMineshaftStructure extends Structure<BetterMineshaftConfig> {
         SAVANNA("savanna"),
         MUSHROOM("mushroom");
 
-        public static final Codec<BetterMineshaftStructure.Type> field_236324_c_ = IStringSerializable.func_233023_a_(BetterMineshaftStructure.Type::values, BetterMineshaftStructure.Type::byName);
+        public static final Codec<BetterMineshaftStructure.Type> field_236324_c_ = IStringSerializable.createEnumCodec(BetterMineshaftStructure.Type::values, BetterMineshaftStructure.Type::byName);
         private static final Map<String, BetterMineshaftStructure.Type> BY_NAME = Arrays.stream(values()).collect(Collectors.toMap(BetterMineshaftStructure.Type::getName, type -> type));
 
         private final String name;
@@ -155,7 +157,7 @@ public class BetterMineshaftStructure extends Structure<BetterMineshaftConfig> {
             return id >= 0 && id < values().length ? values()[id] : NORMAL;
         }
 
-        public String func_176610_l() {
+        public String getString() {
             return this.name;
         }
     }

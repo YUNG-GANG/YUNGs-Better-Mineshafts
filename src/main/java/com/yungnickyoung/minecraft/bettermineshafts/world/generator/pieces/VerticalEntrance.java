@@ -11,7 +11,6 @@ import net.minecraft.state.properties.RailShape;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.*;
 import net.minecraft.world.ISeedReader;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.feature.structure.StructureManager;
 import net.minecraft.world.gen.feature.structure.StructurePiece;
@@ -133,7 +132,7 @@ public class VerticalEntrance extends MineshaftPiece {
     /**
      * Generates the vertical shaft with a ladder.
      */
-    private void generateVerticalShaft(IWorld world, Random random, MutableBoundingBox box) {
+    private void generateVerticalShaft(ISeedReader world, Random random, MutableBoundingBox box) {
         // Randomize blocks
         this.fill(world, box, random, SHAFT_LOCAL_XZ_START, 0, SHAFT_LOCAL_XZ_START, SHAFT_LOCAL_XZ_END, localYEnd, SHAFT_LOCAL_XZ_END, getMainSelector());
 
@@ -166,7 +165,7 @@ public class VerticalEntrance extends MineshaftPiece {
      * as is normally the case. Rotation logic must be handled manually for this piece because the piece's orientation
      * relies on the surrounding terrain, which can't be determined until generation time.
      */
-    private void generateSurfaceTunnel(IWorld world, Random random, MutableBoundingBox box) {
+    private void generateSurfaceTunnel(ISeedReader world, Random random, MutableBoundingBox box) {
         int tunnelStartX = 0,
             tunnelStartZ = 0,
             tunnelEndX = 0,
@@ -269,7 +268,7 @@ public class VerticalEntrance extends MineshaftPiece {
         if (facing.getAxis() == tunnelDirection.getAxis()) {
             BlockState supportBlock = getSupportBlock();
             if (supportBlock.getBlock() instanceof WallBlock) {
-                supportBlock = supportBlock.with(WallBlock.field_235612_b_, WallHeight.TALL).with(WallBlock.field_235615_e_, WallHeight.TALL);
+                supportBlock = supportBlock.with(WallBlock.WALL_HEIGHT_EAST, WallHeight.TALL).with(WallBlock.WALL_HEIGHT_WEST, WallHeight.TALL);
             } else if (supportBlock.getBlock() instanceof FourWayBlock) {
                 supportBlock = supportBlock.with(FourWayBlock.EAST, true).with(FourWayBlock.WEST, true);
             }
@@ -291,7 +290,7 @@ public class VerticalEntrance extends MineshaftPiece {
         } else {
             BlockState supportBlock = getSupportBlock();
             if (supportBlock.getBlock() instanceof WallBlock) {
-                supportBlock = supportBlock.with(WallBlock.field_235613_c_, WallHeight.TALL).with(WallBlock.field_235614_d_, WallHeight.TALL);
+                supportBlock = supportBlock.with(WallBlock.WALL_HEIGHT_NORTH, WallHeight.TALL).with(WallBlock.WALL_HEIGHT_SOUTH, WallHeight.TALL);
             } else if (supportBlock.getBlock() instanceof FourWayBlock) {
                 supportBlock = supportBlock.with(FourWayBlock.NORTH, true).with(FourWayBlock.SOUTH, true);
             }
@@ -335,7 +334,7 @@ public class VerticalEntrance extends MineshaftPiece {
      * Tries to find a direction in which there is a drop-off, with the goal of creating an opening
      * in the face of a mountain or hill.
      */
-    private void determineDirection(IWorld world) {
+    private void determineDirection(ISeedReader world) {
         int minSurfaceHeight = 255;
 
         // Set height for this, equal to 2 below the min height in the 5x5 vertical shaft piece
@@ -368,7 +367,7 @@ public class VerticalEntrance extends MineshaftPiece {
         yAxisLen = ceilingHeight - centerPos.getY() + 1;
         localYEnd = yAxisLen - 1;
 
-        BlockPos.Mutable mutable = centerPos.func_239590_i_();
+        BlockPos.Mutable mutable = centerPos.toMutable();
 
         int radius = 8; // Number of blocks that constitutes one 'radius'
         int maxRadialDist = 3; // Number of radii to check in each direction. E.g. 3 radii * radius of 8 = 24 blocks

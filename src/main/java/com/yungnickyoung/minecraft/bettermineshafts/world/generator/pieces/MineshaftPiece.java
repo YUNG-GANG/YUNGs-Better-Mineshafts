@@ -15,7 +15,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.ISeedReader;
 import net.minecraft.world.gen.feature.structure.IStructurePieceType;
 import net.minecraft.world.gen.feature.structure.StructurePiece;
 
@@ -294,7 +294,7 @@ public abstract class MineshaftPiece extends StructurePiece {
      *                                  GENERATION UTIL METHODS                                *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    protected boolean addBarrel(IWorld world, MutableBoundingBox boundingBox, Random random, BlockPos pos, ResourceLocation lootTableId) {
+    protected boolean addBarrel(ISeedReader world, MutableBoundingBox boundingBox, Random random, BlockPos pos, ResourceLocation lootTableId) {
         if (boundingBox.isVecInside(pos) && world.getBlockState(pos).getBlock() != Blocks.BARREL) {
             world.setBlockState(pos, Blocks.BARREL.getDefaultState().with(BarrelBlock.PROPERTY_FACING, Direction.UP), 2);
             TileEntity blockEntity = world.getTileEntity(pos);
@@ -308,7 +308,7 @@ public abstract class MineshaftPiece extends StructurePiece {
         }
     }
 
-    protected boolean addBarrel(IWorld world, MutableBoundingBox boundingBox, Random random, int x, int y, int z, ResourceLocation lootTableId) {
+    protected boolean addBarrel(ISeedReader world, MutableBoundingBox boundingBox, Random random, int x, int y, int z, ResourceLocation lootTableId) {
         BlockPos blockPos = new BlockPos(this.getXWithOffset(x, z), this.getYWithOffset(y), this.getZWithOffset(x, z));
         return this.addBarrel(world, boundingBox, random, blockPos, lootTableId);
     }
@@ -316,7 +316,7 @@ public abstract class MineshaftPiece extends StructurePiece {
     /**
      * Randomly add vines with a given chance in a given area, facing the specified direction.
      */
-    protected void addVines(IWorld world, MutableBoundingBox boundingBox, Direction facing, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
+    protected void addVines(ISeedReader world, MutableBoundingBox boundingBox, Direction facing, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
         BlockPos.Mutable mutable = new BlockPos.Mutable();
         for (int x = minX; x <= maxX; x++) {
             for (int y = minY; y <= maxY; y++) {
@@ -340,7 +340,7 @@ public abstract class MineshaftPiece extends StructurePiece {
     /**
      * Randomly add vines with a given chance in a given area, doing passes for all four horizontal directions.
      */
-    protected void addVines(IWorld world, MutableBoundingBox boundingBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
+    protected void addVines(ISeedReader world, MutableBoundingBox boundingBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
         this.addVines(world, boundingBox, Direction.EAST, random, chance, minX, minY, minZ, maxX, maxY, maxZ);
         this.addVines(world, boundingBox, Direction.WEST, random, chance, minX, minY, minZ, maxX, maxY, maxZ);
         this.addVines(world, boundingBox, Direction.NORTH, random, chance, minX, minY, minZ, maxX, maxY, maxZ);
@@ -350,7 +350,7 @@ public abstract class MineshaftPiece extends StructurePiece {
     /**
      * Add decorations specific to a biome variant, such as snow.
      */
-    protected void addBiomeDecorations(IWorld world, MutableBoundingBox box, Random random, int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
+    protected void addBiomeDecorations(ISeedReader world, MutableBoundingBox box, Random random, int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
         for (int x = minX; x <= maxX; x++) {
             for (int y = minY; y <= maxY; y++) {
                 for (int z = minZ; z <= maxZ; z++) {
@@ -403,7 +403,7 @@ public abstract class MineshaftPiece extends StructurePiece {
         }
     }
 
-    protected void generateLeg(IWorld world, Random random, int x, int z, BlockSetSelector selector) {
+    protected void generateLeg(ISeedReader world, Random random, int x, int z, BlockSetSelector selector) {
         BlockPos.Mutable mutable = new BlockPos.Mutable(this.getXWithOffset(x, z), this.getYWithOffset(-1), this.getZWithOffset(x, z));
 
         while (mutable.getY() > 0 && (world.getBlockState(mutable) == CAVE_AIR || LIQUIDS.contains(world.getBlockState(mutable).getMaterial()))) {
@@ -419,7 +419,7 @@ public abstract class MineshaftPiece extends StructurePiece {
     /**
      * Replaces each block in the provided area with the provided BlockState.
      */
-    protected void fill(IWorld world, MutableBoundingBox blockBox, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState blockState) {
+    protected void fill(ISeedReader world, MutableBoundingBox blockBox, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState blockState) {
         for (int x = minX; x <= maxX; ++x) {
             for (int y = minY; y <= maxY; ++y) {
                 for (int z = minZ; z <= maxZ; ++z) {
@@ -432,7 +432,7 @@ public abstract class MineshaftPiece extends StructurePiece {
     /**
      * Replaces each block in the provided area with blocks determined by the provided BlockSelector.
      */
-    protected void fill(IWorld world, MutableBoundingBox blockBox, Random random, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockSetSelector selector) {
+    protected void fill(ISeedReader world, MutableBoundingBox blockBox, Random random, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockSetSelector selector) {
         for (int x = minX; x <= maxX; ++x) {
             for (int y = minY; y <= maxY; ++y) {
                 for (int z = minZ; z <= maxZ; ++z) {
@@ -445,7 +445,7 @@ public abstract class MineshaftPiece extends StructurePiece {
     /**
      * Replaces each air block in the provided area with the provided BlockState.
      */
-    protected void replaceAir(IWorld world, MutableBoundingBox blockBox, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState blockState) {
+    protected void replaceAir(ISeedReader world, MutableBoundingBox blockBox, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState blockState) {
         for (int x = minX; x <= maxX; ++x) {
             for (int y = minY; y <= maxY; ++y) {
                 for (int z = minZ; z <= maxZ; ++z) {
@@ -461,7 +461,7 @@ public abstract class MineshaftPiece extends StructurePiece {
     /**
      * Replaces each air block in the provided area with blocks determined by the provided BlockSelector.
      */
-    protected void replaceAir(IWorld world, MutableBoundingBox blockBox, Random random, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockSetSelector selector) {
+    protected void replaceAir(ISeedReader world, MutableBoundingBox blockBox, Random random, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockSetSelector selector) {
         for (int x = minX; x <= maxX; ++x) {
             for (int y = minY; y <= maxY; ++y) {
                 for (int z = minZ; z <= maxZ; ++z) {
@@ -477,7 +477,7 @@ public abstract class MineshaftPiece extends StructurePiece {
     /**
      * Replaces each non-air block in the provided area with the provided BlockState.
      */
-    protected void replaceNonAir(IWorld world, MutableBoundingBox blockBox, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState blockState) {
+    protected void replaceNonAir(ISeedReader world, MutableBoundingBox blockBox, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState blockState) {
         for (int x = minX; x <= maxX; ++x) {
             for (int y = minY; y <= maxY; ++y) {
                 for (int z = minZ; z <= maxZ; ++z) {
@@ -493,7 +493,7 @@ public abstract class MineshaftPiece extends StructurePiece {
     /**
      * Replaces each non-air block in the provided area with blocks determined by the provided BlockSelector.
      */
-    protected void replaceNonAir(IWorld world, MutableBoundingBox blockBox, Random random, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockSetSelector selector) {
+    protected void replaceNonAir(ISeedReader world, MutableBoundingBox blockBox, Random random, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockSetSelector selector) {
         for (int x = minX; x <= maxX; ++x) {
             for (int y = minY; y <= maxY; ++y) {
                 for (int z = minZ; z <= maxZ; ++z) {
@@ -513,7 +513,7 @@ public abstract class MineshaftPiece extends StructurePiece {
     /**
      * Has a chance of replacing each block in the provided area with the provided BlockState.
      */
-    protected void chanceFill(IWorld world, MutableBoundingBox blockBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState blockState) {
+    protected void chanceFill(ISeedReader world, MutableBoundingBox blockBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState blockState) {
         for (int x = minX; x <= maxX; ++x) {
             for (int y = minY; y <= maxY; ++y) {
                 for (int z = minZ; z <= maxZ; ++z) {
@@ -528,7 +528,7 @@ public abstract class MineshaftPiece extends StructurePiece {
     /**
      * Has a chance of replacing each block in the provided area with a block determined by the provided BlockSelector.
      */
-    protected void chanceFill(IWorld world, MutableBoundingBox blockBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockSetSelector selector) {
+    protected void chanceFill(ISeedReader world, MutableBoundingBox blockBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockSetSelector selector) {
         for (int x = minX; x <= maxX; ++x) {
             for (int y = minY; y <= maxY; ++y) {
                 for (int z = minZ; z <= maxZ; ++z) {
@@ -542,7 +542,7 @@ public abstract class MineshaftPiece extends StructurePiece {
     /**
      * Has a chance of replacing each air block in the provided area with the provided BlockState.
      */
-    protected void chanceReplaceAir(IWorld world, MutableBoundingBox blockBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState blockState) {
+    protected void chanceReplaceAir(ISeedReader world, MutableBoundingBox blockBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState blockState) {
         for (int x = minX; x <= maxX; ++x) {
             for (int y = minY; y <= maxY; ++y) {
                 for (int z = minZ; z <= maxZ; ++z) {
@@ -560,7 +560,7 @@ public abstract class MineshaftPiece extends StructurePiece {
     /**
      * Has a chance of replacing each air block in the provided area with a block determined by the provided BlockSelector.
      */
-    protected void chanceReplaceAir(IWorld world, MutableBoundingBox blockBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockSetSelector selector) {
+    protected void chanceReplaceAir(ISeedReader world, MutableBoundingBox blockBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockSetSelector selector) {
         for (int x = minX; x <= maxX; ++x) {
             for (int y = minY; y <= maxY; ++y) {
                 for (int z = minZ; z <= maxZ; ++z) {
@@ -577,7 +577,7 @@ public abstract class MineshaftPiece extends StructurePiece {
     /**
      * Has a chance of replacing each non-air block in the provided area with the provided BlockState.
      */
-    protected void chanceReplaceNonAir(IWorld world, MutableBoundingBox blockBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState blockState) {
+    protected void chanceReplaceNonAir(ISeedReader world, MutableBoundingBox blockBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState blockState) {
         for (int x = minX; x <= maxX; ++x) {
             for (int y = minY; y <= maxY; ++y) {
                 for (int z = minZ; z <= maxZ; ++z) {
@@ -595,7 +595,7 @@ public abstract class MineshaftPiece extends StructurePiece {
     /**
      * Has a chance of replacing each non-air block in the provided area with a block determined by the provided BlockSelector.
      */
-    protected void chanceReplaceNonAir(IWorld world, MutableBoundingBox blockBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockSetSelector selector) {
+    protected void chanceReplaceNonAir(ISeedReader world, MutableBoundingBox blockBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockSetSelector selector) {
         for (int x = minX; x <= maxX; ++x) {
             for (int y = minY; y <= maxY; ++y) {
                 for (int z = minZ; z <= maxZ; ++z) {
@@ -614,7 +614,7 @@ public abstract class MineshaftPiece extends StructurePiece {
      *                                      BLOCK SET/GET                                      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    protected void chanceAddBlock(IWorld world, Random random, float chance, BlockState block, int x, int y, int z, MutableBoundingBox blockBox) {
+    protected void chanceAddBlock(ISeedReader world, Random random, float chance, BlockState block, int x, int y, int z, MutableBoundingBox blockBox) {
         if (random.nextFloat() < chance) {
             this.setBlockState(world, block, x, y, z, blockBox);
         }

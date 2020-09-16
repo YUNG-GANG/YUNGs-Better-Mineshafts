@@ -1,5 +1,7 @@
 package com.yungnickyoung.minecraft.bettermineshafts.config;
 
+import com.yungnickyoung.minecraft.bettermineshafts.init.ModStructures;
+
 public class BMConfig {
     public static void bake() {
         mineshaftSpawnRate = BMForgeConfig.mineshaftSpawnRate.get();
@@ -24,6 +26,9 @@ public class BMConfig {
         lapisOre = BMForgeConfig.ores.lapis.get();
         emeraldOre = BMForgeConfig.ores.emerald.get();
         diamondOre = BMForgeConfig.ores.diamond.get();
+        ModStructures.STRUCTURE_FEATURE_LIST.forEach(structureFeature ->
+            structureFeature.field_236269_c_.probability = mineshaftSpawnRate
+        );
     }
 
     public static double mineshaftSpawnRate;
