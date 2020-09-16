@@ -33,8 +33,8 @@ public final class BMForgeConfig {
             .worldRestart()
             .comment(
                 " The lowest the floor of a mineshaft can be.\n" +
-                    " Default: 13")
-            .define("Minimum y-coordinate", 13);
+                    " Default: 17")
+            .define("Minimum y-coordinate", 17);
 
         maxY = BUILDER
             .worldRestart()
