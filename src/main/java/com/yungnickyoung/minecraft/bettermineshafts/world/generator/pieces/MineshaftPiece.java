@@ -111,18 +111,32 @@ public abstract class MineshaftPiece extends StructurePiece {
                 return BlockSetSelector.from(Blocks.STRIPPED_JUNGLE_LOG.getDefaultState().with(RotatedPillarBlock.AXIS, Direction.Axis.Y));
             case SNOW:
                 return BlockSetSelector.from(Blocks.STRIPPED_SPRUCE_LOG.getDefaultState().with(RotatedPillarBlock.AXIS, Direction.Axis.Y));
-            case ICE:
-                return BlockSetSelector.STONE_BRICK_ICE;
-            case DESERT:
-                return BlockSetSelector.STONE_BRICK_DESERT;
-            case RED_DESERT:
-                return BlockSetSelector.STONE_BRICK_RED_DESERT;
-            case MUSHROOM:
-                return BlockSetSelector.STONE_BRICK_MUSHROOM;
             case SAVANNA:
                 return BlockSetSelector.from(Blocks.STRIPPED_ACACIA_LOG.getDefaultState().with(RotatedPillarBlock.AXIS, Direction.Axis.Y));
+            case ICE:
+            case DESERT:
+            case RED_DESERT:
+            case MUSHROOM:
+                return getBrickSelector();
             default:
                 return BlockSetSelector.from(Blocks.STRIPPED_OAK_LOG.getDefaultState().with(RotatedPillarBlock.AXIS, Direction.Axis.Y));
+        }
+    }
+
+    /**
+     * Alternative leg selector, used when the leg goes into lava to prevent a big fire from happening
+     */
+    protected BlockSetSelector getAltLegSelector() {
+        switch (this.mineshaftType) {
+            case MESA:
+            case JUNGLE:
+            case SAVANNA:
+            case NORMAL:
+                return getBrickSelector();
+            case SNOW:
+                return BlockSetSelector.STONE_BRICK_NORMAL;
+            default:
+                return getLegSelector();
         }
     }
 
@@ -403,12 +417,42 @@ public abstract class MineshaftPiece extends StructurePiece {
         }
     }
 
-    protected void generateLeg(ISeedReader world, Random random, int x, int z, BlockSetSelector selector) {
+    protected BlockSetSelector getLegSelectorForPosition(ISeedReader world, int x, int z) {
         BlockPos.Mutable mutable = new BlockPos.Mutable(this.getXWithOffset(x, z), this.getYWithOffset(-1), this.getZWithOffset(x, z));
+        BlockState currBlock = world.getBlockState(mutable);
 
-        while (mutable.getY() > 0 && (world.getBlockState(mutable) == CAVE_AIR || LIQUIDS.contains(world.getBlockState(mutable).getMaterial()))) {
+        // Check for lava below. If there's lava, we will use the alt leg selector
+        while (mutable.getY() > 0 && (currBlock == CAVE_AIR || LIQUIDS.contains(currBlock.getMaterial()))) {
+            if (currBlock.getMaterial() == Material.LAVA) {
+                return getAltLegSelector();
+            }
+            mutable.move(Direction.DOWN);
+            currBlock = world.getBlockState(mutable);
+        }
+
+        return getLegSelector();
+    }
+
+    protected void generateLeg(ISeedReader world, Random random, int x, int z) {
+        BlockSetSelector selector = getLegSelectorForPosition(world, x, z);
+        BlockPos.Mutable mutable = new BlockPos.Mutable(this.getXWithOffset(x, z), this.getYWithOffset(-1), this.getZWithOffset(x, z));
+        BlockState currBlock = world.getBlockState(mutable);
+
+        while (mutable.getY() > 0 && (currBlock == CAVE_AIR || LIQUIDS.contains(currBlock.getMaterial()))) {
             world.setBlockState(mutable, selector.get(random), 2);
             mutable.move(Direction.DOWN);
+            currBlock = world.getBlockState(mutable);
+        }
+    }
+
+    protected void generateLeg(ISeedReader world, Random random, int x, int z, BlockSetSelector selector) {
+        BlockPos.Mutable mutable = new BlockPos.Mutable(this.getXWithOffset(x, z), this.getYWithOffset(-1), this.getZWithOffset(x, z));
+        BlockState currBlock = world.getBlockState(mutable);
+
+        while (mutable.getY() > 0 && (currBlock == CAVE_AIR || LIQUIDS.contains(currBlock.getMaterial()))) {
+            world.setBlockState(mutable, selector.get(random), 2);
+            mutable.move(Direction.DOWN);
+            currBlock = world.getBlockState(mutable);
         }
     }
 
