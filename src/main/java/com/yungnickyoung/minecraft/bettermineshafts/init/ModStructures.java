@@ -127,26 +127,41 @@ public class ModStructures {
                 }
 
                 StructureFeature<BetterMineshaftConfig, ? extends Structure<BetterMineshaftConfig>> structureFeature;
+                String biomeName = biome.toString();
+                try {
+                    biomeName = biomeName.split(":")[1];
+                } catch (Exception ignored) {}
 
                 // Determine mineshaft variant based on biome
                 if (biome.getCategory() == Biome.Category.MESA) {
-                    structureFeature = MESA_MINESHAFT;
+                    if (biomeName.equalsIgnoreCase("badlands")) {
+                        structureFeature = getVariant(REDDESERT_MINESHAFT);
+                    } else {
+                        structureFeature = getVariant(MESA_MINESHAFT);
+                    }
                 } else if (biome.getCategory() == Biome.Category.JUNGLE) {
-                    structureFeature = JUNGLE_MINESHAFT;
+                    structureFeature = getVariant(JUNGLE_MINESHAFT);
                 }
                 else if (biome.getCategory() == Biome.Category.ICY || biome.getCategory() == Biome.Category.TAIGA) {
-                    structureFeature = SNOW_MINESHAFT;
+                    if (biomeName.equalsIgnoreCase("ice_spikes")) {
+                        structureFeature = getVariant(ICE_MINESHAFT);
+                    } else {
+                        structureFeature = getVariant(SNOW_MINESHAFT);
+                    }
                 }
                 else if (biome.getCategory() == Biome.Category.DESERT) {
-                    structureFeature = DESERT_MINESHAFT;
-                }
+                    if (biomeName.equalsIgnoreCase("desert_lakes")) {
+                        structureFeature = getVariant(REDDESERT_MINESHAFT);
+                    } else {
+                        structureFeature = getVariant(DESERT_MINESHAFT);
+                    }                }
                 else if (biome.getCategory() == Biome.Category.MUSHROOM) {
-                    structureFeature = MUSHROOM_MINESHAFT;
+                    structureFeature = getVariant(MUSHROOM_MINESHAFT);
                 }
                 else if (biome.getCategory() == Biome.Category.SAVANNA) {
-                    structureFeature = SAVANNA_MINESHAFT;
+                    structureFeature = getVariant(SAVANNA_MINESHAFT);
                 } else {
-                    structureFeature = NORMAL_MINESHAFT;
+                    structureFeature = getVariant(NORMAL_MINESHAFT);
                 }
 
                 // Add mineshaft to biome & biome generation settings
@@ -160,27 +175,29 @@ public class ModStructures {
      * Returns the given type if its mineshaft variant is enabled.
      * Otherwise returns a backup type that is enabled.
      */
-    private static BetterMineshaftStructure.Type getType(BetterMineshaftStructure.Type type) {
-        if (type == BetterMineshaftStructure.Type.RED_DESERT) {
-            if (BMConfig.redDesertEnabled) return BetterMineshaftStructure.Type.RED_DESERT;
-            if (BMConfig.desertEnabled) return BetterMineshaftStructure.Type.DESERT;
-        } else if (type == BetterMineshaftStructure.Type.DESERT) {
-            if (BMConfig.desertEnabled) return BetterMineshaftStructure.Type.DESERT;
-        } else if (type == BetterMineshaftStructure.Type.MESA) {
-            if (BMConfig.mesaEnabled) return BetterMineshaftStructure.Type.MESA;
-            if (BMConfig.redDesertEnabled) return BetterMineshaftStructure.Type.RED_DESERT;
-        } else if (type == BetterMineshaftStructure.Type.ICE) {
-            if (BMConfig.iceEnabled) return BetterMineshaftStructure.Type.ICE;
-            if (BMConfig.snowEnabled) return BetterMineshaftStructure.Type.SNOW;
-        } else if (type == BetterMineshaftStructure.Type.SNOW) {
-            if (BMConfig.snowEnabled) return BetterMineshaftStructure.Type.SNOW;
-        } else if (type == BetterMineshaftStructure.Type.JUNGLE) {
-            if (BMConfig.jungleEnabled) return BetterMineshaftStructure.Type.JUNGLE;
-        } else if (type == BetterMineshaftStructure.Type.SAVANNA) {
-            if (BMConfig.savannaEnabled) return BetterMineshaftStructure.Type.SAVANNA;
-        } else if (type == BetterMineshaftStructure.Type.MUSHROOM) {
-            if (BMConfig.mushroomEnabled) return BetterMineshaftStructure.Type.MUSHROOM;
+    private static StructureFeature<BetterMineshaftConfig, ? extends Structure<BetterMineshaftConfig>> getVariant(
+        StructureFeature<BetterMineshaftConfig, ? extends Structure<BetterMineshaftConfig>> variant
+    ) {
+        if (variant == REDDESERT_MINESHAFT) {
+            if (BMConfig.redDesertEnabled) return REDDESERT_MINESHAFT;
+            if (BMConfig.desertEnabled) return DESERT_MINESHAFT;
+        } else if (variant == DESERT_MINESHAFT) {
+            if (BMConfig.desertEnabled) return DESERT_MINESHAFT;
+        } else if (variant == MESA_MINESHAFT) {
+            if (BMConfig.mesaEnabled) return MESA_MINESHAFT;
+            if (BMConfig.redDesertEnabled) return REDDESERT_MINESHAFT;
+        } else if (variant == ICE_MINESHAFT) {
+            if (BMConfig.iceEnabled) return ICE_MINESHAFT;
+            if (BMConfig.snowEnabled) return SNOW_MINESHAFT;
+        } else if (variant == SNOW_MINESHAFT) {
+            if (BMConfig.snowEnabled) return SNOW_MINESHAFT;
+        } else if (variant == JUNGLE_MINESHAFT) {
+            if (BMConfig.jungleEnabled) return JUNGLE_MINESHAFT;
+        } else if (variant == SAVANNA_MINESHAFT) {
+            if (BMConfig.savannaEnabled) return SAVANNA_MINESHAFT;
+        } else if (variant == MUSHROOM_MINESHAFT) {
+            if (BMConfig.mushroomEnabled) return MUSHROOM_MINESHAFT;
         }
-        return BetterMineshaftStructure.Type.NORMAL;
+        return NORMAL_MINESHAFT;
     }
 }
