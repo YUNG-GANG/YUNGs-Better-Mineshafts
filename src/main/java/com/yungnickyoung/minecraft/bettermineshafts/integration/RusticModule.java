@@ -13,8 +13,12 @@ public class RusticModule extends CompatModule {
     @Override
     public void enable() {
         super.enable();
-        this.addIfAbsent(this.lanterns, ModBlocks.IRON_LANTERN.getDefaultState().withProperty(BlockLantern.FACING, EnumFacing.DOWN));
-        this.addIfAbsent(this.lanterns, ModBlocks.GOLDEN_LANTERN.getDefaultState().withProperty(BlockLantern.FACING, EnumFacing.DOWN));
+        if (ModBlocks.IRON_LANTERN != null) {
+            this.addIfAbsent(this.lanterns, ModBlocks.IRON_LANTERN.getDefaultState().withProperty(BlockLantern.FACING, EnumFacing.DOWN));
+        }
+        if (ModBlocks.GOLDEN_LANTERN != null) {
+            this.addIfAbsent(this.lanterns, ModBlocks.GOLDEN_LANTERN.getDefaultState().withProperty(BlockLantern.FACING, EnumFacing.DOWN));
+        }
     }
 
     @Override

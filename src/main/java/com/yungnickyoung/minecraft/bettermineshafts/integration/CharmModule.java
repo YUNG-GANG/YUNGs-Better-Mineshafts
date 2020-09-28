@@ -12,8 +12,12 @@ public class CharmModule extends CompatModule {
     @Override
     public void enable() {
         super.enable();
-        this.addIfAbsent(this.lanterns, Lantern.ironLantern.getDefaultState().withProperty(BlockLantern.HANGING, true));
-        this.addIfAbsent(this.lanterns, Lantern.goldLantern.getDefaultState().withProperty(BlockLantern.HANGING, true));
+        if (Lantern.ironLantern != null) {
+            this.addIfAbsent(this.lanterns, Lantern.ironLantern.getDefaultState().withProperty(BlockLantern.HANGING, true));
+        }
+        if (Lantern.goldLantern != null) {
+            this.addIfAbsent(this.lanterns, Lantern.goldLantern.getDefaultState().withProperty(BlockLantern.HANGING, true));
+        }
     }
 
     @Override

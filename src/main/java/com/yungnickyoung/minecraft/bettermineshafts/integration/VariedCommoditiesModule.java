@@ -17,11 +17,14 @@ public class VariedCommoditiesModule extends CompatModule {
     @Override
     public void enable() {
         super.enable();
-        // Currently unused because they are super wonky
-        this.addIfAbsent(this.lanterns, VCBlocks.lamp.getDefaultState());
-        this.addIfAbsent(this.lanterns, VCBlocks.candle.getDefaultState());
-        this.addIfAbsent(this.leftTorches, VCBlocks.candle.getDefaultState());
-        this.addIfAbsent(this.rightTorches, VCBlocks.candle.getDefaultState());
+        if (VCBlocks.lamp != null) {
+            this.addIfAbsent(this.lanterns, VCBlocks.lamp.getDefaultState());
+        }
+        if (VCBlocks.candle != null) {
+            this.addIfAbsent(this.lanterns, VCBlocks.candle.getDefaultState());
+            this.addIfAbsent(this.leftTorches, VCBlocks.candle.getDefaultState());
+            this.addIfAbsent(this.rightTorches, VCBlocks.candle.getDefaultState());
+        }
     }
 
     @Override
