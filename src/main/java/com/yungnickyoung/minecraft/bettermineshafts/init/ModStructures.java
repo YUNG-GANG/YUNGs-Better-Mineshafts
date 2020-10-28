@@ -12,7 +12,6 @@ import net.minecraft.world.biome.*;
 import net.minecraft.world.gen.DimensionSettings;
 import net.minecraft.world.gen.FlatGenerationSettings;
 import net.minecraft.world.gen.GenerationStage;
-import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.StructureFeature;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.settings.DimensionStructuresSettings;
@@ -29,7 +28,7 @@ import java.util.Locale;
 
 public class ModStructures {
     // Structure
-    public static final Structure<BetterMineshaftConfig> BM_STRUCTURE = new BetterMineshaftStructure(BetterMineshaftConfig.field_236541_a_);
+    public static Structure<BetterMineshaftConfig> BM_STRUCTURE = new BetterMineshaftStructure(BetterMineshaftConfig.field_236541_a_);
 
     // Structure features
     public static final StructureFeature<BetterMineshaftConfig, ? extends Structure<BetterMineshaftConfig>> NORMAL_MINESHAFT =
@@ -67,16 +66,16 @@ public class ModStructures {
     );
 
     public static void init() {
-        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Feature.class, ModStructures::registerStructure);
+        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Structure.class, ModStructures::registerStructure);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(ModStructures::commonSetup);
     }
 
-    public static void registerStructure(final RegistryEvent.Register<Feature<?>> event) {
+    public static void registerStructure(final RegistryEvent.Register<Structure<?>> event) {
         // Add structure to registry and set its name
         BM_STRUCTURE.setRegistryName(new ResourceLocation("mineshaft"));
         Structure.field_236385_u_.put(BM_STRUCTURE, GenerationStage.Decoration.UNDERGROUND_STRUCTURES);
         Structure.field_236365_a_.put("Mineshaft", BM_STRUCTURE);
-        Registry.register(Registry.STRUCTURE_FEATURE, "Mineshaft".toLowerCase(Locale.ROOT), BM_STRUCTURE);
+        event.getRegistry().register(BM_STRUCTURE);
 
         // Add structure and placement info to settings
         FlatGenerationSettings.STRUCTURES.put(BM_STRUCTURE, BM_STRUCTURE.func_236391_a_(new BetterMineshaftConfig(BMConfig.mineshaftSpawnRate, BetterMineshaftStructure.Type.NORMAL)));
