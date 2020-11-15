@@ -10,7 +10,7 @@ public class ModConfig {
     public static void init() {
         ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.COMMON, BMForgeConfig.SPEC, "bettermineshafts-forge-1_16.toml");
         FMLJavaModLoadingContext.get().getModEventBus().addListener(ModConfig::configChanged);
-        BMConfig.bake();
+        BMConfig.init();
     }
 
     public static void configChanged(net.minecraftforge.fml.config.ModConfig.ModConfigEvent event) {

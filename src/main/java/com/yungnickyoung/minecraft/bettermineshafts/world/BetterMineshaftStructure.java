@@ -15,6 +15,7 @@ import net.minecraft.util.registry.DynamicRegistries;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.provider.BiomeProvider;
 import net.minecraft.world.gen.ChunkGenerator;
+import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.structure.StructureStart;
 import net.minecraft.world.gen.feature.template.TemplateManager;
@@ -39,24 +40,10 @@ public class BetterMineshaftStructure extends Structure<BetterMineshaftConfig> {
         return random.nextDouble() < config.probability;
     }
 
-    /**
-     * shouldStartAt
-     */
-//    @Override
-//    @ParametersAreNonnullByDefault
-//    public boolean canBeGenerated(BiomeManager biomeManager, ChunkGenerator<?> chunkGenerator, Random random, int chunkX, int chunkZ, Biome biome) {
-//        ((SharedSeedRandom) random).setLargeFeatureSeed(chunkGenerator.getSeed(), chunkX, chunkZ);
-//        if (chunkGenerator.hasStructure(biome, this)) {
-//            BetterMineshaftConfig featureConfig = chunkGenerator.getStructureConfig(biome, this);
-//            // Default to normal mineshaft in case we fail to load config for this biome
-//            if (featureConfig == null) {
-//                featureConfig = new BetterMineshaftConfig(BMConfig.mineshaftSpawnRate, Type.NORMAL);
-//            }
-//            return random.nextDouble() < featureConfig.probability;
-//        } else {
-//            return false;
-//        }
-//    }
+    @Override
+    public GenerationStage.Decoration func_236396_f_() {
+        return GenerationStage.Decoration.UNDERGROUND_STRUCTURES;
+    }
 
     @Override
     public IStartFactory<BetterMineshaftConfig> getStartFactory() {
@@ -65,7 +52,7 @@ public class BetterMineshaftStructure extends Structure<BetterMineshaftConfig> {
 
     @Override
     public String getStructureName() {
-        return "Mineshaft";
+        return "Better Mineshaft";
     }
 
     public static class Start extends StructureStart<BetterMineshaftConfig> {
