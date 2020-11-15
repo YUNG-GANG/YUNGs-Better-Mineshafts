@@ -19,6 +19,7 @@ import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.structure.StructureStart;
 import net.minecraft.world.gen.feature.template.TemplateManager;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Arrays;
@@ -32,7 +33,10 @@ public class BetterMineshaftStructure extends Structure<BetterMineshaftConfig> {
     }
 
     /**
-     * canBeGenerated
+     * Returns true if the structure should generate.
+     * The approach taken here is kind of legacy at this point, and should be avoided. Instead,
+     * configure the structure's StructureSeparationSettings accordingly.
+     * See {@link com.yungnickyoung.minecraft.bettermineshafts.init.ModStructures#commonSetup}
      */
     @Override
     protected boolean func_230363_a_(ChunkGenerator chunkGenerator, BiomeProvider biomeProvider, long seed, SharedSeedRandom random, int x, int z, Biome biome, ChunkPos chunkPos, BetterMineshaftConfig config) {
@@ -40,6 +44,9 @@ public class BetterMineshaftStructure extends Structure<BetterMineshaftConfig> {
         return random.nextDouble() < config.probability;
     }
 
+    /**
+     * Returns the Decoration stage for this structure.
+     */
     @Override
     public GenerationStage.Decoration func_236396_f_() {
         return GenerationStage.Decoration.UNDERGROUND_STRUCTURES;
@@ -50,6 +57,13 @@ public class BetterMineshaftStructure extends Structure<BetterMineshaftConfig> {
         return Start::new;
     }
 
+    /**
+     * Returns the name displayed when the locate command is used.
+     * I believe (not 100% sure) that the lowercase form of this value must also match
+     * the key of the entry added to Structure.field_236365_a_ during common setup.
+     *
+     * See {@link com.yungnickyoung.minecraft.bettermineshafts.init.ModStructures#commonSetup}
+     */
     @Override
     public String getStructureName() {
         return "Better Mineshaft";
