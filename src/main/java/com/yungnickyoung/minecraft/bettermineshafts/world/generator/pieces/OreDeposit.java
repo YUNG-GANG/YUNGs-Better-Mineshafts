@@ -1,8 +1,9 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
-import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftFeature;
+import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshafts;
+import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftStructure;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
-import com.yungnickyoung.minecraft.bettermineshafts.util.BoxUtil;
+import com.yungnickyoung.minecraft.yungsapi.world.BoundingBoxHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundTag;
@@ -12,8 +13,8 @@ import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.world.StructureWorldAccess;
+import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 
 import java.util.Arrays;
@@ -22,21 +23,23 @@ import java.util.Random;
 
 public class OreDeposit extends MineshaftPiece {
     public enum OreType {
-        GOLD(0, Blocks.GOLD_ORE.getDefaultState()),
-        IRON(1, Blocks.IRON_ORE.getDefaultState()),
-        COAL(2, Blocks.COAL_ORE.getDefaultState()),
-        LAPIS(3, Blocks.LAPIS_ORE.getDefaultState()),
-        REDSTONE(4, Blocks.REDSTONE_ORE.getDefaultState()),
-        EMERALD(5, Blocks.EMERALD_ORE.getDefaultState()),
-        DIAMOND(6, Blocks.DIAMOND_ORE.getDefaultState()),
-        COBBLE(7, Blocks.COBBLESTONE.getDefaultState());
+        COBBLE(0, Blocks.COBBLESTONE.getDefaultState(), 50), // TODO - add config options for ore spawn rates
+        COAL(1, Blocks.COAL_ORE.getDefaultState(), 20 + 50),
+        IRON(2, Blocks.IRON_ORE.getDefaultState(), 9 + 70),
+        REDSTONE(3, Blocks.REDSTONE_ORE.getDefaultState(), 7 + 79),
+        GOLD(4, Blocks.GOLD_ORE.getDefaultState(), 7 + 86),
+        LAPIS(5, Blocks.LAPIS_ORE.getDefaultState(), 3 + 93),
+        EMERALD(6, Blocks.EMERALD_ORE.getDefaultState(), 3 + 96),
+        DIAMOND(7, Blocks.DIAMOND_ORE.getDefaultState(), 1 + 99);
 
         private final int value;
         private final BlockState block;
+        private int threshold;
 
-        OreType(int value, BlockState block) {
+        OreType(int value, BlockState block, int threshold) {
             this.value = value;
             this.block = block;
+            this.threshold = threshold;
         }
 
         public static OreType valueOf(int value) {
@@ -64,7 +67,7 @@ public class OreDeposit extends MineshaftPiece {
         this.oreType = OreType.valueOf(compoundTag.getInt("OreType"));
     }
 
-    public OreDeposit(int i, int chunkPieceLen, Random random, BlockBox blockBox, Direction direction, BetterMineshaftFeature.Type type) {
+    public OreDeposit(int i, int chunkPieceLen, Random random, BlockBox blockBox, Direction direction, BetterMineshaftStructure.Type type) {
         super(BetterMineshaftStructurePieceType.ORE_DEPOSIT, i, chunkPieceLen, type);
         this.setOrientation(direction);
         this.boundingBox = blockBox;
@@ -77,44 +80,40 @@ public class OreDeposit extends MineshaftPiece {
     }
 
     public static BlockBox determineBoxPosition(List<StructurePiece> list, Random random, int x, int y, int z, Direction direction) {
-        BlockBox blockBox = BoxUtil.boxFromCoordsWithRotation(x, y, z, SECONDARY_AXIS_LEN, Y_AXIS_LEN, MAIN_AXIS_LEN, direction);
+        BlockBox blockBox = BoundingBoxHelper.boxFromCoordsWithRotation(x, y, z, SECONDARY_AXIS_LEN, Y_AXIS_LEN, MAIN_AXIS_LEN, direction);
 
         // The following func call returns null if this new blockbox does not intersect with any pieces in the list.
         // If there is an intersection, the following func call returns the piece that intersects.
-        StructurePiece intersectingPiece = StructurePiece.method_14932(list, blockBox); // findIntersecting
+        StructurePiece intersectingPiece = StructurePiece.getOverlappingPiece(list, blockBox);
 
         // Thus, this function returns null if blackBox intersects with an existing piece. Otherwise, we return blackbox
         return intersectingPiece != null ? null : blockBox;
     }
 
     @Override
-    public void method_14918(StructurePiece structurePiece, List<StructurePiece> list, Random random) {
-        float r = random.nextFloat();
+    public void fillOpenings(StructurePiece structurePiece, List<StructurePiece> list, Random random) {
+        int r = random.nextInt(100);
 
-        if (r < .5f) {
-            this.oreType = OreType.COBBLE; // Chance of cobble instead of ore
-        } else if (r <= .7f)
-            this.oreType = OreType.COAL;
-        else if (r <= .79f)
-            this.oreType = OreType.IRON;
-        else if (r <= .86f)
-            this.oreType = OreType.REDSTONE;
-        else if (r <= .93f)
-            this.oreType = OreType.GOLD;
-        else if (r <= .965f)
-            this.oreType = OreType.LAPIS;
-        else if (r <= .99f)
-            this.oreType = OreType.EMERALD;
-        else
-            this.oreType = OreType.DIAMOND;
+        // Determine ore type
+        for (OreType oreType : OreType.values()) {
+            if (r < oreType.threshold) {
+                this.oreType = oreType;
+                break;
+            }
+        }
+
+        // Double check sum to see if user messed up spawn chances
+        if (OreType.DIAMOND.threshold != 100)
+            BetterMineshafts.LOGGER.error("Your ore spawn chances don't add up to 100! Ores won't spawn as you intend!");
+        if (this.oreType == null)
+            this.oreType = OreType.COBBLE;
     }
 
     @Override
-    public boolean generate(IWorld world, ChunkGenerator<?> generator, Random random, BlockBox box, ChunkPos pos) {
-        // Don't spawn if liquid in this box
-        if (this.method_14937(world, box)) {
-            return false;
-        }
+    public boolean generate(StructureWorldAccess world, StructureAccessor structureAccessor, ChunkGenerator generator, Random random, BlockBox box, ChunkPos pos, BlockPos blockPos) {
+        // Don't spawn if liquid in this box or if in ocean biome
+        if (this.isTouchingLiquid(world, box)) return false;
+        if (this.isInOcean(world, 0, 0) || this.isInOcean(world, LOCAL_X_END, LOCAL_Z_END)) return false;
 
         BlockState COBBLE = Blocks.COBBLESTONE.getDefaultState();
         BlockState ORE_BLOCK = this.oreType.getBlock();

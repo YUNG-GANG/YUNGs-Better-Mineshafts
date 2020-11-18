@@ -1,17 +1,18 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
 import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshafts;
-import com.yungnickyoung.minecraft.bettermineshafts.util.SurfaceUtil;
-import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftFeature;
+import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftStructure;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
+import com.yungnickyoung.minecraft.yungsapi.world.SurfaceHelper;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.RailShape;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.structure.StructureManager;
 import net.minecraft.structure.StructurePiece;
 import net.minecraft.util.math.*;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.StructureWorldAccess;
+import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 
 import java.util.List;
@@ -51,7 +52,7 @@ public class VerticalEntrance extends MineshaftPiece {
         this.hasTunnel = compoundTag.getBoolean("hasTunnel");
     }
 
-    public VerticalEntrance(int i, int pieceChainLen, Random random, BlockPos.Mutable centerPos, Direction direction, BetterMineshaftFeature.Type type) {
+    public VerticalEntrance(int i, int pieceChainLen, Random random, BlockPos.Mutable centerPos, Direction direction, BetterMineshaftStructure.Type type) {
         super(BetterMineshaftStructurePieceType.VERTICAL_ENTRANCE, i, pieceChainLen, type);
         this.setOrientation(direction);
         int y = random.nextInt(centerPos.getY() / 2) + 13;
@@ -76,7 +77,7 @@ public class VerticalEntrance extends MineshaftPiece {
     }
 
     @Override
-    public void method_14918(StructurePiece structurePiece, List<StructurePiece> list, Random random) {
+    public void fillOpenings(StructurePiece structurePiece, List<StructurePiece> list, Random random) {
         Direction direction = this.getFacing();
         if (direction == null) {
             return;
@@ -85,21 +86,21 @@ public class VerticalEntrance extends MineshaftPiece {
         switch (direction) {
             case NORTH:
             default:
-                BetterMineshaftGenerator.generateAndAddBigTunnelPiece(structurePiece, list, random, this.centerPos.getX() - 4, this.centerPos.getY(), this.centerPos.getZ() - 3, direction, this.method_14923(), pieceChainLen);
+                BetterMineshaftGenerator.generateAndAddBigTunnelPiece(structurePiece, list, random, this.centerPos.getX() - 4, this.centerPos.getY(), this.centerPos.getZ() - 3, direction, this.getChainLength(), chainLength);
                 break;
             case SOUTH:
-                BetterMineshaftGenerator.generateAndAddBigTunnelPiece(structurePiece, list, random, this.centerPos.getX() + 4, this.centerPos.getY(), this.centerPos.getZ() + 3, direction, this.method_14923(), pieceChainLen);
+                BetterMineshaftGenerator.generateAndAddBigTunnelPiece(structurePiece, list, random, this.centerPos.getX() + 4, this.centerPos.getY(), this.centerPos.getZ() + 3, direction, this.getChainLength(), chainLength);
                 break;
             case WEST:
-                BetterMineshaftGenerator.generateAndAddBigTunnelPiece(structurePiece, list, random, this.centerPos.getX() - 3, this.centerPos.getY(), this.centerPos.getZ() + 4, direction, this.method_14923(), pieceChainLen);
+                BetterMineshaftGenerator.generateAndAddBigTunnelPiece(structurePiece, list, random, this.centerPos.getX() - 3, this.centerPos.getY(), this.centerPos.getZ() + 4, direction, this.getChainLength(), chainLength);
                 break;
             case EAST:
-                BetterMineshaftGenerator.generateAndAddBigTunnelPiece(structurePiece, list, random, this.centerPos.getX() + 3, this.centerPos.getY(), this.centerPos.getZ() - 4, direction, this.method_14923(), pieceChainLen);
+                BetterMineshaftGenerator.generateAndAddBigTunnelPiece(structurePiece, list, random, this.centerPos.getX() + 3, this.centerPos.getY(), this.centerPos.getZ() - 4, direction, this.getChainLength(), chainLength);
         }
     }
 
     @Override
-    public boolean generate(IWorld world, ChunkGenerator<?> generator, Random random, BlockBox box, ChunkPos pos) {
+    public boolean generate(StructureWorldAccess world, StructureAccessor structureAccessor, ChunkGenerator generator, Random random, BlockBox box, ChunkPos pos, BlockPos blockPos) {
         if (BetterMineshafts.DEBUG_LOG) {
             BetterMineshafts.count.incrementAndGet();
         }
@@ -129,7 +130,7 @@ public class VerticalEntrance extends MineshaftPiece {
     /**
      * Generates the vertical shaft with a ladder.
      */
-    private void generateVerticalShaft(IWorld world, Random random, BlockBox box) {
+    private void generateVerticalShaft(StructureWorldAccess world, Random random, BlockBox box) {
         // Randomize blocks
         this.fill(world, box, random, SHAFT_LOCAL_XZ_START, 0, SHAFT_LOCAL_XZ_START, SHAFT_LOCAL_XZ_END, localYEnd, SHAFT_LOCAL_XZ_END, getMainSelector());
 
@@ -139,7 +140,7 @@ public class VerticalEntrance extends MineshaftPiece {
         // Fill in any air in floor with main block
         this.replaceAir(world, box, SHAFT_LOCAL_XZ_START + 1, 0, SHAFT_LOCAL_XZ_START + 1, SHAFT_LOCAL_XZ_END - 1, 0, SHAFT_LOCAL_XZ_END - 1, getMainBlock());
         // Special case - mushroom mineshafts get mycelium in floor
-        if (this.mineshaftType == BetterMineshaftFeature.Type.MUSHROOM)
+        if (this.mineshaftType == BetterMineshaftStructure.Type.MUSHROOM)
             this.chanceReplaceNonAir(world, box, random, .8f, SHAFT_LOCAL_XZ_START + 1, 0, SHAFT_LOCAL_XZ_START + 1, SHAFT_LOCAL_XZ_END - 1, 0, SHAFT_LOCAL_XZ_END - 1, Blocks.MYCELIUM.getDefaultState());
 
         // Ladder
@@ -153,7 +154,7 @@ public class VerticalEntrance extends MineshaftPiece {
 
         // Decorations
         this.addBiomeDecorations(world, box, random, SHAFT_LOCAL_XZ_START + 1, 0, SHAFT_LOCAL_XZ_START + 1, SHAFT_LOCAL_XZ_END - 1, 1, SHAFT_LOCAL_XZ_END - 1);
-        this.addVines(world, box, random, getVineChance(), SHAFT_LOCAL_XZ_START + 1, 0, SHAFT_LOCAL_XZ_START + 1, SHAFT_LOCAL_XZ_END - 1, localYEnd - 4, SHAFT_LOCAL_XZ_END - 1);
+        this.addVines(world, box, random, SHAFT_LOCAL_XZ_START + 1, 0, SHAFT_LOCAL_XZ_START + 1, SHAFT_LOCAL_XZ_END - 1, localYEnd - 4, SHAFT_LOCAL_XZ_END - 1);
     }
 
     /**
@@ -162,7 +163,7 @@ public class VerticalEntrance extends MineshaftPiece {
      * as is normally the case. Rotation logic must be handled manually for this piece because the piece's orientation
      * relies on the surrounding terrain, which can't be determined until generation time.
      */
-    private void generateSurfaceTunnel(IWorld world, Random random, BlockBox box) {
+    private void generateSurfaceTunnel(StructureWorldAccess world, Random random, BlockBox box) {
         int tunnelStartX = 0,
             tunnelStartZ = 0,
             tunnelEndX = 0,
@@ -215,7 +216,7 @@ public class VerticalEntrance extends MineshaftPiece {
             // Fill in any air in floor with main block
             this.replaceAir(world, box, tunnelStartX + 1, tunnelFloorAltitude, tunnelStartZ, tunnelEndX - 1, tunnelFloorAltitude, tunnelEndZ, getMainBlock());
             // Special case - mushroom mineshafts get mycelium in floor
-            if (this.mineshaftType == BetterMineshaftFeature.Type.MUSHROOM)
+            if (this.mineshaftType == BetterMineshaftStructure.Type.MUSHROOM)
                 this.chanceReplaceNonAir(world, box, random, .8f, tunnelStartX + 1, tunnelFloorAltitude, tunnelStartZ, tunnelEndX - 1, tunnelFloorAltitude, tunnelEndZ, Blocks.MYCELIUM.getDefaultState());
 
             // Fill with air
@@ -225,7 +226,7 @@ public class VerticalEntrance extends MineshaftPiece {
             // Fill in any air in floor with main block
             this.replaceAir(world, box, tunnelStartX, tunnelFloorAltitude, tunnelStartZ + 1, tunnelEndX, tunnelFloorAltitude, tunnelEndZ - 1, getMainBlock());
             // Special case - mushroom mineshafts get mycelium in floor
-            if (this.mineshaftType == BetterMineshaftFeature.Type.MUSHROOM)
+            if (this.mineshaftType == BetterMineshaftStructure.Type.MUSHROOM)
                 this.chanceReplaceNonAir(world, box, random, .8f, tunnelStartX, tunnelFloorAltitude, tunnelStartZ + 1, tunnelEndX, tunnelFloorAltitude, tunnelEndZ - 1, Blocks.MYCELIUM.getDefaultState());
 
             // Fill with air
@@ -233,7 +234,7 @@ public class VerticalEntrance extends MineshaftPiece {
         }
 
         // Vines
-        this.addVines(world, box, random, getVineChance(), tunnelStartX + 1, tunnelFloorAltitude, tunnelStartZ + 1, tunnelEndX - 1, tunnelFloorAltitude + 4, tunnelEndZ - 1);
+        this.addVines(world, box, random, tunnelStartX + 1, tunnelFloorAltitude, tunnelStartZ + 1, tunnelEndX - 1, tunnelFloorAltitude + 4, tunnelEndZ - 1);
 
         // ################################################################
         // #                       Supports & Rails                       #
@@ -320,7 +321,7 @@ public class VerticalEntrance extends MineshaftPiece {
      * Tries to find a direction in which there is a drop-off, with the goal of creating an opening
      * in the face of a mountain or hill.
      */
-    private void determineDirection(IWorld world) {
+    private void determineDirection(StructureWorldAccess world) {
         int minSurfaceHeight = 255;
 
         // Set height for this, equal to 2 below the min height in the 5x5 vertical shaft piece
@@ -331,7 +332,7 @@ public class VerticalEntrance extends MineshaftPiece {
                         realZ = centerPos.getZ() + zOffset;
                     int chunkX = realX >> 4,
                         chunkZ = realZ >> 4;
-                    int surfaceHeight = SurfaceUtil.getSurfaceHeight(world.getChunk(chunkX, chunkZ), new ColumnPos(realX, realZ));
+                    int surfaceHeight = SurfaceHelper.getSurfaceHeight(world.getChunk(chunkX, chunkZ), new ColumnPos(realX, realZ));
                     if (surfaceHeight > 1) {
                         minSurfaceHeight = Math.min(minSurfaceHeight, surfaceHeight);
                     }
@@ -353,7 +354,7 @@ public class VerticalEntrance extends MineshaftPiece {
         yAxisLen = ceilingHeight - centerPos.getY() + 1;
         localYEnd = yAxisLen - 1;
 
-        BlockPos.Mutable mutable = new BlockPos.Mutable(centerPos);
+        BlockPos.Mutable mutable = centerPos.mutableCopy();
 
         int radius = 8; // Number of blocks that constitutes one 'radius'
         int maxRadialDist = 3; // Number of radii to check in each direction. E.g. 3 radii * radius of 8 = 24 blocks
@@ -367,7 +368,7 @@ public class VerticalEntrance extends MineshaftPiece {
 
                 // Check altitude of each individual block along the direction.
                 for (int i = radialDist * radius; i < radialDist * radius + radius; i++) {
-                    int surfaceHeight = SurfaceUtil.getSurfaceHeight(world.getChunk(mutable), new ColumnPos(mutable.getX(), mutable.getZ()));
+                    int surfaceHeight = SurfaceHelper.getSurfaceHeight(world.getChunk(mutable), new ColumnPos(mutable.getX(), mutable.getZ()));
 
                     if (surfaceHeight <= floorHeight && surfaceHeight > 1) {
                         this.hasTunnel = true;
@@ -377,7 +378,7 @@ public class VerticalEntrance extends MineshaftPiece {
                         return;
                     }
 
-                    mutable.setOffset(direction);
+                    mutable.move(direction);
                 }
             }
         }

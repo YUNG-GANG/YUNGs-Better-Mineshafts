@@ -1,8 +1,8 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
-import com.yungnickyoung.minecraft.bettermineshafts.util.BoxUtil;
-import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftFeature;
+import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftStructure;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
+import com.yungnickyoung.minecraft.yungsapi.world.BoundingBoxHelper;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.MobSpawnerBlockEntity;
@@ -16,8 +16,8 @@ import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.world.StructureWorldAccess;
+import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 
 import java.util.List;
@@ -37,7 +37,7 @@ public class ZombieVillagerRoom extends MineshaftPiece {
         super(BetterMineshaftStructurePieceType.ZOMBIE_VILLAGER_ROOM, compoundTag);
     }
 
-    public ZombieVillagerRoom(int i, int chunkPieceLen, Random random, BlockBox blockBox, Direction direction, BetterMineshaftFeature.Type type) {
+    public ZombieVillagerRoom(int i, int chunkPieceLen, Random random, BlockBox blockBox, Direction direction, BetterMineshaftStructure.Type type) {
         super(BetterMineshaftStructurePieceType.ZOMBIE_VILLAGER_ROOM, i, chunkPieceLen, type);
         this.setOrientation(direction);
         this.boundingBox = blockBox;
@@ -49,26 +49,24 @@ public class ZombieVillagerRoom extends MineshaftPiece {
     }
 
     public static BlockBox determineBoxPosition(List<StructurePiece> list, Random random, int x, int y, int z, Direction direction) {
-        BlockBox blockBox = BoxUtil.boxFromCoordsWithRotation(x, y, z, SECONDARY_AXIS_LEN, Y_AXIS_LEN, MAIN_AXIS_LEN, direction);
+        BlockBox blockBox = BoundingBoxHelper.boxFromCoordsWithRotation(x, y, z, SECONDARY_AXIS_LEN, Y_AXIS_LEN, MAIN_AXIS_LEN, direction);
 
         // The following func call returns null if this new blockbox does not intersect with any pieces in the list.
         // If there is an intersection, the following func call returns the piece that intersects.
-        StructurePiece intersectingPiece = StructurePiece.method_14932(list, blockBox); // findIntersecting
+        StructurePiece intersectingPiece = StructurePiece.getOverlappingPiece(list, blockBox);
 
         // Thus, this function returns null if blackBox intersects with an existing piece. Otherwise, we return blackbox
         return intersectingPiece != null ? null : blockBox;
     }
 
     @Override
-    public void method_14918(StructurePiece structurePiece, List<StructurePiece> list, Random random) {
-    }
+    public void fillOpenings(StructurePiece structurePiece, List<StructurePiece> list, Random random) {}
 
     @Override
-    public boolean generate(IWorld world, ChunkGenerator<?> generator, Random random, BlockBox box, ChunkPos pos) {
-        // Don't spawn if liquid in this box
-        if (this.method_14937(world, box)) {
-            return false;
-        }
+    public boolean generate(StructureWorldAccess world, StructureAccessor structureAccessor, ChunkGenerator generator, Random random, BlockBox box, ChunkPos pos, BlockPos blockPos) {
+        // Don't spawn if liquid in this box or if in ocean biome
+        if (this.isTouchingLiquid(world, box)) return false;
+        if (this.isInOcean(world, 0, 0) || this.isInOcean(world, LOCAL_X_END, LOCAL_Z_END)) return false;
 
         // Outermost walls
         this.fill(world, box, 1, 0, 0, 5, 2, 0, Blocks.STONE.getDefaultState());

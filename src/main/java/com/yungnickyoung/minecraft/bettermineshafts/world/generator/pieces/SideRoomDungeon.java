@@ -1,6 +1,6 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
-import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftFeature;
+import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftStructure;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -16,8 +16,8 @@ import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.world.StructureWorldAccess;
+import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 
 import java.util.List;
@@ -37,7 +37,7 @@ public class SideRoomDungeon extends MineshaftPiece {
         super(BetterMineshaftStructurePieceType.SIDE_ROOM_DUNGEON, compoundTag);
     }
 
-    public SideRoomDungeon(int i, int pieceChainLen, Random random, BlockBox blockBox, Direction direction, BetterMineshaftFeature.Type type) {
+    public SideRoomDungeon(int i, int pieceChainLen, Random random, BlockBox blockBox, Direction direction, BetterMineshaftStructure.Type type) {
         super(BetterMineshaftStructurePieceType.SIDE_ROOM_DUNGEON, i, pieceChainLen, type);
         this.setOrientation(direction);
         this.boundingBox = blockBox;
@@ -76,18 +76,22 @@ public class SideRoomDungeon extends MineshaftPiece {
 
         // The following func call returns null if this new blockbox does not intersect with any pieces in the list.
         // If there is an intersection, the following func call returns the piece that intersects.
-        StructurePiece intersectingPiece = StructurePiece.method_14932(list, blockBox); // findIntersecting
+        StructurePiece intersectingPiece = StructurePiece.getOverlappingPiece(list, blockBox); // findIntersecting
 
         // Thus, this function returns null if blackBox intersects with an existing piece. Otherwise, we return blackbox
         return intersectingPiece != null ? null : blockBox;
     }
 
     @Override
-    public void method_14918(StructurePiece structurePiece, List<StructurePiece> list, Random random) {
+    public void fillOpenings(StructurePiece structurePiece, List<StructurePiece> list, Random random) {
     }
 
     @Override
-    public boolean generate(IWorld world, ChunkGenerator<?> generator, Random random, BlockBox box, ChunkPos pos) {
+    public boolean generate(StructureWorldAccess world, StructureAccessor structureAccessor, ChunkGenerator generator, Random random, BlockBox box, ChunkPos pos, BlockPos blockPos) {
+        // Don't spawn if liquid in this box or if in ocean biome
+        if (this.isTouchingLiquid(world, box)) return false;
+        if (this.isInOcean(world, 0, 0) || this.isInOcean(world, LOCAL_X_END, LOCAL_Z_END)) return false;
+
          // Fill with stone then clean out with air
         this.fill(world, box, random, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getBrickSelector());
         this.fill(world, box, 1, 1, 1, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END - 1, AIR);
@@ -115,7 +119,7 @@ public class SideRoomDungeon extends MineshaftPiece {
         // Chests
         this.addChest(world, box, random, 1, 1, LOCAL_Z_END - 1, LootTables.ABANDONED_MINESHAFT_CHEST);
         if (random.nextInt(2) == 0) { // Chance of second chest
-            this.addChest(world, box, random, LOCAL_X_END - 1, 1, LOCAL_Z_END - 1, LootTables.STRONGHOLD_CORRIDOR_CHEST);
+            this.addChest(world, box, random, LOCAL_X_END - 1, 1, LOCAL_Z_END - 1, LootTables.ABANDONED_MINESHAFT_CHEST);
         }
 
         // Decorations
@@ -124,7 +128,7 @@ public class SideRoomDungeon extends MineshaftPiece {
         return true;
     }
 
-    private void generateLegs(IWorld world, Random random) {
+    private void generateLegs(StructureWorldAccess world, Random random) {
         generateLeg(world, random, 1, 1, getBrickSelector());
         generateLeg(world, random, 1, LOCAL_Z_END - 1, getBrickSelector());
         generateLeg(world, random, LOCAL_X_END - 1, 1, getBrickSelector());

@@ -11,8 +11,8 @@
     "homepage": "https://www.curseforge.com/minecraft/mc-mods/yungs-better-mineshafts-fabric",
     "sources": "https://github.com/yungnickyoung/YUNGs-Better-Mineshafts"
   },
-  "license": "CC0-1.0",
-  "icon": "assets/modid/icon.png",
+  "license": "GPLv3",
+  "icon": "assets/bettermineshafts/icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
@@ -20,11 +20,8 @@
     ]
   },
   "depends": {
-    "fabricloader": ">=0.7.4",
-    "fabric": "*",
-    "minecraft": "1.15.x"
-  },
-  "suggests": {
-    "flamingo": "*"
+    "fabricloader": ">=0.10.6",
+    "fabric": ">=0.25.0",
+    "minecraft": ">=1.16.2"
   }
 }
