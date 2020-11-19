@@ -233,11 +233,12 @@ public class BigTunnel extends MineshaftPiece {
         }
 
         BlockState supportBlock = getSupportBlock();
-        if (supportBlock.getProperties().contains(Properties.EAST_WALL_SHAPE) && supportBlock.getProperties().contains(Properties.WEST_WALL_SHAPE)) {
-            supportBlock = supportBlock.with(Properties.EAST_WALL_SHAPE, WallShape.TALL).with(Properties.WEST_WALL_SHAPE, WallShape.TALL);
-        } else if (supportBlock.getProperties().contains(Properties.EAST) && supportBlock.getProperties().contains(Properties.WEST)) {
-            supportBlock = supportBlock.with(Properties.EAST, true).with(Properties.WEST, true);
+        if (supportBlock.getProperties().contains(Properties.NORTH_WALL_SHAPE) && supportBlock.getProperties().contains(Properties.SOUTH_WALL_SHAPE)) {
+            supportBlock = supportBlock.with(Properties.NORTH_WALL_SHAPE, WallShape.TALL).with(Properties.SOUTH_WALL_SHAPE, WallShape.TALL);
+        } else if (supportBlock.getProperties().contains(Properties.NORTH) && supportBlock.getProperties().contains(Properties.SOUTH)) {
+            supportBlock = supportBlock.with(Properties.NORTH, true).with(Properties.SOUTH, true);
         }
+
         // Left side
         generateLeg(world, random, 1, 0, getLegSelector());
         this.replaceAir(world, box, 1, -1, 1, 1, -1, 5, supportBlock);
@@ -375,6 +376,7 @@ public class BigTunnel extends MineshaftPiece {
         } else if (supportBlock.getProperties().contains(Properties.EAST) && supportBlock.getProperties().contains(Properties.WEST)) {
             supportBlock = supportBlock.with(Properties.EAST, true).with(Properties.WEST, true);
         }
+
         for (int z : bigSupports) {
             // Bottom slabs
             this.chanceFill(world, box, random, .6f, 1, 1, z, 2, 1, z + 2, getMainSlab());
