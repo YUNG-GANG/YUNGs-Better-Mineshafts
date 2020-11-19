@@ -41,8 +41,8 @@ public class SideRoom extends MineshaftPiece {
         this.hasDownstairs = compoundTag.getBoolean("hasDownstairs");
     }
 
-    public SideRoom(int i, int pieceChainLen, Random random, BlockBox blockBox, Direction direction, BetterMineshaftStructure.Type type) {
-        super(BetterMineshaftStructurePieceType.SIDE_ROOM, i, pieceChainLen, type);
+    public SideRoom(int pieceChainLen, Random random, BlockBox blockBox, Direction direction, BetterMineshaftStructure.Type type) {
+        super(BetterMineshaftStructurePieceType.SIDE_ROOM, pieceChainLen, type);
         this.setOrientation(direction);
         this.boundingBox = blockBox;
     }
@@ -76,16 +76,16 @@ public class SideRoom extends MineshaftPiece {
             StructurePiece newDungeonPiece = null;
             switch (direction) {
                 case NORTH:
-                    newDungeonPiece = BetterMineshaftGenerator.generateAndAddSideRoomDungeonPiece(structurePiece, list, random, this.boundingBox.minX + 6, this.boundingBox.minY - 4, this.boundingBox.maxZ, this.getFacing(), this.getChainLength(), 0);
+                    newDungeonPiece = BetterMineshaftGenerator.generateAndAddSideRoomDungeonPiece(structurePiece, list, random, this.boundingBox.minX + 6, this.boundingBox.minY - 4, this.boundingBox.maxZ, this.getFacing(), chainLength);
                     break;
                 case SOUTH:
-                    newDungeonPiece = BetterMineshaftGenerator.generateAndAddSideRoomDungeonPiece(structurePiece, list, random, this.boundingBox.minX + 6, this.boundingBox.minY - 4, this.boundingBox.minZ, this.getFacing(), this.getChainLength(), 0);
+                    newDungeonPiece = BetterMineshaftGenerator.generateAndAddSideRoomDungeonPiece(structurePiece, list, random, this.boundingBox.minX + 6, this.boundingBox.minY - 4, this.boundingBox.minZ, this.getFacing(), chainLength);
                     break;
                 case WEST:
-                    newDungeonPiece = BetterMineshaftGenerator.generateAndAddSideRoomDungeonPiece(structurePiece, list, random, this.boundingBox.maxX, this.boundingBox.minY - 4, this.boundingBox.minZ + 6, this.getFacing(), this.getChainLength(), 0);
+                    newDungeonPiece = BetterMineshaftGenerator.generateAndAddSideRoomDungeonPiece(structurePiece, list, random, this.boundingBox.maxX, this.boundingBox.minY - 4, this.boundingBox.minZ + 6, this.getFacing(), chainLength);
                     break;
                 case EAST:
-                    newDungeonPiece = BetterMineshaftGenerator.generateAndAddSideRoomDungeonPiece(structurePiece, list, random, this.boundingBox.minX, this.boundingBox.minY - 4, this.boundingBox.minZ + 6, this.getFacing(), this.getChainLength(), 0);
+                    newDungeonPiece = BetterMineshaftGenerator.generateAndAddSideRoomDungeonPiece(structurePiece, list, random, this.boundingBox.minX, this.boundingBox.minY - 4, this.boundingBox.minZ + 6, this.getFacing(), chainLength);
             }
 
             if (newDungeonPiece != null) {

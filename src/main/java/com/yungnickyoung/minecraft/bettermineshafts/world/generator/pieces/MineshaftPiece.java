@@ -27,10 +27,9 @@ public abstract class MineshaftPiece extends StructurePiece {
 
     private static final Set<Material> LIQUIDS = ImmutableSet.of(Material.LAVA, Material.WATER);
 
-    public MineshaftPiece(StructurePieceType structurePieceType, int i, int chainLength, BetterMineshaftStructure.Type type) {
-        super(structurePieceType, i);
+    public MineshaftPiece(StructurePieceType structurePieceType, int chainLength, BetterMineshaftStructure.Type type) {
+        super(structurePieceType, chainLength);
         this.mineshaftType = type;
-        this.chainLength = chainLength;
     }
 
     public MineshaftPiece(StructurePieceType structurePieceType, CompoundTag compoundTag) {
