@@ -189,6 +189,7 @@ public class BigTunnel extends MineshaftPiece {
         this.addBiomeDecorations(world, box, random, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END - 1, LOCAL_Z_END);
         this.addVines(world, box, random, 1, 0, 1, LOCAL_X_END - 1, LOCAL_Y_END, LOCAL_Z_END - 1);
         generateLanterns(world, box, random);
+        generateCobwebs(world, box, random);
 
         return true;
     }
@@ -341,6 +342,21 @@ public class BigTunnel extends MineshaftPiece {
                     // Innermost row
                     this.chanceReplaceAir(world, box, random, .5f, LOCAL_X_END - 3, 1, z, LOCAL_X_END - 3, 1, z + 2, getGravel());
             }
+        });
+    }
+
+    private void generateCobwebs(StructureWorldAccess world, BlockBox box, Random random) {
+        smallSupports.forEach(z -> {
+            this.chanceReplaceAir(world, box, random, .15f, 2, 3, z - 1, LOCAL_X_END - 2, 4, z + 1, Blocks.COBWEB.getDefaultState());
+            this.chanceReplaceAir(world, box, random, .15f, 3, 5, z, LOCAL_X_END - 3, 5, z, Blocks.COBWEB.getDefaultState());
+        });
+
+        bigSupports.forEach(z -> {
+            this.chanceReplaceAir(world, box, random, .15f, 1, 1, z, 1,  4, z + 2, Blocks.COBWEB.getDefaultState());
+            this.chanceReplaceAir(world, box, random, .15f, LOCAL_X_END - 1, 1, z, LOCAL_X_END - 1,  4, z + 2, Blocks.COBWEB.getDefaultState());
+            this.chanceReplaceAir(world, box, random, .15f, 2, 5, z, LOCAL_X_END - 2,  5, z + 2, Blocks.COBWEB.getDefaultState());
+            this.chanceReplaceAir(world, box, random, .15f, 2, 4, z + 1, LOCAL_X_END - 2,  4, z + 1, Blocks.COBWEB.getDefaultState());
+            this.chanceReplaceAir(world, box, random, .15f, 3, 6, z + 1, LOCAL_X_END - 3,  6, z + 1, Blocks.COBWEB.getDefaultState());
         });
     }
 
