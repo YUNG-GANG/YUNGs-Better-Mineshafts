@@ -256,12 +256,14 @@ public abstract class MineshaftPiece extends StructurePiece {
         }
     }
 
-    protected void generateLeg(StructureWorldAccess world, Random random, int x, int z, BlockSetSelector selector) {
-        BlockPos.Mutable mutable = new BlockPos.Mutable(this.applyXTransform(x, z), this.applyYTransform(-1), this.applyZTransform(x, z));
+    protected void generateLeg(StructureWorldAccess world, Random random, BlockBox box, int x, int z, BlockSetSelector selector) {
+        BlockPos.Mutable mutable = new BlockPos.Mutable(x, -1, z);
+        BlockState state = this.getBlockAt(world, mutable.getX(), mutable.getY(), mutable.getZ(), box);
 
-        while (mutable.getY() > 0 && (world.getBlockState(mutable) == AIR || LIQUIDS.contains(world.getBlockState(mutable).getMaterial()))) {
-            world.setBlockState(mutable, selector.get(random), 2);
+        while (applyYTransform(mutable.getY()) > 0 && (state == AIR || state == Blocks.AIR.getDefaultState() || LIQUIDS.contains(state.getMaterial()))) {
+            this.addBlock(world,selector.get(random), x, mutable.getY(), z, box);
             mutable.move(Direction.DOWN);
+            state = this.getBlockAt(world, mutable.getX(), mutable.getY(), mutable.getZ(), box);
         }
     }
 

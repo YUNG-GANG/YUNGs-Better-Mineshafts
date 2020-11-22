@@ -1,6 +1,7 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world;
 
 import com.mojang.serialization.Codec;
+import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshafts;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.MineshaftPiece;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.VerticalEntrance;
 import net.minecraft.structure.StructureManager;
@@ -22,19 +23,19 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class BetterMineshaftStructure extends StructureFeature<BetterMineshaftConfig> {
-    public BetterMineshaftStructure(Codec<BetterMineshaftConfig> codec) {
+public class BetterMineshaftStructure extends StructureFeature<BetterMineshaftFeatureConfig> {
+    public BetterMineshaftStructure(Codec<BetterMineshaftFeatureConfig> codec) {
         super(codec);
     }
 
     @Override
-    protected boolean shouldStartAt(ChunkGenerator chunkGenerator, BiomeSource biomeSource, long worldSeed, ChunkRandom random, int chunkX, int chunkZ, Biome biome, ChunkPos chunkPos, BetterMineshaftConfig config) {
+    protected boolean shouldStartAt(ChunkGenerator chunkGenerator, BiomeSource biomeSource, long worldSeed, ChunkRandom random, int chunkX, int chunkZ, Biome biome, ChunkPos chunkPos, BetterMineshaftFeatureConfig config) {
         random.setCarverSeed(worldSeed, chunkX, chunkZ);
         return random.nextDouble() < config.probability;
     }
 
     @Override
-    public StructureStartFactory<BetterMineshaftConfig> getStructureStartFactory() {
+    public StructureStartFactory<BetterMineshaftFeatureConfig> getStructureStartFactory() {
         return Start::new;
     }
 
@@ -43,12 +44,12 @@ public class BetterMineshaftStructure extends StructureFeature<BetterMineshaftCo
         return GenerationStep.Feature.UNDERGROUND_STRUCTURES;
     }
 
-    public static class Start extends StructureStart<BetterMineshaftConfig> {
-        public Start(StructureFeature<BetterMineshaftConfig> feature, int chunkX, int chunkZ, BlockBox box, int references, long seed) {
+    public static class Start extends StructureStart<BetterMineshaftFeatureConfig> {
+        public Start(StructureFeature<BetterMineshaftFeatureConfig> feature, int chunkX, int chunkZ, BlockBox box, int references, long seed) {
             super(feature, chunkX, chunkZ, box, references, seed);
         }
 
-        public void init(DynamicRegistryManager registryManager, ChunkGenerator chunkGenerator, StructureManager manager, int chunkX, int chunkZ, Biome biome, BetterMineshaftConfig config) {
+        public void init(DynamicRegistryManager registryManager, ChunkGenerator chunkGenerator, StructureManager manager, int chunkX, int chunkZ, Biome biome, BetterMineshaftFeatureConfig config) {
             Direction direction = Direction.NORTH;
 
             // Randomly choose starting direction.
@@ -69,8 +70,8 @@ public class BetterMineshaftStructure extends StructureFeature<BetterMineshaftCo
                 case 3:
                     direction = Direction.WEST;
             }
-//            int y = random.nextInt(Configuration.maxY - Configuration.minY + 1) + Configuration.minY; // TODO
-            BlockPos.Mutable startingPos = new BlockPos.Mutable((chunkX << 4) + 2, 50, (chunkZ << 4) + 2);
+            int y = random.nextInt(BetterMineshafts.CONFIG.maxY - BetterMineshafts.CONFIG.minY + 1) + BetterMineshafts.CONFIG.minY;
+            BlockPos.Mutable startingPos = new BlockPos.Mutable((chunkX << 4) + 2, y, (chunkZ << 4) + 2);
 
             // Entrypoint
             MineshaftPiece entryPoint = new VerticalEntrance(

@@ -23,14 +23,14 @@ import java.util.Random;
 
 public class OreDeposit extends MineshaftPiece {
     public enum OreType {
-        COBBLE(0, Blocks.COBBLESTONE.getDefaultState(), 50), // TODO - add config options for ore spawn rates
-        COAL(1, Blocks.COAL_ORE.getDefaultState(), 20 + 50),
-        IRON(2, Blocks.IRON_ORE.getDefaultState(), 9 + 70),
-        REDSTONE(3, Blocks.REDSTONE_ORE.getDefaultState(), 7 + 79),
-        GOLD(4, Blocks.GOLD_ORE.getDefaultState(), 7 + 86),
-        LAPIS(5, Blocks.LAPIS_ORE.getDefaultState(), 3 + 93),
-        EMERALD(6, Blocks.EMERALD_ORE.getDefaultState(), 3 + 96),
-        DIAMOND(7, Blocks.DIAMOND_ORE.getDefaultState(), 1 + 99);
+        COBBLE(0, Blocks.COBBLESTONE.getDefaultState(), BetterMineshafts.CONFIG.ores.cobble),
+        COAL(1, Blocks.COAL_ORE.getDefaultState(), BetterMineshafts.CONFIG.ores.coal + COBBLE.threshold),
+        IRON(2, Blocks.IRON_ORE.getDefaultState(), BetterMineshafts.CONFIG.ores.iron + COAL.threshold),
+        REDSTONE(3, Blocks.REDSTONE_ORE.getDefaultState(), BetterMineshafts.CONFIG.ores.redstone + IRON.threshold),
+        GOLD(4, Blocks.GOLD_ORE.getDefaultState(), BetterMineshafts.CONFIG.ores.gold + REDSTONE.threshold),
+        LAPIS(5, Blocks.LAPIS_ORE.getDefaultState(), BetterMineshafts.CONFIG.ores.lapis + GOLD.threshold),
+        EMERALD(6, Blocks.EMERALD_ORE.getDefaultState(), BetterMineshafts.CONFIG.ores.emerald + LAPIS.threshold),
+        DIAMOND(7, Blocks.DIAMOND_ORE.getDefaultState(), BetterMineshafts.CONFIG.ores.diamond + EMERALD.threshold);
 
         private final int value;
         private final BlockState block;

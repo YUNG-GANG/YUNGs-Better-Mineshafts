@@ -1,5 +1,6 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
+import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshafts;
 import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftStructure;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
@@ -133,15 +134,16 @@ public class SmallTunnel extends MineshaftPiece {
     }
 
     private void generateCobwebs(StructureWorldAccess world, BlockBox box, Random random) {
-        supports.forEach(z -> { // TODO - add cobweb spawn rate config option
-            this.chanceReplaceAir(world, box, random, .15f, 1, 3, z - 1, 1, 3, z + 1, Blocks.COBWEB.getDefaultState());
-            this.chanceReplaceAir(world, box, random, .15f, 3, 3, z - 1, 3, 3, z + 1, Blocks.COBWEB.getDefaultState());
+        float chance = (float) BetterMineshafts.CONFIG.spawnRates.cobwebSpawnRate;
+        supports.forEach(z -> {
+            this.chanceReplaceAir(world, box, random, chance, 1, 3, z - 1, 1, 3, z + 1, Blocks.COBWEB.getDefaultState());
+            this.chanceReplaceAir(world, box, random, chance, 3, 3, z - 1, 3, 3, z + 1, Blocks.COBWEB.getDefaultState());
         });
     }
 
     private void generateChestCarts(StructureWorldAccess world, BlockBox box, Random random) {
         for (int z = 0; z <= LOCAL_Z_END; z++) {
-            if (random.nextFloat() < .00125) { // TODO - add config option
+            if (random.nextFloat() < BetterMineshafts.CONFIG.spawnRates.smallShaftChestMinecartSpawnRate) {
                 BlockPos blockPos = new BlockPos(this.applyXTransform(LOCAL_X_END / 2, z), applyYTransform(1), this.applyZTransform(LOCAL_X_END / 2, z));
                 if (box.contains(blockPos) && !world.getBlockState(blockPos.down()).isAir()) {
                     ChestMinecartEntity chestMinecartEntity = new ChestMinecartEntity(world.toServerWorld(), ((float) blockPos.getX() + 0.5F), ((float) blockPos.getY() + 0.5F), ((float) blockPos.getZ() + 0.5F));
@@ -179,7 +181,7 @@ public class SmallTunnel extends MineshaftPiece {
 
     private void generateTntCarts(StructureWorldAccess world, BlockBox box, Random random) {
         for (int z = 0; z <= LOCAL_Z_END; z++) {
-            if (random.nextFloat() < .0025) {
+            if (random.nextFloat() < BetterMineshafts.CONFIG.spawnRates.smallShaftTntMinecartSpawnRate) {
                 BlockPos blockPos = new BlockPos(this.applyXTransform(LOCAL_X_END / 2, z), applyYTransform(1), this.applyZTransform(LOCAL_X_END / 2, z));
                 if (box.contains(blockPos) && !world.getBlockState(blockPos.down()).isAir()) {
                     TntMinecartEntity tntMinecartEntity = new TntMinecartEntity(world.toServerWorld(), ((float) blockPos.getX() + 0.5F), ((float) blockPos.getY() + 0.5F), ((float) blockPos.getZ() + 0.5F));
@@ -195,14 +197,14 @@ public class SmallTunnel extends MineshaftPiece {
         for (int z = 0; z <= LOCAL_Z_END; z++) {
             if (this.supports.contains(z)) continue;
             r = random.nextFloat();
-            if (r < .02 / 2) { // TODO - torch spawn rate
+            if (r < BetterMineshafts.CONFIG.spawnRates.torchSpawnRate / 2) {
                 BlockPos pos = new BlockPos(applyXTransform(1, z), applyYTransform(2), applyZTransform(1, z));
                 BlockPos adjPos = new BlockPos(applyXTransform(0, z), applyYTransform(2), applyZTransform(0, z));
                 boolean canPlace = world.getBlockState(pos).isAir() && world.getBlockState(adjPos) != AIR;
                 if (canPlace) {
                     this.replaceAir(world, box, 1, 2, z, 1, 2, z, torchBlock.with(Properties.HORIZONTAL_FACING, Direction.EAST));
                 }
-            } else if (r < .02) {
+            } else if (r < BetterMineshafts.CONFIG.spawnRates.torchSpawnRate) {
                 BlockPos pos = new BlockPos(applyXTransform(LOCAL_X_END - 1, z), applyYTransform(2), applyZTransform(LOCAL_X_END - 1, z));
                 BlockPos adjPos = new BlockPos(applyXTransform(LOCAL_X_END , z), applyYTransform(2), applyZTransform(LOCAL_X_END, z));
                 boolean canPlace = world.getBlockState(pos).isAir() && world.getBlockState(adjPos) != AIR;

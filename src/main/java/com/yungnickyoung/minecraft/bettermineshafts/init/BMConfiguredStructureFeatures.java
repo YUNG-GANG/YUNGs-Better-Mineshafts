@@ -1,7 +1,7 @@
 package com.yungnickyoung.minecraft.bettermineshafts.init;
 
 import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshafts;
-import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftConfig;
+import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftFeatureConfig;
 import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftStructure;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectionContext;
@@ -20,35 +20,35 @@ import java.util.List;
 import java.util.Map;
 
 public class BMConfiguredStructureFeatures {
-    public static ConfiguredStructureFeature<BetterMineshaftConfig, ? extends StructureFeature<BetterMineshaftConfig>> NORMAL_MINESHAFT = BMStructureFeatures.MINESHAFT_STRUCTURE
-        .configure(new BetterMineshaftConfig(BetterMineshafts.SPAWN_RATE, BetterMineshaftStructure.Type.NORMAL));
+    public static ConfiguredStructureFeature<BetterMineshaftFeatureConfig, ? extends StructureFeature<BetterMineshaftFeatureConfig>> NORMAL_MINESHAFT = BMStructureFeatures.MINESHAFT_STRUCTURE
+        .configure(new BetterMineshaftFeatureConfig(BetterMineshafts.CONFIG.mineshaftSpawnRate, BetterMineshaftStructure.Type.NORMAL));
 
-    public static ConfiguredStructureFeature<BetterMineshaftConfig, ? extends StructureFeature<BetterMineshaftConfig>> MESA_MINESHAFT = BMStructureFeatures.MINESHAFT_STRUCTURE
-        .configure(new BetterMineshaftConfig(BetterMineshafts.SPAWN_RATE, BetterMineshaftStructure.Type.MESA));
+    public static ConfiguredStructureFeature<BetterMineshaftFeatureConfig, ? extends StructureFeature<BetterMineshaftFeatureConfig>> MESA_MINESHAFT = BMStructureFeatures.MINESHAFT_STRUCTURE
+        .configure(new BetterMineshaftFeatureConfig(BetterMineshafts.CONFIG.mineshaftSpawnRate, BetterMineshaftStructure.Type.MESA));
 
-    public static ConfiguredStructureFeature<BetterMineshaftConfig, ? extends StructureFeature<BetterMineshaftConfig>> JUNGLE_MINESHAFT = BMStructureFeatures.MINESHAFT_STRUCTURE
-        .configure(new BetterMineshaftConfig(BetterMineshafts.SPAWN_RATE, BetterMineshaftStructure.Type.JUNGLE));
+    public static ConfiguredStructureFeature<BetterMineshaftFeatureConfig, ? extends StructureFeature<BetterMineshaftFeatureConfig>> JUNGLE_MINESHAFT = BMStructureFeatures.MINESHAFT_STRUCTURE
+        .configure(new BetterMineshaftFeatureConfig(BetterMineshafts.CONFIG.mineshaftSpawnRate, BetterMineshaftStructure.Type.JUNGLE));
 
-    public static ConfiguredStructureFeature<BetterMineshaftConfig, ? extends StructureFeature<BetterMineshaftConfig>> SNOW_MINESHAFT = BMStructureFeatures.MINESHAFT_STRUCTURE
-        .configure(new BetterMineshaftConfig(BetterMineshafts.SPAWN_RATE, BetterMineshaftStructure.Type.SNOW));
+    public static ConfiguredStructureFeature<BetterMineshaftFeatureConfig, ? extends StructureFeature<BetterMineshaftFeatureConfig>> SNOW_MINESHAFT = BMStructureFeatures.MINESHAFT_STRUCTURE
+        .configure(new BetterMineshaftFeatureConfig(BetterMineshafts.CONFIG.mineshaftSpawnRate, BetterMineshaftStructure.Type.SNOW));
 
-    public static ConfiguredStructureFeature<BetterMineshaftConfig, ? extends StructureFeature<BetterMineshaftConfig>> MUSHROOM_MINESHAFT = BMStructureFeatures.MINESHAFT_STRUCTURE
-        .configure(new BetterMineshaftConfig(BetterMineshafts.SPAWN_RATE, BetterMineshaftStructure.Type.MUSHROOM));
+    public static ConfiguredStructureFeature<BetterMineshaftFeatureConfig, ? extends StructureFeature<BetterMineshaftFeatureConfig>> MUSHROOM_MINESHAFT = BMStructureFeatures.MINESHAFT_STRUCTURE
+        .configure(new BetterMineshaftFeatureConfig(BetterMineshafts.CONFIG.mineshaftSpawnRate, BetterMineshaftStructure.Type.MUSHROOM));
 
-    public static ConfiguredStructureFeature<BetterMineshaftConfig, ? extends StructureFeature<BetterMineshaftConfig>> SAVANNA_MINESHAFT = BMStructureFeatures.MINESHAFT_STRUCTURE
-        .configure(new BetterMineshaftConfig(BetterMineshafts.SPAWN_RATE, BetterMineshaftStructure.Type.SAVANNA));
+    public static ConfiguredStructureFeature<BetterMineshaftFeatureConfig, ? extends StructureFeature<BetterMineshaftFeatureConfig>> SAVANNA_MINESHAFT = BMStructureFeatures.MINESHAFT_STRUCTURE
+        .configure(new BetterMineshaftFeatureConfig(BetterMineshafts.CONFIG.mineshaftSpawnRate, BetterMineshaftStructure.Type.SAVANNA));
 
-    public static ConfiguredStructureFeature<BetterMineshaftConfig, ? extends StructureFeature<BetterMineshaftConfig>> DESERT_MINESHAFT = BMStructureFeatures.MINESHAFT_STRUCTURE
-        .configure(new BetterMineshaftConfig(BetterMineshafts.SPAWN_RATE, BetterMineshaftStructure.Type.DESERT));
+    public static ConfiguredStructureFeature<BetterMineshaftFeatureConfig, ? extends StructureFeature<BetterMineshaftFeatureConfig>> DESERT_MINESHAFT = BMStructureFeatures.MINESHAFT_STRUCTURE
+        .configure(new BetterMineshaftFeatureConfig(BetterMineshafts.CONFIG.mineshaftSpawnRate, BetterMineshaftStructure.Type.DESERT));
 
-    public static ConfiguredStructureFeature<BetterMineshaftConfig, ? extends StructureFeature<BetterMineshaftConfig>> REDDESERT_MINESHAFT = BMStructureFeatures.MINESHAFT_STRUCTURE
-        .configure(new BetterMineshaftConfig(BetterMineshafts.SPAWN_RATE, BetterMineshaftStructure.Type.RED_DESERT));
+    public static ConfiguredStructureFeature<BetterMineshaftFeatureConfig, ? extends StructureFeature<BetterMineshaftFeatureConfig>> REDDESERT_MINESHAFT = BMStructureFeatures.MINESHAFT_STRUCTURE
+        .configure(new BetterMineshaftFeatureConfig(BetterMineshafts.CONFIG.mineshaftSpawnRate, BetterMineshaftStructure.Type.RED_DESERT));
 
-    public static ConfiguredStructureFeature<BetterMineshaftConfig, ? extends StructureFeature<BetterMineshaftConfig>> ICE_MINESHAFT = BMStructureFeatures.MINESHAFT_STRUCTURE
-        .configure(new BetterMineshaftConfig(BetterMineshafts.SPAWN_RATE, BetterMineshaftStructure.Type.ICE));
+    public static ConfiguredStructureFeature<BetterMineshaftFeatureConfig, ? extends StructureFeature<BetterMineshaftFeatureConfig>> ICE_MINESHAFT = BMStructureFeatures.MINESHAFT_STRUCTURE
+        .configure(new BetterMineshaftFeatureConfig(BetterMineshafts.CONFIG.mineshaftSpawnRate, BetterMineshaftStructure.Type.ICE));
 
     // List of all structure features to make updating spawn rate easy
-    public static final List<ConfiguredStructureFeature<BetterMineshaftConfig, ? extends StructureFeature<BetterMineshaftConfig>>> CONFIGURED_STRUCTURE_FEATURES =
+    public static final List<ConfiguredStructureFeature<BetterMineshaftFeatureConfig, ? extends StructureFeature<BetterMineshaftFeatureConfig>>> CONFIGURED_STRUCTURE_FEATURES =
         Arrays.asList(
             NORMAL_MINESHAFT, MESA_MINESHAFT, JUNGLE_MINESHAFT,
             SNOW_MINESHAFT, MUSHROOM_MINESHAFT, SAVANNA_MINESHAFT,

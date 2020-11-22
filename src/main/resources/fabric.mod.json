@@ -17,6 +17,9 @@
   "entrypoints": {
     "main": [
       "com.yungnickyoung.minecraft.bettermineshafts.BetterMineshafts"
+    ],
+    "modmenu": [
+      "com.yungnickyoung.minecraft.bettermineshafts.config.gui.BMModMenu"
     ]
   },
   "depends": {

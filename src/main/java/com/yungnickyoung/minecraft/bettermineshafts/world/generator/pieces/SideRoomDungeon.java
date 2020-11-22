@@ -95,7 +95,7 @@ public class SideRoomDungeon extends MineshaftPiece {
         this.fill(world, box, random, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getBrickSelector());
         this.fill(world, box, 1, 1, 1, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END - 1, AIR);
 
-        generateLegs(world, random);
+        generateLegs(world, random, box);
 
         // Ladders
         BlockState LADDER = Blocks.LADDER.getDefaultState().with(LadderBlock.FACING, Direction.NORTH);
@@ -127,10 +127,10 @@ public class SideRoomDungeon extends MineshaftPiece {
         return true;
     }
 
-    private void generateLegs(StructureWorldAccess world, Random random) {
-        generateLeg(world, random, 1, 1, getBrickSelector());
-        generateLeg(world, random, 1, LOCAL_Z_END - 1, getBrickSelector());
-        generateLeg(world, random, LOCAL_X_END - 1, 1, getBrickSelector());
-        generateLeg(world, random, LOCAL_X_END - 1, LOCAL_Z_END - 1, getBrickSelector());
+    private void generateLegs(StructureWorldAccess world, Random random, BlockBox box) {
+        generateLeg(world, random, box, 1, 1, getBrickSelector());
+        generateLeg(world, random, box, 1, LOCAL_Z_END - 1, getBrickSelector());
+        generateLeg(world, random, box, LOCAL_X_END - 1, 1, getBrickSelector());
+        generateLeg(world, random, box, LOCAL_X_END - 1, LOCAL_Z_END - 1, getBrickSelector());
     }
 }

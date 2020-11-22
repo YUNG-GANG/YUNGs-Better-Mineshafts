@@ -1,5 +1,7 @@
 package com.yungnickyoung.minecraft.bettermineshafts;
 
+import com.yungnickyoung.minecraft.bettermineshafts.config.Configuration;
+import com.yungnickyoung.minecraft.bettermineshafts.init.BMConfig;
 import com.yungnickyoung.minecraft.bettermineshafts.init.BMConfiguredStructureFeatures;
 import com.yungnickyoung.minecraft.bettermineshafts.init.BMStructureFeatures;
 import com.yungnickyoung.minecraft.bettermineshafts.init.BMStructureFeaturePieces;
@@ -13,17 +15,19 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class BetterMineshafts implements ModInitializer {
     public static final String MOD_ID = "bettermineshafts";
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
-    public static final boolean DEBUG_LOG = true;
+    public static final boolean DEBUG_LOG = false;
 
+    /** Debug info **/
     public static ConcurrentSet<Integer> surfaceEntrances = new ConcurrentSet<>();
     public static AtomicInteger count = new AtomicInteger(0);
 
-    // TODO - replace hardcoded spawnrates w/ config option
-    public static final double SPAWN_RATE = .03;
+    /** Better Caves config. Uses AutoConfig. **/
+    public static Configuration CONFIG;
 
     @Override
     public void onInitialize() {
         // Initialization & Registration
+        BMConfig.init();
         BMStructureFeatures.init();
         BMConfiguredStructureFeatures.init();
         BMStructureFeaturePieces.init();

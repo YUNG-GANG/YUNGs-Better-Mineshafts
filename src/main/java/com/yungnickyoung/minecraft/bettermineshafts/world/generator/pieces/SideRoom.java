@@ -1,5 +1,6 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
+import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshafts;
 import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftStructure;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
@@ -67,7 +68,7 @@ public class SideRoom extends MineshaftPiece {
     @Override
     public void fillOpenings(StructurePiece structurePiece, List<StructurePiece> list, Random random) {
         // Chance of generating side room dungeon downstairs
-        if (random.nextFloat() < .25) { // TODO - make this number a config item
+        if (random.nextFloat() < BetterMineshafts.CONFIG.spawnRates.workstationDungeonSpawnRate) {
             Direction direction = this.getFacing();
             if (direction == null) {
                 return;
@@ -116,7 +117,7 @@ public class SideRoom extends MineshaftPiece {
         }
 
         if (!hasDownstairs)
-            generateLegs(world, random);
+            generateLegs(world, random, box);
 
         // Furnace 1
         if (random.nextInt(2) == 0) {
@@ -158,11 +159,11 @@ public class SideRoom extends MineshaftPiece {
         return true;
     }
 
-    private void generateLegs(StructureWorldAccess world, Random random) {
-        generateLeg(world, random, 1, 1, getBrickSelector());
-        generateLeg(world, random, 1, LOCAL_Z_END - 1, getBrickSelector());
-        generateLeg(world, random, LOCAL_X_END - 1, 1, getBrickSelector());
-        generateLeg(world, random, LOCAL_X_END - 1, LOCAL_Z_END - 1, getBrickSelector());
+    private void generateLegs(StructureWorldAccess world, Random random, BlockBox box) {
+        generateLeg(world, random, box, 1, 1, getBrickSelector());
+        generateLeg(world, random, box, 1, LOCAL_Z_END - 1, getBrickSelector());
+        generateLeg(world, random, box, LOCAL_X_END - 1, 1, getBrickSelector());
+        generateLeg(world, random, box, LOCAL_X_END - 1, LOCAL_Z_END - 1, getBrickSelector());
     }
 
     private void generateIronBarSupports(StructureWorldAccess world, BlockBox box, Random random, boolean[][] ceiling) {
