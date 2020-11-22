@@ -103,13 +103,13 @@ public class SideRoom extends MineshaftPiece {
 
         // Fill with stone then clean out with air. Track ceiling positions to see where we can place iron bar supports
         this.fill(world, box, random, 0, 0, 0, LOCAL_X_END, 1, LOCAL_Z_END, getBrickSelector()); // Floor
-        this.replaceNonAir(world, box, random, 0, 2, 0, LOCAL_X_END, LOCAL_Y_END - 1, LOCAL_Z_END, getBrickSelector());
-        this.fill(world, box, 1, 1, 1, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END, AIR);
-        boolean[][] ceiling = new boolean[SECONDARY_AXIS_LEN][MAIN_AXIS_LEN];
+        this.replaceNonAir(world, box, random, 0, 2, 0, LOCAL_X_END, LOCAL_Y_END - 1, LOCAL_Z_END, getBrickSelector()); // Fill w/ brick selector
+        this.fill(world, box, 1, 1, 1, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END, AIR); // Fill with air
+        boolean[][] ceiling = new boolean[SECONDARY_AXIS_LEN][MAIN_AXIS_LEN]; // Ceiling
         for (int x = 0; x <= LOCAL_X_END; ++x) {
             for (int z = 0; z <= LOCAL_Z_END; ++z) {
                 BlockState currState = this.getBlockAtFixed(world, x, LOCAL_Y_END, z, box);
-                if (currState != null && currState != AIR) {
+                if (currState != null && currState != AIR && currState != Blocks.AIR.getDefaultState()) {
                     this.addBlock(world, getBrickSelector().get(random), x, LOCAL_Y_END, z, box);
                     ceiling[x][z] = true;
                 }
