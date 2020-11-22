@@ -1,4 +1,4 @@
-package com.yungnickyoung.minecraft.bettermineshafts.util;
+package com.yungnickyoung.minecraft.bettermineshafts.world.generator;
 
 import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftStructure;
 import com.yungnickyoung.minecraft.yungsapi.world.BlockSetSelector;
@@ -285,9 +285,7 @@ public class BlockSetSelectors {
         {
             BetterMineshaftStructure.Type.ICE,
             new BlockSetSelector(Blocks.PACKED_ICE.getDefaultState())
-                .addBlock(Blocks.PACKED_ICE.getDefaultState(), .45f)
-                .addBlock(Blocks.BLUE_ICE.getDefaultState(), .45f)
-                .addBlock(Blocks.SNOW_BLOCK.getDefaultState(), .1f)
+                .addBlock(Blocks.BLUE_ICE.getDefaultState(), .5f)
         },
         {
             BetterMineshaftStructure.Type.DESERT,
@@ -295,7 +293,6 @@ public class BlockSetSelectors {
                 .addBlock(Blocks.SMOOTH_SANDSTONE.getDefaultState(), .15f)
                 .addBlock(Blocks.CUT_SANDSTONE.getDefaultState(), .15f)
                 .addBlock(Blocks.CHISELED_SANDSTONE.getDefaultState(), .1f)
-                .addBlock(Blocks.STONE_BRICKS.getDefaultState(), .1f)
         },
         {
             BetterMineshaftStructure.Type.RED_DESERT,
@@ -303,7 +300,6 @@ public class BlockSetSelectors {
                 .addBlock(Blocks.SMOOTH_RED_SANDSTONE.getDefaultState(), .15f)
                 .addBlock(Blocks.CUT_RED_SANDSTONE.getDefaultState(), .15f)
                 .addBlock(Blocks.CHISELED_RED_SANDSTONE.getDefaultState(), .1f)
-                .addBlock(Blocks.STONE_BRICKS.getDefaultState(), .1f)
         },
         {
             BetterMineshaftStructure.Type.SAVANNA,
@@ -311,10 +307,8 @@ public class BlockSetSelectors {
         },
         {
             BetterMineshaftStructure.Type.MUSHROOM,
-            new BlockSetSelector(Blocks.RED_MUSHROOM_BLOCK.getDefaultState())
-                .addBlock(Blocks.MUSHROOM_STEM.getDefaultState(), .33333f)
-                .addBlock(Blocks.BROWN_MUSHROOM_BLOCK.getDefaultState(), .33333f)
-                .addBlock(Blocks.RED_MUSHROOM_BLOCK.getDefaultState(), .33333f)        }
+            BlockSetSelector.from(Blocks.MUSHROOM_STEM.getDefaultState())
+        }
     }).collect(Collectors.toMap(data -> (BetterMineshaftStructure.Type) data[0], data -> (BlockSetSelector) data[1]));
 
     /**

@@ -1,7 +1,7 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
 import com.google.common.collect.ImmutableSet;
-import com.yungnickyoung.minecraft.bettermineshafts.util.BlockSetSelectors;
+import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BlockSetSelectors;
 import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftStructure;
 import com.yungnickyoung.minecraft.yungsapi.world.BlockSetSelector;
 import net.minecraft.block.*;

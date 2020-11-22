@@ -5,6 +5,7 @@ import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshafts;
 import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftStructure;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
+import com.yungnickyoung.minecraft.yungsapi.world.BlockSetSelector;
 import com.yungnickyoung.minecraft.yungsapi.world.BoundingBoxHelper;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.WallShape;
@@ -231,6 +232,7 @@ public class BigTunnel extends MineshaftPiece {
             return;
         }
 
+        // Configure support block
         BlockState supportBlock = getSupportBlock();
         if (supportBlock.getProperties().contains(Properties.NORTH_WALL_SHAPE) && supportBlock.getProperties().contains(Properties.SOUTH_WALL_SHAPE)) {
             supportBlock = supportBlock.with(Properties.NORTH_WALL_SHAPE, WallShape.TALL).with(Properties.SOUTH_WALL_SHAPE, WallShape.TALL);
@@ -238,8 +240,11 @@ public class BigTunnel extends MineshaftPiece {
             supportBlock = supportBlock.with(Properties.NORTH, true).with(Properties.SOUTH, true);
         }
 
+        // Get leg selector
+        BlockSetSelector legSelector = getLegSelector();
+
         // Left side
-        generateLeg(world, random, box, 1, 0, getLegSelector());
+        generateLeg(world, random, box, 1, 0, legSelector);
         this.replaceAir(world, box, 1, -1, 1, 1, -1, 5, supportBlock);
         this.replaceAir(world, box, 1, -2, 1, 1, -2, 3, supportBlock);
         this.replaceAir(world, box, 1, -3, 1, 1, -3, 2, supportBlock);
@@ -248,8 +253,8 @@ public class BigTunnel extends MineshaftPiece {
         this.replaceAir(world, box, 1, -2, 8, 1, -2, 10, supportBlock);
         this.replaceAir(world, box, 1, -3, 9, 1, -3, 10, supportBlock);
         this.replaceAir(world, box, 1, -5, 10, 1, -4, 10, supportBlock);
-        generateLeg(world, random, box, 1, 11, getLegSelector());
-        generateLeg(world, random, box, 1, 12, getLegSelector());
+        generateLeg(world, random, box, 1, 11, legSelector);
+        generateLeg(world, random, box, 1, 12, legSelector);
         this.replaceAir(world, box, 1, -1, 13, 1, -1, 17, supportBlock);
         this.replaceAir(world, box, 1, -2, 13, 1, -2, 15, supportBlock);
         this.replaceAir(world, box, 1, -3, 13, 1, -3, 14, supportBlock);
@@ -258,10 +263,10 @@ public class BigTunnel extends MineshaftPiece {
         this.replaceAir(world, box, 1, -2, 20, 1, -2, 22, supportBlock);
         this.replaceAir(world, box, 1, -3, 21, 1, -3, 22, supportBlock);
         this.replaceAir(world, box, 1, -5, 22, 1, -4, 22, supportBlock);
-        generateLeg(world, random, box, 1, LOCAL_Z_END, getLegSelector());
+        generateLeg(world, random, box, 1, LOCAL_Z_END, legSelector);
 
         // Right side
-        generateLeg(world, random, box, LOCAL_X_END - 1, 0, getLegSelector());
+        generateLeg(world, random, box, LOCAL_X_END - 1, 0, legSelector);
         this.replaceAir(world, box, LOCAL_X_END - 1, -1, 1, LOCAL_X_END - 1, -1, 5, supportBlock);
         this.replaceAir(world, box, LOCAL_X_END - 1, -2, 1, LOCAL_X_END - 1, -2, 3, supportBlock);
         this.replaceAir(world, box, LOCAL_X_END - 1, -3, 1, LOCAL_X_END - 1, -3, 2, supportBlock);
@@ -270,8 +275,8 @@ public class BigTunnel extends MineshaftPiece {
         this.replaceAir(world, box, LOCAL_X_END - 1, -2, 8, LOCAL_X_END - 1, -2, 10, supportBlock);
         this.replaceAir(world, box, LOCAL_X_END - 1, -3, 9, LOCAL_X_END - 1, -3, 10, supportBlock);
         this.replaceAir(world, box, LOCAL_X_END - 1, -5, 10, LOCAL_X_END - 1, -4, 10, supportBlock);
-        generateLeg(world, random, box, LOCAL_X_END - 1, 11, getLegSelector());
-        generateLeg(world, random, box, LOCAL_X_END - 1, 12, getLegSelector());
+        generateLeg(world, random, box, LOCAL_X_END - 1, 11, legSelector);
+        generateLeg(world, random, box, LOCAL_X_END - 1, 12, legSelector);
         this.replaceAir(world, box, LOCAL_X_END - 1, -1, 13, LOCAL_X_END - 1, -1, 17, supportBlock);
         this.replaceAir(world, box, LOCAL_X_END - 1, -2, 13, LOCAL_X_END - 1, -2, 15, supportBlock);
         this.replaceAir(world, box, LOCAL_X_END - 1, -3, 13, LOCAL_X_END - 1, -3, 14, supportBlock);
@@ -280,35 +285,36 @@ public class BigTunnel extends MineshaftPiece {
         this.replaceAir(world, box, LOCAL_X_END - 1, -2, 20, LOCAL_X_END - 1, -2, 22, supportBlock);
         this.replaceAir(world, box, LOCAL_X_END - 1, -3, 21, LOCAL_X_END - 1, -3, 22, supportBlock);
         this.replaceAir(world, box, LOCAL_X_END - 1, -5, 22, LOCAL_X_END - 1, -4, 22, supportBlock);
-        generateLeg(world, random, box, LOCAL_X_END - 1, LOCAL_Z_END, getLegSelector());
+        generateLeg(world, random, box, LOCAL_X_END - 1, LOCAL_Z_END, legSelector);
     }
 
     private void generateLegsVariant(StructureWorldAccess world, BlockBox box, Random random) {
+        BlockSetSelector legSelector = getLegSelector();
         for (int z = 0; z <= LOCAL_Z_END; z += 7) {
-            generateLeg(world, random, box, 2, z + 1, getBrickSelector());
-            generateLeg(world, random, box, LOCAL_X_END - 2, z + 1, getBrickSelector());
+            generateLeg(world, random, box, 2, z + 1, legSelector);
+            generateLeg(world, random, box, LOCAL_X_END - 2, z + 1, legSelector);
 
-            this.replaceAir(world, box, random, 1, -1, z, LOCAL_X_END - 1, -1, z + 2, getBrickSelector());
+            this.replaceAir(world, box, random, 1, -1, z, LOCAL_X_END - 1, -1, z + 2, legSelector);
 
-            this.replaceAir(world, box, random, 2, -1, z + 3, 2, -1, z + 3, getBrickSelector());
-            this.replaceAir(world, box, random, LOCAL_X_END - 2, -1, z + 3, LOCAL_X_END - 2, -1, z + 3, getBrickSelector());
+            this.replaceAir(world, box, random, 2, -1, z + 3, 2, -1, z + 3, legSelector);
+            this.replaceAir(world, box, random, LOCAL_X_END - 2, -1, z + 3, LOCAL_X_END - 2, -1, z + 3, legSelector);
 
-            this.replaceAir(world, box, random, 3, -1, z + 3, LOCAL_X_END - 3, -1, z + 6, getBrickSelector());
+            this.replaceAir(world, box, random, 3, -1, z + 3, LOCAL_X_END - 3, -1, z + 6, legSelector);
 
-            this.replaceAir(world, box, random, 2, -1, z + 6, 2, -1, z + 6, getBrickSelector());
-            this.replaceAir(world, box, random, LOCAL_X_END - 2, -1, z + 6, LOCAL_X_END - 2, -1, z + 6, getBrickSelector());
+            this.replaceAir(world, box, random, 2, -1, z + 6, 2, -1, z + 6, legSelector);
+            this.replaceAir(world, box, random, LOCAL_X_END - 2, -1, z + 6, LOCAL_X_END - 2, -1, z + 6, legSelector);
 
-            this.replaceAir(world, box, random, 2, -2, z, 2, -2, z, getBrickSelector());
-            this.replaceAir(world, box, random, LOCAL_X_END - 2, -2, z, LOCAL_X_END - 2, -2, z, getBrickSelector());
+            this.replaceAir(world, box, random, 2, -2, z, 2, -2, z, legSelector);
+            this.replaceAir(world, box, random, LOCAL_X_END - 2, -2, z, LOCAL_X_END - 2, -2, z, legSelector);
 
-            this.replaceAir(world, box, random, 2, -2, z + 2, 2, -2, z + 2, getBrickSelector());
-            this.replaceAir(world, box, random, LOCAL_X_END - 2, -2, z + 2, LOCAL_X_END - 2, -2, z + 2, getBrickSelector());
+            this.replaceAir(world, box, random, 2, -2, z + 2, 2, -2, z + 2, legSelector);
+            this.replaceAir(world, box, random, LOCAL_X_END - 2, -2, z + 2, LOCAL_X_END - 2, -2, z + 2, legSelector);
 
-            this.replaceAir(world, box, random, 1, -2, z + 1, 1, -2, z + 1, getBrickSelector());
-            this.replaceAir(world, box, random, LOCAL_X_END - 1, -2, z + 1, LOCAL_X_END - 1, -2, z + 1, getBrickSelector());
+            this.replaceAir(world, box, random, 1, -2, z + 1, 1, -2, z + 1, legSelector);
+            this.replaceAir(world, box, random, LOCAL_X_END - 1, -2, z + 1, LOCAL_X_END - 1, -2, z + 1, legSelector);
 
-            this.replaceAir(world, box, random, 3, -2, z + 1, 3, -2, z + 1, getBrickSelector());
-            this.replaceAir(world, box, random, LOCAL_X_END - 3, -2, z + 1, LOCAL_X_END - 3, -2, z + 1, getBrickSelector());
+            this.replaceAir(world, box, random, 3, -2, z + 1, 3, -2, z + 1, legSelector);
+            this.replaceAir(world, box, random, LOCAL_X_END - 3, -2, z + 1, LOCAL_X_END - 3, -2, z + 1, legSelector);
         }
     }
 
