@@ -25,6 +25,7 @@
   "depends": {
     "fabricloader": ">=0.10.6",
     "fabric": ">=0.25.0",
-    "minecraft": ">=1.16.2"
+    "minecraft": ">=1.16.2",
+    "yungsapi": ">=1.16.4-Fabric-1"
   }
 }

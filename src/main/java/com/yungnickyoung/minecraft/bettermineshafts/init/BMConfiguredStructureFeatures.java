@@ -108,7 +108,7 @@ public class BMConfiguredStructureFeatures {
         normalMap.put(Biome.Category.SAVANNA, BMConfiguredStructureFeatures.SAVANNA_MINESHAFT);
 
         BiomeModifications.create(new Identifier(BetterMineshafts.MOD_ID, "mineshaft_replacement"))
-            .add(ModificationPhase.REPLACEMENTS,
+            .add(ModificationPhase.ADDITIONS,
                 selectionContext -> biomeHasVanillaMineshaft(selectionContext),
                 (selectionContext, modificationContext) -> {
                     // First, remove vanilla mineshaft

@@ -21,6 +21,6 @@ public class Configuration implements ConfigData {
     public SpawnRatesConfig spawnRates = new SpawnRatesConfig();
 
     @ConfigEntry.Gui.CollapsibleObject
-    @ConfigEntry.Gui.Tooltip(count = 2)
+    @ConfigEntry.Gui.Tooltip(count = 3)
     public OresConfig ores = new OresConfig();
 }
