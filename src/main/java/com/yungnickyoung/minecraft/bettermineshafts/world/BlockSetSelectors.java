@@ -1,19 +1,9 @@
-package com.yungnickyoung.minecraft.bettermineshafts.util;
+package com.yungnickyoung.minecraft.bettermineshafts.world;
 
-import com.mojang.datafixers.util.Pair;
-import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshafts;
-import net.minecraft.block.BlockState;
+import com.yungnickyoung.minecraft.yungsapi.world.BlockSetSelector;
 import net.minecraft.block.Blocks;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
-/**
- * Describes a set of blocks and the probability of each block in the set being chosen.
- * Includes static members used for each Better Mineshaft biome variant.
- */
-public class BlockSetSelector {
+public class BlockSetSelectors {
     /**
      * Main theme blocks.
      */
@@ -126,66 +116,4 @@ public class BlockSetSelector {
         .addBlock(Blocks.MUSHROOM_STEM.getDefaultState(), .33333f)
         .addBlock(Blocks.BROWN_MUSHROOM_BLOCK.getDefaultState(), .33333f)
         .addBlock(Blocks.RED_MUSHROOM_BLOCK.getDefaultState(), .33333f);
-
-    /**
-     * List of pairs of blocks and their corresponding probabilities.
-     * The total sum of all the probabilities cannot exceed 1.
-     */
-    private List<Pair<BlockState, Float>> entries = new ArrayList<>();
-    private BlockState defaultBlock = Blocks.CAVE_AIR.getDefaultState();
-
-    public BlockSetSelector() {
-    }
-
-    public BlockSetSelector(BlockState defaultBlock) {
-        this.defaultBlock = defaultBlock;
-    }
-
-    public static BlockSetSelector from(BlockState... blockStates) {
-        BlockSetSelector selector = new BlockSetSelector();
-        float chance = 1f / blockStates.length;
-
-        for (BlockState state : blockStates) {
-            selector.addBlock(state, chance);
-        }
-
-        return selector;
-    }
-
-    public BlockSetSelector addBlock(BlockState blockState, float chance) {
-        // Abort if blockState already a part of this selector
-        for (Pair<BlockState, Float> entry : entries) {
-            if (entry.getFirst() == blockState) {
-                BetterMineshafts.LOGGER.warn(String.format("WARNING: duplicate block %s added to BlockSelector!", blockState.toString()));
-                return this;
-            }
-        }
-
-        // Attempt to add blockState to entries
-        float currTotal = (float) entries.stream().mapToDouble(Pair::getSecond).sum();
-        float newTotal = currTotal + chance;
-        if (newTotal > 1) { // Total probability cannot exceed 1
-            BetterMineshafts.LOGGER.warn(String.format("WARNING: block %s added to BlockSelector exceeds max probabiltiy of 1!", blockState.toString()));
-            return this;
-        }
-        entries.add(new Pair<>(blockState, chance));
-        return this;
-    }
-
-    public BlockState get(Random random) {
-        float target = random.nextFloat();
-        float currBottom = 0;
-
-        for (Pair<BlockState, Float> entry : entries) {
-            float chance = entry.getSecond();
-            if (currBottom <= target && target < currBottom + chance) {
-                return entry.getFirst();
-            }
-
-            currBottom += chance;
-        }
-
-        // No match found
-        return this.defaultBlock;
-    }
 }

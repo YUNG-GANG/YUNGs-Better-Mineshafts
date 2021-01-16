@@ -2,8 +2,9 @@ package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
 import com.google.common.collect.ImmutableSet;
 import com.yungnickyoung.minecraft.bettermineshafts.config.BMConfig;
-import com.yungnickyoung.minecraft.bettermineshafts.util.BlockSetSelector;
+import com.yungnickyoung.minecraft.bettermineshafts.world.BlockSetSelectors;
 import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftStructure;
+import com.yungnickyoung.minecraft.yungsapi.world.BlockSetSelector;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.nbt.CompoundNBT;
@@ -65,42 +66,42 @@ public abstract class MineshaftPiece extends StructurePiece {
     protected BlockSetSelector getMainSelector() {
         switch (this.mineshaftType) {
             case MESA:
-                return BlockSetSelector.MESA;
+                return BlockSetSelectors.MESA;
             case JUNGLE:
-                return BlockSetSelector.JUNGLE;
+                return BlockSetSelectors.JUNGLE;
             case SNOW:
-                return BlockSetSelector.SNOW;
+                return BlockSetSelectors.SNOW;
             case ICE:
-                return BlockSetSelector.ICE;
+                return BlockSetSelectors.ICE;
             case DESERT:
-                return BlockSetSelector.DESERT;
+                return BlockSetSelectors.DESERT;
             case RED_DESERT:
-                return BlockSetSelector.RED_DESERT;
+                return BlockSetSelectors.RED_DESERT;
             case MUSHROOM:
-                return BlockSetSelector.MUSHROOM;
+                return BlockSetSelectors.MUSHROOM;
             case SAVANNA:
-                return BlockSetSelector.ACACIA;
+                return BlockSetSelectors.ACACIA;
             default:
-                return BlockSetSelector.NORMAL;
+                return BlockSetSelectors.NORMAL;
         }
     }
 
     protected BlockSetSelector getBrickSelector() {
         switch (this.mineshaftType) {
             case JUNGLE:
-                return BlockSetSelector.STONE_BRICK_JUNGLE;
+                return BlockSetSelectors.STONE_BRICK_JUNGLE;
             case SNOW:
-                return BlockSetSelector.STONE_BRICK_SNOW;
+                return BlockSetSelectors.STONE_BRICK_SNOW;
             case ICE:
-                return BlockSetSelector.STONE_BRICK_ICE;
+                return BlockSetSelectors.STONE_BRICK_ICE;
             case DESERT:
-                return BlockSetSelector.STONE_BRICK_DESERT;
+                return BlockSetSelectors.STONE_BRICK_DESERT;
             case RED_DESERT:
-                return BlockSetSelector.STONE_BRICK_RED_DESERT;
+                return BlockSetSelectors.STONE_BRICK_RED_DESERT;
             case MUSHROOM:
-                return BlockSetSelector.STONE_BRICK_MUSHROOM;
+                return BlockSetSelectors.STONE_BRICK_MUSHROOM;
             default:
-                return BlockSetSelector.STONE_BRICK_NORMAL;
+                return BlockSetSelectors.STONE_BRICK_NORMAL;
         }
     }
 
@@ -135,7 +136,7 @@ public abstract class MineshaftPiece extends StructurePiece {
             case NORMAL:
                 return getBrickSelector();
             case SNOW:
-                return BlockSetSelector.STONE_BRICK_NORMAL;
+                return BlockSetSelectors.STONE_BRICK_NORMAL;
             default:
                 return getLegSelector();
         }
