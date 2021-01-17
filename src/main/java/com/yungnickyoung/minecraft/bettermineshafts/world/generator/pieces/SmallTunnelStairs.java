@@ -1,8 +1,8 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
-import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftStructure;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
+import com.yungnickyoung.minecraft.bettermineshafts.world.generator.MineshaftVariantSettings;
 import com.yungnickyoung.minecraft.yungsapi.world.BoundingBoxHelper;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.PoweredRailBlock;
@@ -37,8 +37,8 @@ public class SmallTunnelStairs extends MineshaftPiece {
         super(BetterMineshaftStructurePieceType.SMALL_TUNNEL_STAIRS, compoundTag);
     }
 
-    public SmallTunnelStairs(int i, int chunkPieceLen, Random random, MutableBoundingBox blockBox, Direction direction, BetterMineshaftStructure.Type type) {
-        super(BetterMineshaftStructurePieceType.SMALL_TUNNEL_STAIRS, i, chunkPieceLen, type);
+    public SmallTunnelStairs(int i, int chunkPieceLen, Random random, MutableBoundingBox blockBox, Direction direction, MineshaftVariantSettings settings) {
+        super(BetterMineshaftStructurePieceType.SMALL_TUNNEL_STAIRS, i, chunkPieceLen, settings);
         this.setCoordBaseMode(direction);
         this.boundingBox = blockBox;
     }
@@ -91,12 +91,10 @@ public class SmallTunnelStairs extends MineshaftPiece {
         if (this.isInOcean(world, 0, 0) || this.isInOcean(world, LOCAL_X_END, LOCAL_Z_END)) return false;
 
         // Randomize blocks
-        float chance =
-            this.mineshaftType == BetterMineshaftStructure.Type.ICE
-                || this.mineshaftType == BetterMineshaftStructure.Type.MUSHROOM
-            ? .95f
-            : .6f;
-        this.chanceReplaceNonAir(world, box, random, chance, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getMainSelector());
+        this.chanceReplaceNonAir(world, box, random, settings.replacementRate, 0, 1, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getMainSelector());
+
+        // Randomize floor
+        this.chanceReplaceNonAir(world, box, random, settings.replacementRate, 0, 0, 0, LOCAL_X_END, 0, LOCAL_Z_END, getFloorSelector());
 
         for (int i = 0; i < 5 ; i++) {
             // Fill with air
@@ -104,6 +102,7 @@ public class SmallTunnelStairs extends MineshaftPiece {
 
             // Place floor blocks
             this.chanceReplaceNonAir(world, box, random, .5f, 1, i, i, LOCAL_X_END - 1, i, i, getMainSelector());
+            this.replaceAir(world, box, 1, i, i, LOCAL_X_END - 1, i, i, getMainBlock());
 
             // Place rails
             if (i == 0) {
@@ -120,7 +119,7 @@ public class SmallTunnelStairs extends MineshaftPiece {
 
         // Decorations
         this.addBiomeDecorations(world, box, random, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END - 1, LOCAL_Z_END);
-        this.addVines(world, box, random, getVineChance(), 1, 0, 1, LOCAL_X_END - 1, LOCAL_Y_END, LOCAL_Z_END - 1);
+        this.addVines(world, box, random, settings.vineChance, 1, 0, 1, LOCAL_X_END - 1, LOCAL_Y_END, LOCAL_Z_END - 1);
 
         return true;
     }

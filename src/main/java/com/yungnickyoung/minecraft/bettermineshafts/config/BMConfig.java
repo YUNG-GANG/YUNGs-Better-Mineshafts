@@ -29,7 +29,7 @@ public class BMConfig {
     public static int emeraldOre;
     public static int diamondOre;
 
-    public static void init() {
+    public static void bake() {
         mineshaftSpawnRate = BMForgeConfig.mineshaftSpawnRate.get();
         minY = BMForgeConfig.minY.get();
         maxY = BMForgeConfig.maxY.get();
@@ -52,12 +52,5 @@ public class BMConfig {
         lapisOre = BMForgeConfig.ores.lapis.get();
         emeraldOre = BMForgeConfig.ores.emerald.get();
         diamondOre = BMForgeConfig.ores.diamond.get();
-    }
-
-    public static void bake() {
-        init();
-        ModStructureFeatures.STRUCTURE_FEATURE_LIST.forEach(structureFeature ->
-            structureFeature.field_236269_c_.probability = mineshaftSpawnRate
-        );
     }
 }

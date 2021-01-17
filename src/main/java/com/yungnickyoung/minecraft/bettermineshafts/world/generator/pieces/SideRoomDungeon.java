@@ -1,7 +1,7 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
-import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftStructure;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
+import com.yungnickyoung.minecraft.bettermineshafts.world.generator.MineshaftVariantSettings;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.LadderBlock;
@@ -38,8 +38,8 @@ public class SideRoomDungeon extends MineshaftPiece {
         super(BetterMineshaftStructurePieceType.SIDE_ROOM_DUNGEON, compoundTag);
     }
 
-    public SideRoomDungeon(int i, int pieceChainLen, Random random, MutableBoundingBox blockBox, Direction direction, BetterMineshaftStructure.Type type) {
-        super(BetterMineshaftStructurePieceType.SIDE_ROOM_DUNGEON, i, pieceChainLen, type);
+    public SideRoomDungeon(int i, int pieceChainLen, Random random, MutableBoundingBox blockBox, Direction direction, MineshaftVariantSettings settings) {
+        super(BetterMineshaftStructurePieceType.SIDE_ROOM_DUNGEON, i, pieceChainLen, settings);
         this.setCoordBaseMode(direction);
         this.boundingBox = blockBox;
     }
@@ -122,7 +122,7 @@ public class SideRoomDungeon extends MineshaftPiece {
         // Chests
         this.generateChest(world, box, random, 1, 1, LOCAL_Z_END - 1, LootTables.CHESTS_ABANDONED_MINESHAFT);
         if (random.nextInt(2) == 0) { // Chance of second chest
-            this.generateChest(world, box, random, LOCAL_X_END - 1, 1, LOCAL_Z_END - 1, LootTables.CHESTS_STRONGHOLD_CORRIDOR);
+            this.generateChest(world, box, random, LOCAL_X_END - 1, 1, LOCAL_Z_END - 1, LootTables.CHESTS_ABANDONED_MINESHAFT);
         }
 
         // Decorations
@@ -132,9 +132,9 @@ public class SideRoomDungeon extends MineshaftPiece {
     }
 
     private void generateLegs(ISeedReader world, Random random) {
-        generateLeg(world, random, 1, 1, getBrickSelector());
-        generateLeg(world, random, 1, LOCAL_Z_END - 1, getBrickSelector());
-        generateLeg(world, random, LOCAL_X_END - 1, 1, getBrickSelector());
-        generateLeg(world, random, LOCAL_X_END - 1, LOCAL_Z_END - 1, getBrickSelector());
+        generateLegWithSelector(world, random, 1, 1, getBrickSelector());
+        generateLegWithSelector(world, random, 1, LOCAL_Z_END - 1, getBrickSelector());
+        generateLegWithSelector(world, random, LOCAL_X_END - 1, 1, getBrickSelector());
+        generateLegWithSelector(world, random, LOCAL_X_END - 1, LOCAL_Z_END - 1, getBrickSelector());
     }
 }

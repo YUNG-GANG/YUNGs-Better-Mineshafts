@@ -1,5 +1,6 @@
 package com.yungnickyoung.minecraft.bettermineshafts;
 
+import com.yungnickyoung.minecraft.bettermineshafts.config.BMSettings;
 import com.yungnickyoung.minecraft.bettermineshafts.init.ModStructures;
 import com.yungnickyoung.minecraft.bettermineshafts.init.ModConfig;
 import io.netty.util.internal.ConcurrentSet;
@@ -30,8 +31,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 @Mod("bettermineshafts")
 public class BetterMineshafts {
-    public static final String MOD_ID = "bettermineshafts";
-    public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
+    public static final Logger LOGGER = LogManager.getLogger(BMSettings.MOD_ID);
 
     // Debug variables used in development
     public static final boolean DEBUG_LOG = false;

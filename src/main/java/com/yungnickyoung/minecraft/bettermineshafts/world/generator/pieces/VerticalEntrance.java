@@ -1,9 +1,9 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
 import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshafts;
-import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftStructure;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
+import com.yungnickyoung.minecraft.bettermineshafts.world.generator.MineshaftVariantSettings;
 import com.yungnickyoung.minecraft.yungsapi.world.SurfaceHelper;
 import net.minecraft.block.*;
 import net.minecraft.nbt.CompoundNBT;
@@ -57,8 +57,8 @@ public class VerticalEntrance extends MineshaftPiece {
         this.hasTunnel = compoundTag.getBoolean("hasTunnel");
     }
 
-    public VerticalEntrance(int i, int pieceChainLen, Random random, BlockPos.Mutable centerPos, Direction direction, BetterMineshaftStructure.Type type) {
-        super(BetterMineshaftStructurePieceType.VERTICAL_ENTRANCE, i, pieceChainLen, type);
+    public VerticalEntrance(int i, int pieceChainLen, Random random, BlockPos.Mutable centerPos, Direction direction, MineshaftVariantSettings settings) {
+        super(BetterMineshaftStructurePieceType.VERTICAL_ENTRANCE, i, pieceChainLen, settings);
         this.setCoordBaseMode(direction);
         this.centerPos = new BlockPos(centerPos); // position passed in is center of shaft piece (unlike all other pieces, where it is a corner)
         this.boundingBox = getInitialMutableBoundingBox(centerPos);
@@ -144,9 +144,6 @@ public class VerticalEntrance extends MineshaftPiece {
 
         // Fill in any air in floor with main block
         this.replaceAir(world, box, SHAFT_LOCAL_XZ_START + 1, 0, SHAFT_LOCAL_XZ_START + 1, SHAFT_LOCAL_XZ_END - 1, 0, SHAFT_LOCAL_XZ_END - 1, getMainBlock());
-        // Special case - mushroom mineshafts get mycelium in floor
-        if (this.mineshaftType == BetterMineshaftStructure.Type.MUSHROOM)
-            this.chanceReplaceNonAir(world, box, random, .8f, SHAFT_LOCAL_XZ_START + 1, 0, SHAFT_LOCAL_XZ_START + 1, SHAFT_LOCAL_XZ_END - 1, 0, SHAFT_LOCAL_XZ_END - 1, Blocks.MYCELIUM.getDefaultState());
 
         // Ladder
         this.replaceAir(world, box, SHAFT_LOCAL_XZ_START + 2, 1, SHAFT_LOCAL_XZ_START, SHAFT_LOCAL_XZ_START + 2, localYEnd - 4, SHAFT_LOCAL_XZ_START, getMainBlock());
@@ -159,7 +156,7 @@ public class VerticalEntrance extends MineshaftPiece {
 
         // Decorations
         this.addBiomeDecorations(world, box, random, SHAFT_LOCAL_XZ_START + 1, 0, SHAFT_LOCAL_XZ_START + 1, SHAFT_LOCAL_XZ_END - 1, 1, SHAFT_LOCAL_XZ_END - 1);
-        this.addVines(world, box, random, getVineChance(), SHAFT_LOCAL_XZ_START + 1, 0, SHAFT_LOCAL_XZ_START + 1, SHAFT_LOCAL_XZ_END - 1, localYEnd - 4, SHAFT_LOCAL_XZ_END - 1);
+        this.addVines(world, box, random, settings.replacementRate, SHAFT_LOCAL_XZ_START + 1, 0, SHAFT_LOCAL_XZ_START + 1, SHAFT_LOCAL_XZ_END - 1, localYEnd - 4, SHAFT_LOCAL_XZ_END - 1);
     }
 
     /**
@@ -215,31 +212,24 @@ public class VerticalEntrance extends MineshaftPiece {
         // ################################################################
 
         // Randomize blocks
-        this.chanceReplaceNonAir(world, box, random, .6f, tunnelStartX, tunnelFloorAltitude, tunnelStartZ, tunnelEndX, tunnelFloorAltitude + 4, tunnelEndZ, getMainSelector());
+        this.chanceReplaceNonAir(world, box, random, settings.replacementRate, tunnelStartX, tunnelFloorAltitude, tunnelStartZ, tunnelEndX, tunnelFloorAltitude + 4, tunnelEndZ, getMainSelector());
 
         if (facing.getAxis() == tunnelDirection.getAxis()) {
             // Fill in any air in floor with main block
             this.replaceAir(world, box, tunnelStartX + 1, tunnelFloorAltitude, tunnelStartZ, tunnelEndX - 1, tunnelFloorAltitude, tunnelEndZ, getMainBlock());
-            // Special case - mushroom mineshafts get mycelium in floor
-            if (this.mineshaftType == BetterMineshaftStructure.Type.MUSHROOM)
-                this.chanceReplaceNonAir(world, box, random, .8f, tunnelStartX + 1, tunnelFloorAltitude, tunnelStartZ, tunnelEndX - 1, tunnelFloorAltitude, tunnelEndZ, Blocks.MYCELIUM.getDefaultState());
 
             // Fill with air
             this.fill(world, box, tunnelStartX + 1, tunnelFloorAltitude + 1, tunnelStartZ, tunnelEndX - 1, tunnelFloorAltitude + 3, tunnelEndZ, CAVE_AIR);
-        }
-        else {
+        } else {
             // Fill in any air in floor with main block
             this.replaceAir(world, box, tunnelStartX, tunnelFloorAltitude, tunnelStartZ + 1, tunnelEndX, tunnelFloorAltitude, tunnelEndZ - 1, getMainBlock());
-            // Special case - mushroom mineshafts get mycelium in floor
-            if (this.mineshaftType == BetterMineshaftStructure.Type.MUSHROOM)
-                this.chanceReplaceNonAir(world, box, random, .8f, tunnelStartX, tunnelFloorAltitude, tunnelStartZ + 1, tunnelEndX, tunnelFloorAltitude, tunnelEndZ - 1, Blocks.MYCELIUM.getDefaultState());
 
             // Fill with air
             this.fill(world, box, tunnelStartX, tunnelFloorAltitude + 1, tunnelStartZ + 1, tunnelEndX, tunnelFloorAltitude + 3, tunnelEndZ - 1, CAVE_AIR);
         }
 
         // Vines
-        this.addVines(world, box, random, getVineChance(), tunnelStartX + 1, tunnelFloorAltitude, tunnelStartZ + 1, tunnelEndX - 1, tunnelFloorAltitude + 4, tunnelEndZ - 1);
+        this.addVines(world, box, random, settings.vineChance, tunnelStartX + 1, tunnelFloorAltitude, tunnelStartZ + 1, tunnelEndX - 1, tunnelFloorAltitude + 4, tunnelEndZ - 1);
 
         // ################################################################
         // #                       Supports & Rails                       #

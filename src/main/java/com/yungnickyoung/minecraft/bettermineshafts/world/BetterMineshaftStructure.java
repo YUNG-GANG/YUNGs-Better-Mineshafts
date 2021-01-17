@@ -1,34 +1,42 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world;
 
 import com.mojang.serialization.Codec;
+import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshafts;
 import com.yungnickyoung.minecraft.bettermineshafts.config.BMConfig;
+import com.yungnickyoung.minecraft.bettermineshafts.world.generator.MineshaftVariantSettings;
+import com.yungnickyoung.minecraft.bettermineshafts.world.generator.MineshaftVariants;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.MineshaftPiece;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.VerticalEntrance;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.util.Direction;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.RegistryKey;
 import net.minecraft.util.SharedSeedRandom;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.registry.DynamicRegistries;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.provider.BiomeProvider;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationStage;
+import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.structure.StructureStart;
 import net.minecraft.world.gen.feature.template.TemplateManager;
+import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @MethodsReturnNonnullByDefault
-public class BetterMineshaftStructure extends Structure<BetterMineshaftConfig> {
-    public BetterMineshaftStructure(Codec<BetterMineshaftConfig> codec) {
+public class BetterMineshaftStructure extends Structure<NoFeatureConfig> {
+    public BetterMineshaftStructure(Codec<NoFeatureConfig> codec) {
         super(codec);
     }
 
@@ -39,9 +47,9 @@ public class BetterMineshaftStructure extends Structure<BetterMineshaftConfig> {
      * See {@link com.yungnickyoung.minecraft.bettermineshafts.init.ModStructures#commonSetup}
      */
     @Override
-    protected boolean func_230363_a_(ChunkGenerator chunkGenerator, BiomeProvider biomeProvider, long seed, SharedSeedRandom random, int x, int z, Biome biome, ChunkPos chunkPos, BetterMineshaftConfig config) {
+    protected boolean func_230363_a_(ChunkGenerator chunkGenerator, BiomeProvider biomeProvider, long seed, SharedSeedRandom random, int x, int z, Biome biome, ChunkPos chunkPos, NoFeatureConfig config) {
         random.setLargeFeatureSeed(seed, x, z);
-        return random.nextDouble() < config.probability;
+        return random.nextDouble() < BMConfig.mineshaftSpawnRate;
     }
 
     /**
@@ -53,7 +61,7 @@ public class BetterMineshaftStructure extends Structure<BetterMineshaftConfig> {
     }
 
     @Override
-    public IStartFactory<BetterMineshaftConfig> getStartFactory() {
+    public IStartFactory<NoFeatureConfig> getStartFactory() {
         return Start::new;
     }
 
@@ -69,26 +77,21 @@ public class BetterMineshaftStructure extends Structure<BetterMineshaftConfig> {
         return "Better Mineshaft";
     }
 
-    public static class Start extends StructureStart<BetterMineshaftConfig> {
-        public Start(Structure<BetterMineshaftConfig> structureFeature, int chunkX, int chunkZ, MutableBoundingBox blockBox, int i, long l) {
+    public static class Start extends StructureStart<NoFeatureConfig> {
+        public Start(Structure<NoFeatureConfig> structureFeature, int chunkX, int chunkZ, MutableBoundingBox blockBox, int i, long l) {
             super(structureFeature, chunkX, chunkZ, blockBox, i, l);
         }
 
+        @Override
         @ParametersAreNonnullByDefault
-        public void func_230364_a_(
-            DynamicRegistries p_230364_1_,
-            ChunkGenerator chunkGenerator,
-            TemplateManager structureManager,
-            int chunkX,
-            int chunkZ,
-            Biome biome,
-            BetterMineshaftConfig config
-        ) {
+        public void func_230364_a_(DynamicRegistries p_230364_1_, ChunkGenerator chunkGenerator, TemplateManager structureManager, int chunkX, int chunkZ, Biome biome, NoFeatureConfig config) {
             Direction direction = Direction.NORTH;
             // Separate rand is necessary bc for some reason otherwise r is 0 every time
             SharedSeedRandom rand = new SharedSeedRandom();
             rand.setBaseChunkSeed(chunkX, chunkZ);
             int r = rand.nextInt(4);
+
+            // Determine starting position and direction
             switch (r) {
                 case 0:
                     direction = Direction.NORTH;
@@ -105,6 +108,9 @@ public class BetterMineshaftStructure extends Structure<BetterMineshaftConfig> {
             int y = this.rand.nextInt(BMConfig.maxY - BMConfig.minY + 1) + BMConfig.minY;
             BlockPos.Mutable startingPos = new BlockPos.Mutable((chunkX << 4) + 2, y, (chunkZ << 4) + 2);
 
+            // Determine mineshaft variant based on biome
+            MineshaftVariantSettings settings = getSettingsForBiome(biome);
+
             // Entrypoint
             MineshaftPiece entryPoint = new VerticalEntrance(
                 0,
@@ -112,7 +118,7 @@ public class BetterMineshaftStructure extends Structure<BetterMineshaftConfig> {
                 this.rand,
                 startingPos,
                 direction,
-                config.type
+                settings
             );
 
             this.components.add(entryPoint);
@@ -123,6 +129,40 @@ public class BetterMineshaftStructure extends Structure<BetterMineshaftConfig> {
 
             // Expand bounding box to encompass all children
             this.recalculateStructureSize();
+        }
+
+        private MineshaftVariantSettings getSettingsForBiome(Biome biome) {
+            RegistryKey<Biome> registryKey;
+
+            // Ensure biome registry name isn't null. This should never happen.
+            if (biome.getRegistryName() == null) {
+                BetterMineshafts.LOGGER.error("Found null registry name for biome {}. This shouldn't happen!", biome);
+                return MineshaftVariants.get().getDefault();
+            }
+
+            registryKey = RegistryKey.getOrCreateKey(Registry.BIOME_KEY, biome.getRegistryName());
+
+            // Search tag lists of variants top-down, short-circuiting if we find a matching tag list.
+            boolean found = true;
+            for (MineshaftVariantSettings variant : MineshaftVariants.get().getVariants()) {
+                for (List<BiomeDictionary.Type> tagList : variant.biomeTags) {
+                    found = true;
+                    for (BiomeDictionary.Type tag : tagList) {
+                        // Check tag
+                        if (!BiomeDictionary.hasType(registryKey, tag)) {
+                            found = false;
+                            break;
+                        }
+                    }
+
+                    if (found) {
+                        return variant;
+                    }
+                }
+            }
+
+            // No match --> return default
+            return MineshaftVariants.get().getDefault();
         }
     }
 

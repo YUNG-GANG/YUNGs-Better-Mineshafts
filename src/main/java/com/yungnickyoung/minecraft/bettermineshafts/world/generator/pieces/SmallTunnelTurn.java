@@ -1,8 +1,8 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
-import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftStructure;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
+import com.yungnickyoung.minecraft.bettermineshafts.world.generator.MineshaftVariantSettings;
 import com.yungnickyoung.minecraft.yungsapi.world.BoundingBoxHelper;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.RailBlock;
@@ -55,8 +55,8 @@ public class SmallTunnelTurn extends MineshaftPiece {
         this.turnDirection = TurnDirection.valueOf(compoundTag.getInt("TurnDirection"));
     }
 
-    public SmallTunnelTurn(int i, int chunkPieceLen, Random random, MutableBoundingBox blockBox, Direction direction, BetterMineshaftStructure.Type type) {
-        super(BetterMineshaftStructurePieceType.SMALL_TUNNEL_TURN, i, chunkPieceLen, type);
+    public SmallTunnelTurn(int i, int chunkPieceLen, Random random, MutableBoundingBox blockBox, Direction direction, MineshaftVariantSettings settings) {
+        super(BetterMineshaftStructurePieceType.SMALL_TUNNEL_TURN, i, chunkPieceLen, settings);
         this.setCoordBaseMode(direction);
         this.turnDirection = random.nextBoolean() ? TurnDirection.LEFT : TurnDirection.RIGHT;
         this.boundingBox = blockBox;
@@ -114,21 +114,16 @@ public class SmallTunnelTurn extends MineshaftPiece {
         Direction direction = this.getCoordBaseMode();
 
         // Randomize blocks
-        float chance =
-            this.mineshaftType == BetterMineshaftStructure.Type.ICE
-                || this.mineshaftType == BetterMineshaftStructure.Type.MUSHROOM
-            ? .95f
-            : .6f;
-        this.chanceReplaceNonAir(world, box, random, chance, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getMainSelector());
+        this.chanceReplaceNonAir(world, box, random, settings.replacementRate, 0, 1, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getMainSelector());
+
+        // Randomize floor
+        this.chanceReplaceNonAir(world, box, random, settings.replacementRate, 0, 0, 0, LOCAL_X_END, 0, LOCAL_Z_END, getFloorSelector());
 
         // Fill with air
         this.fill(world, box, 1, 1, 0, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END - 1, CAVE_AIR);
 
         // Fill in any air in floor with main block
         this.replaceAir(world, box, 1, 0, 0, LOCAL_X_END - 1, 0, LOCAL_Z_END, getMainBlock());
-        // Special case - mushroom mineshafts get mycelium in floor
-        if (this.mineshaftType == BetterMineshaftStructure.Type.MUSHROOM)
-            this.chanceReplaceNonAir(world, box, random, .8f, 1, 0, 0, LOCAL_X_END - 1, 0, LOCAL_Z_END, Blocks.MYCELIUM.getDefaultState());
 
         // Rails
         this.fill(world, box, 2, 1, 0, 2, 1, 1, Blocks.RAIL.getDefaultState());
@@ -152,7 +147,7 @@ public class SmallTunnelTurn extends MineshaftPiece {
 
         // Decorations
         this.addBiomeDecorations(world, box, random, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END - 1, LOCAL_Z_END);
-        this.addVines(world, box, random, getVineChance(), 1, 0, 1, LOCAL_X_END - 1, LOCAL_Y_END, LOCAL_Z_END - 1);
+        this.addVines(world, box, random, settings.vineChance, 1, 0, 1, LOCAL_X_END - 1, LOCAL_Y_END, LOCAL_Z_END - 1);
 
         return true;
     }

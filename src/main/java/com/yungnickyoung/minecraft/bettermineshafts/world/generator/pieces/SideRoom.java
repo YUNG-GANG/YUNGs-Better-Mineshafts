@@ -1,9 +1,9 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
 import com.google.common.collect.Lists;
-import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftStructure;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
+import com.yungnickyoung.minecraft.bettermineshafts.world.generator.MineshaftVariantSettings;
 import com.yungnickyoung.minecraft.yungsapi.world.BoundingBoxHelper;
 import net.minecraft.block.*;
 import net.minecraft.item.ItemStack;
@@ -42,8 +42,8 @@ public class SideRoom extends MineshaftPiece {
         this.hasDownstairs = compoundTag.getBoolean("hasDownstairs");
     }
 
-    public SideRoom(int i, int pieceChainLen, Random random, MutableBoundingBox blockBox, Direction direction, BetterMineshaftStructure.Type type) {
-        super(BetterMineshaftStructurePieceType.SIDE_ROOM, i, pieceChainLen, type);
+    public SideRoom(int i, int pieceChainLen, Random random, MutableBoundingBox blockBox, Direction direction, MineshaftVariantSettings settings) {
+        super(BetterMineshaftStructurePieceType.SIDE_ROOM, i, pieceChainLen, settings);
         this.setCoordBaseMode(direction);
         this.boundingBox = blockBox;
     }
@@ -104,7 +104,7 @@ public class SideRoom extends MineshaftPiece {
         if (this.isInOcean(world, 0, 0) || this.isInOcean(world, LOCAL_X_END, LOCAL_Z_END)) return false;
 
         // Fill with stone then clean out with air. Track ceiling positions to see where we can place iron bar supports
-        this.fill(world, box, random, 0, 0, 0, LOCAL_X_END, 1, LOCAL_Z_END, getBrickSelector());
+        this.fill(world, box, random, 0, 0, 0, LOCAL_X_END, 1, LOCAL_Z_END, getBrickSelector()); // Floor
         this.replaceNonAir(world, box, random, 0, 2, 0, LOCAL_X_END, LOCAL_Y_END - 1, LOCAL_Z_END, getBrickSelector());
         this.fill(world, box, 1, 1, 1, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END, CAVE_AIR);
         boolean[][] ceiling = new boolean[SECONDARY_AXIS_LEN][MAIN_AXIS_LEN];
@@ -156,16 +156,16 @@ public class SideRoom extends MineshaftPiece {
         // Decorations
         generateIronBarSupports(world, box, random, ceiling);
         this.addBiomeDecorations(world, box, random, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END - 1, LOCAL_Z_END);
-        this.addVines(world, box, random, getVineChance(), 1, 0, 1, LOCAL_X_END - 1, LOCAL_Y_END, LOCAL_Z_END - 1);
+        this.addVines(world, box, random, settings.vineChance, 1, 0, 1, LOCAL_X_END - 1, LOCAL_Y_END, LOCAL_Z_END - 1);
 
         return true;
     }
 
     private void generateLegs(ISeedReader world, Random random) {
-        generateLeg(world, random, 1, 1, getBrickSelector());
-        generateLeg(world, random, 1, LOCAL_Z_END - 1, getBrickSelector());
-        generateLeg(world, random, LOCAL_X_END - 1, 1, getBrickSelector());
-        generateLeg(world, random, LOCAL_X_END - 1, LOCAL_Z_END - 1, getBrickSelector());
+        generateLegWithSelector(world, random, 1, 1, getBrickSelector());
+        generateLegWithSelector(world, random, 1, LOCAL_Z_END - 1, getBrickSelector());
+        generateLegWithSelector(world, random, LOCAL_X_END - 1, 1, getBrickSelector());
+        generateLegWithSelector(world, random, LOCAL_X_END - 1, LOCAL_Z_END - 1, getBrickSelector());
     }
 
     private void generateIronBarSupports(ISeedReader world, MutableBoundingBox box, Random random, boolean[][] ceiling) {

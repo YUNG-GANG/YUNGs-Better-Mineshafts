@@ -29,7 +29,7 @@ logoFile="BMLogo.png"
 
 [[dependencies.bettermineshafts]]
     modId="yungsapi"
-    versionRange="[1.16.4-Forge-2,)"
+    versionRange="[1.16.4-Forge-3,)"
     mandatory=true
     ordering="NONE"
     side="SERVER"
