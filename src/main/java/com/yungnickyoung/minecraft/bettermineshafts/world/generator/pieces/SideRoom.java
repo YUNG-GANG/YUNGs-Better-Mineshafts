@@ -1,6 +1,7 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
 import com.google.common.collect.Lists;
+import com.yungnickyoung.minecraft.bettermineshafts.config.Configuration;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.MineshaftVariantSettings;
@@ -69,7 +70,7 @@ public class SideRoom extends MineshaftPiece {
     @Override
     public void buildComponent(StructurePiece structurePiece, List<StructurePiece> list, Random random) {
         // Chance of generating side room dungeon downstairs
-        if (random.nextInt(4) == 0) {
+        if (random.nextFloat() < Configuration.spawnRates.workstationDungeonSpawnRate.get()) {
             Direction direction = this.getCoordBaseMode();
             if (direction == null) {
                 return;

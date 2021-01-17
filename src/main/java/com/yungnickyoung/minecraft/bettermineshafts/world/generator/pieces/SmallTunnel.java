@@ -1,6 +1,7 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
 import com.google.common.collect.Lists;
+import com.yungnickyoung.minecraft.bettermineshafts.config.Configuration;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.MineshaftVariantSettings;
@@ -132,15 +133,16 @@ public class SmallTunnel extends MineshaftPiece {
     }
 
     private void generateCobwebs(ISeedReader world, MutableBoundingBox box, Random random) {
+        float chance = Configuration.spawnRates.cobwebSpawnRate.get().floatValue();
         supports.forEach(z -> {
-            this.chanceReplaceAir(world, box, random, .15f, 1, 3, z - 3, 1, 3, z + 3, Blocks.COBWEB.getDefaultState());
-            this.chanceReplaceAir(world, box, random, .15f, 3, 3, z - 3, 3, 3, z + 3, Blocks.COBWEB.getDefaultState());
+            this.chanceReplaceAir(world, box, random, chance, 1, 3, z - 3, 1, 3, z + 3, Blocks.COBWEB.getDefaultState());
+            this.chanceReplaceAir(world, box, random, chance, 3, 3, z - 3, 3, 3, z + 3, Blocks.COBWEB.getDefaultState());
         });
     }
 
     private void generateChestCarts(ISeedReader world, MutableBoundingBox box, Random random, ResourceLocation lootTableId) {
         for (int z = 0; z <= LOCAL_Z_END; z++) {
-            if (random.nextInt(800) == 0) {
+            if (random.nextFloat() < Configuration.spawnRates.smallShaftChestMinecartSpawnRate.get()) {
                 BlockPos blockPos = new BlockPos(this.getXWithOffset(LOCAL_X_END / 2, z), this.getYWithOffset(1), this.getZWithOffset(LOCAL_X_END / 2, z));
                 if (box.isVecInside(blockPos) && !world.getBlockState(blockPos.down()).isAir()) {
                     ChestMinecartEntity chestMinecartEntity = new ChestMinecartEntity(world.getWorld(), ((float) blockPos.getX() + 0.5F), ((float) blockPos.getY() + 0.5F), ((float) blockPos.getZ() + 0.5F));
@@ -178,7 +180,7 @@ public class SmallTunnel extends MineshaftPiece {
 
     private void generateTntCarts(ISeedReader world, MutableBoundingBox box, Random random) {
         for (int z = 0; z <= LOCAL_Z_END; z++) {
-            if (random.nextInt(400) == 0) {
+            if (random.nextFloat() < Configuration.spawnRates.smallShaftTntMinecartSpawnRate.get()) {
                 BlockPos blockPos = new BlockPos(this.getXWithOffset(LOCAL_X_END / 2, z), this.getYWithOffset(1), this.getZWithOffset(LOCAL_X_END / 2, z));
                 if (box.isVecInside(blockPos) && !world.getBlockState(blockPos.down()).isAir()) {
                     TNTMinecartEntity tntMinecartEntity = new TNTMinecartEntity(world.getWorld(), ((float) blockPos.getX() + 0.5F), ((float) blockPos.getY() + 0.5F), ((float) blockPos.getZ() + 0.5F));
@@ -194,14 +196,14 @@ public class SmallTunnel extends MineshaftPiece {
         for (int z = 0; z <= LOCAL_Z_END; z++) {
             if (this.supports.contains(z)) continue;
             r = random.nextFloat();
-            if (r < .02 / 2) {
+            if (r < Configuration.spawnRates.torchSpawnRate.get() / 2) {
                 BlockPos pos = new BlockPos(getXWithOffset(1, z), getYWithOffset(2), getZWithOffset(1, z));
                 BlockPos adjPos = new BlockPos(getXWithOffset(0, z), getYWithOffset(2), getZWithOffset(0, z));
                 boolean canPlace = world.getBlockState(pos).isAir() && world.getBlockState(adjPos) != CAVE_AIR;
                 if (canPlace) {
                     this.replaceAir(world, box, 1, 2, z, 1, 2, z, torchBlock.with(BlockStateProperties.HORIZONTAL_FACING, Direction.EAST));
                 }
-            } else if (r < .02) {
+            } else if (r < Configuration.spawnRates.torchSpawnRate.get()) {
                 BlockPos pos = new BlockPos(getXWithOffset(LOCAL_X_END - 1, z), getYWithOffset(2), getZWithOffset(LOCAL_X_END - 1, z));
                 BlockPos adjPos = new BlockPos(getXWithOffset(LOCAL_X_END , z), getYWithOffset(2), getZWithOffset(LOCAL_X_END, z));
                 boolean canPlace = world.getBlockState(pos).isAir() && world.getBlockState(adjPos) != CAVE_AIR;

@@ -63,21 +63,12 @@ public class ModStructures {
                     .put(MINESHAFT_STRUCTURE.get(), new StructureSeparationSettings(1, 0, 593751784))
                     .build();
 
-            // Register configured structure features
+            // Register configured structure feature
             Registry<StructureFeature<?, ?>> registry = WorldGenRegistries.CONFIGURED_STRUCTURE_FEATURE;
-            Registry.register(registry, new ResourceLocation(BMSettings.MOD_ID, "mineshaft"), ModStructureFeatures.NORMAL_MINESHAFT);
-//            Registry.register(registry, new ResourceLocation(BetterMineshafts.MOD_ID, "mineshaft_normal"), ModStructureFeatures.NORMAL_MINESHAFT);
-//            Registry.register(registry, new ResourceLocation(BetterMineshafts.MOD_ID, "mineshaft_mesa"), ModStructureFeatures.MESA_MINESHAFT);
-//            Registry.register(registry, new ResourceLocation(BetterMineshafts.MOD_ID, "mineshaft_jungle"), ModStructureFeatures.JUNGLE_MINESHAFT);
-//            Registry.register(registry, new ResourceLocation(BetterMineshafts.MOD_ID, "mineshaft_mushroom"), ModStructureFeatures.MUSHROOM_MINESHAFT);
-//            Registry.register(registry, new ResourceLocation(BetterMineshafts.MOD_ID, "mineshaft_savanna"), ModStructureFeatures.SAVANNA_MINESHAFT);
-//            Registry.register(registry, new ResourceLocation(BetterMineshafts.MOD_ID, "mineshaft_desert"), ModStructureFeatures.DESERT_MINESHAFT);
-//            Registry.register(registry, new ResourceLocation(BetterMineshafts.MOD_ID, "mineshaft_reddesert"), ModStructureFeatures.REDDESERT_MINESHAFT);
-//            Registry.register(registry, new ResourceLocation(BetterMineshafts.MOD_ID, "mineshaft_ice"), ModStructureFeatures.ICE_MINESHAFT);
-//            Registry.register(registry, new ResourceLocation(BetterMineshafts.MOD_ID, "mineshaft_snow"), ModStructureFeatures.SNOW_MINESHAFT);
+            Registry.register(registry, new ResourceLocation(BMSettings.MOD_ID, "mineshaft"), ModStructureFeatures.MINESHAFT_STRUCTURE_FEATURE);
 
-            // Add structure to this to prevent any issues if other mods' custom ChunkGenerators use FlatGenerationSettings.STRUCTURES.
-            FlatGenerationSettings.STRUCTURES.put(ModStructures.MINESHAFT_STRUCTURE.get(), ModStructureFeatures.NORMAL_MINESHAFT);
+            // Add structurefeature to this to prevent any issues if other mods' custom ChunkGenerators use FlatGenerationSettings.STRUCTURES.
+            FlatGenerationSettings.STRUCTURES.put(ModStructures.MINESHAFT_STRUCTURE.get(), ModStructureFeatures.MINESHAFT_STRUCTURE_FEATURE);
 
             // Register pieces
             ModStructurePieces.init();
@@ -92,10 +83,7 @@ public class ModStructures {
             ServerWorld serverWorld = (ServerWorld) event.getWorld();
 
             // Prevent spawning in superflat world
-            if (
-                serverWorld.getChunkProvider().getChunkGenerator() instanceof FlatChunkGenerator
-                && serverWorld.getDimensionKey().equals(World.OVERWORLD)
-            ) {
+            if (serverWorld.getChunkProvider().getChunkGenerator() instanceof FlatChunkGenerator && serverWorld.getDimensionKey().equals(World.OVERWORLD)) {
                 return;
             }
 
@@ -126,77 +114,7 @@ public class ModStructures {
         // I couldn't figure out how to remove that for now.
         event.getGeneration().getStructures().removeIf(supplier -> supplier.get().field_236268_b_ == Structure.field_236367_c_);
 
-        // Determine mineshaft variant to add based on biome
-        StructureFeature<NoFeatureConfig, ? extends Structure<NoFeatureConfig>> structureFeature;
-//        String biomeName = event.getName().toString();
-//        try {
-//            biomeName = biomeName.split(":")[1];
-//        } catch (Exception ignored) {}
-
-        // Determine mineshaft variant based on biome
-//        if (event.getCategory() == Biome.Category.MESA) {
-//            if (biomeName.equalsIgnoreCase("badlands")) {
-//                structureFeature = getVariant(ModStructureFeatures.REDDESERT_MINESHAFT);
-//            } else {
-//                structureFeature = getVariant(ModStructureFeatures.MESA_MINESHAFT);
-//            }
-//        } else if (event.getCategory() == Biome.Category.JUNGLE) {
-//            structureFeature = getVariant(ModStructureFeatures.JUNGLE_MINESHAFT);
-//        }
-//        else if (event.getCategory() == Biome.Category.ICY || event.getCategory() == Biome.Category.TAIGA) {
-//            if (biomeName.contains("ice")) {
-//                structureFeature = getVariant(ModStructureFeatures.ICE_MINESHAFT);
-//            } else {
-//                structureFeature = getVariant(ModStructureFeatures.SNOW_MINESHAFT);
-//            }
-//        }
-//        else if (event.getCategory() == Biome.Category.DESERT) {
-//            if (biomeName.equalsIgnoreCase("desert_lakes")) {
-//                structureFeature = getVariant(ModStructureFeatures.REDDESERT_MINESHAFT);
-//            } else {
-//                structureFeature = getVariant(ModStructureFeatures.DESERT_MINESHAFT);
-//            }                }
-//        else if (event.getCategory() == Biome.Category.MUSHROOM) {
-//            structureFeature = getVariant(ModStructureFeatures.MUSHROOM_MINESHAFT);
-//        }
-//        else if (event.getCategory() == Biome.Category.SAVANNA) {
-//            structureFeature = getVariant(ModStructureFeatures.SAVANNA_MINESHAFT);
-//        } else {
-//            structureFeature = getVariant(ModStructureFeatures.NORMAL_MINESHAFT);
-//        }
-        structureFeature = ModStructureFeatures.NORMAL_MINESHAFT;
-
-        // Add mineshaft to biome generation settings
-        event.getGeneration().getStructures().add(() -> structureFeature);
+        // Add mineshaft to biome generation settings. We defer biome-specific logic to actual world generation later on.
+        event.getGeneration().getStructures().add(() -> ModStructureFeatures.MINESHAFT_STRUCTURE_FEATURE);
     }
-
-    /**
-     * Returns the given type if its mineshaft variant is enabled.
-     * Otherwise returns a backup type that is enabled.
-     */
-//    private static StructureFeature<BetterMineshaftConfig, ? extends Structure<BetterMineshaftConfig>> getVariant(
-//        StructureFeature<BetterMineshaftConfig, ? extends Structure<BetterMineshaftConfig>> variant
-//    ) {
-//        if (variant == ModStructureFeatures.REDDESERT_MINESHAFT) {
-//            if (BMConfig.redDesertEnabled) return ModStructureFeatures.REDDESERT_MINESHAFT;
-//            if (BMConfig.desertEnabled) return ModStructureFeatures.DESERT_MINESHAFT;
-//        } else if (variant == ModStructureFeatures.DESERT_MINESHAFT) {
-//            if (BMConfig.desertEnabled) return ModStructureFeatures.DESERT_MINESHAFT;
-//        } else if (variant == ModStructureFeatures.MESA_MINESHAFT) {
-//            if (BMConfig.mesaEnabled) return ModStructureFeatures.MESA_MINESHAFT;
-//            if (BMConfig.redDesertEnabled) return ModStructureFeatures.REDDESERT_MINESHAFT;
-//        } else if (variant == ModStructureFeatures.ICE_MINESHAFT) {
-//            if (BMConfig.iceEnabled) return ModStructureFeatures.ICE_MINESHAFT;
-//            if (BMConfig.snowEnabled) return ModStructureFeatures.SNOW_MINESHAFT;
-//        } else if (variant == ModStructureFeatures.SNOW_MINESHAFT) {
-//            if (BMConfig.snowEnabled) return ModStructureFeatures.SNOW_MINESHAFT;
-//        } else if (variant == ModStructureFeatures.JUNGLE_MINESHAFT) {
-//            if (BMConfig.jungleEnabled) return ModStructureFeatures.JUNGLE_MINESHAFT;
-//        } else if (variant == ModStructureFeatures.SAVANNA_MINESHAFT) {
-//            if (BMConfig.savannaEnabled) return ModStructureFeatures.SAVANNA_MINESHAFT;
-//        } else if (variant == ModStructureFeatures.MUSHROOM_MINESHAFT) {
-//            if (BMConfig.mushroomEnabled) return ModStructureFeatures.MUSHROOM_MINESHAFT;
-//        }
-//        return ModStructureFeatures.NORMAL_MINESHAFT;
-//    }
 }

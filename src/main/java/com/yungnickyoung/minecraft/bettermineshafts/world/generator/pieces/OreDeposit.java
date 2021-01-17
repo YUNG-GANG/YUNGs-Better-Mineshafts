@@ -1,7 +1,7 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
 import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshafts;
-import com.yungnickyoung.minecraft.bettermineshafts.config.BMConfig;
+import com.yungnickyoung.minecraft.bettermineshafts.config.Configuration;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.MineshaftVariantSettings;
 import com.yungnickyoung.minecraft.yungsapi.world.BoundingBoxHelper;
@@ -25,14 +25,14 @@ import java.util.Random;
 
 public class OreDeposit extends MineshaftPiece {
     public enum OreType {
-        COBBLE(0, Blocks.COBBLESTONE.getDefaultState(), BMConfig.cobbleOre),
-        COAL(1, Blocks.COAL_ORE.getDefaultState(), BMConfig.coalOre + COBBLE.threshold),
-        IRON(2, Blocks.IRON_ORE.getDefaultState(), BMConfig.ironOre + COAL.threshold),
-        REDSTONE(3, Blocks.REDSTONE_ORE.getDefaultState(), BMConfig.redstoneOre + IRON.threshold),
-        GOLD(4, Blocks.GOLD_ORE.getDefaultState(), BMConfig.goldOre + REDSTONE.threshold),
-        LAPIS(5, Blocks.LAPIS_ORE.getDefaultState(), BMConfig.lapisOre + GOLD.threshold),
-        EMERALD(6, Blocks.EMERALD_ORE.getDefaultState(), BMConfig.emeraldOre + LAPIS.threshold),
-        DIAMOND(7, Blocks.DIAMOND_ORE.getDefaultState(), BMConfig.diamondOre + EMERALD.threshold);
+        COBBLE(0, Blocks.COBBLESTONE.getDefaultState(), Configuration.ores.cobble.get()),
+        COAL(1, Blocks.COAL_ORE.getDefaultState(), Configuration.ores.coal.get() + COBBLE.threshold),
+        IRON(2, Blocks.IRON_ORE.getDefaultState(), Configuration.ores.iron.get() + COAL.threshold),
+        REDSTONE(3, Blocks.REDSTONE_ORE.getDefaultState(), Configuration.ores.redstone.get() + IRON.threshold),
+        GOLD(4, Blocks.GOLD_ORE.getDefaultState(), Configuration.ores.gold.get() + REDSTONE.threshold),
+        LAPIS(5, Blocks.LAPIS_ORE.getDefaultState(), Configuration.ores.lapis.get() + GOLD.threshold),
+        EMERALD(6, Blocks.EMERALD_ORE.getDefaultState(), Configuration.ores.emerald.get() + LAPIS.threshold),
+        DIAMOND(7, Blocks.DIAMOND_ORE.getDefaultState(), Configuration.ores.diamond.get() + EMERALD.threshold);
 
         private final int value;
         private final BlockState block;

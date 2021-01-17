@@ -1,14 +1,12 @@
 package com.yungnickyoung.minecraft.bettermineshafts.init;
 
 import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshafts;
-import com.yungnickyoung.minecraft.bettermineshafts.config.BMConfig;
-import com.yungnickyoung.minecraft.bettermineshafts.config.BMForgeConfig;
+import com.yungnickyoung.minecraft.bettermineshafts.config.Configuration;
 import com.yungnickyoung.minecraft.bettermineshafts.config.BMSettings;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.MineshaftVariants;
 import com.yungnickyoung.minecraft.yungsapi.io.JSON;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
 
 import java.io.File;
@@ -21,9 +19,8 @@ import java.nio.file.StandardOpenOption;
 public class ModConfig {
     public static void init() {
         initCustomFiles();
-        ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.COMMON, BMForgeConfig.SPEC, "bettermineshafts-forge-1_16.toml");
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(ModConfig::configChanged);
-        BMConfig.bake();
+        // Register mod config with Forge
+        ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.COMMON, Configuration.SPEC, "bettermineshafts-forge-1_16.toml");
     }
 
     private static void initCustomFiles() {
@@ -169,14 +166,6 @@ public class ModConfig {
         Path path = Paths.get(FMLPaths.CONFIGDIR.get().toString(), BMSettings.CUSTOM_CONFIG_PATH, BMSettings.VERSION_PATH, "biomeTags.txt");
         File readme = new File(path.toString());
         if (!readme.exists()) {
-//            GsonBuilder gsonBuilder = new GsonBuilder();
-//            gsonBuilder.registerTypeAdapter(BiomeDictionary.Type.class, new BiomeDictionaryTypeAdapter());
-//            gsonBuilder.setPrettyPrinting();
-//            gsonBuilder.disableHtmlEscaping();
-//            Gson gson = gsonBuilder.create();
-//
-//            String jsonString = gson.toJson(BiomeDictionary.Type.getAll());
-
             String readmeText =
                 "Helper file showing all available BiomeDictionary biome tags.\n\n";
             try {
@@ -196,13 +185,6 @@ public class ModConfig {
         Path jsonPath = Paths.get(FMLPaths.CONFIGDIR.get().toString(), BMSettings.CUSTOM_CONFIG_PATH, BMSettings.VERSION_PATH, "variants.json");
         File jsonFile = new File(jsonPath.toString());
 
-//        GsonBuilder gsonBuilder = new GsonBuilder();
-//        gsonBuilder.registerTypeHierarchyAdapter(IBlockState.class, new BlockStateAdapter());
-//        gsonBuilder.registerTypeAdapter(BiomeDictionary.Type.class, new BiomeDictionaryTypeAdapter());
-//        gsonBuilder.setPrettyPrinting();
-//        gsonBuilder.disableHtmlEscaping();
-//        Gson gson = gsonBuilder.create();
-
         if (!jsonFile.exists()) {
             // Create default file if JSON file doesn't already exist
             try {
@@ -210,14 +192,6 @@ public class ModConfig {
             } catch (IOException e) {
                 BetterMineshafts.LOGGER.error("Unable to create JSON file! - {}", e.toString());
             }
-
-//            String jsonString = gson.toJson(MineshaftVariants.get());
-
-//            try {
-//                Files.write(jsonPath, jsonString.getBytes());
-//            } catch (IOException e) {
-//                BetterMineshafts.LOGGER.error("Unable to create JSON file! - {}", e.toString());
-//            }
         } else {
             // If file already exists, load data into BlockSetSelectors' singleton instance
             if (!jsonFile.canRead()) {
@@ -231,20 +205,6 @@ public class ModConfig {
                 BetterMineshafts.LOGGER.error("Error loading Better Mineshafts variants.json file: {}", e.toString());
                 BetterMineshafts.LOGGER.error("Using default configuration...");
             }
-
-//            try (Reader reader = Files.newBufferedReader(jsonPath)) {
-//                MineshaftVariants.instance = gson.fromJson(reader, MineshaftVariants.class);
-//            } catch (Exception e) {
-//                BetterMineshafts.LOGGER.error("Error loading Better Mineshafts variants.json file: {}", e.toString());
-//                BetterMineshafts.LOGGER.error("Using default configuration...");
-//            }
-        }
-    }
-
-    private static void configChanged(net.minecraftforge.fml.config.ModConfig.ModConfigEvent event) {
-        if (event.getConfig().getSpec() == BMForgeConfig.SPEC) {
-            BMConfig.bake();
-            BetterMineshafts.LOGGER.debug("Baked configuration changes.");
         }
     }
 }

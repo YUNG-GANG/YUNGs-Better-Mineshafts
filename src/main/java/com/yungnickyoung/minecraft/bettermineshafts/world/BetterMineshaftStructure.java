@@ -2,14 +2,13 @@ package com.yungnickyoung.minecraft.bettermineshafts.world;
 
 import com.mojang.serialization.Codec;
 import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshafts;
-import com.yungnickyoung.minecraft.bettermineshafts.config.BMConfig;
+import com.yungnickyoung.minecraft.bettermineshafts.config.Configuration;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.MineshaftVariantSettings;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.MineshaftVariants;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.MineshaftPiece;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.VerticalEntrance;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.util.Direction;
-import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.RegistryKey;
 import net.minecraft.util.SharedSeedRandom;
 import net.minecraft.util.math.BlockPos;
@@ -26,13 +25,9 @@ import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.structure.StructureStart;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @MethodsReturnNonnullByDefault
 public class BetterMineshaftStructure extends Structure<NoFeatureConfig> {
@@ -49,7 +44,7 @@ public class BetterMineshaftStructure extends Structure<NoFeatureConfig> {
     @Override
     protected boolean func_230363_a_(ChunkGenerator chunkGenerator, BiomeProvider biomeProvider, long seed, SharedSeedRandom random, int x, int z, Biome biome, ChunkPos chunkPos, NoFeatureConfig config) {
         random.setLargeFeatureSeed(seed, x, z);
-        return random.nextDouble() < BMConfig.mineshaftSpawnRate;
+        return random.nextDouble() < Configuration.mineshaftSpawnRate.get();
     }
 
     /**
@@ -105,7 +100,7 @@ public class BetterMineshaftStructure extends Structure<NoFeatureConfig> {
                 case 3:
                     direction = Direction.WEST;
             }
-            int y = this.rand.nextInt(BMConfig.maxY - BMConfig.minY + 1) + BMConfig.minY;
+            int y = this.rand.nextInt(Configuration.maxY.get() - Configuration.minY.get() + 1) + Configuration.minY.get();
             BlockPos.Mutable startingPos = new BlockPos.Mutable((chunkX << 4) + 2, y, (chunkZ << 4) + 2);
 
             // Determine mineshaft variant based on biome
@@ -143,7 +138,7 @@ public class BetterMineshaftStructure extends Structure<NoFeatureConfig> {
             registryKey = RegistryKey.getOrCreateKey(Registry.BIOME_KEY, biome.getRegistryName());
 
             // Search tag lists of variants top-down, short-circuiting if we find a matching tag list.
-            boolean found = true;
+            boolean found;
             for (MineshaftVariantSettings variant : MineshaftVariants.get().getVariants()) {
                 for (List<BiomeDictionary.Type> tagList : variant.biomeTags) {
                     found = true;
@@ -163,43 +158,6 @@ public class BetterMineshaftStructure extends Structure<NoFeatureConfig> {
 
             // No match --> return default
             return MineshaftVariants.get().getDefault();
-        }
-    }
-
-    public enum Type implements IStringSerializable {
-        NORMAL("normal"),
-        MESA("mesa"),
-        JUNGLE("jungle"),
-        SNOW("snow"),
-        ICE("ice"),
-        DESERT("desert"),
-        RED_DESERT("red_desert"),
-        SAVANNA("savanna"),
-        MUSHROOM("mushroom");
-
-        public static final Codec<BetterMineshaftStructure.Type> field_236324_c_ = IStringSerializable.createEnumCodec(BetterMineshaftStructure.Type::values, BetterMineshaftStructure.Type::byName);
-        private static final Map<String, BetterMineshaftStructure.Type> BY_NAME = Arrays.stream(values()).collect(Collectors.toMap(BetterMineshaftStructure.Type::getName, type -> type));
-
-        private final String name;
-
-        Type(String name) {
-            this.name = name;
-        }
-
-        public String getName() {
-            return this.name;
-        }
-
-        private static BetterMineshaftStructure.Type byName(String p_214715_0_) {
-            return BY_NAME.get(p_214715_0_);
-        }
-
-        public static BetterMineshaftStructure.Type byId(int id) {
-            return id >= 0 && id < values().length ? values()[id] : NORMAL;
-        }
-
-        public String getString() {
-            return this.name;
         }
     }
 }
