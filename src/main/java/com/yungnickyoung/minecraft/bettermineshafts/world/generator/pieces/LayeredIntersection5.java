@@ -123,7 +123,7 @@ public class LayeredIntersection5 extends MineshaftPiece{
         this.fill(world, box, 0, 5, LOCAL_Z_END, LOCAL_X_END, LOCAL_Y_END - 1, LOCAL_Z_END, CAVE_AIR);
 
         // First floor Bottom - fill in any air in floor with main block
-        this.replaceAir(world, box, 1, 0, 0, LOCAL_X_END - 1, 0, LOCAL_Z_END - 1, getMainBlock());
+        this.replaceAir(world, box, 0, 0, 0, LOCAL_X_END, 0, LOCAL_Z_END - 1, getMainBlock());
 
         // First floor rails
         this.chanceAddBlock(world, random, .5f, Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, RailShape.NORTH_SOUTH), 2, 1, 0, box);
