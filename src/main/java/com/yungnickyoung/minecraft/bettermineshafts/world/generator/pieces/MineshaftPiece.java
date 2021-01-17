@@ -239,7 +239,7 @@ public abstract class MineshaftPiece extends StructurePiece {
 
         // If this variant's legs are marked as flammable, we check for lava below. If there's lava, we will use the brick selector for this leg
         if (settings.flammableLegs) {
-            while (mutable.getY() > 0 && (currBlock == CAVE_AIR || LIQUIDS.contains(currBlock.getMaterial()))) {
+            while (mutable.getY() > 0 && (currBlock.getMaterial() == Material.AIR || LIQUIDS.contains(currBlock.getMaterial()))) {
                 if (currBlock.getMaterial() == Material.LAVA) {
                     return getBrickSelector();
                 }
@@ -256,7 +256,7 @@ public abstract class MineshaftPiece extends StructurePiece {
         BlockPos.Mutable mutable = new BlockPos.Mutable(this.getXWithOffset(x, z), this.getYWithOffset(-1), this.getZWithOffset(x, z));
         BlockState currBlock = world.getBlockState(mutable);
 
-        while (mutable.getY() > 0 && (currBlock == CAVE_AIR || LIQUIDS.contains(currBlock.getMaterial()))) {
+        while (mutable.getY() > 0 && (currBlock.getMaterial() == Material.AIR || LIQUIDS.contains(currBlock.getMaterial()))) {
             world.setBlockState(mutable, selector.get(random), 2);
             mutable.move(Direction.DOWN);
             currBlock = world.getBlockState(mutable);
@@ -267,7 +267,7 @@ public abstract class MineshaftPiece extends StructurePiece {
         BlockPos.Mutable mutable = new BlockPos.Mutable(this.getXWithOffset(x, z), this.getYWithOffset(-1), this.getZWithOffset(x, z));
         BlockState currBlock = world.getBlockState(mutable);
 
-        while (mutable.getY() > 0 && (currBlock == CAVE_AIR || LIQUIDS.contains(currBlock.getMaterial()))) {
+        while (mutable.getY() > 0 && (currBlock.getMaterial() == Material.AIR || LIQUIDS.contains(currBlock.getMaterial()))) {
             world.setBlockState(mutable, selector.get(random), 2);
             mutable.move(Direction.DOWN);
             currBlock = world.getBlockState(mutable);
