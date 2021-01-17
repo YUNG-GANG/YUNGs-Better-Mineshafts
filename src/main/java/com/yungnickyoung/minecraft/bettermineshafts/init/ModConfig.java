@@ -1,11 +1,13 @@
 package com.yungnickyoung.minecraft.bettermineshafts.init;
 
 import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshafts;
-import com.yungnickyoung.minecraft.bettermineshafts.config.Configuration;
 import com.yungnickyoung.minecraft.bettermineshafts.config.BMSettings;
+import com.yungnickyoung.minecraft.bettermineshafts.config.Configuration;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.MineshaftVariants;
 import com.yungnickyoung.minecraft.yungsapi.io.JSON;
 import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
 
@@ -21,6 +23,12 @@ public class ModConfig {
         initCustomFiles();
         // Register mod config with Forge
         ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.COMMON, Configuration.SPEC, "bettermineshafts-forge-1_16.toml");
+        // Refresh JSON config on world load so that user doesn't have to restart MC
+        MinecraftForge.EVENT_BUS.addListener(ModConfig::onWorldLoad);
+    }
+
+    private static void onWorldLoad(WorldEvent.Load event) {
+        loadVariantsJSON();
     }
 
     private static void initCustomFiles() {
