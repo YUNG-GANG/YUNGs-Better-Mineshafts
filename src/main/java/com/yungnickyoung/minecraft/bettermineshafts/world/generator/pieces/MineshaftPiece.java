@@ -29,15 +29,15 @@ import java.util.Set;
 
 public abstract class MineshaftPiece extends StructurePiece {
     protected MineshaftVariantSettings settings;
-    protected int pieceChainLen;
+    protected int chainLength;
 
     protected static final BlockState CAVE_AIR = Blocks.CAVE_AIR.getDefaultState();
     private static final Set<Material> LIQUIDS = ImmutableSet.of(Material.LAVA, Material.WATER);
 
-    public MineshaftPiece(IStructurePieceType structurePieceType, int i, int pieceChainLen, MineshaftVariantSettings settings) {
-        super(structurePieceType, i);
+    public MineshaftPiece(IStructurePieceType structurePieceType, int chainLength, MineshaftVariantSettings settings) {
+        super(structurePieceType, chainLength);
         this.settings = settings;
-        this.pieceChainLen = pieceChainLen;
+        this.chainLength = chainLength;
     }
 
     public MineshaftPiece(IStructurePieceType structurePieceType, CompoundNBT compoundTag) {

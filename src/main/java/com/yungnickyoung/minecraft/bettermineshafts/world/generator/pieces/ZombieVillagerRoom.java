@@ -38,8 +38,8 @@ public class ZombieVillagerRoom extends MineshaftPiece {
         super(BetterMineshaftStructurePieceType.ZOMBIE_VILLAGER_ROOM, compoundTag);
     }
 
-    public ZombieVillagerRoom(int i, int chunkPieceLen, Random random, MutableBoundingBox blockBox, Direction direction, MineshaftVariantSettings settings) {
-        super(BetterMineshaftStructurePieceType.ZOMBIE_VILLAGER_ROOM, i, chunkPieceLen, settings);
+    public ZombieVillagerRoom(int chainLength, Random random, MutableBoundingBox blockBox, Direction direction, MineshaftVariantSettings settings) {
+        super(BetterMineshaftStructurePieceType.ZOMBIE_VILLAGER_ROOM, chainLength, settings);
         this.setCoordBaseMode(direction);
         this.boundingBox = blockBox;
     }

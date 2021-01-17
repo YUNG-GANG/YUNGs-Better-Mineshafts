@@ -48,8 +48,8 @@ public class SmallTunnel extends MineshaftPiece {
         }
     }
 
-    public SmallTunnel(int i, int chunkPieceLen, Random random, MutableBoundingBox blockBox, Direction direction, MineshaftVariantSettings settings) {
-        super(BetterMineshaftStructurePieceType.SMALL_TUNNEL, i, chunkPieceLen, settings);
+    public SmallTunnel(int chainLength, Random random, MutableBoundingBox blockBox, Direction direction, MineshaftVariantSettings settings) {
+        super(BetterMineshaftStructurePieceType.SMALL_TUNNEL, chainLength, settings);
         this.setCoordBaseMode(direction);
         this.boundingBox = blockBox;
     }
@@ -85,16 +85,16 @@ public class SmallTunnel extends MineshaftPiece {
         switch (direction) {
             case NORTH:
             default:
-                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.minX, this.boundingBox.minY, this.boundingBox.minZ - 1, direction, this.getComponentType(), pieceChainLen);
+                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.minX, this.boundingBox.minY, this.boundingBox.minZ - 1, direction, chainLength);
                 break;
             case SOUTH:
-                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.maxX, this.boundingBox.minY, this.boundingBox.maxZ + 1, direction, this.getComponentType(), pieceChainLen);
+                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.maxX, this.boundingBox.minY, this.boundingBox.maxZ + 1, direction, chainLength);
                 break;
             case WEST:
-                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.minX - 1, this.boundingBox.minY, this.boundingBox.maxZ, direction, this.getComponentType(), pieceChainLen);
+                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.minX - 1, this.boundingBox.minY, this.boundingBox.maxZ, direction, chainLength);
                 break;
             case EAST:
-                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.maxX + 1, this.boundingBox.minY, this.boundingBox.minZ, direction, this.getComponentType(), pieceChainLen);
+                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.maxX + 1, this.boundingBox.minY, this.boundingBox.minZ, direction, chainLength);
         }
 
         buildSupports(random);

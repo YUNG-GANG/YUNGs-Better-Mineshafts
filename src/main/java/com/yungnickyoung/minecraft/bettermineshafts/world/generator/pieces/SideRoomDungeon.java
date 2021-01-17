@@ -38,8 +38,8 @@ public class SideRoomDungeon extends MineshaftPiece {
         super(BetterMineshaftStructurePieceType.SIDE_ROOM_DUNGEON, compoundTag);
     }
 
-    public SideRoomDungeon(int i, int pieceChainLen, Random random, MutableBoundingBox blockBox, Direction direction, MineshaftVariantSettings settings) {
-        super(BetterMineshaftStructurePieceType.SIDE_ROOM_DUNGEON, i, pieceChainLen, settings);
+    public SideRoomDungeon(int chainLength, Random random, MutableBoundingBox blockBox, Direction direction, MineshaftVariantSettings settings) {
+        super(BetterMineshaftStructurePieceType.SIDE_ROOM_DUNGEON, chainLength, settings);
         this.setCoordBaseMode(direction);
         this.boundingBox = blockBox;
     }

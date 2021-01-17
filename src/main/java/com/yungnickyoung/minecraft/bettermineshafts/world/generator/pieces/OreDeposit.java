@@ -70,8 +70,8 @@ public class OreDeposit extends MineshaftPiece {
         this.oreType = OreType.valueOf(compoundTag.getInt("OreType"));
     }
 
-    public OreDeposit(int i, int chunkPieceLen, Random random, MutableBoundingBox blockBox, Direction direction, MineshaftVariantSettings settings) {
-        super(BetterMineshaftStructurePieceType.ORE_DEPOSIT, i, chunkPieceLen, settings);
+    public OreDeposit(int chainLength, Random random, MutableBoundingBox blockBox, Direction direction, MineshaftVariantSettings settings) {
+        super(BetterMineshaftStructurePieceType.ORE_DEPOSIT, chainLength, settings);
         this.setCoordBaseMode(direction);
         this.boundingBox = blockBox;
     }

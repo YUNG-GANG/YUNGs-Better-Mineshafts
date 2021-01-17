@@ -108,7 +108,6 @@ public class BetterMineshaftStructure extends Structure<NoFeatureConfig> {
 
             // Entrypoint
             MineshaftPiece entryPoint = new VerticalEntrance(
-                0,
                 -1,
                 this.rand,
                 startingPos,
