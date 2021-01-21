@@ -32,4 +32,4 @@ logoFile="BMLogo.png"
     versionRange="[1.16.4-Forge-3,)"
     mandatory=true
     ordering="NONE"
-    side="SERVER"
+    side="BOTH"
