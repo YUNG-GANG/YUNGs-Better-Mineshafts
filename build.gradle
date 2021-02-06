@@ -48,9 +48,9 @@ dependencies {
 	//compile "some.group:artifact:version:classifier"
 	//compile "some.group:artifact:version"
 
-	provided 'curse.maven:rustic:2966295'
-	provided 'curse.maven:charm:2934951'
-	provided 'curse.maven:variedcommodities:2830501'
+	provided 'curse.maven:rustic-256141:2966295'
+	provided 'curse.maven:charm-318872:2934951'
+	provided 'curse.maven:variedcommodities-257777:2830501'
 
 	implementation 'com.google.code.gson:gson:2.8.6'
 
