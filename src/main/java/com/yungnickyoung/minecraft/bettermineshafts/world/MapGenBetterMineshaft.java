@@ -78,7 +78,9 @@ public class MapGenBetterMineshaft extends MapGenMineshaft {
                 case 3:
                     direction = EnumFacing.WEST;
             }
-            int y = random.nextInt(Configuration.maxY - Configuration.minY + 1) + Configuration.minY;
+            int minY = settings.minY == 0 ? 17 : settings.minY;
+            int maxY = settings.maxY == 0 ? 37 : settings.maxY;
+            int y = random.nextInt(maxY - minY + 1) + minY;
             BlockPos.MutableBlockPos startingPos = new BlockPos.MutableBlockPos((chunkX << 4) + 2, y, (chunkZ << 4) + 2);
 
             // Entrypoint

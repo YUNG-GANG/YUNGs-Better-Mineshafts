@@ -20,6 +20,8 @@ public class MineshaftVariantSettings {
     public IBlockState gravelBlock;
     public IBlockState stoneWallBlock;
     public IBlockState stoneSlabBlock;
+    public int minY;
+    public int maxY;
     public float vineChance;
     public float snowChance;
     public float cactusChance;
@@ -90,6 +92,16 @@ public class MineshaftVariantSettings {
 
     public MineshaftVariantSettings setStoneSlabBlock(IBlockState stoneSlabBlock) {
         this.stoneSlabBlock = stoneSlabBlock;
+        return this;
+    }
+
+    public MineshaftVariantSettings setMinY(int minY) {
+        this.minY = minY;
+        return this;
+    }
+
+    public MineshaftVariantSettings setMaxY(int maxY) {
+        this.maxY = maxY;
         return this;
     }
 
