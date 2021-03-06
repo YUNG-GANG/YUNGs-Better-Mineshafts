@@ -9,7 +9,9 @@
   ],
   "contact": {
     "homepage": "https://www.curseforge.com/minecraft/mc-mods/yungs-better-mineshafts-fabric",
-    "sources": "https://github.com/yungnickyoung/YUNGs-Better-Mineshafts"
+    "sources": "https://github.com/yungnickyoung/YUNGs-Better-Mineshafts",
+    "issues": "https://github.com/yungnickyoung/YUNGs-Better-Mineshafts/issues",
+    "discord": "discord.gg/rns3beq"
   },
   "license": "GPLv3",
   "icon": "assets/bettermineshafts/icon.png",
