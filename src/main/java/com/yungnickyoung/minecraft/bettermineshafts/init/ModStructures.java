@@ -1,12 +1,15 @@
 package com.yungnickyoung.minecraft.bettermineshafts.init;
 
 import com.google.common.collect.ImmutableMap;
+import com.mojang.serialization.Codec;
+import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshafts;
 import com.yungnickyoung.minecraft.bettermineshafts.config.BMSettings;
 import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftStructure;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraft.world.World;
+import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.FlatChunkGenerator;
 import net.minecraft.world.gen.FlatGenerationSettings;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
@@ -20,11 +23,13 @@ import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.lang.reflect.Method;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -72,15 +77,43 @@ public class ModStructures {
 
             // Register pieces
             ModStructurePieces.init();
+
+            // There are very few mods (i.e. Terraforged) that relies on seeing the structure in the noise settings registry before the world is made.
+            // Credits to TelepathicGrunt for this.
+            WorldGenRegistries.NOISE_SETTINGS.getEntries().forEach(settings -> {
+                Map<Structure<?>, StructureSeparationSettings> structureMap = settings.getValue().getStructures().func_236195_a_();
+
+                // Pre-caution in case a mod makes the structure map immutable like datapacks do.
+                if (structureMap instanceof ImmutableMap) {
+                    Map<Structure<?>, StructureSeparationSettings> tempMap = new HashMap<>(structureMap);
+                    tempMap.put(MINESHAFT_STRUCTURE.get(), DimensionStructuresSettings.field_236191_b_.get(MINESHAFT_STRUCTURE.get()));
+                    settings.getValue().getStructures().field_236193_d_ = tempMap;
+                } else {
+                    structureMap.put(MINESHAFT_STRUCTURE.get(), DimensionStructuresSettings.field_236191_b_.get(MINESHAFT_STRUCTURE.get()));
+                }
+            });
         });
     }
 
     /**
      * We must manually add the separation settings for our structure to spawn.
      */
+    @SuppressWarnings("unchecked")
     public static void addDimensionalSpacing(final WorldEvent.Load event) {
         if (event.getWorld() instanceof ServerWorld) {
             ServerWorld serverWorld = (ServerWorld) event.getWorld();
+
+            // Skip Terraforged's chunk generator as they are a special case of a mod locking down their chunk generator.
+            // Credits to TelepathicGrunt for this.
+            try {
+                Method getCodecMethod = ObfuscationReflectionHelper.findMethod(ChunkGenerator.class, "getCodec");
+                ResourceLocation chunkGenResourceLocation = Registry.CHUNK_GENERATOR_CODEC.getKey((Codec<? extends ChunkGenerator>) getCodecMethod.invoke(serverWorld.getChunkProvider().generator));
+                if (chunkGenResourceLocation != null && chunkGenResourceLocation.getNamespace().equals("terraforged")) {
+                    return;
+                }
+            } catch (Exception e) {
+                BetterMineshafts.LOGGER.error("Was unable to check if " + serverWorld.getDimensionKey().getLocation() + " is using Terraforged's ChunkGenerator.");
+            }
 
             // Prevent spawning in superflat world
             if (serverWorld.getChunkProvider().getChunkGenerator() instanceof FlatChunkGenerator && serverWorld.getDimensionKey().equals(World.OVERWORLD)) {
