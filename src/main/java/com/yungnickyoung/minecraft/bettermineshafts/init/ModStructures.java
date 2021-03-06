@@ -9,6 +9,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.FlatChunkGenerator;
 import net.minecraft.world.gen.FlatGenerationSettings;
@@ -146,6 +147,9 @@ public class ModStructures {
         // This will prevent them from spawning, although the /locate entry will still exist.
         // I couldn't figure out how to remove that for now.
         event.getGeneration().getStructures().removeIf(supplier -> supplier.get().field_236268_b_ == Structure.field_236367_c_);
+
+        // Don't add Better Mineshafts to oceans or beaches
+        if (event.getCategory() == Biome.Category.OCEAN || event.getCategory() == Biome.Category.BEACH) return;
 
         // Add mineshaft to biome generation settings. We defer biome-specific logic to actual world generation later on.
         event.getGeneration().getStructures().add(() -> ModStructureFeatures.MINESHAFT_STRUCTURE_FEATURE);
