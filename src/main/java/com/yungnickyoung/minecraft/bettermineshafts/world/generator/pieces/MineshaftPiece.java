@@ -9,6 +9,7 @@ import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.BarrelTileEntity;
+import net.minecraft.tileentity.LockableLootTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.RegistryKey;
@@ -129,10 +130,7 @@ public abstract class MineshaftPiece extends StructurePiece {
     protected void addBarrel(ISeedReader world, MutableBoundingBox boundingBox, Random random, BlockPos pos, ResourceLocation lootTableId) {
         if (boundingBox.isVecInside(pos) && world.getBlockState(pos).getBlock() != Blocks.BARREL) {
             world.setBlockState(pos, Blocks.BARREL.getDefaultState().with(BarrelBlock.PROPERTY_FACING, Direction.UP), 2);
-            TileEntity blockEntity = world.getTileEntity(pos);
-            if (blockEntity instanceof BarrelTileEntity) {
-                ((BarrelTileEntity) blockEntity).setLootTable(lootTableId, random.nextLong());
-            }
+            LockableLootTileEntity.setLootTable(world, random, pos, lootTableId);
         }
     }
 
