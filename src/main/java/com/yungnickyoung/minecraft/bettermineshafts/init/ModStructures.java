@@ -107,7 +107,7 @@ public class ModStructures {
             // Skip Terraforged's chunk generator as they are a special case of a mod locking down their chunk generator.
             // Credits to TelepathicGrunt for this.
             try {
-                Method getCodecMethod = ObfuscationReflectionHelper.findMethod(ChunkGenerator.class, "getCodec");
+                Method getCodecMethod = ObfuscationReflectionHelper.findMethod(ChunkGenerator.class, "func_230347_a_");
                 ResourceLocation chunkGenResourceLocation = Registry.CHUNK_GENERATOR_CODEC.getKey((Codec<? extends ChunkGenerator>) getCodecMethod.invoke(serverWorld.getChunkProvider().generator));
                 if (chunkGenResourceLocation != null && chunkGenResourceLocation.getNamespace().equals("terraforged")) {
                     return;
