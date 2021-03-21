@@ -109,7 +109,16 @@ public class BlockStateAdapter extends TypeAdapter<IBlockState> {
                     Field[] fields = blockClass.getDeclaredFields();
                     for (Field field : fields) {
                         field.setAccessible(true);
-                        Object _field = field.get(blockState);
+                        Object _field;
+                        try {
+                            _field = field.get(blockState);
+                        } catch (Exception e) {
+                            try {
+                                _field = field.get(blockState.getBlock());
+                            } catch (Exception ignored) {
+                                continue;
+                            }
+                        }
 
                         if (_field instanceof IProperty) {
                             IProperty<T> property = (IProperty<T>) _field;
@@ -117,7 +126,11 @@ public class BlockStateAdapter extends TypeAdapter<IBlockState> {
                             if (property.getName().equals(key)) {
                                 Object val = property.parseValue(value).orNull();
                                 Class<T> blockEnumClass = property.getValueClass();
-                                blockState = blockState.withProperty(property, Objects.requireNonNull(blockEnumClass.cast(val)));
+                                try {
+                                    blockState = blockState.withProperty(property, Objects.requireNonNull(blockEnumClass.cast(val)));
+                                } catch (Exception e) {
+                                    continue;
+                                }
                                 found = true;
                                 break;
                             }
