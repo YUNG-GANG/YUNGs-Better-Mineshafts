@@ -147,19 +147,16 @@ public abstract class MineshaftPiece extends StructurePiece {
         for (int x = minX; x <= maxX; x++) {
             for (int y = minY; y <= maxY; y++) {
                 for (int z = minZ; z <= maxZ; z++) {
-                    mutable.setPos(x, y, z);
-                    // Wrap in try-catch to attempt to avoid issues related to accessing unloaded chunks
-                    try {
-                        BlockState nextBlock = this.getBlockStateFromPos(world, x + facing.getXOffset(), y + facing.getYOffset(), z + facing.getZOffset(), boundingBox);
-                        if (
-                            this.getBlockStateFromPos(world, x, y, z, boundingBox).isAir()
-                                && Block.doesSideFillSquare(nextBlock.getCollisionShape(world, mutable), facing.getOpposite())
-                                && nextBlock.getBlock().getDefaultState() != Blocks.LADDER.getDefaultState()
-                                && random.nextFloat() < chance
-                        ) {
-                            this.setBlockState(world, Blocks.VINE.getDefaultState().with(VineBlock.getPropertyFor(facing.getAxis() == Direction.Axis.X ? facing : facing.getOpposite()), true), x, y, z, boundingBox);
-                        }
-                    } catch (Exception ignored) {}
+                    mutable.setPos(this.getXWithOffset(x, z), this.getYWithOffset(y), this.getZWithOffset(x, z)).move(facing);
+                    BlockState nextBlock = this.getBlockStateFromPos(world, x + facing.getXOffset(), y + facing.getYOffset(), z + facing.getZOffset(), boundingBox);
+                    if (
+                        this.getBlockStateFromPos(world, x, y, z, boundingBox).isAir()
+                            && Block.doesSideFillSquare(nextBlock.getCollisionShape(world, mutable), facing.getOpposite())
+                            && nextBlock.getBlock().getDefaultState() != Blocks.LADDER.getDefaultState()
+                            && random.nextFloat() < chance
+                    ) {
+                        this.setBlockState(world, Blocks.VINE.getDefaultState().with(VineBlock.getPropertyFor(facing.getAxis() == Direction.Axis.X ? facing : facing.getOpposite()), true), x, y, z, boundingBox);
+                    }
                 }
             }
         }
