@@ -173,7 +173,7 @@ public abstract class MineshaftPiece extends StructurePiece {
         for (int x = minX; x <= maxX; x++) {
             for (int y = minY; y <= maxY; y++) {
                 for (int z = minZ; z <= maxZ; z++) {
-                    mutable.set(x, y, z);
+                    mutable.set(this.applyXTransform(x, z), this.applyYTransform(y), this.applyZTransform(x, z)).move(facing);
                     BlockState nextBlock = this.getBlockAt(world, x + facing.getOffsetX(), y + facing.getOffsetY(), z + facing.getOffsetZ(), boundingBox);
                     if (
                         this.getBlockAt(world, x, y, z, boundingBox).isAir()
