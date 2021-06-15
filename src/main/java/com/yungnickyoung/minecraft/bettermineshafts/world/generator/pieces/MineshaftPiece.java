@@ -314,10 +314,6 @@ public abstract class MineshaftPiece extends StructurePiece {
     protected boolean addBarrel(IWorld world, MutableBoundingBox boundingBox, Random random, BlockPos pos, ResourceLocation lootTableId) {
         if (boundingBox.isVecInside(pos) && world.getBlockState(pos).getBlock() != Blocks.BARREL) {
             world.setBlockState(pos, Blocks.BARREL.getDefaultState().with(BarrelBlock.PROPERTY_FACING, Direction.UP), 2);
-            /*TileEntity blockEntity = world.getTileEntity(pos);
-            if (blockEntity instanceof BarrelTileEntity) {
-                ((BarrelTileEntity) blockEntity).setLootTable(lootTableId, random.nextLong());
-            }*/
             LockableLootTileEntity.setLootTable(world, random, pos, lootTableId);
             return true;
         } else {
