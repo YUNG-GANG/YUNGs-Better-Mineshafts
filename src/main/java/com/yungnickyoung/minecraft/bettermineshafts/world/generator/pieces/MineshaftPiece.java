@@ -100,35 +100,22 @@ public abstract class MineshaftPiece extends StructurePiece {
     }
 
     protected BlockState getTrapdoor() {
-        switch (this.mineshaftType) {
-            case MESA:
-            case RED_DESERT:
-                return Blocks.DARK_OAK_TRAPDOOR.getDefaultState();
-            case JUNGLE:
-                return Blocks.JUNGLE_TRAPDOOR.getDefaultState();
-            case SNOW:
-            case ICE:
-                return Blocks.SPRUCE_TRAPDOOR.getDefaultState();
-            case SAVANNA:
-                return Blocks.ACACIA_TRAPDOOR.getDefaultState();
-            default:
-                return Blocks.OAK_TRAPDOOR.getDefaultState();
-        }
+        return switch (this.mineshaftType) {
+            case MESA, RED_DESERT -> Blocks.DARK_OAK_TRAPDOOR.getDefaultState();
+            case JUNGLE -> Blocks.JUNGLE_TRAPDOOR.getDefaultState();
+            case SNOW, ICE -> Blocks.SPRUCE_TRAPDOOR.getDefaultState();
+            case SAVANNA -> Blocks.ACACIA_TRAPDOOR.getDefaultState();
+            default -> Blocks.OAK_TRAPDOOR.getDefaultState();
+        };
     }
 
     protected float getVineChance() {
-        switch (this.mineshaftType) {
-            case DESERT:
-            case RED_DESERT:
-                return .1f;
-            case JUNGLE:
-                return .6f;
-            case ICE:
-            case SNOW:
-                return .05f;
-            default:
-                return .25f;
-        }
+        return switch (this.mineshaftType) {
+            case DESERT, RED_DESERT -> .1f;
+            case JUNGLE -> .6f;
+            case ICE, SNOW -> .05f;
+            default -> .25f;
+        };
     }
 
     protected float getReplacementRate() {
@@ -488,49 +475,49 @@ public abstract class MineshaftPiece extends StructurePiece {
         return !blockBox.contains(blockPos) ? null : blockView.getBlockState(blockPos);
     }
 
+    /**
+     * Check is there a liquid in a box
+     **/
     protected boolean isTouchingLiquid(BlockView world, BlockBox box) {
-        int i = Math.max(this.boundingBox.getMinX() - 1, box.getMinX());
-        int j = Math.max(this.boundingBox.getMinY() - 1, box.getMinY());
-        int k = Math.max(this.boundingBox.getMinZ() - 1, box.getMinZ());
-        int l = Math.min(this.boundingBox.getMaxX() + 1, box.getMaxX());
-        int m = Math.min(this.boundingBox.getMaxY() + 1, box.getMaxY());
-        int n = Math.min(this.boundingBox.getMaxZ() + 1, box.getMaxZ());
+        int minX = Math.max(this.boundingBox.getMinX() - 1, box.getMinX());
+        int minY = Math.max(this.boundingBox.getMinY() - 1, box.getMinY());
+        int minZ = Math.max(this.boundingBox.getMinZ() - 1, box.getMinZ());
+        int maxX = Math.min(this.boundingBox.getMaxX() + 1, box.getMaxX());
+        int maxY = Math.min(this.boundingBox.getMaxY() + 1, box.getMaxY());
+        int maxZ = Math.min(this.boundingBox.getMaxZ() + 1, box.getMaxZ());
         BlockPos.Mutable mutable = new BlockPos.Mutable();
 
-
-        int s;
-        int t;
-        for (s = i; s <= l; ++s) {
-            for (t = k; t <= n; ++t) {
-                if (world.getBlockState(mutable.set(s, j, t)).getMaterial().isLiquid()) {
+        for (int x = minX; x <= maxX; ++x) {
+            for (int z = minZ; z <= maxZ; ++z) {
+                if (world.getBlockState(mutable.set(x, minY, z)).getMaterial().isLiquid()) {
                     return true;
                 }
 
-                if (world.getBlockState(mutable.set(s, m, t)).getMaterial().isLiquid()) {
+                if (world.getBlockState(mutable.set(x, maxY, z)).getMaterial().isLiquid()) {
                     return true;
                 }
             }
         }
 
-        for (s = i; s <= l; ++s) {
-            for (t = j; t <= m; ++t) {
-                if (world.getBlockState(mutable.set(s, t, k)).getMaterial().isLiquid()) {
+        for (int x = minX; x <= maxX; ++x) {
+            for (int y = minY; y <= maxY; ++y) {
+                if (world.getBlockState(mutable.set(x, y, minZ)).getMaterial().isLiquid()) {
                     return true;
                 }
 
-                if (world.getBlockState(mutable.set(s, t, n)).getMaterial().isLiquid()) {
+                if (world.getBlockState(mutable.set(x, y, maxZ)).getMaterial().isLiquid()) {
                     return true;
                 }
             }
         }
 
-        for (s = k; s <= n; ++s) {
-            for (t = j; t <= m; ++t) {
-                if (world.getBlockState(mutable.set(i, t, s)).getMaterial().isLiquid()) {
+        for (int z = minZ; z <= maxZ; ++z) {
+            for (int y = minY; y <= maxY; ++y) {
+                if (world.getBlockState(mutable.set(minX, y, z)).getMaterial().isLiquid()) {
                     return true;
                 }
 
-                if (world.getBlockState(mutable.set(l, t, s)).getMaterial().isLiquid()) {
+                if (world.getBlockState(mutable.set(maxX, y, z)).getMaterial().isLiquid()) {
                     return true;
                 }
             }

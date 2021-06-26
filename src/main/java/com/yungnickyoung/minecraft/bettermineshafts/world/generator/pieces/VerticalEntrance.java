@@ -370,7 +370,7 @@ public class VerticalEntrance extends MineshaftPiece {
                     if (surfaceHeight <= floorHeight && surfaceHeight > 1) {
                         this.hasTunnel = true;
                         this.tunnelDirection = direction;
-                        this.tunnelFloorAltitude = ceilingHeight - 4 - this.boundingBox.getMinX();
+                        this.tunnelFloorAltitude = ceilingHeight - 4 - this.boundingBox.getMinY();
                         this.tunnelLength = i;
                         return;
                     }

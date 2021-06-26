@@ -55,24 +55,24 @@ public class SideRoomDungeon extends MineshaftPiece {
         switch (direction) {
             case NORTH:
             default:
-                ((BlockBoxAccessor) blockBox).setMinZ(x + 4);
-                ((BlockBoxAccessor) blockBox).setMaxZ(x - 4);
-                ((BlockBoxAccessor) blockBox).setMinY(z - (MAIN_AXIS_LEN - 1));
+                ((BlockBoxAccessor) blockBox).setMaxX(x + 4);
+                ((BlockBoxAccessor) blockBox).setMinX(x - 4);
+                ((BlockBoxAccessor) blockBox).setMinZ(z - (MAIN_AXIS_LEN - 1));
                 break;
             case SOUTH:
-                ((BlockBoxAccessor) blockBox).setMinZ(x + 4);
-                ((BlockBoxAccessor) blockBox).setMaxZ(x - 4);
-                ((BlockBoxAccessor) blockBox).setMaxY(z + (MAIN_AXIS_LEN - 1));
+                ((BlockBoxAccessor) blockBox).setMaxX(x + 4);
+                ((BlockBoxAccessor) blockBox).setMinX(x - 4);
+                ((BlockBoxAccessor) blockBox).setMaxZ(z + (MAIN_AXIS_LEN - 1));
                 break;
             case WEST:
-                ((BlockBoxAccessor) blockBox).setMaxZ(x - (MAIN_AXIS_LEN - 1));
-                ((BlockBoxAccessor) blockBox).setMaxY(z + 4);
-                ((BlockBoxAccessor) blockBox).setMinY(z - 4);
+                ((BlockBoxAccessor) blockBox).setMinX(x - (MAIN_AXIS_LEN - 1));
+                ((BlockBoxAccessor) blockBox).setMaxZ(z + 4);
+                ((BlockBoxAccessor) blockBox).setMinZ(z - 4);
                 break;
             case EAST:
-                ((BlockBoxAccessor) blockBox).setMinZ(x + (MAIN_AXIS_LEN - 1));
-                ((BlockBoxAccessor) blockBox).setMaxY(z + 4);
-                ((BlockBoxAccessor) blockBox).setMinY(z - 4);
+                ((BlockBoxAccessor) blockBox).setMaxX(x + (MAIN_AXIS_LEN - 1));
+                ((BlockBoxAccessor) blockBox).setMaxZ(z + 4);
+                ((BlockBoxAccessor) blockBox).setMinZ(z - 4);
         }
 
         // The following func call returns null if this new blockbox does not intersect with any pieces in the list.
