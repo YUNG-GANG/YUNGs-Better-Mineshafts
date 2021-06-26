@@ -7,9 +7,11 @@ import com.yungnickyoung.minecraft.yungsapi.world.BoundingBoxHelper;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.RailBlock;
 import net.minecraft.block.enums.RailShape;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.StructureManager;
 import net.minecraft.structure.StructurePiece;
+import net.minecraft.structure.StructurePiecesHolder;
 import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -19,7 +21,6 @@ import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
 
 public class SmallTunnelTurn extends MineshaftPiece {
@@ -34,52 +35,51 @@ public class SmallTunnelTurn extends MineshaftPiece {
 
         public static TurnDirection valueOf(int value) {
             return Arrays.stream(values())
-                .filter(dir -> dir.value == value)
-                .findFirst().get();
+                    .filter(dir -> dir.value == value)
+                    .findFirst().get();
         }
     }
 
-    private TurnDirection turnDirection;
+    private final TurnDirection turnDirection;
     private static final int
-        SECONDARY_AXIS_LEN = 5,
-        Y_AXIS_LEN = 5,
-        MAIN_AXIS_LEN = 5;
+            SECONDARY_AXIS_LEN = 5,
+            Y_AXIS_LEN = 5,
+            MAIN_AXIS_LEN = 5;
     private static final int
-        LOCAL_X_END = SECONDARY_AXIS_LEN - 1,
-        LOCAL_Y_END = Y_AXIS_LEN - 1,
-        LOCAL_Z_END = MAIN_AXIS_LEN - 1;
+            LOCAL_X_END = SECONDARY_AXIS_LEN - 1,
+            LOCAL_Y_END = Y_AXIS_LEN - 1,
+            LOCAL_Z_END = MAIN_AXIS_LEN - 1;
 
-    public SmallTunnelTurn(StructureManager structureManager, CompoundTag compoundTag) {
+    public SmallTunnelTurn(ServerWorld world, NbtCompound compoundTag) {
         super(BetterMineshaftStructurePieceType.SMALL_TUNNEL_TURN, compoundTag);
         this.turnDirection = TurnDirection.valueOf(compoundTag.getInt("TurnDirection"));
     }
 
     public SmallTunnelTurn(int chunkPieceLen, Random random, BlockBox blockBox, Direction direction, BetterMineshaftStructure.Type type) {
-        super(BetterMineshaftStructurePieceType.SMALL_TUNNEL_TURN, chunkPieceLen, type);
+        super(BetterMineshaftStructurePieceType.SMALL_TUNNEL_TURN, chunkPieceLen, type, blockBox);
         this.setOrientation(direction);
         this.turnDirection = random.nextBoolean() ? TurnDirection.LEFT : TurnDirection.RIGHT;
-        this.boundingBox = blockBox;
     }
 
     @Override
-    protected void toNbt(CompoundTag tag) {
-        super.toNbt(tag);
+    protected void writeNbt(ServerWorld world, NbtCompound tag) {
+        super.writeNbt(world, tag);
         tag.putInt("TurnDirection", this.turnDirection.value);
     }
 
-    public static BlockBox determineBoxPosition(List<StructurePiece> list, Random random, int x, int y, int z, Direction direction) {
+    public static BlockBox determineBoxPosition(StructurePiecesHolder structurePiecesHolder, Random random, int x, int y, int z, Direction direction) {
         BlockBox blockBox = BoundingBoxHelper.boxFromCoordsWithRotation(x, y, z, SECONDARY_AXIS_LEN, Y_AXIS_LEN, MAIN_AXIS_LEN, direction);
 
         // The following func call returns null if this new blockbox does not intersect with any pieces in the list.
         // If there is an intersection, the following func call returns the piece that intersects.
-        StructurePiece intersectingPiece = StructurePiece.getOverlappingPiece(list, blockBox);
+        StructurePiece intersectingPiece = structurePiecesHolder.getIntersecting(blockBox);
 
         // Thus, this function returns null if blackBox intersects with an existing piece. Otherwise, we return blackbox
         return intersectingPiece != null ? null : blockBox;
     }
 
     @Override
-    public void fillOpenings(StructurePiece structurePiece, List<StructurePiece> list, Random random) {
+    public void fillOpenings(StructurePiece structurePiece, StructurePiecesHolder structurePiecesHolder, Random random) {
         Direction direction = this.getFacing();
         if (direction == null) {
             return;
@@ -89,16 +89,16 @@ public class SmallTunnelTurn extends MineshaftPiece {
         switch (nextDirection) {
             case NORTH:
             default:
-                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.minX, this.boundingBox.minY, this.boundingBox.minZ - 1, nextDirection, chainLength);
+                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, structurePiecesHolder, random, this.boundingBox.getMaxZ(), this.boundingBox.getMinX(), this.boundingBox.getMinY() - 1, nextDirection, chainLength);
                 break;
             case SOUTH:
-                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.maxX, this.boundingBox.minY, this.boundingBox.maxZ + 1, nextDirection, chainLength);
+                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, structurePiecesHolder, random, this.boundingBox.getMinZ(), this.boundingBox.getMinX(), this.boundingBox.getMaxY() + 1, nextDirection, chainLength);
                 break;
             case WEST:
-                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.minX - 1, this.boundingBox.minY, this.boundingBox.maxZ, nextDirection, chainLength);
+                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, structurePiecesHolder, random, this.boundingBox.getMaxZ() - 1, this.boundingBox.getMinX(), this.boundingBox.getMaxY(), nextDirection, chainLength);
                 break;
             case EAST:
-                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.maxX + 1, this.boundingBox.minY, this.boundingBox.minZ, nextDirection, chainLength);
+                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, structurePiecesHolder, random, this.boundingBox.getMinZ() + 1, this.boundingBox.getMinX(), this.boundingBox.getMinY(), nextDirection, chainLength);
         }
     }
 
@@ -128,16 +128,13 @@ public class SmallTunnelTurn extends MineshaftPiece {
         if (this.turnDirection == TurnDirection.LEFT) {
             if (direction == Direction.NORTH || direction == Direction.EAST) {
                 generateLeftTurn(world, box);
-            }
-            else {
+            } else {
                 generateRightTurn(world, box);
             }
-        }
-        else {
+        } else {
             if (direction == Direction.NORTH || direction == Direction.EAST) {
                 generateRightTurn(world, box);
-            }
-            else {
+            } else {
                 generateLeftTurn(world, box);
             }
         }

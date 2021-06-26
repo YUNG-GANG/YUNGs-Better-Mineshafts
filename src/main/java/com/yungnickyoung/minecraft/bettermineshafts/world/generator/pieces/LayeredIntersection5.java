@@ -1,5 +1,6 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
+import com.yungnickyoung.minecraft.bettermineshafts.mixin.BlockBoxAccessor;
 import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftStructure;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
@@ -8,9 +9,11 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.LadderBlock;
 import net.minecraft.block.RailBlock;
 import net.minecraft.block.enums.RailShape;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.StructureManager;
 import net.minecraft.structure.StructurePiece;
+import net.minecraft.structure.StructurePiecesHolder;
 import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -19,66 +22,64 @@ import net.minecraft.world.StructureWorldAccess;
 import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 
-import java.util.List;
 import java.util.Random;
 
-public class LayeredIntersection5 extends MineshaftPiece{
+public class LayeredIntersection5 extends MineshaftPiece {
     private static final int
-        SECONDARY_AXIS_LEN = 5,
-        Y_AXIS_LEN = 10,
-        MAIN_AXIS_LEN = 5;
+            SECONDARY_AXIS_LEN = 5,
+            Y_AXIS_LEN = 10,
+            MAIN_AXIS_LEN = 5;
     private static final int
-        LOCAL_X_END = SECONDARY_AXIS_LEN - 1,
-        LOCAL_Y_END = Y_AXIS_LEN - 1,
-        LOCAL_Z_END = MAIN_AXIS_LEN - 1;
+            LOCAL_X_END = SECONDARY_AXIS_LEN - 1,
+            LOCAL_Y_END = Y_AXIS_LEN - 1,
+            LOCAL_Z_END = MAIN_AXIS_LEN - 1;
 
-    public LayeredIntersection5(StructureManager structureManager, CompoundTag compoundTag) {
+    public LayeredIntersection5(ServerWorld world, NbtCompound compoundTag) {
         super(BetterMineshaftStructurePieceType.LAYERED_INTERSECTION_5, compoundTag);
     }
 
     public LayeredIntersection5(int pieceChainLen, Random random, BlockBox blockBox, Direction direction, BetterMineshaftStructure.Type type) {
-        super(BetterMineshaftStructurePieceType.LAYERED_INTERSECTION_5, pieceChainLen, type);
+        super(BetterMineshaftStructurePieceType.LAYERED_INTERSECTION_5, pieceChainLen, type, blockBox);
         this.setOrientation(direction);
-        this.boundingBox = blockBox;
     }
 
     @Override
-    protected void toNbt(CompoundTag tag) {
-        super.toNbt(tag);
+    protected void writeNbt(ServerWorld world, NbtCompound tag) {
+        super.writeNbt(world, tag);
     }
 
-    public static BlockBox determineBoxPosition(List<StructurePiece> list, Random random, int x, int y, int z, Direction direction) {
+    public static BlockBox determineBoxPosition(StructurePiecesHolder structurePiecesHolder, Random random, int x, int y, int z, Direction direction) {
         BlockBox blockBox = new BlockBox(x, y, z, x, y + Y_AXIS_LEN - 1, z);
 
         switch (direction) {
             case NORTH:
             default:
-                blockBox.maxX = x + (SECONDARY_AXIS_LEN - 1);
-                blockBox.minZ = z - (MAIN_AXIS_LEN - 1);
+                ((BlockBoxAccessor) blockBox).setMinZ(x + (SECONDARY_AXIS_LEN - 1));
+                ((BlockBoxAccessor) blockBox).setMinY(z - (MAIN_AXIS_LEN - 1));
                 break;
             case SOUTH:
-                blockBox.minX = x - (SECONDARY_AXIS_LEN - 1);
-                blockBox.maxZ = z + (MAIN_AXIS_LEN - 1);
+                ((BlockBoxAccessor) blockBox).setMaxZ(x - (SECONDARY_AXIS_LEN - 1));
+                ((BlockBoxAccessor) blockBox).setMaxY(z + (MAIN_AXIS_LEN - 1));
                 break;
             case WEST:
-                blockBox.minX = x - (MAIN_AXIS_LEN - 1);
-                blockBox.minZ = z - (SECONDARY_AXIS_LEN - 1);
+                ((BlockBoxAccessor) blockBox).setMaxZ(x - (MAIN_AXIS_LEN - 1));
+                ((BlockBoxAccessor) blockBox).setMinY(z - (SECONDARY_AXIS_LEN - 1));
                 break;
             case EAST:
-                blockBox.maxX = x + (MAIN_AXIS_LEN - 1);
-                blockBox.maxZ = z + (SECONDARY_AXIS_LEN - 1);
+                ((BlockBoxAccessor) blockBox).setMinZ(x + (MAIN_AXIS_LEN - 1));
+                ((BlockBoxAccessor) blockBox).setMaxY(z + (SECONDARY_AXIS_LEN - 1));
         }
 
         // The following func call returns null if this new blockbox does not intersect with any pieces in the list.
         // If there is an intersection, the following func call returns the piece that intersects.
-        StructurePiece intersectingPiece = StructurePiece.getOverlappingPiece(list, blockBox);
+        StructurePiece intersectingPiece = structurePiecesHolder.getIntersecting(blockBox);
 
         // Thus, this function returns null if blackBox intersects with an existing piece. Otherwise, we return blackbox
         return intersectingPiece != null ? null : blockBox;
     }
 
     @Override
-    public void fillOpenings(StructurePiece structurePiece, List<StructurePiece> list, Random random) {
+    public void fillOpenings(StructurePiece structurePiece, StructurePiecesHolder structurePiecesHolder, Random random) {
         Direction direction = this.getFacing();
         if (direction == null) {
             return;
@@ -88,17 +89,17 @@ public class LayeredIntersection5 extends MineshaftPiece{
             case NORTH:
             case SOUTH:
             default:
-                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.maxX + 1, this.boundingBox.minY, this.boundingBox.minZ, Direction.EAST, chainLength);
-                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.minX - 1, this.boundingBox.minY, this.boundingBox.maxZ, Direction.WEST, chainLength);
-                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.maxX + 1, this.boundingBox.minY + 5, this.boundingBox.minZ, Direction.EAST, chainLength);
-                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.minX - 1, this.boundingBox.minY + 5, this.boundingBox.maxZ, Direction.WEST, chainLength);
+                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, structurePiecesHolder, random, this.boundingBox.getMinZ() + 1, this.boundingBox.getMinX(), this.boundingBox.getMinY(), Direction.EAST, chainLength);
+                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, structurePiecesHolder, random, this.boundingBox.getMaxZ() - 1, this.boundingBox.getMinX(), this.boundingBox.getMaxY(), Direction.WEST, chainLength);
+                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, structurePiecesHolder, random, this.boundingBox.getMinZ() + 1, this.boundingBox.getMinX() + 5, this.boundingBox.getMinY(), Direction.EAST, chainLength);
+                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, structurePiecesHolder, random, this.boundingBox.getMaxZ() - 1, this.boundingBox.getMinX() + 5, this.boundingBox.getMaxY(), Direction.WEST, chainLength);
                 break;
             case EAST:
             case WEST:
-                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.maxX, this.boundingBox.minY, this.boundingBox.maxZ + 1, Direction.SOUTH, chainLength);
-                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.minX, this.boundingBox.minY, this.boundingBox.minZ - 1, Direction.NORTH, chainLength);
-                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.maxX, this.boundingBox.minY + 5, this.boundingBox.maxZ + 1, Direction.SOUTH, chainLength);
-                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.minX, this.boundingBox.minY + 5, this.boundingBox.minZ - 1, Direction.NORTH, chainLength);
+                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, structurePiecesHolder, random, this.boundingBox.getMinZ(), this.boundingBox.getMinX(), this.boundingBox.getMaxY() + 1, Direction.SOUTH, chainLength);
+                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, structurePiecesHolder, random, this.boundingBox.getMaxZ(), this.boundingBox.getMinX(), this.boundingBox.getMinY() - 1, Direction.NORTH, chainLength);
+                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, structurePiecesHolder, random, this.boundingBox.getMinZ(), this.boundingBox.getMinX() + 5, this.boundingBox.getMaxY() + 1, Direction.SOUTH, chainLength);
+                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, structurePiecesHolder, random, this.boundingBox.getMaxZ(), this.boundingBox.getMinX() + 5, this.boundingBox.getMinY() - 1, Direction.NORTH, chainLength);
                 break;
         }
     }

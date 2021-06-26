@@ -1,15 +1,17 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
 import com.google.common.collect.ImmutableSet;
-import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BlockSetSelectors;
 import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftStructure;
+import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BlockSetSelectors;
 import com.yungnickyoung.minecraft.yungsapi.world.BlockSetSelector;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BarrelBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.StructurePiece;
 import net.minecraft.structure.StructurePieceType;
+import net.minecraft.structure.StructurePiecesHolder;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
@@ -18,7 +20,6 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.StructureWorldAccess;
 import net.minecraft.world.biome.Biome;
 
-import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
@@ -27,22 +28,18 @@ public abstract class MineshaftPiece extends StructurePiece {
 
     private static final Set<Material> LIQUIDS = ImmutableSet.of(Material.LAVA, Material.WATER);
 
-    public MineshaftPiece(StructurePieceType structurePieceType, int chainLength, BetterMineshaftStructure.Type type) {
-        super(structurePieceType, chainLength);
+    public MineshaftPiece(StructurePieceType structurePieceType, int chainLength, BetterMineshaftStructure.Type type, BlockBox boundingBox) {
+        super(structurePieceType, chainLength, boundingBox);
         this.mineshaftType = type;
     }
 
-    public MineshaftPiece(StructurePieceType structurePieceType, CompoundTag compoundTag) {
+    public MineshaftPiece(StructurePieceType structurePieceType, NbtCompound compoundTag) {
         super(structurePieceType, compoundTag);
         this.mineshaftType = BetterMineshaftStructure.Type.byIndex(compoundTag.getInt("MST"));
     }
 
-    protected void toNbt(CompoundTag tag) {
+    protected void writeNbt(ServerWorld world, NbtCompound tag) {
         tag.putInt("MST", this.mineshaftType.ordinal());
-    }
-
-    public void setBoundingBox(BlockBox boundingBox) {
-        this.boundingBox = boundingBox;
     }
 
     /**
@@ -51,7 +48,8 @@ public abstract class MineshaftPiece extends StructurePiece {
      * Does not actually place any blocks.
      */
     @Override
-    public void fillOpenings(StructurePiece structurePiece, List<StructurePiece> list, Random random) {}
+    public void fillOpenings(StructurePiece structurePiece, StructurePiecesHolder structurePiecesHolder, Random random) {
+    }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *                                     BLOCK SELECTORS                                     *
@@ -135,11 +133,11 @@ public abstract class MineshaftPiece extends StructurePiece {
 
     protected float getReplacementRate() {
         return
-            this.mineshaftType == BetterMineshaftStructure.Type.SNOW
-                || this.mineshaftType == BetterMineshaftStructure.Type.ICE
-                || this.mineshaftType == BetterMineshaftStructure.Type.MUSHROOM
-                ? .95f
-                : .6f;
+                this.mineshaftType == BetterMineshaftStructure.Type.SNOW
+                        || this.mineshaftType == BetterMineshaftStructure.Type.ICE
+                        || this.mineshaftType == BetterMineshaftStructure.Type.MUSHROOM
+                        ? .95f
+                        : .6f;
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -176,9 +174,9 @@ public abstract class MineshaftPiece extends StructurePiece {
                     mutable.set(this.applyXTransform(x, z), this.applyYTransform(y), this.applyZTransform(x, z)).move(facing);
                     BlockState nextBlock = this.getBlockAt(world, x + facing.getOffsetX(), y + facing.getOffsetY(), z + facing.getOffsetZ(), boundingBox);
                     if (
-                        this.getBlockAt(world, x, y, z, boundingBox).isAir()
-                            && Block.isFaceFullSquare(nextBlock.getCollisionShape(world, mutable), facing.getOpposite())
-                            && nextBlock.getBlock().getDefaultState() != Blocks.LADDER.getDefaultState()
+                            this.getBlockAt(world, x, y, z, boundingBox).isAir()
+                                    && Block.isFaceFullSquare(nextBlock.getCollisionShape(world, mutable), facing.getOpposite())
+                                    && nextBlock.getBlock().getDefaultState() != Blocks.LADDER.getDefaultState()
                     ) {
                         if (random.nextFloat() < chance) {
                             this.addBlock(world, Blocks.VINE.getDefaultState().with(VineBlock.getFacingProperty(facing.getAxis() == Direction.Axis.X ? facing : facing.getOpposite()), true), x, y, z, boundingBox);
@@ -261,7 +259,7 @@ public abstract class MineshaftPiece extends StructurePiece {
         BlockState state = this.getBlockAt(world, mutable.getX(), mutable.getY(), mutable.getZ(), box);
 
         while (applyYTransform(mutable.getY()) > 0 && (state == AIR || state == Blocks.AIR.getDefaultState() || LIQUIDS.contains(state.getMaterial()))) {
-            this.addBlock(world,selector.get(random), x, mutable.getY(), z, box);
+            this.addBlock(world, selector.get(random), x, mutable.getY(), z, box);
             mutable.move(Direction.DOWN);
             state = this.getBlockAt(world, mutable.getX(), mutable.getY(), mutable.getZ(), box);
         }
@@ -392,7 +390,8 @@ public abstract class MineshaftPiece extends StructurePiece {
                     }
                 }
             }
-        }    }
+        }
+    }
 
     /**
      * Has a chance of replacing each air block in the provided area with the provided BlockState.
@@ -489,6 +488,57 @@ public abstract class MineshaftPiece extends StructurePiece {
         return !blockBox.contains(blockPos) ? null : blockView.getBlockState(blockPos);
     }
 
+    protected boolean isTouchingLiquid(BlockView world, BlockBox box) {
+        int i = Math.max(this.boundingBox.getMinX() - 1, box.getMinX());
+        int j = Math.max(this.boundingBox.getMinY() - 1, box.getMinY());
+        int k = Math.max(this.boundingBox.getMinZ() - 1, box.getMinZ());
+        int l = Math.min(this.boundingBox.getMaxX() + 1, box.getMaxX());
+        int m = Math.min(this.boundingBox.getMaxY() + 1, box.getMaxY());
+        int n = Math.min(this.boundingBox.getMaxZ() + 1, box.getMaxZ());
+        BlockPos.Mutable mutable = new BlockPos.Mutable();
+
+
+        int s;
+        int t;
+        for (s = i; s <= l; ++s) {
+            for (t = k; t <= n; ++t) {
+                if (world.getBlockState(mutable.set(s, j, t)).getMaterial().isLiquid()) {
+                    return true;
+                }
+
+                if (world.getBlockState(mutable.set(s, m, t)).getMaterial().isLiquid()) {
+                    return true;
+                }
+            }
+        }
+
+        for (s = i; s <= l; ++s) {
+            for (t = j; t <= m; ++t) {
+                if (world.getBlockState(mutable.set(s, t, k)).getMaterial().isLiquid()) {
+                    return true;
+                }
+
+                if (world.getBlockState(mutable.set(s, t, n)).getMaterial().isLiquid()) {
+                    return true;
+                }
+            }
+        }
+
+        for (s = k; s <= n; ++s) {
+            for (t = j; t <= m; ++t) {
+                if (world.getBlockState(mutable.set(i, t, s)).getMaterial().isLiquid()) {
+                    return true;
+                }
+
+                if (world.getBlockState(mutable.set(l, t, s)).getMaterial().isLiquid()) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *                                  PLACEMENT METHODS                                      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -497,4 +547,5 @@ public abstract class MineshaftPiece extends StructurePiece {
         BlockPos pos = new BlockPos.Mutable(applyXTransform(localX, localZ), 1, applyZTransform(localX, localZ));
         return world.getBiome(pos).getCategory() == Biome.Category.OCEAN;
     }
+
 }

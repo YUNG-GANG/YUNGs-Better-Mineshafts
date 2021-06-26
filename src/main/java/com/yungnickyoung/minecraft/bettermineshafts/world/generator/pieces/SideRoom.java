@@ -11,9 +11,11 @@ import net.minecraft.block.entity.FurnaceBlockEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.loot.LootTables;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.StructureManager;
 import net.minecraft.structure.StructurePiece;
+import net.minecraft.structure.StructurePiecesHolder;
 import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -29,44 +31,43 @@ import java.util.Random;
 public class SideRoom extends MineshaftPiece {
     private boolean hasDownstairs;
     private static final int
-        SECONDARY_AXIS_LEN = 10,
-        Y_AXIS_LEN = 5,
-        MAIN_AXIS_LEN = 5;
+            SECONDARY_AXIS_LEN = 10,
+            Y_AXIS_LEN = 5,
+            MAIN_AXIS_LEN = 5;
     private static final int
-        LOCAL_X_END = SECONDARY_AXIS_LEN - 1,
-        LOCAL_Y_END = Y_AXIS_LEN - 1,
-        LOCAL_Z_END = MAIN_AXIS_LEN - 1;
+            LOCAL_X_END = SECONDARY_AXIS_LEN - 1,
+            LOCAL_Y_END = Y_AXIS_LEN - 1,
+            LOCAL_Z_END = MAIN_AXIS_LEN - 1;
 
-    public SideRoom(StructureManager structureManager, CompoundTag compoundTag) {
+    public SideRoom(ServerWorld world, NbtCompound compoundTag) {
         super(BetterMineshaftStructurePieceType.SIDE_ROOM, compoundTag);
         this.hasDownstairs = compoundTag.getBoolean("hasDownstairs");
     }
 
     public SideRoom(int pieceChainLen, Random random, BlockBox blockBox, Direction direction, BetterMineshaftStructure.Type type) {
-        super(BetterMineshaftStructurePieceType.SIDE_ROOM, pieceChainLen, type);
+        super(BetterMineshaftStructurePieceType.SIDE_ROOM, pieceChainLen, type, blockBox);
         this.setOrientation(direction);
-        this.boundingBox = blockBox;
     }
 
     @Override
-    protected void toNbt(CompoundTag tag) {
-        super.toNbt(tag);
+    protected void writeNbt(ServerWorld world, NbtCompound tag) {
+        super.writeNbt(world, tag);
         tag.putBoolean("hasDownstairs", this.hasDownstairs);
     }
 
-    public static BlockBox determineBoxPosition(List<StructurePiece> list, Random random, int x, int y, int z, Direction direction) {
+    public static BlockBox determineBoxPosition(StructurePiecesHolder structurePiecesHolder, Random random, int x, int y, int z, Direction direction) {
         BlockBox blockBox = BoundingBoxHelper.boxFromCoordsWithRotation(x, y, z, SECONDARY_AXIS_LEN, Y_AXIS_LEN, MAIN_AXIS_LEN, direction);
 
         // The following func call returns null if this new blockbox does not intersect with any pieces in the list.
         // If there is an intersection, the following func call returns the piece that intersects.
-        StructurePiece intersectingPiece = StructurePiece.getOverlappingPiece(list, blockBox);
+        StructurePiece intersectingPiece = structurePiecesHolder.getIntersecting(blockBox);
 
         // Thus, this function returns null if blackBox intersects with an existing piece. Otherwise, we return blackbox
         return intersectingPiece != null ? null : blockBox;
     }
 
     @Override
-    public void fillOpenings(StructurePiece structurePiece, List<StructurePiece> list, Random random) {
+    public void fillOpenings(StructurePiece structurePiece, StructurePiecesHolder structurePiecesHolder, Random random) {
         // Chance of generating side room dungeon downstairs
         if (random.nextFloat() < BetterMineshafts.CONFIG.spawnRates.workstationDungeonSpawnRate) {
             Direction direction = this.getFacing();
@@ -77,16 +78,16 @@ public class SideRoom extends MineshaftPiece {
             StructurePiece newDungeonPiece = null;
             switch (direction) {
                 case NORTH:
-                    newDungeonPiece = BetterMineshaftGenerator.generateAndAddSideRoomDungeonPiece(structurePiece, list, random, this.boundingBox.minX + 6, this.boundingBox.minY - 4, this.boundingBox.maxZ, this.getFacing(), chainLength);
+                    newDungeonPiece = BetterMineshaftGenerator.generateAndAddSideRoomDungeonPiece(structurePiece, structurePiecesHolder, random, this.boundingBox.getMaxZ() + 6, this.boundingBox.getMinX() - 4, this.boundingBox.getMaxY(), this.getFacing(), chainLength);
                     break;
                 case SOUTH:
-                    newDungeonPiece = BetterMineshaftGenerator.generateAndAddSideRoomDungeonPiece(structurePiece, list, random, this.boundingBox.minX + 6, this.boundingBox.minY - 4, this.boundingBox.minZ, this.getFacing(), chainLength);
+                    newDungeonPiece = BetterMineshaftGenerator.generateAndAddSideRoomDungeonPiece(structurePiece, structurePiecesHolder, random, this.boundingBox.getMaxZ() + 6, this.boundingBox.getMinX() - 4, this.boundingBox.getMinY(), this.getFacing(), chainLength);
                     break;
                 case WEST:
-                    newDungeonPiece = BetterMineshaftGenerator.generateAndAddSideRoomDungeonPiece(structurePiece, list, random, this.boundingBox.maxX, this.boundingBox.minY - 4, this.boundingBox.minZ + 6, this.getFacing(), chainLength);
+                    newDungeonPiece = BetterMineshaftGenerator.generateAndAddSideRoomDungeonPiece(structurePiece, structurePiecesHolder, random, this.boundingBox.getMinZ(), this.boundingBox.getMinX() - 4, this.boundingBox.getMinY() + 6, this.getFacing(), chainLength);
                     break;
                 case EAST:
-                    newDungeonPiece = BetterMineshaftGenerator.generateAndAddSideRoomDungeonPiece(structurePiece, list, random, this.boundingBox.minX, this.boundingBox.minY - 4, this.boundingBox.minZ + 6, this.getFacing(), chainLength);
+                    newDungeonPiece = BetterMineshaftGenerator.generateAndAddSideRoomDungeonPiece(structurePiece, structurePiecesHolder, random, this.boundingBox.getMaxZ(), this.boundingBox.getMinX() - 4, this.boundingBox.getMinY() + 6, this.getFacing(), chainLength);
             }
 
             if (newDungeonPiece != null) {
@@ -124,7 +125,7 @@ public class SideRoom extends MineshaftPiece {
             this.addBlock(world, Blocks.FURNACE.getDefaultState().with(FurnaceBlock.FACING, Direction.NORTH), 2, 1, 1, box);
             BlockEntity blockEntity = world.getBlockEntity(new BlockPos(this.applyXTransform(2, 1), this.applyYTransform(1), this.applyZTransform(2, 1)));
             if (blockEntity instanceof FurnaceBlockEntity) {
-                ((FurnaceBlockEntity)blockEntity).setStack(1, new ItemStack(Items.COAL, random.nextInt(33)));
+                ((FurnaceBlockEntity) blockEntity).setStack(1, new ItemStack(Items.COAL, random.nextInt(33)));
             }
         }
 
@@ -133,7 +134,7 @@ public class SideRoom extends MineshaftPiece {
             this.addBlock(world, Blocks.FURNACE.getDefaultState().with(FurnaceBlock.FACING, Direction.NORTH), 1, 1, 1, box);
             BlockEntity blockEntity = world.getBlockEntity(new BlockPos(this.applyXTransform(1, 1), this.applyYTransform(1), this.applyZTransform(1, 1)));
             if (blockEntity instanceof FurnaceBlockEntity) {
-                ((FurnaceBlockEntity)blockEntity).setStack(1, new ItemStack(Items.COAL, random.nextInt(33)));
+                ((FurnaceBlockEntity) blockEntity).setStack(1, new ItemStack(Items.COAL, random.nextInt(33)));
             }
         }
 
