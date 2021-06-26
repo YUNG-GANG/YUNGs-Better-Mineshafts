@@ -30,7 +30,7 @@ public class BetterMineshaftStructure extends StructureFeature<BetterMineshaftFe
 
     @Override
     protected boolean shouldStartAt(ChunkGenerator chunkGenerator, BiomeSource biomeSource, long worldSeed, ChunkRandom random, ChunkPos pos, Biome biome, ChunkPos chunkPos, BetterMineshaftFeatureConfig config, HeightLimitView world) {
-        random.setCarverSeed(worldSeed, pos.getRegionRelativeX(), pos.getRegionRelativeZ());
+        random.setCarverSeed(worldSeed, pos.x, pos.z);
         return random.nextDouble() < config.probability;
     }
 
@@ -55,7 +55,7 @@ public class BetterMineshaftStructure extends StructureFeature<BetterMineshaftFe
             // Randomly choose starting direction.
             // Separate rand is necessary bc for some reason otherwise r is 0 every time.
             ChunkRandom rand = new ChunkRandom();
-            rand.setTerrainSeed(pos.getRegionRelativeX(), pos.getRegionRelativeZ());
+            rand.setTerrainSeed(pos.x, pos.z);
             int r = rand.nextInt(4);
             switch (r) {
                 case 0:
@@ -71,7 +71,7 @@ public class BetterMineshaftStructure extends StructureFeature<BetterMineshaftFe
                     direction = Direction.WEST;
             }
             int y = random.nextInt(BetterMineshafts.CONFIG.maxY - BetterMineshafts.CONFIG.minY + 1) + BetterMineshafts.CONFIG.minY;
-            BlockPos.Mutable startingPos = new BlockPos.Mutable((pos.getRegionRelativeX() << 4) + 2, y, (pos.getRegionRelativeZ() << 4) + 2);
+            BlockPos.Mutable startingPos = new BlockPos.Mutable((pos.x << 4) + 2, y, (pos.z << 4) + 2);
 
             // Entrypoint
             MineshaftPiece entryPoint = new VerticalEntrance(
