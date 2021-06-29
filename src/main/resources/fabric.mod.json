@@ -28,7 +28,8 @@
     "fabricloader": ">=0.10.6",
     "fabric": ">=0.25.0",
     "minecraft": ">=1.17",
-    "yungsapi": ">=1.16.4-Fabric-1"
+    "yungsapi": ">=1.17-Fabric-6",
+    "cloth-config2": ">=5-"
   },
   "mixins": [
     "bettermineshafts.mixins.json"
