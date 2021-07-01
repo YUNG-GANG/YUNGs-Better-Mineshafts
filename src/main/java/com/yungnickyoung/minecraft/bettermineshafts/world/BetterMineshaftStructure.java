@@ -7,11 +7,11 @@ import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.Verti
 import net.minecraft.structure.StructureManager;
 import net.minecraft.structure.StructureStart;
 import net.minecraft.util.StringIdentifiable;
-import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.DynamicRegistryManager;
+import net.minecraft.world.HeightLimitView;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.source.BiomeSource;
 import net.minecraft.world.gen.ChunkRandom;
@@ -29,8 +29,8 @@ public class BetterMineshaftStructure extends StructureFeature<BetterMineshaftFe
     }
 
     @Override
-    protected boolean shouldStartAt(ChunkGenerator chunkGenerator, BiomeSource biomeSource, long worldSeed, ChunkRandom random, int chunkX, int chunkZ, Biome biome, ChunkPos chunkPos, BetterMineshaftFeatureConfig config) {
-        random.setCarverSeed(worldSeed, chunkX, chunkZ);
+    protected boolean shouldStartAt(ChunkGenerator chunkGenerator, BiomeSource biomeSource, long worldSeed, ChunkRandom random, ChunkPos pos, Biome biome, ChunkPos chunkPos, BetterMineshaftFeatureConfig config, HeightLimitView world) {
+        random.setCarverSeed(worldSeed, pos.x, pos.z);
         return random.nextDouble() < config.probability;
     }
 
@@ -45,17 +45,17 @@ public class BetterMineshaftStructure extends StructureFeature<BetterMineshaftFe
     }
 
     public static class Start extends StructureStart<BetterMineshaftFeatureConfig> {
-        public Start(StructureFeature<BetterMineshaftFeatureConfig> feature, int chunkX, int chunkZ, BlockBox box, int references, long seed) {
-            super(feature, chunkX, chunkZ, box, references, seed);
+        public Start(StructureFeature<BetterMineshaftFeatureConfig> feature, ChunkPos pos, int references, long seed) {
+            super(feature, pos, references, seed);
         }
 
-        public void init(DynamicRegistryManager registryManager, ChunkGenerator chunkGenerator, StructureManager manager, int chunkX, int chunkZ, Biome biome, BetterMineshaftFeatureConfig config) {
+        public void init(DynamicRegistryManager registryManager, ChunkGenerator chunkGenerator, StructureManager manager, ChunkPos pos, Biome biome, BetterMineshaftFeatureConfig config, HeightLimitView world) {
             Direction direction = Direction.NORTH;
 
             // Randomly choose starting direction.
             // Separate rand is necessary bc for some reason otherwise r is 0 every time.
             ChunkRandom rand = new ChunkRandom();
-            rand.setTerrainSeed(chunkX, chunkZ);
+            rand.setTerrainSeed(pos.x, pos.z);
             int r = rand.nextInt(4);
             switch (r) {
                 case 0:
@@ -71,7 +71,7 @@ public class BetterMineshaftStructure extends StructureFeature<BetterMineshaftFe
                     direction = Direction.WEST;
             }
             int y = random.nextInt(BetterMineshafts.CONFIG.maxY - BetterMineshafts.CONFIG.minY + 1) + BetterMineshafts.CONFIG.minY;
-            BlockPos.Mutable startingPos = new BlockPos.Mutable((chunkX << 4) + 2, y, (chunkZ << 4) + 2);
+            BlockPos.Mutable startingPos = new BlockPos.Mutable((pos.x << 4) + 2, y, (pos.z << 4) + 2);
 
             // Entrypoint
             MineshaftPiece entryPoint = new VerticalEntrance(
@@ -82,11 +82,11 @@ public class BetterMineshaftStructure extends StructureFeature<BetterMineshaftFe
                 config.type
             );
 
-            this.children.add(entryPoint);
+            this.addPiece(entryPoint);
 
             // Build room component. This also populates the children list, effectively building the entire mineshaft.
             // Note that no blocks are actually placed yet.
-            entryPoint.fillOpenings(entryPoint, this.children, this.random);
+            entryPoint.fillOpenings(entryPoint, this, this.random);
 
             // Expand bounding box to encompass all children
             this.setBoundingBoxFromChildren();
@@ -109,7 +109,7 @@ public class BetterMineshaftStructure extends StructureFeature<BetterMineshaftFe
 
         private final String name;
 
-        private Type(String name) {
+        Type(String name) {
             this.name = name;
         }
 

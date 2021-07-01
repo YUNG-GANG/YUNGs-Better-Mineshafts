@@ -8,9 +8,10 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.PoweredRailBlock;
 import net.minecraft.block.RailBlock;
 import net.minecraft.block.enums.RailShape;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.structure.StructureManager;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.StructurePiece;
+import net.minecraft.structure.StructurePiecesHolder;
 import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -19,7 +20,6 @@ import net.minecraft.world.StructureWorldAccess;
 import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 
-import java.util.List;
 import java.util.Random;
 
 public class SmallTunnelStairs extends MineshaftPiece {
@@ -32,34 +32,33 @@ public class SmallTunnelStairs extends MineshaftPiece {
         LOCAL_Y_END = Y_AXIS_LEN - 1,
         LOCAL_Z_END = MAIN_AXIS_LEN - 1;
 
-    public SmallTunnelStairs(StructureManager structureManager, CompoundTag compoundTag) {
+    public SmallTunnelStairs(ServerWorld world, NbtCompound compoundTag) {
         super(BetterMineshaftStructurePieceType.SMALL_TUNNEL_STAIRS, compoundTag);
     }
 
     public SmallTunnelStairs(int chunkPieceLen, Random random, BlockBox blockBox, Direction direction, BetterMineshaftStructure.Type type) {
-        super(BetterMineshaftStructurePieceType.SMALL_TUNNEL_STAIRS, chunkPieceLen, type);
+        super(BetterMineshaftStructurePieceType.SMALL_TUNNEL_STAIRS, chunkPieceLen, type, blockBox);
         this.setOrientation(direction);
-        this.boundingBox = blockBox;
     }
 
     @Override
-    protected void toNbt(CompoundTag tag) {
-        super.toNbt(tag);
+    protected void writeNbt(ServerWorld world, NbtCompound tag) {
+        super.writeNbt(world, tag);
     }
 
-    public static BlockBox determineBoxPosition(List<StructurePiece> list, Random random, int x, int y, int z, Direction direction) {
+    public static BlockBox determineBoxPosition(StructurePiecesHolder structurePiecesHolder, Random random, int x, int y, int z, Direction direction) {
         BlockBox blockBox = BoundingBoxHelper.boxFromCoordsWithRotation(x, y, z, SECONDARY_AXIS_LEN, Y_AXIS_LEN, MAIN_AXIS_LEN, direction);
 
         // The following func call returns null if this new blockbox does not intersect with any pieces in the list.
         // If there is an intersection, the following func call returns the piece that intersects.
-        StructurePiece intersectingPiece = StructurePiece.getOverlappingPiece(list, blockBox);
+        StructurePiece intersectingPiece = structurePiecesHolder.getIntersecting(blockBox);
 
         // Thus, this function returns null if blackBox intersects with an existing piece. Otherwise, we return blackbox
         return intersectingPiece != null ? null : blockBox;
     }
 
     @Override
-    public void fillOpenings(StructurePiece structurePiece, List<StructurePiece> list, Random random) {
+    public void fillOpenings(StructurePiece structurePiece, StructurePiecesHolder structurePiecesHolder, Random random) {
         Direction direction = this.getFacing();
         if (direction == null) {
             return;
@@ -68,16 +67,16 @@ public class SmallTunnelStairs extends MineshaftPiece {
         switch (direction) {
             case NORTH:
             default:
-                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.minX, this.boundingBox.minY + 4, this.boundingBox.minZ - 1, direction, chainLength);
+                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, structurePiecesHolder, random, this.boundingBox.getMinX(), this.boundingBox.getMinY() + 4, this.boundingBox.getMinZ() - 1, direction, chainLength);
                 break;
             case SOUTH:
-                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.maxX, this.boundingBox.minY + 4, this.boundingBox.maxZ + 1, direction, chainLength);
+                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, structurePiecesHolder, random, this.boundingBox.getMaxX(), this.boundingBox.getMinY() + 4, this.boundingBox.getMaxZ() + 1, direction, chainLength);
                 break;
             case WEST:
-                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.minX - 1, this.boundingBox.minY + 4, this.boundingBox.maxZ, direction, chainLength);
+                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, structurePiecesHolder, random, this.boundingBox.getMinX() - 1, this.boundingBox.getMinY() + 4, this.boundingBox.getMaxZ(), direction, chainLength);
                 break;
             case EAST:
-                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, list, random, this.boundingBox.maxX + 1, this.boundingBox.minY + 4, this.boundingBox.minZ, direction, chainLength);
+                BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, structurePiecesHolder, random, this.boundingBox.getMaxX() + 1, this.boundingBox.getMinY() + 4, this.boundingBox.getMinZ(), direction, chainLength);
         }
     }
 
@@ -94,7 +93,7 @@ public class SmallTunnelStairs extends MineshaftPiece {
         // Randomize floor
         this.chanceReplaceNonAir(world, box, random, this.getReplacementRate(), 0, 0, 0, LOCAL_X_END, 0, LOCAL_Z_END, getFloorSelector());
 
-        for (int i = 0; i < 5 ; i++) {
+        for (int i = 0; i < 5; i++) {
             // Fill with air
             this.fill(world, box, 1, i + 1, i, LOCAL_X_END - 1, i + 1 + 2, i, AIR);
 

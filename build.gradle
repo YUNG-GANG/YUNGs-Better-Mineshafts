@@ -1,48 +1,45 @@
 plugins {
-	id 'fabric-loom' version '0.5-SNAPSHOT'
+	id 'fabric-loom' version '0.8-SNAPSHOT'
 	id 'maven-publish'
 }
 
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
+sourceCompatibility = JavaVersion.VERSION_16
+targetCompatibility = JavaVersion.VERSION_16
 
 archivesBaseName = project.archives_base_name
 version = "${project.minecraft_version}-${project.mod_version}"
 group = project.maven_group
 
+repositories {
+	mavenCentral()
+	maven { url "https://maven.fabricmc.net" }
+	maven { url "https://maven.shedaniel.me/" }
+	maven { url "https://maven.terraformersmc.com/releases/" }
+	maven { url 'https://jitpack.io' }
+}
+
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-
-	// Cloth - embedded
-	modImplementation "me.shedaniel.cloth:config-2:${project.cloth_config_version}"
-	include "me.shedaniel.cloth:config-2:${project.cloth_config_version}"
-
-	// Auto Config - embedded
-	modImplementation "me.sargunvohra.mcmods:autoconfig1u:${project.auto_config_version}"
-	include "me.sargunvohra.mcmods:autoconfig1u:${project.auto_config_version}"
-
-	// ModMenu - optional
-	modImplementation "io.github.prospector:modmenu:${project.mod_menu_version}"
-
-	// Fabric API - required dependency
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-	// YUNG's API - required dependency
+	// ClothConfig & OmegaConfig
+	modApi "me.shedaniel.cloth:cloth-config-fabric:${project.clothconfig_version}"
+	modImplementation include("com.github.Draylar.omega-config:omega-config-base:${project.omega_config_version}")
+
+	// ModMenu
+	modImplementation ("com.terraformersmc:modmenu:${project.mod_menu_version}") { transitive = false }
+
+	// YUNG's API
 	modImplementation "com.yungnickyoung.minecraft.yungsapi:YungsApi:${project.yungs_api_version}"
 }
 
 processResources {
 	inputs.property "version", project.version
 
-	from(sourceSets.main.resources.srcDirs) {
-		include "fabric.mod.json"
+	filesMatching("fabric.mod.json") {
 		expand "version": project.version
-	}
-
-	from(sourceSets.main.resources.srcDirs) {
-		exclude "fabric.mod.json"
 	}
 }
 
@@ -53,12 +50,11 @@ tasks.withType(JavaCompile) {
 	options.encoding = "UTF-8"
 }
 
-// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-// if it is present.
-// If you remove this task, sources will not be generated.
-task sourcesJar(type: Jar, dependsOn: classes) {
-	classifier = "sources"
-	from sourceSets.main.allSource
+java {
+	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
+	// if it is present.
+	// If you remove this line, sources will not be generated.
+	withSourcesJar()
 }
 
 jar {

@@ -9,9 +9,10 @@ import net.minecraft.block.entity.MobSpawnerBlockEntity;
 import net.minecraft.block.enums.*;
 import net.minecraft.entity.EntityType;
 import net.minecraft.loot.LootTables;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.structure.StructureManager;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.StructurePiece;
+import net.minecraft.structure.StructurePiecesHolder;
 import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -20,7 +21,6 @@ import net.minecraft.world.StructureWorldAccess;
 import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 
-import java.util.List;
 import java.util.Random;
 
 public class ZombieVillagerRoom extends MineshaftPiece {
@@ -33,34 +33,34 @@ public class ZombieVillagerRoom extends MineshaftPiece {
         LOCAL_Y_END = Y_AXIS_LEN - 1,
         LOCAL_Z_END = MAIN_AXIS_LEN - 1;
 
-    public ZombieVillagerRoom(StructureManager structureManager, CompoundTag compoundTag) {
+    public ZombieVillagerRoom(ServerWorld world, NbtCompound compoundTag) {
         super(BetterMineshaftStructurePieceType.ZOMBIE_VILLAGER_ROOM, compoundTag);
     }
 
     public ZombieVillagerRoom(int chunkPieceLen, Random random, BlockBox blockBox, Direction direction, BetterMineshaftStructure.Type type) {
-        super(BetterMineshaftStructurePieceType.ZOMBIE_VILLAGER_ROOM, chunkPieceLen, type);
+        super(BetterMineshaftStructurePieceType.ZOMBIE_VILLAGER_ROOM, chunkPieceLen, type, blockBox);
         this.setOrientation(direction);
-        this.boundingBox = blockBox;
     }
 
     @Override
-    protected void toNbt(CompoundTag tag) {
-        super.toNbt(tag);
+    protected void writeNbt(ServerWorld world, NbtCompound tag) {
+        super.writeNbt(world, tag);
     }
 
-    public static BlockBox determineBoxPosition(List<StructurePiece> list, Random random, int x, int y, int z, Direction direction) {
+    public static BlockBox determineBoxPosition(StructurePiecesHolder structurePiecesHolder, Random random, int x, int y, int z, Direction direction) {
         BlockBox blockBox = BoundingBoxHelper.boxFromCoordsWithRotation(x, y, z, SECONDARY_AXIS_LEN, Y_AXIS_LEN, MAIN_AXIS_LEN, direction);
 
         // The following func call returns null if this new blockbox does not intersect with any pieces in the list.
         // If there is an intersection, the following func call returns the piece that intersects.
-        StructurePiece intersectingPiece = StructurePiece.getOverlappingPiece(list, blockBox);
+        StructurePiece intersectingPiece = structurePiecesHolder.getIntersecting(blockBox);
 
         // Thus, this function returns null if blackBox intersects with an existing piece. Otherwise, we return blackbox
         return intersectingPiece != null ? null : blockBox;
     }
 
     @Override
-    public void fillOpenings(StructurePiece structurePiece, List<StructurePiece> list, Random random) {}
+    public void fillOpenings(StructurePiece structurePiece, StructurePiecesHolder structurePiecesHolder, Random random) {
+    }
 
     @Override
     public boolean generate(StructureWorldAccess world, StructureAccessor structureAccessor, ChunkGenerator generator, Random random, BlockBox box, ChunkPos pos, BlockPos blockPos) {
@@ -114,7 +114,7 @@ public class ZombieVillagerRoom extends MineshaftPiece {
         this.addBlock(world, AIR, 3, 4, 3, box);
 
         // Top middle roof block
-        this.addBlock(world, Blocks.STONE_SLAB.getDefaultState().with(SlabBlock.TYPE, SlabType.TOP), 3, 4,3, box);
+        this.addBlock(world, Blocks.STONE_SLAB.getDefaultState().with(SlabBlock.TYPE, SlabType.TOP), 3, 4, 3, box);
 
         // Floor
         this.fill(world, box, 1, 0, 1, 5, 0, 5, Blocks.STONE.getDefaultState());
@@ -141,11 +141,11 @@ public class ZombieVillagerRoom extends MineshaftPiece {
         this.addBlock(world, Blocks.BLACK_BED.getDefaultState().with(BedBlock.FACING, Direction.NORTH).with(BedBlock.PART, BedPart.HEAD), 5, 1, 5, box);
 
         // Mob spawner
-        BlockPos spawnerPos = new BlockPos(this.applyXTransform(3,3), this.applyYTransform(0), this.applyZTransform(3, 3));
+        BlockPos spawnerPos = new BlockPos(this.applyXTransform(3, 3), this.applyYTransform(0), this.applyZTransform(3, 3));
         world.setBlockState(spawnerPos, Blocks.SPAWNER.getDefaultState(), 2);
         BlockEntity blockEntity = world.getBlockEntity(spawnerPos);
         if (blockEntity instanceof MobSpawnerBlockEntity) {
-            ((MobSpawnerBlockEntity)blockEntity).getLogic().setEntityId(EntityType.ZOMBIE_VILLAGER);
+            ((MobSpawnerBlockEntity) blockEntity).getLogic().setEntityId(EntityType.ZOMBIE_VILLAGER);
         }
 
         // Wall with redstone torch in corner

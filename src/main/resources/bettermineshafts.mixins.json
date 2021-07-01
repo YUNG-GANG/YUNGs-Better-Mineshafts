@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "com.yungnickyoung.minecraft.bettermineshafts.mixin",
+  "compatibilityLevel": "JAVA_16",
+  "mixins": [
+    "BlockBoxAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1,
+    "maxShiftBy": 1
+  }
+}

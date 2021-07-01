@@ -1,5 +1,6 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
+import com.yungnickyoung.minecraft.bettermineshafts.mixin.BlockBoxAccessor;
 import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftStructure;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
 import net.minecraft.block.BlockState;
@@ -9,9 +10,10 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.MobSpawnerBlockEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.loot.LootTables;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.structure.StructureManager;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.StructurePiece;
+import net.minecraft.structure.StructurePiecesHolder;
 import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -20,7 +22,6 @@ import net.minecraft.world.StructureWorldAccess;
 import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 
-import java.util.List;
 import java.util.Random;
 
 public class SideRoomDungeon extends MineshaftPiece {
@@ -33,57 +34,57 @@ public class SideRoomDungeon extends MineshaftPiece {
         LOCAL_Y_END = Y_AXIS_LEN - 1,
         LOCAL_Z_END = MAIN_AXIS_LEN - 1;
 
-    public SideRoomDungeon(StructureManager structureManager, CompoundTag compoundTag) {
+    public SideRoomDungeon(ServerWorld world, NbtCompound compoundTag) {
         super(BetterMineshaftStructurePieceType.SIDE_ROOM_DUNGEON, compoundTag);
     }
 
     public SideRoomDungeon(int pieceChainLen, Random random, BlockBox blockBox, Direction direction, BetterMineshaftStructure.Type type) {
-        super(BetterMineshaftStructurePieceType.SIDE_ROOM_DUNGEON, pieceChainLen, type);
+        super(BetterMineshaftStructurePieceType.SIDE_ROOM_DUNGEON, pieceChainLen, type, blockBox);
         this.setOrientation(direction);
-        this.boundingBox = blockBox;
     }
 
     @Override
-    protected void toNbt(CompoundTag tag) {
-        super.toNbt(tag);
+    protected void writeNbt(ServerWorld world, NbtCompound tag) {
+        super.writeNbt(world, tag);
     }
 
-    public static BlockBox determineBoxPosition(List<StructurePiece> list, Random random, int x, int y, int z, Direction direction) {
+    public static BlockBox determineBoxPosition(StructurePiecesHolder structurePiecesHolder, Random random, int x, int y, int z, Direction direction) {
         BlockBox blockBox = new BlockBox(x, y, z, x, y + Y_AXIS_LEN - 1, z);
 
         switch (direction) {
             case NORTH:
             default:
-                blockBox.maxX = x + 4;
-                blockBox.minX = x - 4;
-                blockBox.minZ = z - (MAIN_AXIS_LEN - 1);
+                ((BlockBoxAccessor) blockBox).setMaxX(x + 4);
+                ((BlockBoxAccessor) blockBox).setMinX(x - 4);
+                ((BlockBoxAccessor) blockBox).setMinZ(z - (MAIN_AXIS_LEN - 1));
                 break;
             case SOUTH:
-                blockBox.maxX = x + 4;
-                blockBox.minX = x - 4;
-                blockBox.maxZ = z + (MAIN_AXIS_LEN - 1);
+                ((BlockBoxAccessor) blockBox).setMaxX(x + 4);
+                ((BlockBoxAccessor) blockBox).setMinX(x - 4);
+                ((BlockBoxAccessor) blockBox).setMaxZ(z + (MAIN_AXIS_LEN - 1));
                 break;
             case WEST:
-                blockBox.minX = x - (MAIN_AXIS_LEN - 1);
-                blockBox.maxZ = z + 4;
-                blockBox.minZ = z - 4;
+                ((BlockBoxAccessor) blockBox).setMinX(x - (MAIN_AXIS_LEN - 1));
+                ((BlockBoxAccessor) blockBox).setMaxZ(z + 4);
+                ((BlockBoxAccessor) blockBox).setMinZ(z - 4);
                 break;
             case EAST:
-                blockBox.maxX = x + (MAIN_AXIS_LEN - 1);
-                blockBox.maxZ = z + 4;
-                blockBox.minZ = z - 4;
+                ((BlockBoxAccessor) blockBox).setMaxX(x + (MAIN_AXIS_LEN - 1));
+                ((BlockBoxAccessor) blockBox).setMaxZ(z + 4);
+                ((BlockBoxAccessor) blockBox).setMinZ(z - 4);
         }
 
         // The following func call returns null if this new blockbox does not intersect with any pieces in the list.
         // If there is an intersection, the following func call returns the piece that intersects.
-        StructurePiece intersectingPiece = StructurePiece.getOverlappingPiece(list, blockBox); // findIntersecting
+        StructurePiece intersectingPiece = structurePiecesHolder.getIntersecting(blockBox); // findIntersecting
 
         // Thus, this function returns null if blackBox intersects with an existing piece. Otherwise, we return blackbox
         return intersectingPiece != null ? null : blockBox;
     }
 
     @Override
-    public void fillOpenings(StructurePiece structurePiece, List<StructurePiece> list, Random random) {}
+    public void fillOpenings(StructurePiece structurePiece, StructurePiecesHolder structurePiecesHolder, Random random) {
+    }
 
     @Override
     public boolean generate(StructureWorldAccess world, StructureAccessor structureAccessor, ChunkGenerator generator, Random random, BlockBox box, ChunkPos pos, BlockPos blockPos) {
@@ -91,7 +92,7 @@ public class SideRoomDungeon extends MineshaftPiece {
         if (this.isTouchingLiquid(world, box)) return false;
         if (this.isInOcean(world, 0, 0) || this.isInOcean(world, LOCAL_X_END, LOCAL_Z_END)) return false;
 
-         // Fill with stone then clean out with air
+        // Fill with stone then clean out with air
         this.fill(world, box, random, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getBrickSelector());
         this.fill(world, box, 1, 1, 1, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END - 1, AIR);
 
@@ -102,11 +103,11 @@ public class SideRoomDungeon extends MineshaftPiece {
         this.fill(world, box, 4, 1, 1, 4, 3, 1, LADDER);
 
         // Spawner
-        BlockPos spawnerPos = new BlockPos(this.applyXTransform(4,5), this.applyYTransform(1), this.applyZTransform(4, 5));
+        BlockPos spawnerPos = new BlockPos(this.applyXTransform(4, 5), this.applyYTransform(1), this.applyZTransform(4, 5));
         world.setBlockState(spawnerPos, Blocks.SPAWNER.getDefaultState(), 2);
         BlockEntity blockEntity = world.getBlockEntity(spawnerPos);
         if (blockEntity instanceof MobSpawnerBlockEntity) {
-            ((MobSpawnerBlockEntity)blockEntity).getLogic().setEntityId(EntityType.CAVE_SPIDER);
+            ((MobSpawnerBlockEntity) blockEntity).getLogic().setEntityId(EntityType.CAVE_SPIDER);
         }
 
         // Cobwebs immediately surrounding chests

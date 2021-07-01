@@ -6,9 +6,10 @@ import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMinesh
 import com.yungnickyoung.minecraft.yungsapi.world.BoundingBoxHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.structure.StructureManager;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.StructurePiece;
+import net.minecraft.structure.StructurePiecesHolder;
 import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -18,7 +19,6 @@ import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
 
 public class OreDeposit extends MineshaftPiece {
@@ -34,7 +34,7 @@ public class OreDeposit extends MineshaftPiece {
 
         private final int value;
         private final BlockState block;
-        private int threshold;
+        private final int threshold;
 
         OreType(int value, BlockState block, int threshold) {
             this.value = value;
@@ -52,6 +52,7 @@ public class OreDeposit extends MineshaftPiece {
             return this.block;
         }
     }
+
     private OreType oreType;
     private static final int
         SECONDARY_AXIS_LEN = 5,
@@ -62,36 +63,35 @@ public class OreDeposit extends MineshaftPiece {
         LOCAL_Y_END = Y_AXIS_LEN - 1,
         LOCAL_Z_END = MAIN_AXIS_LEN - 1;
 
-    public OreDeposit(StructureManager structureManager, CompoundTag compoundTag) {
+    public OreDeposit(ServerWorld world, NbtCompound compoundTag) {
         super(BetterMineshaftStructurePieceType.ORE_DEPOSIT, compoundTag);
         this.oreType = OreType.valueOf(compoundTag.getInt("OreType"));
     }
 
     public OreDeposit(int chunkPieceLen, Random random, BlockBox blockBox, Direction direction, BetterMineshaftStructure.Type type) {
-        super(BetterMineshaftStructurePieceType.ORE_DEPOSIT, chunkPieceLen, type);
+        super(BetterMineshaftStructurePieceType.ORE_DEPOSIT, chunkPieceLen, type, blockBox);
         this.setOrientation(direction);
-        this.boundingBox = blockBox;
     }
 
     @Override
-    protected void toNbt(CompoundTag tag) {
-        super.toNbt(tag);
+    protected void writeNbt(ServerWorld world, NbtCompound tag) {
+        super.writeNbt(world, tag);
         tag.putInt("OreType", this.oreType.value);
     }
 
-    public static BlockBox determineBoxPosition(List<StructurePiece> list, Random random, int x, int y, int z, Direction direction) {
+    public static BlockBox determineBoxPosition(StructurePiecesHolder structurePiecesHolder, Random random, int x, int y, int z, Direction direction) {
         BlockBox blockBox = BoundingBoxHelper.boxFromCoordsWithRotation(x, y, z, SECONDARY_AXIS_LEN, Y_AXIS_LEN, MAIN_AXIS_LEN, direction);
 
         // The following func call returns null if this new blockbox does not intersect with any pieces in the list.
         // If there is an intersection, the following func call returns the piece that intersects.
-        StructurePiece intersectingPiece = StructurePiece.getOverlappingPiece(list, blockBox);
+        StructurePiece intersectingPiece = structurePiecesHolder.getIntersecting(blockBox);
 
         // Thus, this function returns null if blackBox intersects with an existing piece. Otherwise, we return blackbox
         return intersectingPiece != null ? null : blockBox;
     }
 
     @Override
-    public void fillOpenings(StructurePiece structurePiece, List<StructurePiece> list, Random random) {
+    public void fillOpenings(StructurePiece structurePiece, StructurePiecesHolder structurePiecesHolder, Random random) {
         int r = random.nextInt(100);
 
         // Determine ore type

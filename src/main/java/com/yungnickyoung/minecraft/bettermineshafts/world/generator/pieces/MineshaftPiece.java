@@ -1,15 +1,17 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
 import com.google.common.collect.ImmutableSet;
-import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BlockSetSelectors;
 import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftStructure;
+import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BlockSetSelectors;
 import com.yungnickyoung.minecraft.yungsapi.world.BlockSetSelector;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BarrelBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.StructurePiece;
 import net.minecraft.structure.StructurePieceType;
+import net.minecraft.structure.StructurePiecesHolder;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
@@ -18,7 +20,6 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.StructureWorldAccess;
 import net.minecraft.world.biome.Biome;
 
-import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
@@ -27,22 +28,18 @@ public abstract class MineshaftPiece extends StructurePiece {
 
     private static final Set<Material> LIQUIDS = ImmutableSet.of(Material.LAVA, Material.WATER);
 
-    public MineshaftPiece(StructurePieceType structurePieceType, int chainLength, BetterMineshaftStructure.Type type) {
-        super(structurePieceType, chainLength);
+    public MineshaftPiece(StructurePieceType structurePieceType, int chainLength, BetterMineshaftStructure.Type type, BlockBox boundingBox) {
+        super(structurePieceType, chainLength, boundingBox);
         this.mineshaftType = type;
     }
 
-    public MineshaftPiece(StructurePieceType structurePieceType, CompoundTag compoundTag) {
+    public MineshaftPiece(StructurePieceType structurePieceType, NbtCompound compoundTag) {
         super(structurePieceType, compoundTag);
         this.mineshaftType = BetterMineshaftStructure.Type.byIndex(compoundTag.getInt("MST"));
     }
 
-    protected void toNbt(CompoundTag tag) {
+    protected void writeNbt(ServerWorld world, NbtCompound tag) {
         tag.putInt("MST", this.mineshaftType.ordinal());
-    }
-
-    public void setBoundingBox(BlockBox boundingBox) {
-        this.boundingBox = boundingBox;
     }
 
     /**
@@ -51,7 +48,8 @@ public abstract class MineshaftPiece extends StructurePiece {
      * Does not actually place any blocks.
      */
     @Override
-    public void fillOpenings(StructurePiece structurePiece, List<StructurePiece> list, Random random) {}
+    public void fillOpenings(StructurePiece structurePiece, StructurePiecesHolder structurePiecesHolder, Random random) {
+    }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *                                     BLOCK SELECTORS                                     *
@@ -102,35 +100,22 @@ public abstract class MineshaftPiece extends StructurePiece {
     }
 
     protected BlockState getTrapdoor() {
-        switch (this.mineshaftType) {
-            case MESA:
-            case RED_DESERT:
-                return Blocks.DARK_OAK_TRAPDOOR.getDefaultState();
-            case JUNGLE:
-                return Blocks.JUNGLE_TRAPDOOR.getDefaultState();
-            case SNOW:
-            case ICE:
-                return Blocks.SPRUCE_TRAPDOOR.getDefaultState();
-            case SAVANNA:
-                return Blocks.ACACIA_TRAPDOOR.getDefaultState();
-            default:
-                return Blocks.OAK_TRAPDOOR.getDefaultState();
-        }
+        return switch (this.mineshaftType) {
+            case MESA, RED_DESERT -> Blocks.DARK_OAK_TRAPDOOR.getDefaultState();
+            case JUNGLE -> Blocks.JUNGLE_TRAPDOOR.getDefaultState();
+            case SNOW, ICE -> Blocks.SPRUCE_TRAPDOOR.getDefaultState();
+            case SAVANNA -> Blocks.ACACIA_TRAPDOOR.getDefaultState();
+            default -> Blocks.OAK_TRAPDOOR.getDefaultState();
+        };
     }
 
     protected float getVineChance() {
-        switch (this.mineshaftType) {
-            case DESERT:
-            case RED_DESERT:
-                return .1f;
-            case JUNGLE:
-                return .6f;
-            case ICE:
-            case SNOW:
-                return .05f;
-            default:
-                return .25f;
-        }
+        return switch (this.mineshaftType) {
+            case DESERT, RED_DESERT -> .1f;
+            case JUNGLE -> .6f;
+            case ICE, SNOW -> .05f;
+            default -> .25f;
+        };
     }
 
     protected float getReplacementRate() {
@@ -261,7 +246,7 @@ public abstract class MineshaftPiece extends StructurePiece {
         BlockState state = this.getBlockAt(world, mutable.getX(), mutable.getY(), mutable.getZ(), box);
 
         while (applyYTransform(mutable.getY()) > 0 && (state == AIR || state == Blocks.AIR.getDefaultState() || LIQUIDS.contains(state.getMaterial()))) {
-            this.addBlock(world,selector.get(random), x, mutable.getY(), z, box);
+            this.addBlock(world, selector.get(random), x, mutable.getY(), z, box);
             mutable.move(Direction.DOWN);
             state = this.getBlockAt(world, mutable.getX(), mutable.getY(), mutable.getZ(), box);
         }
@@ -392,7 +377,8 @@ public abstract class MineshaftPiece extends StructurePiece {
                     }
                 }
             }
-        }    }
+        }
+    }
 
     /**
      * Has a chance of replacing each air block in the provided area with the provided BlockState.
@@ -492,6 +478,57 @@ public abstract class MineshaftPiece extends StructurePiece {
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *                                  PLACEMENT METHODS                                      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    /**
+     * Checks if there is liquid within a given box
+     **/
+    protected boolean isTouchingLiquid(BlockView world, BlockBox box) {
+        int minX = Math.max(this.boundingBox.getMinX() - 1, box.getMinX());
+        int minY = Math.max(this.boundingBox.getMinY() - 1, box.getMinY());
+        int minZ = Math.max(this.boundingBox.getMinZ() - 1, box.getMinZ());
+        int maxX = Math.min(this.boundingBox.getMaxX() + 1, box.getMaxX());
+        int maxY = Math.min(this.boundingBox.getMaxY() + 1, box.getMaxY());
+        int maxZ = Math.min(this.boundingBox.getMaxZ() + 1, box.getMaxZ());
+        BlockPos.Mutable mutable = new BlockPos.Mutable();
+
+        for (int x = minX; x <= maxX; ++x) {
+            for (int z = minZ; z <= maxZ; ++z) {
+                if (world.getBlockState(mutable.set(x, minY, z)).getMaterial().isLiquid()) {
+                    return true;
+                }
+
+                if (world.getBlockState(mutable.set(x, maxY, z)).getMaterial().isLiquid()) {
+                    return true;
+                }
+            }
+        }
+
+        for (int x = minX; x <= maxX; ++x) {
+            for (int y = minY; y <= maxY; ++y) {
+                if (world.getBlockState(mutable.set(x, y, minZ)).getMaterial().isLiquid()) {
+                    return true;
+                }
+
+                if (world.getBlockState(mutable.set(x, y, maxZ)).getMaterial().isLiquid()) {
+                    return true;
+                }
+            }
+        }
+
+        for (int z = minZ; z <= maxZ; ++z) {
+            for (int y = minY; y <= maxY; ++y) {
+                if (world.getBlockState(mutable.set(minX, y, z)).getMaterial().isLiquid()) {
+                    return true;
+                }
+
+                if (world.getBlockState(mutable.set(maxX, y, z)).getMaterial().isLiquid()) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 
     protected boolean isInOcean(StructureWorldAccess world, int localX, int localZ) {
         BlockPos pos = new BlockPos.Mutable(applyXTransform(localX, localZ), 1, applyZTransform(localX, localZ));
