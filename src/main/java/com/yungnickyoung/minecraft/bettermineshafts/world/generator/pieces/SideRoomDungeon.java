@@ -12,7 +12,6 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.loot.LootTables;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.structure.StructureManager;
 import net.minecraft.structure.StructurePiece;
 import net.minecraft.structure.StructurePiecesHolder;
 import net.minecraft.util.math.BlockBox;
@@ -27,13 +26,13 @@ import java.util.Random;
 
 public class SideRoomDungeon extends MineshaftPiece {
     private static final int
-            SECONDARY_AXIS_LEN = 9,
-            Y_AXIS_LEN = 4,
-            MAIN_AXIS_LEN = 9;
+        SECONDARY_AXIS_LEN = 9,
+        Y_AXIS_LEN = 4,
+        MAIN_AXIS_LEN = 9;
     private static final int
-            LOCAL_X_END = SECONDARY_AXIS_LEN - 1,
-            LOCAL_Y_END = Y_AXIS_LEN - 1,
-            LOCAL_Z_END = MAIN_AXIS_LEN - 1;
+        LOCAL_X_END = SECONDARY_AXIS_LEN - 1,
+        LOCAL_Y_END = Y_AXIS_LEN - 1,
+        LOCAL_Z_END = MAIN_AXIS_LEN - 1;
 
     public SideRoomDungeon(ServerWorld world, NbtCompound compoundTag) {
         super(BetterMineshaftStructurePieceType.SIDE_ROOM_DUNGEON, compoundTag);

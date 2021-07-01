@@ -11,7 +11,6 @@ import net.minecraft.block.RailBlock;
 import net.minecraft.block.enums.RailShape;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.structure.StructureManager;
 import net.minecraft.structure.StructurePiece;
 import net.minecraft.structure.StructurePiecesHolder;
 import net.minecraft.util.math.*;
@@ -19,24 +18,23 @@ import net.minecraft.world.StructureWorldAccess;
 import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 
-import java.util.List;
 import java.util.Random;
 
 public class VerticalEntrance extends MineshaftPiece {
     private final BlockPos centerPos;
     private int  // height of vertical shaft depends on surface terrain
-            yAxisLen = 0,
-            localYEnd = 0;
+        yAxisLen = 0,
+        localYEnd = 0;
     private int // Surface tunnel vars
-            tunnelLength = 0,
-            tunnelFloorAltitude = 0;
+        tunnelLength = 0,
+        tunnelFloorAltitude = 0;
     private Direction tunnelDirection = Direction.NORTH;
     private boolean hasTunnel = false;
 
     // Vertical shaft static vars
     private static final int
-            SHAFT_LOCAL_XZ_START = 22,
-            SHAFT_LOCAL_XZ_END = 26;
+        SHAFT_LOCAL_XZ_START = 22,
+        SHAFT_LOCAL_XZ_END = 26;
 
     public VerticalEntrance(ServerWorld world, NbtCompound compoundTag) {
         super(BetterMineshaftStructurePieceType.VERTICAL_ENTRANCE, compoundTag);
@@ -64,7 +62,7 @@ public class VerticalEntrance extends MineshaftPiece {
 
     @Override
     protected void writeNbt(ServerWorld world, NbtCompound tag) {
-        super.writeNbt(null, tag);
+        super.writeNbt(world, tag);
         tag.putIntArray("centerPos", new int[]{centerPos.getX(), centerPos.getY(), centerPos.getZ()});
         tag.putInt("yAxisLen", yAxisLen);
         tag.putInt("tunnelLen", tunnelLength);
@@ -166,9 +164,9 @@ public class VerticalEntrance extends MineshaftPiece {
      */
     private void generateSurfaceTunnel(StructureWorldAccess world, Random random, BlockBox box) {
         int tunnelStartX = 0,
-                tunnelStartZ = 0,
-                tunnelEndX = 0,
-                tunnelEndZ = 0;
+            tunnelStartZ = 0,
+            tunnelEndX = 0,
+            tunnelEndZ = 0;
         Direction facing = this.getFacing();
 
         // We have to account for this piece's rotation.
@@ -182,8 +180,8 @@ public class VerticalEntrance extends MineshaftPiece {
             tunnelEndX = 26;
             tunnelEndZ = 26 + tunnelLength;
         } else if (
-                (relativeTunnelDir == Direction.WEST && !(facing == Direction.SOUTH || facing == Direction.WEST)) ||
-                        (relativeTunnelDir == Direction.EAST && (facing == Direction.SOUTH || facing == Direction.WEST))
+            (relativeTunnelDir == Direction.WEST && !(facing == Direction.SOUTH || facing == Direction.WEST)) ||
+            (relativeTunnelDir == Direction.EAST && (facing == Direction.SOUTH || facing == Direction.WEST))
         ) {
             tunnelStartX = 22 - tunnelLength;
             tunnelStartZ = 22;
@@ -195,7 +193,7 @@ public class VerticalEntrance extends MineshaftPiece {
             tunnelEndX = 26;
             tunnelEndZ = 22;
         } else if (
-                relativeTunnelDir == Direction.EAST || relativeTunnelDir == Direction.WEST
+            relativeTunnelDir == Direction.EAST || relativeTunnelDir == Direction.WEST
         ) {
             tunnelStartX = 26;
             tunnelStartZ = 22;
@@ -326,9 +324,9 @@ public class VerticalEntrance extends MineshaftPiece {
             for (int zOffset = -2; zOffset <= 2; zOffset++) {
                 try {
                     int realX = centerPos.getX() + xOffset,
-                            realZ = centerPos.getZ() + zOffset;
+                        realZ = centerPos.getZ() + zOffset;
                     int chunkX = realX >> 4,
-                            chunkZ = realZ >> 4;
+                        chunkZ = realZ >> 4;
                     int surfaceHeight = SurfaceHelper.getSurfaceHeight(world.getChunk(chunkX, chunkZ), new ColumnPos(realX, realZ));
                     if (surfaceHeight > 1) {
                         minSurfaceHeight = Math.min(minSurfaceHeight, surfaceHeight);

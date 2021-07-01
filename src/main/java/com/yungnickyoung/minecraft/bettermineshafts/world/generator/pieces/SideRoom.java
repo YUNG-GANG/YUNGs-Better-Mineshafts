@@ -31,13 +31,13 @@ import java.util.Random;
 public class SideRoom extends MineshaftPiece {
     private boolean hasDownstairs;
     private static final int
-            SECONDARY_AXIS_LEN = 10,
-            Y_AXIS_LEN = 5,
-            MAIN_AXIS_LEN = 5;
+        SECONDARY_AXIS_LEN = 10,
+        Y_AXIS_LEN = 5,
+        MAIN_AXIS_LEN = 5;
     private static final int
-            LOCAL_X_END = SECONDARY_AXIS_LEN - 1,
-            LOCAL_Y_END = Y_AXIS_LEN - 1,
-            LOCAL_Z_END = MAIN_AXIS_LEN - 1;
+        LOCAL_X_END = SECONDARY_AXIS_LEN - 1,
+        LOCAL_Y_END = Y_AXIS_LEN - 1,
+        LOCAL_Z_END = MAIN_AXIS_LEN - 1;
 
     public SideRoom(ServerWorld world, NbtCompound compoundTag) {
         super(BetterMineshaftStructurePieceType.SIDE_ROOM, compoundTag);

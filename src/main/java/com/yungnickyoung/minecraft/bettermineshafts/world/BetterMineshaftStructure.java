@@ -75,11 +75,11 @@ public class BetterMineshaftStructure extends StructureFeature<BetterMineshaftFe
 
             // Entrypoint
             MineshaftPiece entryPoint = new VerticalEntrance(
-                    -1,
-                    this.random,
-                    startingPos,
-                    direction,
-                    config.type
+                -1,
+                this.random,
+                startingPos,
+                direction,
+                config.type
             );
 
             this.addPiece(entryPoint);

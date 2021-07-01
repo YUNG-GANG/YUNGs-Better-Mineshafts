@@ -44,7 +44,7 @@ public class BetterMineshaftGenerator {
                 if (blockBox != null) {
                     MineshaftPiece newPiece = new ZombieVillagerRoom(chainLength + 1, random, blockBox, direction, type);
                     structurePiecesHolder.addPiece(newPiece);
-                    newPiece.fillOpenings(structurePiece, structurePiecesHolder, random); // buildComponent
+                    newPiece.fillOpenings(structurePiece, structurePiecesHolder, random);
                     return newPiece;
                 }
             } else {
@@ -53,7 +53,7 @@ public class BetterMineshaftGenerator {
                 if (blockBox != null) {
                     MineshaftPiece newPiece = new OreDeposit(chainLength + 1, random, blockBox, direction, type);
                     structurePiecesHolder.addPiece(newPiece);
-                    newPiece.fillOpenings(structurePiece, structurePiecesHolder, random); // buildComponent
+                    newPiece.fillOpenings(structurePiece, structurePiecesHolder, random);
                     return newPiece;
                 }
             }

@@ -26,10 +26,10 @@
   },
   "depends": {
     "fabricloader": ">=0.10.6",
-    "fabric": ">=0.25.0",
+    "fabric": ">=0.36.0",
     "minecraft": ">=1.17",
-    "yungsapi": ">=1.17-Fabric-6",
-    "cloth-config2": ">=5-"
+    "yungsapi": ">=1.17-Fabric-11",
+    "cloth-config2": ">=5.0.0"
   },
   "mixins": [
     "bettermineshafts.mixins.json"

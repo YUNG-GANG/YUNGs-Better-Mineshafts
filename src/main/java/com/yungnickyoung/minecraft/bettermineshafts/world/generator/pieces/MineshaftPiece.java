@@ -120,11 +120,11 @@ public abstract class MineshaftPiece extends StructurePiece {
 
     protected float getReplacementRate() {
         return
-                this.mineshaftType == BetterMineshaftStructure.Type.SNOW
-                        || this.mineshaftType == BetterMineshaftStructure.Type.ICE
-                        || this.mineshaftType == BetterMineshaftStructure.Type.MUSHROOM
-                        ? .95f
-                        : .6f;
+            this.mineshaftType == BetterMineshaftStructure.Type.SNOW
+                || this.mineshaftType == BetterMineshaftStructure.Type.ICE
+                || this.mineshaftType == BetterMineshaftStructure.Type.MUSHROOM
+                ? .95f
+                : .6f;
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -161,9 +161,9 @@ public abstract class MineshaftPiece extends StructurePiece {
                     mutable.set(this.applyXTransform(x, z), this.applyYTransform(y), this.applyZTransform(x, z)).move(facing);
                     BlockState nextBlock = this.getBlockAt(world, x + facing.getOffsetX(), y + facing.getOffsetY(), z + facing.getOffsetZ(), boundingBox);
                     if (
-                            this.getBlockAt(world, x, y, z, boundingBox).isAir()
-                                    && Block.isFaceFullSquare(nextBlock.getCollisionShape(world, mutable), facing.getOpposite())
-                                    && nextBlock.getBlock().getDefaultState() != Blocks.LADDER.getDefaultState()
+                        this.getBlockAt(world, x, y, z, boundingBox).isAir()
+                            && Block.isFaceFullSquare(nextBlock.getCollisionShape(world, mutable), facing.getOpposite())
+                            && nextBlock.getBlock().getDefaultState() != Blocks.LADDER.getDefaultState()
                     ) {
                         if (random.nextFloat() < chance) {
                             this.addBlock(world, Blocks.VINE.getDefaultState().with(VineBlock.getFacingProperty(facing.getAxis() == Direction.Axis.X ? facing : facing.getOpposite()), true), x, y, z, boundingBox);
@@ -475,8 +475,12 @@ public abstract class MineshaftPiece extends StructurePiece {
         return !blockBox.contains(blockPos) ? null : blockView.getBlockState(blockPos);
     }
 
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *                                  PLACEMENT METHODS                                      *
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
     /**
-     * Check is there a liquid in a box
+     * Checks if there is liquid within a given box
      **/
     protected boolean isTouchingLiquid(BlockView world, BlockBox box) {
         int minX = Math.max(this.boundingBox.getMinX() - 1, box.getMinX());
@@ -526,13 +530,8 @@ public abstract class MineshaftPiece extends StructurePiece {
         return false;
     }
 
-    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     *                                  PLACEMENT METHODS                                      *
-     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
     protected boolean isInOcean(StructureWorldAccess world, int localX, int localZ) {
         BlockPos pos = new BlockPos.Mutable(applyXTransform(localX, localZ), 1, applyZTransform(localX, localZ));
         return world.getBiome(pos).getCategory() == Biome.Category.OCEAN;
     }
-
 }

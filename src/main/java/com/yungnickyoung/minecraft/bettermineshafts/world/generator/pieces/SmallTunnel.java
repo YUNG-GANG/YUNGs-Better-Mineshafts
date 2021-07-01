@@ -17,7 +17,6 @@ import net.minecraft.nbt.NbtInt;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.property.Properties;
-import net.minecraft.structure.StructureManager;
 import net.minecraft.structure.StructurePiece;
 import net.minecraft.structure.StructurePiecesHolder;
 import net.minecraft.util.math.BlockBox;
@@ -35,13 +34,13 @@ import java.util.Random;
 public class SmallTunnel extends MineshaftPiece {
     private final List<Integer> supports = new ArrayList<>(); // local z coords
     private static final int
-            SECONDARY_AXIS_LEN = 5,
-            Y_AXIS_LEN = 5,
-            MAIN_AXIS_LEN = 8;
+        SECONDARY_AXIS_LEN = 5,
+        Y_AXIS_LEN = 5,
+        MAIN_AXIS_LEN = 8;
     private static final int
-            LOCAL_X_END = SECONDARY_AXIS_LEN - 1,
-            LOCAL_Y_END = Y_AXIS_LEN - 1,
-            LOCAL_Z_END = MAIN_AXIS_LEN - 1;
+        LOCAL_X_END = SECONDARY_AXIS_LEN - 1,
+        LOCAL_Y_END = Y_AXIS_LEN - 1,
+        LOCAL_Z_END = MAIN_AXIS_LEN - 1;
 
     public SmallTunnel(ServerWorld world, NbtCompound compoundTag) {
         super(BetterMineshaftStructurePieceType.SMALL_TUNNEL, compoundTag);

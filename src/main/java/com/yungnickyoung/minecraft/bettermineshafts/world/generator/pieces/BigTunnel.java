@@ -21,7 +21,6 @@ import net.minecraft.nbt.NbtIntArray;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.property.Properties;
-import net.minecraft.structure.StructureManager;
 import net.minecraft.structure.StructurePiece;
 import net.minecraft.structure.StructurePiecesHolder;
 import net.minecraft.util.Pair;
@@ -44,13 +43,13 @@ public class BigTunnel extends MineshaftPiece {
     private final List<Integer> smallSupports = Lists.newLinkedList(); // local z coords
     private final List<Pair<Integer, Integer>> gravelDeposits = Lists.newLinkedList(); // Pair<z coordinate, side> where side 0 = left, 1 = right
     private static final int
-            SECONDARY_AXIS_LEN = 9,
-            Y_AXIS_LEN = 8,
-            MAIN_AXIS_LEN = 24;
+        SECONDARY_AXIS_LEN = 9,
+        Y_AXIS_LEN = 8,
+        MAIN_AXIS_LEN = 24;
     private static final int
-            LOCAL_X_END = SECONDARY_AXIS_LEN - 1,
-            LOCAL_Y_END = Y_AXIS_LEN - 1,
-            LOCAL_Z_END = MAIN_AXIS_LEN - 1;
+        LOCAL_X_END = SECONDARY_AXIS_LEN - 1,
+        LOCAL_Y_END = Y_AXIS_LEN - 1,
+        LOCAL_Z_END = MAIN_AXIS_LEN - 1;
 
     public BigTunnel(ServerWorld world, NbtCompound compoundTag) {
         super(BetterMineshaftStructurePieceType.BIG_TUNNEL, compoundTag);
@@ -105,7 +104,7 @@ public class BigTunnel extends MineshaftPiece {
         NbtList listTag6 = new NbtList();
         smallShaftLeftEntrances.forEach(pos -> listTag1.add(new NbtIntArray(new int[]{pos.getX(), pos.getY(), pos.getZ()})));
         smallShaftRightEntrances.forEach(pos -> listTag2.add(new NbtIntArray(new int[]{pos.getX(), pos.getY(), pos.getZ()})));
-        sideRoomEntrances.forEach(blockBox -> listTag3.add(new NbtIntArray(new int[]{blockBox.getMinY(), blockBox.getMinZ(), blockBox.getMaxX(), blockBox.getMaxY(), blockBox.getMaxZ(), blockBox.getMinX()})));
+        sideRoomEntrances.forEach(blockBox -> listTag3.add(new NbtIntArray(new int[]{blockBox.getMinX(), blockBox.getMinY(), blockBox.getMinZ(), blockBox.getMaxX(), blockBox.getMaxY(), blockBox.getMaxZ()})));
         bigSupports.forEach(z -> listTag4.add(NbtInt.of(z)));
         smallSupports.forEach(z -> listTag5.add(NbtInt.of(z)));
         gravelDeposits.forEach(pair -> listTag6.add(new NbtIntArray(new int[]{pair.getLeft(), pair.getRight()})));
@@ -145,7 +144,7 @@ public class BigTunnel extends MineshaftPiece {
         }
 
         // Get the length of the main axis. This SHOULD be equal to the MAIN_AXIS_LEN variable.
-        int pieceLen = this.getFacing().getAxis() == Direction.Axis.Z ? this.boundingBox.getBlockCountZ() : this.boundingBox.getBlockCountY();
+        int pieceLen = this.getFacing().getAxis() == Direction.Axis.Z ? this.boundingBox.getBlockCountZ() : this.boundingBox.getBlockCountX();
 
         // Build side rooms
         buildSideRoomsLeft(structurePiece, structurePiecesHolder, random, direction, pieceLen);

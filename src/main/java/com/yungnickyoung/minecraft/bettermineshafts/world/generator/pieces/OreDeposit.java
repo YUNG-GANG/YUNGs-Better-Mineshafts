@@ -8,7 +8,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.structure.StructureManager;
 import net.minecraft.structure.StructurePiece;
 import net.minecraft.structure.StructurePiecesHolder;
 import net.minecraft.util.math.BlockBox;
@@ -45,8 +44,8 @@ public class OreDeposit extends MineshaftPiece {
 
         public static OreType valueOf(int value) {
             return Arrays.stream(values())
-                    .filter(oreType -> oreType.value == value)
-                    .findFirst().get();
+                .filter(oreType -> oreType.value == value)
+                .findFirst().get();
         }
 
         public BlockState getBlock() {
@@ -56,13 +55,13 @@ public class OreDeposit extends MineshaftPiece {
 
     private OreType oreType;
     private static final int
-            SECONDARY_AXIS_LEN = 5,
-            Y_AXIS_LEN = 5,
-            MAIN_AXIS_LEN = 4;
+        SECONDARY_AXIS_LEN = 5,
+        Y_AXIS_LEN = 5,
+        MAIN_AXIS_LEN = 4;
     private static final int
-            LOCAL_X_END = SECONDARY_AXIS_LEN - 1,
-            LOCAL_Y_END = Y_AXIS_LEN - 1,
-            LOCAL_Z_END = MAIN_AXIS_LEN - 1;
+        LOCAL_X_END = SECONDARY_AXIS_LEN - 1,
+        LOCAL_Y_END = Y_AXIS_LEN - 1,
+        LOCAL_Z_END = MAIN_AXIS_LEN - 1;
 
     public OreDeposit(ServerWorld world, NbtCompound compoundTag) {
         super(BetterMineshaftStructurePieceType.ORE_DEPOSIT, compoundTag);

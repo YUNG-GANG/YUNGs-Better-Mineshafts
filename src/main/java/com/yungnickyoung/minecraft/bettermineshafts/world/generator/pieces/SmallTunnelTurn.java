@@ -9,7 +9,6 @@ import net.minecraft.block.RailBlock;
 import net.minecraft.block.enums.RailShape;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.structure.StructureManager;
 import net.minecraft.structure.StructurePiece;
 import net.minecraft.structure.StructurePiecesHolder;
 import net.minecraft.util.math.BlockBox;
@@ -35,20 +34,20 @@ public class SmallTunnelTurn extends MineshaftPiece {
 
         public static TurnDirection valueOf(int value) {
             return Arrays.stream(values())
-                    .filter(dir -> dir.value == value)
-                    .findFirst().get();
+                .filter(dir -> dir.value == value)
+                .findFirst().get();
         }
     }
 
     private final TurnDirection turnDirection;
     private static final int
-            SECONDARY_AXIS_LEN = 5,
-            Y_AXIS_LEN = 5,
-            MAIN_AXIS_LEN = 5;
+        SECONDARY_AXIS_LEN = 5,
+        Y_AXIS_LEN = 5,
+        MAIN_AXIS_LEN = 5;
     private static final int
-            LOCAL_X_END = SECONDARY_AXIS_LEN - 1,
-            LOCAL_Y_END = Y_AXIS_LEN - 1,
-            LOCAL_Z_END = MAIN_AXIS_LEN - 1;
+        LOCAL_X_END = SECONDARY_AXIS_LEN - 1,
+        LOCAL_Y_END = Y_AXIS_LEN - 1,
+        LOCAL_Z_END = MAIN_AXIS_LEN - 1;
 
     public SmallTunnelTurn(ServerWorld world, NbtCompound compoundTag) {
         super(BetterMineshaftStructurePieceType.SMALL_TUNNEL_TURN, compoundTag);

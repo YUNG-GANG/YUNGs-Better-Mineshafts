@@ -10,7 +10,6 @@ import net.minecraft.block.RailBlock;
 import net.minecraft.block.enums.RailShape;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.structure.StructureManager;
 import net.minecraft.structure.StructurePiece;
 import net.minecraft.structure.StructurePiecesHolder;
 import net.minecraft.util.math.BlockBox;
@@ -25,13 +24,13 @@ import java.util.Random;
 
 public class LayeredIntersection4 extends MineshaftPiece {
     private static final int
-            SECONDARY_AXIS_LEN = 7,
-            Y_AXIS_LEN = 9,
-            MAIN_AXIS_LEN = 7;
+        SECONDARY_AXIS_LEN = 7,
+        Y_AXIS_LEN = 9,
+        MAIN_AXIS_LEN = 7;
     private static final int
-            LOCAL_X_END = SECONDARY_AXIS_LEN - 1,
-            LOCAL_Y_END = Y_AXIS_LEN - 1,
-            LOCAL_Z_END = MAIN_AXIS_LEN - 1;
+        LOCAL_X_END = SECONDARY_AXIS_LEN - 1,
+        LOCAL_Y_END = Y_AXIS_LEN - 1,
+        LOCAL_Z_END = MAIN_AXIS_LEN - 1;
 
     public LayeredIntersection4(ServerWorld world, NbtCompound compoundTag) {
         super(BetterMineshaftStructurePieceType.LAYERED_INTERSECTION_4, compoundTag);
