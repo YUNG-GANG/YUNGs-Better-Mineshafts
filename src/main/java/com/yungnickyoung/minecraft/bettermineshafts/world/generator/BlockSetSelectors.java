@@ -28,10 +28,10 @@ public class BlockSetSelectors {
         {
             BetterMineshaftStructure.Type.NORMAL,
             new BlockSetSelector(Blocks.OAK_PLANKS.getDefaultState())
-                .addBlock(Blocks.COBBLESTONE.getDefaultState(), 0.1f)
-                .addBlock(Blocks.STONE_BRICKS.getDefaultState(), 0.1f)
-                .addBlock(Blocks.MOSSY_STONE_BRICKS.getDefaultState(), 0.1f)
-                .addBlock(Blocks.CRACKED_STONE_BRICKS.getDefaultState(), 0.1f)
+                .addBlock(Blocks.STONE.getDefaultState(), 0.1f)
+                .addBlock(Blocks.STONE.getDefaultState(), 0.1f)
+                .addBlock(Blocks.STONE.getDefaultState(), 0.1f)
+                .addBlock(Blocks.STONE.getDefaultState(), 0.1f)
                 .addBlock(Blocks.CAVE_AIR.getDefaultState(), 0.2f)
         },
         {
@@ -44,61 +44,55 @@ public class BlockSetSelectors {
                 .addBlock(Blocks.CAVE_AIR.getDefaultState(), 0.2f)
         },
         {
-            BetterMineshaftStructure.Type.JUNGLE,
-            new BlockSetSelector(Blocks.JUNGLE_PLANKS.getDefaultState())
-                .addBlock(Blocks.MOSSY_COBBLESTONE.getDefaultState(), 0.1f)
-                .addBlock(Blocks.STONE_BRICKS.getDefaultState(), 0.05f)
-                .addBlock(Blocks.MOSSY_STONE_BRICKS.getDefaultState(), 0.2f)
-                .addBlock(Blocks.CRACKED_STONE_BRICKS.getDefaultState(), 0.05f)
-                .addBlock(Blocks.CHISELED_STONE_BRICKS.getDefaultState(), 0.05f)
+            BetterMineshaftStructure.Type.NORMAL,
+            new BlockSetSelector(Blocks.OAK_PLANKS.getDefaultState())
+                .addBlock(Blocks.STONE.getDefaultState(), 0.1f)
+                .addBlock(Blocks.STONE.getDefaultState(), 0.1f)
+                .addBlock(Blocks.STONE.getDefaultState(), 0.1f)
+                .addBlock(Blocks.STONE.getDefaultState(), 0.1f)
                 .addBlock(Blocks.CAVE_AIR.getDefaultState(), 0.2f)
         },
         {
-            BetterMineshaftStructure.Type.SNOW,
-            new BlockSetSelector(Blocks.SPRUCE_PLANKS.getDefaultState())
-                .addBlock(Blocks.SNOW_BLOCK.getDefaultState(), .25f)
-                .addBlock(Blocks.PACKED_ICE.getDefaultState(), .1f)
-                .addBlock(Blocks.BLUE_ICE.getDefaultState(), .1f)
-                .addBlock(Blocks.COBBLESTONE.getDefaultState(), 0.05f)
-                .addBlock(Blocks.CRACKED_STONE_BRICKS.getDefaultState(), 0.1f)
+            BetterMineshaftStructure.Type.NORMAL,
+            new BlockSetSelector(Blocks.OAK_PLANKS.getDefaultState())
+                .addBlock(Blocks.STONE.getDefaultState(), 0.1f)
+                .addBlock(Blocks.STONE.getDefaultState(), 0.1f)
+                .addBlock(Blocks.STONE.getDefaultState(), 0.1f)
+                .addBlock(Blocks.STONE.getDefaultState(), 0.1f)
                 .addBlock(Blocks.CAVE_AIR.getDefaultState(), 0.2f)
         },
         {
             BetterMineshaftStructure.Type.ICE,
-            new BlockSetSelector(Blocks.PACKED_ICE.getDefaultState())
-                .addBlock(Blocks.BLUE_ICE.getDefaultState(), .4f)
-                .addBlock(Blocks.SNOW_BLOCK.getDefaultState(), 0.1f)
-                .addBlock(Blocks.CAVE_AIR.getDefaultState(), 0.1f)
+            new BlockSetSelector(Blocks.STONE.getDefaultState())
+                .addBlock(Blocks.STONE.getDefaultState(), .4f)
+                .addBlock(Blocks.STONE.getDefaultState(), 0.1f)
+                .addBlock(Blocks.STONE.getDefaultState(), 0.1f)
         },
         {
-            BetterMineshaftStructure.Type.DESERT,
-            new BlockSetSelector(Blocks.SANDSTONE.getDefaultState())
-                .addBlock(Blocks.SAND.getDefaultState(), 0.3f)
-                .addBlock(Blocks.CHISELED_SANDSTONE.getDefaultState(), 0.1f)
-                .addBlock(Blocks.CUT_SANDSTONE.getDefaultState(), 0.1f)
-                .addBlock(Blocks.SMOOTH_SANDSTONE.getDefaultState(), 0.1f)
-                .addBlock(Blocks.STONE_BRICKS.getDefaultState(), 0.05f)
-                .addBlock(Blocks.CRACKED_STONE_BRICKS.getDefaultState(), 0.05f)
+            BetterMineshaftStructure.Type.NORMAL,
+            new BlockSetSelector(Blocks.OAK_PLANKS.getDefaultState())
+                .addBlock(Blocks.STONE.getDefaultState(), 0.1f)
+                .addBlock(Blocks.STONE.getDefaultState(), 0.1f)
+                .addBlock(Blocks.STONE.getDefaultState(), 0.1f)
+                .addBlock(Blocks.STONE.getDefaultState(), 0.1f)
                 .addBlock(Blocks.CAVE_AIR.getDefaultState(), 0.2f)
         },
         {
-            BetterMineshaftStructure.Type.RED_DESERT,
-            new BlockSetSelector(Blocks.RED_SANDSTONE.getDefaultState())
-                .addBlock(Blocks.RED_SAND.getDefaultState(), 0.3f)
-                .addBlock(Blocks.CHISELED_RED_SANDSTONE.getDefaultState(), 0.1f)
-                .addBlock(Blocks.CUT_RED_SANDSTONE.getDefaultState(), 0.1f)
-                .addBlock(Blocks.SMOOTH_RED_SANDSTONE.getDefaultState(), 0.1f)
-                .addBlock(Blocks.STONE_BRICKS.getDefaultState(), 0.05f)
-                .addBlock(Blocks.CRACKED_STONE_BRICKS.getDefaultState(), 0.05f)
+            BetterMineshaftStructure.Type.NORMAL,
+            new BlockSetSelector(Blocks.OAK_PLANKS.getDefaultState())
+                .addBlock(Blocks.STONE.getDefaultState(), 0.1f)
+                .addBlock(Blocks.STONE.getDefaultState(), 0.1f)
+                .addBlock(Blocks.STONE.getDefaultState(), 0.1f)
+                .addBlock(Blocks.STONE.getDefaultState(), 0.1f)
                 .addBlock(Blocks.CAVE_AIR.getDefaultState(), 0.2f)
         },
         {
-            BetterMineshaftStructure.Type.SAVANNA,
-            new BlockSetSelector(Blocks.ACACIA_PLANKS.getDefaultState())
-                .addBlock(Blocks.COBBLESTONE.getDefaultState(), 0.1f)
-                .addBlock(Blocks.STONE_BRICKS.getDefaultState(), 0.1f)
-                .addBlock(Blocks.MOSSY_STONE_BRICKS.getDefaultState(), 0.1f)
-                .addBlock(Blocks.CRACKED_STONE_BRICKS.getDefaultState(), 0.1f)
+            BetterMineshaftStructure.Type.NORMAL,
+            new BlockSetSelector(Blocks.OAK_PLANKS.getDefaultState())
+                .addBlock(Blocks.STONE.getDefaultState(), 0.1f)
+                .addBlock(Blocks.STONE.getDefaultState(), 0.1f)
+                .addBlock(Blocks.STONE.getDefaultState(), 0.1f)
+                .addBlock(Blocks.STONE.getDefaultState(), 0.1f)
                 .addBlock(Blocks.CAVE_AIR.getDefaultState(), 0.2f)
         },
         {
