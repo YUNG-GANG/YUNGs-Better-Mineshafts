@@ -1,36 +1,34 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
 import com.google.common.collect.Lists;
+import com.mojang.datafixers.util.Pair;
 import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshafts;
-import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftStructure;
+import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftStructureFeature;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
 import com.yungnickyoung.minecraft.yungsapi.world.BlockSetSelector;
 import com.yungnickyoung.minecraft.yungsapi.world.BoundingBoxHelper;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.LanternBlock;
-import net.minecraft.block.PoweredRailBlock;
-import net.minecraft.block.enums.WallShape;
-import net.minecraft.entity.vehicle.ChestMinecartEntity;
-import net.minecraft.entity.vehicle.TntMinecartEntity;
-import net.minecraft.loot.LootTables;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtInt;
-import net.minecraft.nbt.NbtIntArray;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.state.property.Properties;
-import net.minecraft.structure.StructurePiece;
-import net.minecraft.structure.StructurePiecesHolder;
-import net.minecraft.util.Pair;
-import net.minecraft.util.math.BlockBox;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.StructureWorldAccess;
-import net.minecraft.world.gen.StructureAccessor;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.IntArrayTag;
+import net.minecraft.nbt.IntTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.entity.vehicle.MinecartChest;
+import net.minecraft.world.entity.vehicle.MinecartTNT;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.StructureFeatureManager;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.WallSide;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.levelgen.structure.StructurePiece;
+import net.minecraft.world.level.levelgen.structure.StructurePieceAccessor;
+import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 
 import java.util.List;
 import java.util.Random;
@@ -38,7 +36,7 @@ import java.util.Random;
 public class BigTunnel extends MineshaftPiece {
     private final List<BlockPos> smallShaftLeftEntrances = Lists.newLinkedList();
     private final List<BlockPos> smallShaftRightEntrances = Lists.newLinkedList();
-    private final List<BlockBox> sideRoomEntrances = Lists.newLinkedList();
+    private final List<BoundingBox> sideRoomEntrances = Lists.newLinkedList();
     private final List<Integer> bigSupports = Lists.newLinkedList(); // local z coords
     private final List<Integer> smallSupports = Lists.newLinkedList(); // local z coords
     private final List<Pair<Integer, Integer>> gravelDeposits = Lists.newLinkedList(); // Pair<z coordinate, side> where side 0 = left, 1 = right
@@ -51,15 +49,15 @@ public class BigTunnel extends MineshaftPiece {
         LOCAL_Y_END = Y_AXIS_LEN - 1,
         LOCAL_Z_END = MAIN_AXIS_LEN - 1;
 
-    public BigTunnel(ServerWorld world, NbtCompound compoundTag) {
+    public BigTunnel(CompoundTag compoundTag) {
         super(BetterMineshaftStructurePieceType.BIG_TUNNEL, compoundTag);
 
-        NbtList listTag1 = compoundTag.getList("SmallShaftLeftEntrances", 11);
-        NbtList listTag2 = compoundTag.getList("SmallShaftRightEntrances", 11);
-        NbtList listTag3 = compoundTag.getList("SideRoomEntrances", 11);
-        NbtList listTag4 = compoundTag.getList("BigSupports", 3);
-        NbtList listTag5 = compoundTag.getList("SmallSupports", 3);
-        NbtList listTag6 = compoundTag.getList("GravelDeposits", 11);
+        ListTag listTag1 = compoundTag.getList("SmallShaftLeftEntrances", 11);
+        ListTag listTag2 = compoundTag.getList("SmallShaftRightEntrances", 11);
+        ListTag listTag3 = compoundTag.getList("SideRoomEntrances", 11);
+        ListTag listTag4 = compoundTag.getList("BigSupports", 3);
+        ListTag listTag5 = compoundTag.getList("SmallSupports", 3);
+        ListTag listTag6 = compoundTag.getList("GravelDeposits", 11);
 
         for (int i = 0; i < listTag1.size(); ++i) {
             this.smallShaftLeftEntrances.add(new BlockPos(listTag1.getIntArray(i)[0], listTag1.getIntArray(i)[1], listTag1.getIntArray(i)[2]));
@@ -70,7 +68,7 @@ public class BigTunnel extends MineshaftPiece {
         }
 
         for (int i = 0; i < listTag3.size(); ++i) {
-            this.sideRoomEntrances.add(new BlockBox(listTag3.getIntArray(i)[0], listTag3.getIntArray(i)[1],
+            this.sideRoomEntrances.add(new BoundingBox(listTag3.getIntArray(i)[0], listTag3.getIntArray(i)[1],
                     listTag3.getIntArray(i)[2], listTag3.getIntArray(i)[3],
                     listTag3.getIntArray(i)[4], listTag3.getIntArray(i)[5]));
         }
@@ -88,41 +86,41 @@ public class BigTunnel extends MineshaftPiece {
         }
     }
 
-    public BigTunnel(int chainLength, Random random, BlockBox blockBox, Direction direction, BetterMineshaftStructure.Type type) {
+    public BigTunnel(int chainLength, Random random, BoundingBox blockBox, Direction direction, BetterMineshaftStructureFeature.Type type) {
         super(BetterMineshaftStructurePieceType.BIG_TUNNEL, chainLength, type, blockBox);
         this.setOrientation(direction);
     }
 
     @Override
-    protected void writeNbt(ServerWorld world, NbtCompound tag) {
-        super.writeNbt(world, tag);
-        NbtList listTag1 = new NbtList();
-        NbtList listTag2 = new NbtList();
-        NbtList listTag3 = new NbtList();
-        NbtList listTag4 = new NbtList();
-        NbtList listTag5 = new NbtList();
-        NbtList listTag6 = new NbtList();
-        smallShaftLeftEntrances.forEach(pos -> listTag1.add(new NbtIntArray(new int[]{pos.getX(), pos.getY(), pos.getZ()})));
-        smallShaftRightEntrances.forEach(pos -> listTag2.add(new NbtIntArray(new int[]{pos.getX(), pos.getY(), pos.getZ()})));
-        sideRoomEntrances.forEach(blockBox -> listTag3.add(new NbtIntArray(new int[]{blockBox.getMinX(), blockBox.getMinY(), blockBox.getMinZ(), blockBox.getMaxX(), blockBox.getMaxY(), blockBox.getMaxZ()})));
-        bigSupports.forEach(z -> listTag4.add(NbtInt.of(z)));
-        smallSupports.forEach(z -> listTag5.add(NbtInt.of(z)));
-        gravelDeposits.forEach(pair -> listTag6.add(new NbtIntArray(new int[]{pair.getLeft(), pair.getRight()})));
-        tag.put("SmallShaftLeftEntrances", listTag1);
-        tag.put("SmallShaftRightEntrances", listTag2);
-        tag.put("SideRoomEntrances", listTag3);
-        tag.put("BigSupports", listTag4);
-        tag.put("SmallSupports", listTag5);
-        tag.put("GravelDeposits", listTag6);
+    protected void addAdditionalSaveData(StructurePieceSerializationContext structurePieceSerializationContext, CompoundTag compoundTag) {
+        super.addAdditionalSaveData(structurePieceSerializationContext, compoundTag);
+        ListTag listTag1 = new ListTag();
+        ListTag listTag2 = new ListTag();
+        ListTag listTag3 = new ListTag();
+        ListTag listTag4 = new ListTag();
+        ListTag listTag5 = new ListTag();
+        ListTag listTag6 = new ListTag();
+        smallShaftLeftEntrances.forEach(pos -> listTag1.add(new IntArrayTag(new int[]{pos.getX(), pos.getY(), pos.getZ()})));
+        smallShaftRightEntrances.forEach(pos -> listTag2.add(new IntArrayTag(new int[]{pos.getX(), pos.getY(), pos.getZ()})));
+        sideRoomEntrances.forEach(blockBox -> listTag3.add(new IntArrayTag(new int[]{blockBox.minX(), blockBox.minY(), blockBox.minZ(), blockBox.maxX(), blockBox.maxY(), blockBox.maxZ()})));
+        bigSupports.forEach(z -> listTag4.add(IntTag.valueOf(z)));
+        smallSupports.forEach(z -> listTag5.add(IntTag.valueOf(z)));
+        gravelDeposits.forEach(pair -> listTag6.add(new IntArrayTag(new int[]{pair.getFirst(), pair.getSecond()})));
+        compoundTag.put("SmallShaftLeftEntrances", listTag1);
+        compoundTag.put("SmallShaftRightEntrances", listTag2);
+        compoundTag.put("SideRoomEntrances", listTag3);
+        compoundTag.put("BigSupports", listTag4);
+        compoundTag.put("SmallSupports", listTag5);
+        compoundTag.put("GravelDeposits", listTag6);
     }
 
-    public static BlockBox determineBoxPosition(int x, int y, int z, Direction direction) {
+    public static BoundingBox determineBoxPosition(int x, int y, int z, Direction direction) {
         return BoundingBoxHelper.boxFromCoordsWithRotation(x, y, z, SECONDARY_AXIS_LEN, Y_AXIS_LEN, MAIN_AXIS_LEN, direction);
     }
 
     @Override
-    public void fillOpenings(StructurePiece structurePiece, StructurePiecesHolder structurePiecesHolder, Random random) {
-        Direction direction = this.getFacing();
+    public void addChildren(StructurePiece structurePiece, StructurePieceAccessor structurePieceAccessor, Random random) {
+        Direction direction = this.getOrientation();
         if (direction == null) {
             return;
         }
@@ -131,28 +129,28 @@ public class BigTunnel extends MineshaftPiece {
         switch (direction) {
             case NORTH:
             default:
-                BetterMineshaftGenerator.generateAndAddBigTunnelPiece(structurePiece, structurePiecesHolder, random, this.boundingBox.getMinX(), this.boundingBox.getMinY(), this.boundingBox.getMinZ() - 1, direction, chainLength);
+                BetterMineshaftGenerator.generateAndAddBigTunnelPiece(structurePiece, structurePieceAccessor, random, this.boundingBox.minX(), this.boundingBox.minY(), this.boundingBox.minZ() - 1, direction, this.genDepth);
                 break;
             case SOUTH:
-                BetterMineshaftGenerator.generateAndAddBigTunnelPiece(structurePiece, structurePiecesHolder, random, this.boundingBox.getMaxX(), this.boundingBox.getMinY(), this.boundingBox.getMaxZ() + 1, direction, chainLength);
+                BetterMineshaftGenerator.generateAndAddBigTunnelPiece(structurePiece, structurePieceAccessor, random, this.boundingBox.maxX(), this.boundingBox.minY(), this.boundingBox.maxZ() + 1, direction, this.genDepth);
                 break;
             case WEST:
-                BetterMineshaftGenerator.generateAndAddBigTunnelPiece(structurePiece, structurePiecesHolder, random, this.boundingBox.getMinX() - 1, this.boundingBox.getMinY(), this.boundingBox.getMaxZ(), direction, chainLength);
+                BetterMineshaftGenerator.generateAndAddBigTunnelPiece(structurePiece, structurePieceAccessor, random, this.boundingBox.minX() - 1, this.boundingBox.minY(), this.boundingBox.maxZ(), direction, this.genDepth);
                 break;
             case EAST:
-                BetterMineshaftGenerator.generateAndAddBigTunnelPiece(structurePiece, structurePiecesHolder, random, this.boundingBox.getMaxX() + 1, this.boundingBox.getMinY(), this.boundingBox.getMinZ(), direction, chainLength);
+                BetterMineshaftGenerator.generateAndAddBigTunnelPiece(structurePiece, structurePieceAccessor, random, this.boundingBox.maxX() + 1, this.boundingBox.minY(), this.boundingBox.minZ(), direction, this.genDepth);
         }
 
         // Get the length of the main axis. This SHOULD be equal to the MAIN_AXIS_LEN variable.
-        int pieceLen = this.getFacing().getAxis() == Direction.Axis.Z ? this.boundingBox.getBlockCountZ() : this.boundingBox.getBlockCountX();
+        int pieceLen = this.getOrientation().getAxis() == Direction.Axis.Z ? this.boundingBox.getZSpan() : this.boundingBox.getXSpan();
 
         // Build side rooms
-        buildSideRoomsLeft(structurePiece, structurePiecesHolder, random, direction, pieceLen);
-        buildSideRoomsRight(structurePiece, structurePiecesHolder, random, direction, pieceLen);
+        buildSideRoomsLeft(structurePiece, structurePieceAccessor, random, direction, pieceLen);
+        buildSideRoomsRight(structurePiece, structurePieceAccessor, random, direction, pieceLen);
 
         // Build small shafts and mark their entrances
-        buildSmallShaftsLeft(structurePiece, structurePiecesHolder, random, direction, pieceLen);
-        buildSmallShaftsRight(structurePiece, structurePiecesHolder, random, direction, pieceLen);
+        buildSmallShaftsLeft(structurePiece, structurePieceAccessor, random, direction, pieceLen);
+        buildSmallShaftsRight(structurePiece, structurePieceAccessor, random, direction, pieceLen);
 
         // Decorations
         buildSupports(random);
@@ -160,9 +158,9 @@ public class BigTunnel extends MineshaftPiece {
     }
 
     @Override
-    public boolean generate(StructureWorldAccess world, StructureAccessor structureAccessor, ChunkGenerator generator, Random random, BlockBox box, ChunkPos pos, BlockPos blockPos) {
+    public void postProcess(WorldGenLevel world, StructureFeatureManager structureFeatureManager, ChunkGenerator chunkGenerator, Random random, BoundingBox box, ChunkPos chunkPos, BlockPos blockPos) {
         // Don't spawn if in ocean biome
-        if (this.isInOcean(world, 0, 0) || this.isInOcean(world, LOCAL_X_END, LOCAL_Z_END)) return false;
+        if (this.isTouchingLiquid(world, boundingBox)) return;
 
         // Randomize blocks
         this.chanceReplaceNonAir(world, box, random, this.getReplacementRate(), 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getMainSelector());
@@ -194,19 +192,17 @@ public class BigTunnel extends MineshaftPiece {
         this.addVines(world, box, random, 1, 0, 1, LOCAL_X_END - 1, LOCAL_Y_END, LOCAL_Z_END - 1);
         generateLanterns(world, box, random);
         generateCobwebs(world, box, random);
-
-        return true;
     }
 
-    private void generateSmallShaftEntrances(StructureWorldAccess world, BlockBox box, Random random) {
+    private void generateSmallShaftEntrances(WorldGenLevel world, BoundingBox box, Random random) {
         smallShaftLeftEntrances.forEach(entrancePos -> {
             int x = entrancePos.getX();
             int y = entrancePos.getY();
             int z = entrancePos.getZ();
 
             this.fill(world, box, x, y, z, x, y, z + 2, AIR);
-            this.addBlock(world, getSupportBlock(), x, y + 1, z, box);
-            this.addBlock(world, getSupportBlock(), x, y + 1, z + 2, box);
+            this.placeBlock(world, getSupportBlock(), x, y + 1, z, box);
+            this.placeBlock(world, getSupportBlock(), x, y + 1, z + 2, box);
             this.fill(world, box, x + 1, y, z, x + 1, y + 1, z, getSupportBlock());
             this.fill(world, box, x + 1, y, z + 2, x + 1, y + 1, z + 2, getSupportBlock());
             this.chanceFill(world, box, random, .75f, x, y + 2, z, x + 1, y + 2, z + 2, getMainBlock());
@@ -221,8 +217,8 @@ public class BigTunnel extends MineshaftPiece {
 
             this.replaceAir(world, box, x, y - 1, z, x + 1, y - 1, z + 2, getMainBlock());
             this.fill(world, box, x + 1, y, z, x + 1, y, z + 2, AIR);
-            this.addBlock(world, getSupportBlock(), x + 1, y + 1, z, box);
-            this.addBlock(world, getSupportBlock(), x + 1, y + 1, z + 2, box);
+            this.placeBlock(world, getSupportBlock(), x + 1, y + 1, z, box);
+            this.placeBlock(world, getSupportBlock(), x + 1, y + 1, z + 2, box);
             this.fill(world, box, x, y, z, x, y + 1, z, getSupportBlock());
             this.fill(world, box, x, y, z + 2, x, y + 1, z + 2, getSupportBlock());
             this.chanceFill(world, box, random, .75f, x, y + 2, z, x + 1, y + 2, z + 2, getMainBlock());
@@ -230,19 +226,19 @@ public class BigTunnel extends MineshaftPiece {
         });
     }
 
-    private void generateLegs(StructureWorldAccess world, BlockBox box, Random random) {
+    private void generateLegs(WorldGenLevel world, BoundingBox box, Random random) {
         // Ice and mushroom biome variants have different legs
-        if (this.mineshaftType == BetterMineshaftStructure.Type.ICE || this.mineshaftType == BetterMineshaftStructure.Type.MUSHROOM) {
+        if (this.mineshaftType == BetterMineshaftStructureFeature.Type.ICE || this.mineshaftType == BetterMineshaftStructureFeature.Type.MUSHROOM) {
             generateLegsVariant(world, box, random);
             return;
         }
 
         // Configure support block
         BlockState supportBlock = getSupportBlock();
-        if (supportBlock.getProperties().contains(Properties.NORTH_WALL_SHAPE) && supportBlock.getProperties().contains(Properties.SOUTH_WALL_SHAPE)) {
-            supportBlock = supportBlock.with(Properties.NORTH_WALL_SHAPE, WallShape.TALL).with(Properties.SOUTH_WALL_SHAPE, WallShape.TALL);
-        } else if (supportBlock.getProperties().contains(Properties.NORTH) && supportBlock.getProperties().contains(Properties.SOUTH)) {
-            supportBlock = supportBlock.with(Properties.NORTH, true).with(Properties.SOUTH, true);
+        if (supportBlock.getProperties().contains(BlockStateProperties.NORTH_WALL) && supportBlock.getProperties().contains(BlockStateProperties.SOUTH_WALL)) {
+            supportBlock = supportBlock.setValue(BlockStateProperties.NORTH_WALL, WallSide.TALL).setValue(BlockStateProperties.SOUTH_WALL, WallSide.TALL);
+        } else if (supportBlock.getProperties().contains(BlockStateProperties.NORTH) && supportBlock.getProperties().contains(BlockStateProperties.SOUTH)) {
+            supportBlock = supportBlock.setValue(BlockStateProperties.NORTH, true).setValue(BlockStateProperties.SOUTH, true);
         }
 
         // Get leg selector
@@ -293,7 +289,7 @@ public class BigTunnel extends MineshaftPiece {
         generateLeg(world, random, box, LOCAL_X_END - 1, LOCAL_Z_END, legSelector);
     }
 
-    private void generateLegsVariant(StructureWorldAccess world, BlockBox box, Random random) {
+    private void generateLegsVariant(WorldGenLevel world, BoundingBox box, Random random) {
         BlockSetSelector legSelector = getLegSelector();
         for (int z = 0; z <= LOCAL_Z_END; z += 7) {
             generateLeg(world, random, box, 2, z + 1, legSelector);
@@ -323,10 +319,10 @@ public class BigTunnel extends MineshaftPiece {
         }
     }
 
-    private void generateGravelDeposits(StructureWorldAccess world, BlockBox box, Random random) {
+    private void generateGravelDeposits(WorldGenLevel world, BoundingBox box, Random random) {
         gravelDeposits.forEach(pair -> {
-            int z = pair.getLeft();
-            int side = pair.getRight();
+            int z = pair.getFirst();
+            int side = pair.getSecond();
             switch (side) {
                 case 0: // Left side
                 default:
@@ -354,53 +350,53 @@ public class BigTunnel extends MineshaftPiece {
         });
     }
 
-    private void generateCobwebs(StructureWorldAccess world, BlockBox box, Random random) {
+    private void generateCobwebs(WorldGenLevel world, BoundingBox box, Random random) {
         float chance = (float) BetterMineshafts.CONFIG.spawnRates.cobwebSpawnRate;
         smallSupports.forEach(z -> {
-            this.chanceReplaceAir(world, box, random, chance, 2, 3, z - 1, LOCAL_X_END - 2, 4, z + 1, Blocks.COBWEB.getDefaultState());
-            this.chanceReplaceAir(world, box, random, chance, 3, 5, z, LOCAL_X_END - 3, 5, z, Blocks.COBWEB.getDefaultState());
+            this.chanceReplaceAir(world, box, random, chance, 2, 3, z - 1, LOCAL_X_END - 2, 4, z + 1, Blocks.COBWEB.defaultBlockState());
+            this.chanceReplaceAir(world, box, random, chance, 3, 5, z, LOCAL_X_END - 3, 5, z, Blocks.COBWEB.defaultBlockState());
         });
 
         bigSupports.forEach(z -> {
-            this.chanceReplaceAir(world, box, random, chance, 1, 1, z, 1, 4, z + 2, Blocks.COBWEB.getDefaultState());
-            this.chanceReplaceAir(world, box, random, chance, LOCAL_X_END - 1, 1, z, LOCAL_X_END - 1, 4, z + 2, Blocks.COBWEB.getDefaultState());
-            this.chanceReplaceAir(world, box, random, chance, 2, 5, z, LOCAL_X_END - 2, 5, z + 2, Blocks.COBWEB.getDefaultState());
-            this.chanceReplaceAir(world, box, random, chance, 2, 4, z + 1, LOCAL_X_END - 2, 4, z + 1, Blocks.COBWEB.getDefaultState());
-            this.chanceReplaceAir(world, box, random, chance, 3, 6, z + 1, LOCAL_X_END - 3, 6, z + 1, Blocks.COBWEB.getDefaultState());
+            this.chanceReplaceAir(world, box, random, chance, 1, 1, z, 1, 4, z + 2, Blocks.COBWEB.defaultBlockState());
+            this.chanceReplaceAir(world, box, random, chance, LOCAL_X_END - 1, 1, z, LOCAL_X_END - 1, 4, z + 2, Blocks.COBWEB.defaultBlockState());
+            this.chanceReplaceAir(world, box, random, chance, 2, 5, z, LOCAL_X_END - 2, 5, z + 2, Blocks.COBWEB.defaultBlockState());
+            this.chanceReplaceAir(world, box, random, chance, 2, 4, z + 1, LOCAL_X_END - 2, 4, z + 1, Blocks.COBWEB.defaultBlockState());
+            this.chanceReplaceAir(world, box, random, chance, 3, 6, z + 1, LOCAL_X_END - 3, 6, z + 1, Blocks.COBWEB.defaultBlockState());
         });
     }
 
-    private void generateChestCarts(StructureWorldAccess world, BlockBox box, Random random) {
+    private void generateChestCarts(WorldGenLevel world, BoundingBox box, Random random) {
         for (int z = 0; z <= LOCAL_Z_END; z++) {
             if (random.nextFloat() < BetterMineshafts.CONFIG.spawnRates.mainShaftChestMinecartSpawnRate) {
-                BlockPos blockPos = new BlockPos(this.applyXTransform(LOCAL_X_END / 2, z), applyYTransform(1), this.applyZTransform(LOCAL_X_END / 2, z));
-                if (box.contains(blockPos) && !world.getBlockState(blockPos.down()).isAir()) {
-                    ChestMinecartEntity chestMinecartEntity = new ChestMinecartEntity(world.toServerWorld(), ((float) blockPos.getX() + 0.5F), ((float) blockPos.getY() + 0.5F), ((float) blockPos.getZ() + 0.5F));
-                    chestMinecartEntity.setLootTable(LootTables.ABANDONED_MINESHAFT_CHEST, random.nextLong());
-                    world.spawnEntity(chestMinecartEntity);
+                BlockPos blockPos = this.getWorldPos(LOCAL_X_END / 2, 1, z);
+                if (box.isInside(blockPos) && !world.getBlockState(blockPos.below()).isAir()) {
+                    MinecartChest chestMinecartEntity = new MinecartChest(world.getLevel(), ((float) blockPos.getX() + 0.5F), ((float) blockPos.getY() + 0.5F), ((float) blockPos.getZ() + 0.5F));
+                    chestMinecartEntity.setLootTable(BuiltInLootTables.ABANDONED_MINESHAFT, random.nextLong());
+                    world.addFreshEntity(chestMinecartEntity);
                 }
             }
         }
     }
 
-    private void generateTntCarts(StructureWorldAccess world, BlockBox box, Random random) {
+    private void generateTntCarts(WorldGenLevel world, BoundingBox box, Random random) {
         for (int z = 0; z <= LOCAL_Z_END; z++) {
             if (random.nextFloat() < BetterMineshafts.CONFIG.spawnRates.mainShaftTntMinecartSpawnRate) {
-                BlockPos blockPos = new BlockPos(this.applyXTransform(LOCAL_X_END / 2, z), applyYTransform(1), this.applyZTransform(LOCAL_X_END / 2, z));
-                if (box.contains(blockPos) && !world.getBlockState(blockPos.down()).isAir()) {
-                    TntMinecartEntity tntMinecartEntity = new TntMinecartEntity(world.toServerWorld(), ((float) blockPos.getX() + 0.5F), ((float) blockPos.getY() + 0.5F), ((float) blockPos.getZ() + 0.5F));
-                    world.spawnEntity(tntMinecartEntity);
+                BlockPos blockPos = this.getWorldPos(LOCAL_X_END / 2, 1, z);
+                if (box.isInside(blockPos) && !world.getBlockState(blockPos.below()).isAir()) {
+                    MinecartTNT tntMinecartEntity = new MinecartTNT(world.getLevel(), ((float) blockPos.getX() + 0.5F), ((float) blockPos.getY() + 0.5F), ((float) blockPos.getZ() + 0.5F));
+                    world.addFreshEntity(tntMinecartEntity);
                 }
             }
         }
     }
 
-    private void generateBigSupports(StructureWorldAccess world, BlockBox box, Random random) {
+    private void generateBigSupports(WorldGenLevel world, BoundingBox box, Random random) {
         BlockState supportBlock = getSupportBlock();
-        if (supportBlock.getProperties().contains(Properties.EAST_WALL_SHAPE) && supportBlock.getProperties().contains(Properties.WEST_WALL_SHAPE)) {
-            supportBlock = supportBlock.with(Properties.EAST_WALL_SHAPE, WallShape.TALL).with(Properties.WEST_WALL_SHAPE, WallShape.TALL);
-        } else if (supportBlock.getProperties().contains(Properties.EAST) && supportBlock.getProperties().contains(Properties.WEST)) {
-            supportBlock = supportBlock.with(Properties.EAST, true).with(Properties.WEST, true);
+        if (supportBlock.getProperties().contains(BlockStateProperties.EAST_WALL) && supportBlock.getProperties().contains(BlockStateProperties.WEST_WALL)) {
+            supportBlock = supportBlock.setValue(BlockStateProperties.EAST_WALL, WallSide.TALL).setValue(BlockStateProperties.WEST_WALL, WallSide.TALL);
+        } else if (supportBlock.getProperties().contains(BlockStateProperties.EAST) && supportBlock.getProperties().contains(BlockStateProperties.WEST)) {
+            supportBlock = supportBlock.setValue(BlockStateProperties.EAST, true).setValue(BlockStateProperties.WEST, true);
         }
 
         for (int z : bigSupports) {
@@ -408,10 +404,10 @@ public class BigTunnel extends MineshaftPiece {
             this.chanceFill(world, box, random, .6f, 1, 1, z, 2, 1, z + 2, getMainSlab());
             this.chanceFill(world, box, random, .6f, LOCAL_X_END - 2, 1, z, LOCAL_X_END - 1, 1, z + 2, getMainSlab());
             // Main blocks
-            this.addBlock(world, getMainBlock(), 1, 1, z + 1, box);
-            this.addBlock(world, getMainBlock(), LOCAL_X_END - 1, 1, z + 1, box);
-            this.addBlock(world, getMainBlock(), 1, 4, z + 1, box);
-            this.addBlock(world, getMainBlock(), LOCAL_X_END - 1, 4, z + 1, box);
+            this.placeBlock(world, getMainBlock(), 1, 1, z + 1, box);
+            this.placeBlock(world, getMainBlock(), LOCAL_X_END - 1, 1, z + 1, box);
+            this.placeBlock(world, getMainBlock(), 1, 4, z + 1, box);
+            this.placeBlock(world, getMainBlock(), LOCAL_X_END - 1, 4, z + 1, box);
             this.fill(world, box, 2, 5, z + 1, LOCAL_X_END - 2, 5, z + 1, getMainBlock());
             // Supports
             this.fill(world, box, 1, 2, z + 1, 1, 3, z + 1, getSupportBlock());
@@ -420,37 +416,37 @@ public class BigTunnel extends MineshaftPiece {
         }
     }
 
-    private void generateSmallSupports(StructureWorldAccess world, BlockBox box, Random random) {
+    private void generateSmallSupports(WorldGenLevel world, BoundingBox box, Random random) {
         BlockState supportBlock = getSupportBlock();
-        if (supportBlock.getProperties().contains(Properties.EAST_WALL_SHAPE) && supportBlock.getProperties().contains(Properties.WEST_WALL_SHAPE)) {
-            supportBlock = supportBlock.with(Properties.EAST_WALL_SHAPE, WallShape.TALL).with(Properties.WEST_WALL_SHAPE, WallShape.TALL);
-        } else if (supportBlock.getProperties().contains(Properties.EAST) && supportBlock.getProperties().contains(Properties.WEST)) {
-            supportBlock = supportBlock.with(Properties.EAST, true).with(Properties.WEST, true);
+        if (supportBlock.getProperties().contains(BlockStateProperties.EAST_WALL) && supportBlock.getProperties().contains(BlockStateProperties.WEST_WALL)) {
+            supportBlock = supportBlock.setValue(BlockStateProperties.EAST_WALL, WallSide.TALL).setValue(BlockStateProperties.WEST_WALL, WallSide.TALL);
+        } else if (supportBlock.getProperties().contains(BlockStateProperties.EAST) && supportBlock.getProperties().contains(BlockStateProperties.WEST)) {
+            supportBlock = supportBlock.setValue(BlockStateProperties.EAST, true).setValue(BlockStateProperties.WEST, true);
         }
 
         for (int z : smallSupports) {
-            this.addBlock(world, getMainBlock(), 2, 1, z, box);
-            this.addBlock(world, getMainBlock(), LOCAL_X_END - 2, 1, z, box);
-            this.addBlock(world, getSupportBlock(), 2, 2, z, box);
-            this.addBlock(world, getSupportBlock(), LOCAL_X_END - 2, 2, z, box);
-            this.addBlock(world, getMainBlock(), 2, 3, z, box);
-            this.addBlock(world, getMainBlock(), LOCAL_X_END - 2, 3, z, box);
+            this.placeBlock(world, getMainBlock(), 2, 1, z, box);
+            this.placeBlock(world, getMainBlock(), LOCAL_X_END - 2, 1, z, box);
+            this.placeBlock(world, getSupportBlock(), 2, 2, z, box);
+            this.placeBlock(world, getSupportBlock(), LOCAL_X_END - 2, 2, z, box);
+            this.placeBlock(world, getMainBlock(), 2, 3, z, box);
+            this.placeBlock(world, getMainBlock(), LOCAL_X_END - 2, 3, z, box);
             this.fill(world, box, 3, 4, z, LOCAL_X_END - 3, 4, z, getMainBlock());
             this.chanceReplaceNonAir(world, box, random, .5f, 3, 4, z, LOCAL_X_END - 3, 4, z, supportBlock);
             this.chanceFill(world, box, random, .4f, 2, 3, z, LOCAL_X_END - 2, 3, z, supportBlock);
-            this.addBlock(world, supportBlock, 3, 3, z, box);
-            this.addBlock(world, supportBlock, LOCAL_X_END - 3, 3, z, box);
+            this.placeBlock(world, supportBlock, 3, 3, z, box);
+            this.placeBlock(world, supportBlock, LOCAL_X_END - 3, 3, z, box);
         }
     }
 
-    private void generateLanterns(StructureWorldAccess world, BlockBox box, Random random) {
-        BlockState LANTERN = Blocks.LANTERN.getDefaultState().with(LanternBlock.HANGING, true);
+    private void generateLanterns(WorldGenLevel world, BoundingBox box, Random random) {
+        BlockState LANTERN = Blocks.LANTERN.defaultBlockState().setValue(BlockStateProperties.HANGING, true);
         for (int z = 0; z <= LOCAL_Z_END; z++) {
             for (int x = 3; x <= LOCAL_X_END - 3; x++) {
                 // Check rate * 3 because this used to spawn in any of the 3 middle blocks, so the * 3 matches the spawn rate for the previous logic
                 if (random.nextFloat() < BetterMineshafts.CONFIG.spawnRates.lanternSpawnRate * 3) {
-                    if (!this.getBlockAt(world, x, LOCAL_Y_END, z, box).isAir()) {
-                        this.addBlock(world, LANTERN, x, LOCAL_Y_END - 1, z, box);
+                    if (!this.getBlock(world, x, LOCAL_Y_END, z, box).isAir()) {
+                        this.placeBlock(world, LANTERN, x, LOCAL_Y_END - 1, z, box);
                         z += 20;
                     }
                 }
@@ -458,34 +454,34 @@ public class BigTunnel extends MineshaftPiece {
         }
     }
 
-    private void generateRails(StructureWorldAccess world, BlockBox box, Random random) {
+    private void generateRails(WorldGenLevel world, BoundingBox box, Random random) {
         // Place rails in center
-        this.chanceFill(world, box, random, .5f, LOCAL_X_END / 2, 1, 0, LOCAL_X_END / 2, 1, LOCAL_Z_END, Blocks.RAIL.getDefaultState());
+        this.chanceFill(world, box, random, .5f, LOCAL_X_END / 2, 1, 0, LOCAL_X_END / 2, 1, LOCAL_Z_END, Blocks.RAIL.defaultBlockState());
         // Place powered rails
         int blocksSinceLastRail = 0;
         for (int n = 0; n <= LOCAL_Z_END; n++) {
             blocksSinceLastRail++;
             if (random.nextInt(20) == 0 || blocksSinceLastRail > 25) {
-                this.addBlock(world, Blocks.POWERED_RAIL.getDefaultState().with(PoweredRailBlock.POWERED, true), LOCAL_X_END / 2, 1, n, box);
+                this.placeBlock(world, Blocks.POWERED_RAIL.defaultBlockState().setValue(BlockStateProperties.POWERED, true), LOCAL_X_END / 2, 1, n, box);
                 blocksSinceLastRail = 0; // reset counter
             }
         }
     }
 
-    private void generateSideRoomOpenings(StructureWorldAccess world, BlockBox chunkBox, Random random) {
+    private void generateSideRoomOpenings(WorldGenLevel world, BoundingBox chunkBox, Random random) {
         sideRoomEntrances.forEach(entranceBox -> {
             // Ensure floor in gap between tunnel and room
-            this.replaceAir(world, chunkBox, random, entranceBox.getMinX(), 0, entranceBox.getMinZ(), entranceBox.getMaxX(), 0, entranceBox.getMaxZ(), getBrickSelector());
+            this.replaceAir(world, chunkBox, random, entranceBox.minX(), 0, entranceBox.minZ(), entranceBox.maxX(), 0, entranceBox.maxZ(), getBrickSelector());
             switch (random.nextInt(3)) {
                 case 0:
                     // Completely open
-                    this.fill(world, chunkBox, entranceBox.getMinX(), entranceBox.getMinY(), entranceBox.getMinZ() + 2, entranceBox.getMaxX(), entranceBox.getMaxY(), entranceBox.getMaxZ() - 2, AIR);
+                    this.fill(world, chunkBox, entranceBox.minX(), entranceBox.minY(), entranceBox.minZ() + 2, entranceBox.maxX(), entranceBox.maxY(), entranceBox.maxZ() - 2, AIR);
                     return;
                 case 1:
                     // A few columns for openings
-                    this.fill(world, chunkBox, entranceBox.getMinX(), entranceBox.getMinY(), entranceBox.getMinZ() + 2, entranceBox.getMaxX(), entranceBox.getMaxY() - 1, entranceBox.getMinZ() + 2, AIR);
-                    this.fill(world, chunkBox, entranceBox.getMinX(), entranceBox.getMinY(), entranceBox.getMinZ() + 4, entranceBox.getMaxX(), entranceBox.getMaxY() - 1, entranceBox.getMinZ() + 5, AIR);
-                    this.fill(world, chunkBox, entranceBox.getMinX(), entranceBox.getMinY(), entranceBox.getMinZ() + 7, entranceBox.getMaxX(), entranceBox.getMaxY() - 1, entranceBox.getMinZ() + 7, AIR);
+                    this.fill(world, chunkBox, entranceBox.minX(), entranceBox.minY(), entranceBox.minZ() + 2, entranceBox.maxX(), entranceBox.maxY() - 1, entranceBox.minZ() + 2, AIR);
+                    this.fill(world, chunkBox, entranceBox.minX(), entranceBox.minY(), entranceBox.minZ() + 4, entranceBox.maxX(), entranceBox.maxY() - 1, entranceBox.minZ() + 5, AIR);
+                    this.fill(world, chunkBox, entranceBox.minX(), entranceBox.minY(), entranceBox.minZ() + 7, entranceBox.maxX(), entranceBox.maxY() - 1, entranceBox.minZ() + 7, AIR);
                     return;
                 case 2:
                     // No openings - random block removal will expose these, probably
@@ -543,7 +539,7 @@ public class BigTunnel extends MineshaftPiece {
         }
     }
 
-    private void buildSideRoomsLeft(StructurePiece structurePiece, StructurePiecesHolder structurePiecesHolder, Random random, Direction direction, int pieceLen) {
+    private void buildSideRoomsLeft(StructurePiece structurePiece, StructurePieceAccessor structurePieceAccessor, Random random, Direction direction, int pieceLen) {
         Direction nextPieceDirection;
         StructurePiece newPiece;
         for (int n = 0; n < (pieceLen - 1) - 10; n++) {
@@ -552,30 +548,30 @@ public class BigTunnel extends MineshaftPiece {
                     case NORTH:
                     default:
                         nextPieceDirection = Direction.EAST;
-                        newPiece = BetterMineshaftGenerator.generateAndAddSideRoomPiece(structurePiece, structurePiecesHolder, random, this.boundingBox.getMinX() - 5, this.boundingBox.getMinY(), this.boundingBox.getMaxZ() - n - 9, nextPieceDirection, chainLength);
+                        newPiece = BetterMineshaftGenerator.generateAndAddSideRoomPiece(structurePiece, structurePieceAccessor, random, this.boundingBox.minX() - 5, this.boundingBox.minY(), this.boundingBox.maxZ() - n - 9, nextPieceDirection, this.genDepth);
                         if (newPiece != null) {
-                            sideRoomEntrances.add(new BlockBox(0, 1, n, 0, 3, n + 9));
+                            sideRoomEntrances.add(new BoundingBox(0, 1, n, 0, 3, n + 9));
                         }
                         break;
                     case SOUTH:
                         nextPieceDirection = Direction.WEST;
-                        newPiece = BetterMineshaftGenerator.generateAndAddSideRoomPiece(structurePiece, structurePiecesHolder, random, this.boundingBox.getMaxX() + 5, this.boundingBox.getMinY(), this.boundingBox.getMinZ() + n + 9, nextPieceDirection, chainLength);
+                        newPiece = BetterMineshaftGenerator.generateAndAddSideRoomPiece(structurePiece, structurePieceAccessor, random, this.boundingBox.maxX() + 5, this.boundingBox.minY(), this.boundingBox.minZ() + n + 9, nextPieceDirection, this.genDepth);
                         if (newPiece != null) {
-                            sideRoomEntrances.add(new BlockBox(SECONDARY_AXIS_LEN - 1, 1, n, SECONDARY_AXIS_LEN - 1, 3, n + 9));
+                            sideRoomEntrances.add(new BoundingBox(SECONDARY_AXIS_LEN - 1, 1, n, SECONDARY_AXIS_LEN - 1, 3, n + 9));
                         }
                         break;
                     case WEST:
                         nextPieceDirection = Direction.NORTH;
-                        newPiece = BetterMineshaftGenerator.generateAndAddSideRoomPiece(structurePiece, structurePiecesHolder, random, this.boundingBox.getMaxX() - n - 9, this.boundingBox.getMinY(), this.boundingBox.getMaxZ() + 5, nextPieceDirection, chainLength);
+                        newPiece = BetterMineshaftGenerator.generateAndAddSideRoomPiece(structurePiece, structurePieceAccessor, random, this.boundingBox.maxX() - n - 9, this.boundingBox.minY(), this.boundingBox.maxZ() + 5, nextPieceDirection, this.genDepth);
                         if (newPiece != null) {
-                            sideRoomEntrances.add(new BlockBox(SECONDARY_AXIS_LEN - 1, 1, n, SECONDARY_AXIS_LEN - 1, 3, n + 9));
+                            sideRoomEntrances.add(new BoundingBox(SECONDARY_AXIS_LEN - 1, 1, n, SECONDARY_AXIS_LEN - 1, 3, n + 9));
                         }
                         break;
                     case EAST:
                         nextPieceDirection = Direction.SOUTH;
-                        newPiece = BetterMineshaftGenerator.generateAndAddSideRoomPiece(structurePiece, structurePiecesHolder, random, this.boundingBox.getMinX() + n + 9, this.boundingBox.getMinY(), this.boundingBox.getMinZ() - 5, nextPieceDirection, chainLength);
+                        newPiece = BetterMineshaftGenerator.generateAndAddSideRoomPiece(structurePiece, structurePieceAccessor, random, this.boundingBox.minX() + n + 9, this.boundingBox.minY(), this.boundingBox.minZ() - 5, nextPieceDirection, this.genDepth);
                         if (newPiece != null) {
-                            sideRoomEntrances.add(new BlockBox(0, 1, n, 0, 3, n + 9));
+                            sideRoomEntrances.add(new BoundingBox(0, 1, n, 0, 3, n + 9));
                         }
                         break;
                 }
@@ -584,7 +580,7 @@ public class BigTunnel extends MineshaftPiece {
         }
     }
 
-    private void buildSideRoomsRight(StructurePiece structurePiece, StructurePiecesHolder structurePiecesHolder, Random random, Direction direction, int pieceLen) {
+    private void buildSideRoomsRight(StructurePiece structurePiece, StructurePieceAccessor structurePieceAccessor, Random random, Direction direction, int pieceLen) {
         Direction nextPieceDirection;
         StructurePiece newPiece;
         for (int n = 0; n < (pieceLen - 1) - 10; n++) {
@@ -593,30 +589,30 @@ public class BigTunnel extends MineshaftPiece {
                     case NORTH:
                     default:
                         nextPieceDirection = Direction.WEST;
-                        newPiece = BetterMineshaftGenerator.generateAndAddSideRoomPiece(structurePiece, structurePiecesHolder, random, this.boundingBox.getMaxX() + 5, this.boundingBox.getMinY(), this.boundingBox.getMaxZ() - n, nextPieceDirection, chainLength);
+                        newPiece = BetterMineshaftGenerator.generateAndAddSideRoomPiece(structurePiece, structurePieceAccessor, random, this.boundingBox.maxX() + 5, this.boundingBox.minY(), this.boundingBox.maxZ() - n, nextPieceDirection, this.genDepth);
                         if (newPiece != null) {
-                            sideRoomEntrances.add(new BlockBox(SECONDARY_AXIS_LEN - 1, 1, n, SECONDARY_AXIS_LEN - 1, 3, n + 9));
+                            sideRoomEntrances.add(new BoundingBox(SECONDARY_AXIS_LEN - 1, 1, n, SECONDARY_AXIS_LEN - 1, 3, n + 9));
                         }
                         break;
                     case SOUTH:
                         nextPieceDirection = Direction.EAST;
-                        newPiece = BetterMineshaftGenerator.generateAndAddSideRoomPiece(structurePiece, structurePiecesHolder, random, this.boundingBox.getMinX() - 5, this.boundingBox.getMinY(), this.boundingBox.getMinZ() + n, nextPieceDirection, chainLength);
+                        newPiece = BetterMineshaftGenerator.generateAndAddSideRoomPiece(structurePiece, structurePieceAccessor, random, this.boundingBox.minX() - 5, this.boundingBox.minY(), this.boundingBox.minZ() + n, nextPieceDirection, this.genDepth);
                         if (newPiece != null) {
-                            sideRoomEntrances.add(new BlockBox(0, 1, n, 0, 3, n + 9));
+                            sideRoomEntrances.add(new BoundingBox(0, 1, n, 0, 3, n + 9));
                         }
                         break;
                     case WEST:
                         nextPieceDirection = Direction.SOUTH;
-                        newPiece = BetterMineshaftGenerator.generateAndAddSideRoomPiece(structurePiece, structurePiecesHolder, random, this.boundingBox.getMaxX() - n, this.boundingBox.getMinY(), this.boundingBox.getMinZ() - 5, nextPieceDirection, chainLength);
+                        newPiece = BetterMineshaftGenerator.generateAndAddSideRoomPiece(structurePiece, structurePieceAccessor, random, this.boundingBox.maxX() - n, this.boundingBox.minY(), this.boundingBox.minZ() - 5, nextPieceDirection, this.genDepth);
                         if (newPiece != null) {
-                            sideRoomEntrances.add(new BlockBox(0, 1, n, 0, 3, n + 9));
+                            sideRoomEntrances.add(new BoundingBox(0, 1, n, 0, 3, n + 9));
                         }
                         break;
                     case EAST:
                         nextPieceDirection = Direction.NORTH;
-                        newPiece = BetterMineshaftGenerator.generateAndAddSideRoomPiece(structurePiece, structurePiecesHolder, random, this.boundingBox.getMinX() + n, this.boundingBox.getMinY(), this.boundingBox.getMaxZ() + 5, nextPieceDirection, chainLength);
+                        newPiece = BetterMineshaftGenerator.generateAndAddSideRoomPiece(structurePiece, structurePieceAccessor, random, this.boundingBox.minX() + n, this.boundingBox.minY(), this.boundingBox.maxZ() + 5, nextPieceDirection, this.genDepth);
                         if (newPiece != null) {
-                            sideRoomEntrances.add(new BlockBox(SECONDARY_AXIS_LEN - 1, 1, n, SECONDARY_AXIS_LEN - 1, 3, n + 9));
+                            sideRoomEntrances.add(new BoundingBox(SECONDARY_AXIS_LEN - 1, 1, n, SECONDARY_AXIS_LEN - 1, 3, n + 9));
                         }
                         break;
                 }
@@ -625,7 +621,7 @@ public class BigTunnel extends MineshaftPiece {
         }
     }
 
-    private void buildSmallShaftsLeft(StructurePiece structurePiece, StructurePiecesHolder structurePiecesHolder, Random random, Direction direction, int pieceLen) {
+    private void buildSmallShaftsLeft(StructurePiece structurePiece, StructurePieceAccessor structurePieceAccessor, Random random, Direction direction, int pieceLen) {
         Direction nextPieceDirection;
         StructurePiece newPiece;
         for (int n = 0; n < (pieceLen - 1) - 4; n++) {
@@ -634,28 +630,28 @@ public class BigTunnel extends MineshaftPiece {
                     case NORTH:
                     default:
                         nextPieceDirection = Direction.WEST;
-                        newPiece = BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, structurePiecesHolder, random, this.boundingBox.getMinX() - 1, this.boundingBox.getMinY(), this.boundingBox.getMaxZ() - n, nextPieceDirection, 0);
+                        newPiece = BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, structurePieceAccessor, random, this.boundingBox.minX() - 1, this.boundingBox.minY(), this.boundingBox.maxZ() - n, nextPieceDirection, 0);
                         if (newPiece != null) {
                             this.smallShaftLeftEntrances.add(new BlockPos(0, 1, n + 1));
                         }
                         break;
                     case SOUTH:
                         nextPieceDirection = Direction.EAST;
-                        newPiece = BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, structurePiecesHolder, random, this.boundingBox.getMaxX() + 1, this.boundingBox.getMinY(), this.boundingBox.getMinZ() + n, nextPieceDirection, 0);
+                        newPiece = BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, structurePieceAccessor, random, this.boundingBox.maxX() + 1, this.boundingBox.minY(), this.boundingBox.minZ() + n, nextPieceDirection, 0);
                         if (newPiece != null) {
                             this.smallShaftRightEntrances.add(new BlockPos(SECONDARY_AXIS_LEN - 2, 1, n + 1));
                         }
                         break;
                     case WEST:
                         nextPieceDirection = Direction.SOUTH;
-                        newPiece = BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, structurePiecesHolder, random, this.boundingBox.getMaxX() - n, this.boundingBox.getMinY(), this.boundingBox.getMaxZ() + 1, nextPieceDirection, 0);
+                        newPiece = BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, structurePieceAccessor, random, this.boundingBox.maxX() - n, this.boundingBox.minY(), this.boundingBox.maxZ() + 1, nextPieceDirection, 0);
                         if (newPiece != null) {
                             this.smallShaftRightEntrances.add(new BlockPos(SECONDARY_AXIS_LEN - 2, 1, n + 1));
                         }
                         break;
                     case EAST:
                         nextPieceDirection = Direction.NORTH;
-                        newPiece = BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, structurePiecesHolder, random, this.boundingBox.getMinX() + n, this.boundingBox.getMinY(), this.boundingBox.getMinZ() - 1, nextPieceDirection, 0);
+                        newPiece = BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, structurePieceAccessor, random, this.boundingBox.minX() + n, this.boundingBox.minY(), this.boundingBox.minZ() - 1, nextPieceDirection, 0);
                         if (newPiece != null) {
                             this.smallShaftLeftEntrances.add(new BlockPos(0, 1, n + 1));
                         }
@@ -667,7 +663,7 @@ public class BigTunnel extends MineshaftPiece {
         }
     }
 
-    private void buildSmallShaftsRight(StructurePiece structurePiece, StructurePiecesHolder structurePiecesHolder, Random random, Direction direction, int pieceLen) {
+    private void buildSmallShaftsRight(StructurePiece structurePiece, StructurePieceAccessor structurePieceAccessor, Random random, Direction direction, int pieceLen) {
         Direction nextPieceDirection;
         StructurePiece newPiece;
         for (int n = 5; n < pieceLen; n++) {
@@ -676,28 +672,28 @@ public class BigTunnel extends MineshaftPiece {
                     case NORTH:
                     default:
                         nextPieceDirection = Direction.EAST;
-                        newPiece = BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, structurePiecesHolder, random, this.boundingBox.getMaxX() + 1, this.boundingBox.getMinY(), this.boundingBox.getMaxZ() - n, nextPieceDirection, 0);
+                        newPiece = BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, structurePieceAccessor, random, this.boundingBox.maxX() + 1, this.boundingBox.minY(), this.boundingBox.maxZ() - n, nextPieceDirection, 0);
                         if (newPiece != null) {
                             this.smallShaftRightEntrances.add(new BlockPos(SECONDARY_AXIS_LEN - 2, 1, n - 3));
                         }
                         break;
                     case SOUTH:
                         nextPieceDirection = Direction.WEST;
-                        newPiece = BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, structurePiecesHolder, random, this.boundingBox.getMinX() - 1, this.boundingBox.getMinY(), this.boundingBox.getMinZ() + n, nextPieceDirection, 0);
+                        newPiece = BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, structurePieceAccessor, random, this.boundingBox.minX() - 1, this.boundingBox.minY(), this.boundingBox.minZ() + n, nextPieceDirection, 0);
                         if (newPiece != null) {
                             this.smallShaftLeftEntrances.add(new BlockPos(0, 1, n - 3));
                         }
                         break;
                     case WEST:
                         nextPieceDirection = Direction.NORTH;
-                        newPiece = BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, structurePiecesHolder, random, this.boundingBox.getMaxX() - n, this.boundingBox.getMinY(), this.boundingBox.getMinZ() - 1, nextPieceDirection, 0);
+                        newPiece = BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, structurePieceAccessor, random, this.boundingBox.maxX() - n, this.boundingBox.minY(), this.boundingBox.minZ() - 1, nextPieceDirection, 0);
                         if (newPiece != null) {
                             this.smallShaftLeftEntrances.add(new BlockPos(0, 1, n - 3));
                         }
                         break;
                     case EAST:
                         nextPieceDirection = Direction.SOUTH;
-                        newPiece = BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, structurePiecesHolder, random, this.boundingBox.getMinX() + n, this.boundingBox.getMinY(), this.boundingBox.getMaxZ() + 1, nextPieceDirection, 0);
+                        newPiece = BetterMineshaftGenerator.generateAndAddSmallTunnelPiece(structurePiece, structurePieceAccessor, random, this.boundingBox.minX() + n, this.boundingBox.minY(), this.boundingBox.maxZ() + 1, nextPieceDirection, 0);
                         if (newPiece != null) {
                             this.smallShaftRightEntrances.add(new BlockPos(SECONDARY_AXIS_LEN - 2, 1, n - 3));
                         }

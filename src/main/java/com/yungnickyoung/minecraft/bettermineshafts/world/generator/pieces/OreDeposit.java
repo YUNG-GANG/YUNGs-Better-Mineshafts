@@ -1,36 +1,36 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
 import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshafts;
-import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftStructure;
+import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftStructureFeature;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
 import com.yungnickyoung.minecraft.yungsapi.world.BoundingBoxHelper;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.structure.StructurePiece;
-import net.minecraft.structure.StructurePiecesHolder;
-import net.minecraft.util.math.BlockBox;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.StructureWorldAccess;
-import net.minecraft.world.gen.StructureAccessor;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.StructureFeatureManager;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.levelgen.structure.StructurePiece;
+import net.minecraft.world.level.levelgen.structure.StructurePieceAccessor;
+import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
 
 import java.util.Arrays;
 import java.util.Random;
 
 public class OreDeposit extends MineshaftPiece {
     public enum OreType {
-        COBBLE(0, Blocks.COBBLESTONE.getDefaultState(), BetterMineshafts.CONFIG.ores.cobble),
-        COAL(1, Blocks.COAL_ORE.getDefaultState(), BetterMineshafts.CONFIG.ores.coal + COBBLE.threshold),
-        IRON(2, Blocks.IRON_ORE.getDefaultState(), BetterMineshafts.CONFIG.ores.iron + COAL.threshold),
-        REDSTONE(3, Blocks.REDSTONE_ORE.getDefaultState(), BetterMineshafts.CONFIG.ores.redstone + IRON.threshold),
-        GOLD(4, Blocks.GOLD_ORE.getDefaultState(), BetterMineshafts.CONFIG.ores.gold + REDSTONE.threshold),
-        LAPIS(5, Blocks.LAPIS_ORE.getDefaultState(), BetterMineshafts.CONFIG.ores.lapis + GOLD.threshold),
-        EMERALD(6, Blocks.EMERALD_ORE.getDefaultState(), BetterMineshafts.CONFIG.ores.emerald + LAPIS.threshold),
-        DIAMOND(7, Blocks.DIAMOND_ORE.getDefaultState(), BetterMineshafts.CONFIG.ores.diamond + EMERALD.threshold);
+        COBBLE(0, Blocks.COBBLESTONE.defaultBlockState(), BetterMineshafts.CONFIG.ores.cobble),
+        COAL(1, Blocks.COAL_ORE.defaultBlockState(), BetterMineshafts.CONFIG.ores.coal + COBBLE.threshold),
+        IRON(2, Blocks.IRON_ORE.defaultBlockState(), BetterMineshafts.CONFIG.ores.iron + COAL.threshold),
+        REDSTONE(3, Blocks.REDSTONE_ORE.defaultBlockState(), BetterMineshafts.CONFIG.ores.redstone + IRON.threshold),
+        GOLD(4, Blocks.GOLD_ORE.defaultBlockState(), BetterMineshafts.CONFIG.ores.gold + REDSTONE.threshold),
+        LAPIS(5, Blocks.LAPIS_ORE.defaultBlockState(), BetterMineshafts.CONFIG.ores.lapis + GOLD.threshold),
+        EMERALD(6, Blocks.EMERALD_ORE.defaultBlockState(), BetterMineshafts.CONFIG.ores.emerald + LAPIS.threshold),
+        DIAMOND(7, Blocks.DIAMOND_ORE.defaultBlockState(), BetterMineshafts.CONFIG.ores.diamond + EMERALD.threshold);
 
         private final int value;
         private final BlockState block;
@@ -63,35 +63,35 @@ public class OreDeposit extends MineshaftPiece {
         LOCAL_Y_END = Y_AXIS_LEN - 1,
         LOCAL_Z_END = MAIN_AXIS_LEN - 1;
 
-    public OreDeposit(ServerWorld world, NbtCompound compoundTag) {
+    public OreDeposit(CompoundTag compoundTag) {
         super(BetterMineshaftStructurePieceType.ORE_DEPOSIT, compoundTag);
         this.oreType = OreType.valueOf(compoundTag.getInt("OreType"));
     }
 
-    public OreDeposit(int chunkPieceLen, Random random, BlockBox blockBox, Direction direction, BetterMineshaftStructure.Type type) {
+    public OreDeposit(int chunkPieceLen, Random random, BoundingBox blockBox, Direction direction, BetterMineshaftStructureFeature.Type type) {
         super(BetterMineshaftStructurePieceType.ORE_DEPOSIT, chunkPieceLen, type, blockBox);
         this.setOrientation(direction);
     }
 
     @Override
-    protected void writeNbt(ServerWorld world, NbtCompound tag) {
-        super.writeNbt(world, tag);
-        tag.putInt("OreType", this.oreType.value);
+    protected void addAdditionalSaveData(StructurePieceSerializationContext structurePieceSerializationContext, CompoundTag compoundTag) {
+        super.addAdditionalSaveData(structurePieceSerializationContext, compoundTag);
+        compoundTag.putInt("OreType", this.oreType.value);
     }
 
-    public static BlockBox determineBoxPosition(StructurePiecesHolder structurePiecesHolder, Random random, int x, int y, int z, Direction direction) {
-        BlockBox blockBox = BoundingBoxHelper.boxFromCoordsWithRotation(x, y, z, SECONDARY_AXIS_LEN, Y_AXIS_LEN, MAIN_AXIS_LEN, direction);
+    public static BoundingBox determineBoxPosition(StructurePieceAccessor structurePieceAccessor, Random random, int x, int y, int z, Direction direction) {
+        BoundingBox blockBox = BoundingBoxHelper.boxFromCoordsWithRotation(x, y, z, SECONDARY_AXIS_LEN, Y_AXIS_LEN, MAIN_AXIS_LEN, direction);
 
         // The following func call returns null if this new blockbox does not intersect with any pieces in the list.
         // If there is an intersection, the following func call returns the piece that intersects.
-        StructurePiece intersectingPiece = structurePiecesHolder.getIntersecting(blockBox);
+        StructurePiece intersectingPiece = structurePieceAccessor.findCollisionPiece(blockBox);
 
         // Thus, this function returns null if blackBox intersects with an existing piece. Otherwise, we return blackbox
         return intersectingPiece != null ? null : blockBox;
     }
 
     @Override
-    public void fillOpenings(StructurePiece structurePiece, StructurePiecesHolder structurePiecesHolder, Random random) {
+    public void addChildren(StructurePiece structurePiece, StructurePieceAccessor structurePieceAccessor, Random random) {
         int r = random.nextInt(100);
 
         // Determine ore type
@@ -110,12 +110,12 @@ public class OreDeposit extends MineshaftPiece {
     }
 
     @Override
-    public boolean generate(StructureWorldAccess world, StructureAccessor structureAccessor, ChunkGenerator generator, Random random, BlockBox box, ChunkPos pos, BlockPos blockPos) {
+    public void postProcess(WorldGenLevel world, StructureFeatureManager structureFeatureManager, ChunkGenerator chunkGenerator, Random random, BoundingBox box, ChunkPos chunkPos, BlockPos blockPos) {
         // Don't spawn if liquid in this box or if in ocean biome
-        if (this.isTouchingLiquid(world, box)) return false;
-        if (this.isInOcean(world, 0, 0) || this.isInOcean(world, LOCAL_X_END, LOCAL_Z_END)) return false;
+        if (this.isTouchingLiquid(world, box)) return;
+        if (this.isInOcean(world, 0, 0) || this.isInOcean(world, LOCAL_X_END, LOCAL_Z_END)) return;
 
-        BlockState COBBLE = Blocks.COBBLESTONE.getDefaultState();
+        BlockState COBBLE = Blocks.COBBLESTONE.defaultBlockState();
         BlockState ORE_BLOCK = this.oreType.getBlock();
 
         // Fill with cobble
@@ -124,7 +124,5 @@ public class OreDeposit extends MineshaftPiece {
         // Ore deposit. Ore is more dense in center than edges
         this.chanceReplaceNonAir(world, box, random, .65f, 1, 1, 1, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END - 1, ORE_BLOCK);
         this.chanceReplaceNonAir(world, box, random, .15f, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, ORE_BLOCK);
-
-        return true;
     }
 }

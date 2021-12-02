@@ -25,11 +25,11 @@
     ]
   },
   "depends": {
-    "fabricloader": ">=0.10.6",
-    "fabric": ">=0.36.0",
-    "minecraft": ">=1.17",
-    "yungsapi": ">=1.17-Fabric-11",
-    "cloth-config2": ">=5.0.0"
+    "fabricloader": ">=0.12.0",
+    "fabric": ">=0.43.1",
+    "minecraft": ">=1.18",
+    "cloth-config2": ">=6.0.42",
+    "java": ">=17"
   },
   "mixins": [
     "bettermineshafts.mixins.json"

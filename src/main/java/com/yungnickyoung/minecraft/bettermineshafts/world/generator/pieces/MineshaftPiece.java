@@ -1,45 +1,49 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
 import com.google.common.collect.ImmutableSet;
-import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftStructure;
+import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftStructureFeature;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BlockSetSelectors;
 import com.yungnickyoung.minecraft.yungsapi.world.BlockSetSelector;
-import net.minecraft.block.*;
-import net.minecraft.block.entity.BarrelBlockEntity;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.structure.StructurePiece;
-import net.minecraft.structure.StructurePieceType;
-import net.minecraft.structure.StructurePiecesHolder;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockBox;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.StructureWorldAccess;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BarrelBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.levelgen.feature.StructurePieceType;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.levelgen.structure.StructurePiece;
+import net.minecraft.world.level.levelgen.structure.StructurePieceAccessor;
+import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
+import net.minecraft.world.level.material.Material;
 
 import java.util.Random;
 import java.util.Set;
 
 public abstract class MineshaftPiece extends StructurePiece {
-    public BetterMineshaftStructure.Type mineshaftType;
-
+    public BetterMineshaftStructureFeature.Type mineshaftType;
+    protected static final BlockState AIR = Blocks.AIR.defaultBlockState();
     private static final Set<Material> LIQUIDS = ImmutableSet.of(Material.LAVA, Material.WATER);
 
-    public MineshaftPiece(StructurePieceType structurePieceType, int chainLength, BetterMineshaftStructure.Type type, BlockBox boundingBox) {
+    public MineshaftPiece(StructurePieceType structurePieceType, int chainLength, BetterMineshaftStructureFeature.Type type, BoundingBox boundingBox) {
         super(structurePieceType, chainLength, boundingBox);
         this.mineshaftType = type;
     }
 
-    public MineshaftPiece(StructurePieceType structurePieceType, NbtCompound compoundTag) {
+    public MineshaftPiece(StructurePieceType structurePieceType, CompoundTag compoundTag) {
         super(structurePieceType, compoundTag);
-        this.mineshaftType = BetterMineshaftStructure.Type.byIndex(compoundTag.getInt("MST"));
+        this.mineshaftType = BetterMineshaftStructureFeature.Type.byId(compoundTag.getInt("MST"));
     }
 
-    protected void writeNbt(ServerWorld world, NbtCompound tag) {
-        tag.putInt("MST", this.mineshaftType.ordinal());
+    @Override
+    protected void addAdditionalSaveData(StructurePieceSerializationContext structurePieceSerializationContext, CompoundTag compoundTag) {
+        compoundTag.putInt("MST", this.mineshaftType.ordinal());
     }
 
     /**
@@ -48,7 +52,7 @@ public abstract class MineshaftPiece extends StructurePiece {
      * Does not actually place any blocks.
      */
     @Override
-    public void fillOpenings(StructurePiece structurePiece, StructurePiecesHolder structurePiecesHolder, Random random) {
+    public void addChildren(StructurePiece structurePiece, StructurePieceAccessor structurePieceAccessor, Random random) {
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -101,11 +105,11 @@ public abstract class MineshaftPiece extends StructurePiece {
 
     protected BlockState getTrapdoor() {
         return switch (this.mineshaftType) {
-            case MESA, RED_DESERT -> Blocks.DARK_OAK_TRAPDOOR.getDefaultState();
-            case JUNGLE -> Blocks.JUNGLE_TRAPDOOR.getDefaultState();
-            case SNOW, ICE -> Blocks.SPRUCE_TRAPDOOR.getDefaultState();
-            case SAVANNA -> Blocks.ACACIA_TRAPDOOR.getDefaultState();
-            default -> Blocks.OAK_TRAPDOOR.getDefaultState();
+            case MESA, RED_DESERT -> Blocks.DARK_OAK_TRAPDOOR.defaultBlockState();
+            case JUNGLE -> Blocks.JUNGLE_TRAPDOOR.defaultBlockState();
+            case SNOW, ICE -> Blocks.SPRUCE_TRAPDOOR.defaultBlockState();
+            case SAVANNA -> Blocks.ACACIA_TRAPDOOR.defaultBlockState();
+            default -> Blocks.OAK_TRAPDOOR.defaultBlockState();
         };
     }
 
@@ -120,9 +124,9 @@ public abstract class MineshaftPiece extends StructurePiece {
 
     protected float getReplacementRate() {
         return
-            this.mineshaftType == BetterMineshaftStructure.Type.SNOW
-                || this.mineshaftType == BetterMineshaftStructure.Type.ICE
-                || this.mineshaftType == BetterMineshaftStructure.Type.MUSHROOM
+            this.mineshaftType == BetterMineshaftStructureFeature.Type.SNOW
+                || this.mineshaftType == BetterMineshaftStructureFeature.Type.ICE
+                || this.mineshaftType == BetterMineshaftStructureFeature.Type.MUSHROOM
                 ? .95f
                 : .6f;
     }
@@ -131,9 +135,9 @@ public abstract class MineshaftPiece extends StructurePiece {
      *                                  GENERATION UTIL METHODS                                *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    protected boolean addBarrel(StructureWorldAccess world, BlockBox boundingBox, Random random, BlockPos pos, Identifier lootTableId) {
-        if (boundingBox.contains(pos) && world.getBlockState(pos).getBlock() != Blocks.BARREL) {
-            world.setBlockState(pos, Blocks.BARREL.getDefaultState().with(BarrelBlock.FACING, Direction.UP), 2);
+    protected boolean addBarrel(WorldGenLevel world, BoundingBox boundingBox, Random random, BlockPos pos, ResourceLocation lootTableId) {
+        if (boundingBox.isInside(pos) && world.getBlockState(pos).getBlock() != Blocks.BARREL) {
+            world.setBlock(pos, Blocks.BARREL.defaultBlockState().setValue(BlockStateProperties.FACING, Direction.UP), 2);
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if (blockEntity instanceof BarrelBlockEntity) {
                 ((BarrelBlockEntity) blockEntity).setLootTable(lootTableId, random.nextLong());
@@ -145,28 +149,27 @@ public abstract class MineshaftPiece extends StructurePiece {
         }
     }
 
-    protected boolean addBarrel(StructureWorldAccess world, BlockBox boundingBox, Random random, int x, int y, int z, Identifier lootTableId) {
-        BlockPos blockPos = new BlockPos(this.applyXTransform(x, z), this.applyYTransform(y), this.applyZTransform(x, z));
-        return this.addBarrel(world, boundingBox, random, blockPos, lootTableId);
+    protected boolean addBarrel(WorldGenLevel world, BoundingBox boundingBox, Random random, int x, int y, int z, ResourceLocation lootTableId) {
+        return this.addBarrel(world, boundingBox, random, this.getWorldPos(x, y, z), lootTableId);
     }
 
     /**
      * Randomly add vines with a given chance in a given area, facing the specified direction.
      */
-    protected void addVines(StructureWorldAccess world, BlockBox boundingBox, Direction facing, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
-        BlockPos.Mutable mutable = new BlockPos.Mutable();
+    protected void addVines(WorldGenLevel world, BoundingBox boundingBox, Direction facing, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
+        BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
         for (int x = minX; x <= maxX; x++) {
             for (int y = minY; y <= maxY; y++) {
                 for (int z = minZ; z <= maxZ; z++) {
-                    mutable.set(this.applyXTransform(x, z), this.applyYTransform(y), this.applyZTransform(x, z)).move(facing);
-                    BlockState nextBlock = this.getBlockAt(world, x + facing.getOffsetX(), y + facing.getOffsetY(), z + facing.getOffsetZ(), boundingBox);
+                    mutable.set(this.getWorldX(x, z), this.getWorldY(y), this.getWorldZ(x, z)).move(facing);
+                    BlockState nextBlock = this.getBlock(world, x + facing.getStepX(), y + facing.getStepY(), z + facing.getStepZ(), boundingBox);
                     if (
-                        this.getBlockAt(world, x, y, z, boundingBox).isAir()
-                            && Block.isFaceFullSquare(nextBlock.getCollisionShape(world, mutable), facing.getOpposite())
-                            && nextBlock.getBlock().getDefaultState() != Blocks.LADDER.getDefaultState()
+                        this.getBlock(world, x, y, z, boundingBox).isAir()
+                            && Block.isFaceFull(nextBlock.getCollisionShape(world, mutable), facing.getOpposite())
+                            && nextBlock.getBlock().defaultBlockState() != Blocks.LADDER.defaultBlockState()
                     ) {
                         if (random.nextFloat() < chance) {
-                            this.addBlock(world, Blocks.VINE.getDefaultState().with(VineBlock.getFacingProperty(facing.getAxis() == Direction.Axis.X ? facing : facing.getOpposite()), true), x, y, z, boundingBox);
+                            this.placeBlock(world, Blocks.VINE.defaultBlockState().setValue(VineBlock.getPropertyForFace(facing.getAxis() == Direction.Axis.X ? facing : facing.getOpposite()), true), x, y, z, boundingBox);
                         }
                     }
                 }
@@ -177,7 +180,7 @@ public abstract class MineshaftPiece extends StructurePiece {
     /**
      * Randomly add vines with a given chance in a given area, doing passes for all four horizontal directions.
      */
-    protected void addVines(StructureWorldAccess world, BlockBox boundingBox, Random random, int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
+    protected void addVines(WorldGenLevel world, BoundingBox boundingBox, Random random, int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
         float chance = getVineChance();
         this.addVines(world, boundingBox, Direction.EAST, random, chance, minX, minY, minZ, maxX, maxY, maxZ);
         this.addVines(world, boundingBox, Direction.WEST, random, chance, minX, minY, minZ, maxX, maxY, maxZ);
@@ -188,51 +191,51 @@ public abstract class MineshaftPiece extends StructurePiece {
     /**
      * Add decorations specific to a biome variant, such as snow.
      */
-    protected void addBiomeDecorations(StructureWorldAccess world, BlockBox box, Random random, int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
+    protected void addBiomeDecorations(WorldGenLevel world, BoundingBox boundingBox, Random random, int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
         for (int x = minX; x <= maxX; x++) {
             for (int y = minY; y <= maxY; y++) {
                 for (int z = minZ; z <= maxZ; z++) {
-                    BlockPos blockPos = new BlockPos(this.applyXTransform(x, z), this.applyYTransform(y), this.applyZTransform(x, z));
-                    BlockState state = this.getBlockAt(world, x, y, z, box);
-                    BlockState stateBelow = this.getBlockAt(world, x, y - 1, z, box);
+                    BlockPos blockPos = getWorldPos(x, y, z);
+                    BlockState state = this.getBlock(world, x, y, z, boundingBox);
+                    BlockState stateBelow = this.getBlock(world, x, y - 1, z, boundingBox);
                     Block blockBelow = stateBelow.getBlock();
 
                     // Snow layers
-                    if (mineshaftType == BetterMineshaftStructure.Type.SNOW) {
-                        if (state == AIR && Blocks.SNOW.canPlaceAt(AIR, world, blockPos)) {
-                            this.addBlock(world, Blocks.SNOW.getDefaultState().with(SnowBlock.LAYERS, random.nextInt(2) + 1), x, y, z, box);
+                    if (mineshaftType == BetterMineshaftStructureFeature.Type.SNOW) {
+                        if (state.isAir() && Blocks.SNOW.canSurvive(AIR, world, blockPos)) {
+                            this.placeBlock(world, Blocks.SNOW.defaultBlockState().setValue(BlockStateProperties.LAYERS, random.nextInt(2) + 1), x, y, z, boundingBox);
                         }
                     }
 
                     // Cacti
-                    if (mineshaftType == BetterMineshaftStructure.Type.DESERT || mineshaftType == BetterMineshaftStructure.Type.RED_DESERT) {
+                    if (mineshaftType == BetterMineshaftStructureFeature.Type.DESERT || mineshaftType == BetterMineshaftStructureFeature.Type.RED_DESERT) {
                         if (random.nextFloat() < .1f) {
-                            if (state == AIR && Blocks.CACTUS.canPlaceAt(AIR, world, blockPos)) {
-                                this.addBlock(world, Blocks.CACTUS.getDefaultState().with(CactusBlock.AGE, 0), x, y, z, box);
-                                if (random.nextFloat() < .5f && this.getBlockAt(world, x, y + 1, z, box) == AIR) {
-                                    this.addBlock(world, Blocks.CACTUS.getDefaultState().with(CactusBlock.AGE, 0), x, y + 1, z, box);
+                            if (state.isAir() && Blocks.CACTUS.canSurvive(AIR, world, blockPos)) {
+                                this.placeBlock(world, Blocks.CACTUS.defaultBlockState().setValue(BlockStateProperties.AGE_15, 0), x, y, z, boundingBox);
+                                if (random.nextFloat() < .5f && this.getBlock(world, x, y + 1, z, boundingBox).is(Blocks.AIR)) {
+                                    this.placeBlock(world, Blocks.CACTUS.defaultBlockState().setValue(BlockStateProperties.AGE_15, 0), x, y + 1, z, boundingBox);
                                 }
                             }
                         }
                     }
 
                     // Dead bushes
-                    if (mineshaftType == BetterMineshaftStructure.Type.MESA || mineshaftType == BetterMineshaftStructure.Type.DESERT || mineshaftType == BetterMineshaftStructure.Type.RED_DESERT) {
+                    if (mineshaftType == BetterMineshaftStructureFeature.Type.MESA || mineshaftType == BetterMineshaftStructureFeature.Type.DESERT || mineshaftType == BetterMineshaftStructureFeature.Type.RED_DESERT) {
                         if (random.nextFloat() < .1f) {
-                            if (state == AIR && (blockBelow == Blocks.SAND || blockBelow == Blocks.RED_SAND || blockBelow == Blocks.TERRACOTTA || blockBelow == Blocks.WHITE_TERRACOTTA || blockBelow == Blocks.ORANGE_TERRACOTTA || blockBelow == Blocks.YELLOW_TERRACOTTA || blockBelow == Blocks.BROWN_TERRACOTTA || blockBelow == Blocks.DIRT)) {
-                                this.addBlock(world, Blocks.DEAD_BUSH.getDefaultState(), x, y, z, box);
+                            if (state.isAir() && (blockBelow == Blocks.SAND || blockBelow == Blocks.RED_SAND || blockBelow == Blocks.TERRACOTTA || blockBelow == Blocks.WHITE_TERRACOTTA || blockBelow == Blocks.ORANGE_TERRACOTTA || blockBelow == Blocks.YELLOW_TERRACOTTA || blockBelow == Blocks.BROWN_TERRACOTTA || blockBelow == Blocks.DIRT)) {
+                                this.placeBlock(world, Blocks.DEAD_BUSH.defaultBlockState(), x, y, z, boundingBox);
                             }
                         }
                     }
 
                     // Mushrooms
-                    if (mineshaftType == BetterMineshaftStructure.Type.MUSHROOM) {
-                        if (state == AIR && (blockBelow == Blocks.MYCELIUM || blockBelow == Blocks.DIRT)) {
+                    if (mineshaftType == BetterMineshaftStructureFeature.Type.MUSHROOM) {
+                        if (state.isAir() && Blocks.RED_MUSHROOM.canSurvive(AIR, world, blockPos)) {
                             float r = random.nextFloat();
                             if (r < .2f) {
-                                this.addBlock(world, Blocks.RED_MUSHROOM.getDefaultState(), x, y, z, box);
+                                this.placeBlock(world, Blocks.RED_MUSHROOM.defaultBlockState(), x, y, z, boundingBox);
                             } else if (r < .4f) {
-                                this.addBlock(world, Blocks.BROWN_MUSHROOM.getDefaultState(), x, y, z, box);
+                                this.placeBlock(world, Blocks.BROWN_MUSHROOM.defaultBlockState(), x, y, z, boundingBox);
                             }
                         }
                     }
@@ -241,14 +244,14 @@ public abstract class MineshaftPiece extends StructurePiece {
         }
     }
 
-    protected void generateLeg(StructureWorldAccess world, Random random, BlockBox box, int x, int z, BlockSetSelector selector) {
-        BlockPos.Mutable mutable = new BlockPos.Mutable(x, -1, z);
-        BlockState state = this.getBlockAt(world, mutable.getX(), mutable.getY(), mutable.getZ(), box);
+    protected void generateLeg(WorldGenLevel world, Random random, BoundingBox box, int x, int z, BlockSetSelector selector) {
+        BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos(x, -1, z);
+        BlockState state = this.getBlock(world, mutable.getX(), mutable.getY(), mutable.getZ(), box);
 
-        while (applyYTransform(mutable.getY()) > 0 && (state == AIR || state == Blocks.AIR.getDefaultState() || LIQUIDS.contains(state.getMaterial()))) {
-            this.addBlock(world, selector.get(random), x, mutable.getY(), z, box);
+        while (getWorldY(mutable.getY()) > 0 && (state.isAir() || LIQUIDS.contains(state.getMaterial()))) {
+            this.placeBlock(world, selector.get(random), x, mutable.getY(), z, box);
             mutable.move(Direction.DOWN);
-            state = this.getBlockAt(world, mutable.getX(), mutable.getY(), mutable.getZ(), box);
+            state = this.getBlock(world, mutable.getX(), mutable.getY(), mutable.getZ(), box);
         }
     }
 
@@ -259,11 +262,11 @@ public abstract class MineshaftPiece extends StructurePiece {
     /**
      * Replaces each block in the provided area with the provided BlockState.
      */
-    protected void fill(StructureWorldAccess world, BlockBox blockBox, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState blockState) {
+    protected void fill(WorldGenLevel world, BoundingBox boundingBox, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState blockState) {
         for (int x = minX; x <= maxX; ++x) {
             for (int y = minY; y <= maxY; ++y) {
                 for (int z = minZ; z <= maxZ; ++z) {
-                    this.addBlock(world, blockState, x, y, z, blockBox);
+                    this.placeBlock(world, blockState, x, y, z, boundingBox);
                 }
             }
         }
@@ -272,11 +275,11 @@ public abstract class MineshaftPiece extends StructurePiece {
     /**
      * Replaces each block in the provided area with blocks determined by the provided BlockSetSelector.
      */
-    protected void fill(StructureWorldAccess world, BlockBox blockBox, Random random, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockSetSelector selector) {
+    protected void fill(WorldGenLevel world, BoundingBox boundingBox, Random random, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockSetSelector selector) {
         for (int x = minX; x <= maxX; ++x) {
             for (int y = minY; y <= maxY; ++y) {
                 for (int z = minZ; z <= maxZ; ++z) {
-                    this.addBlock(world, selector.get(random), x, y, z, blockBox);
+                    this.placeBlock(world, selector.get(random), x, y, z, boundingBox);
                 }
             }
         }
@@ -285,13 +288,13 @@ public abstract class MineshaftPiece extends StructurePiece {
     /**
      * Replaces each air block in the provided area with the provided BlockState.
      */
-    protected void replaceAir(StructureWorldAccess world, BlockBox blockBox, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState blockState) {
+    protected void replaceAir(WorldGenLevel world, BoundingBox boundingBox, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState blockState) {
         for (int x = minX; x <= maxX; ++x) {
             for (int y = minY; y <= maxY; ++y) {
                 for (int z = minZ; z <= maxZ; ++z) {
-                    BlockState currState = this.getBlockAtFixed(world, x, y, z, blockBox);
+                    BlockState currState = this.getBlockAtFixed(world, x, y, z, boundingBox);
                     if (currState != null && currState.isAir()) {
-                        this.addBlock(world, blockState, x, y, z, blockBox);
+                        this.placeBlock(world, blockState, x, y, z, boundingBox);
                     }
                 }
             }
@@ -301,13 +304,13 @@ public abstract class MineshaftPiece extends StructurePiece {
     /**
      * Replaces each air block in the provided area with blocks determined by the provided BlockSetSelector.
      */
-    protected void replaceAir(StructureWorldAccess world, BlockBox blockBox, Random random, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockSetSelector selector) {
+    protected void replaceAir(WorldGenLevel world, BoundingBox boundingBox, Random random, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockSetSelector selector) {
         for (int x = minX; x <= maxX; ++x) {
             for (int y = minY; y <= maxY; ++y) {
                 for (int z = minZ; z <= maxZ; ++z) {
-                    BlockState currState = this.getBlockAtFixed(world, x, y, z, blockBox);
+                    BlockState currState = this.getBlockAtFixed(world, x, y, z, boundingBox);
                     if (currState != null && currState.isAir()) {
-                        this.addBlock(world, selector.get(random), x, y, z, blockBox);
+                        this.placeBlock(world, selector.get(random), x, y, z, boundingBox);
                     }
                 }
             }
@@ -317,13 +320,13 @@ public abstract class MineshaftPiece extends StructurePiece {
     /**
      * Replaces each non-air block in the provided area with the provided BlockState.
      */
-    protected void replaceNonAir(StructureWorldAccess world, BlockBox blockBox, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState blockState) {
+    protected void replaceNonAir(WorldGenLevel world, BoundingBox boundingBox, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState blockState) {
         for (int x = minX; x <= maxX; ++x) {
             for (int y = minY; y <= maxY; ++y) {
                 for (int z = minZ; z <= maxZ; ++z) {
-                    BlockState currState = this.getBlockAtFixed(world, x, y, z, blockBox);
+                    BlockState currState = this.getBlockAtFixed(world, x, y, z, boundingBox);
                     if (currState != null && !currState.isAir()) {
-                        this.addBlock(world, blockState, x, y, z, blockBox);
+                        this.placeBlock(world, blockState, x, y, z, boundingBox);
                     }
                 }
             }
@@ -333,13 +336,13 @@ public abstract class MineshaftPiece extends StructurePiece {
     /**
      * Replaces each non-air block in the provided area with blocks determined by the provided BlockSetSelector.
      */
-    protected void replaceNonAir(StructureWorldAccess world, BlockBox blockBox, Random random, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockSetSelector selector) {
+    protected void replaceNonAir(WorldGenLevel world, BoundingBox boundingBox, Random random, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockSetSelector selector) {
         for (int x = minX; x <= maxX; ++x) {
             for (int y = minY; y <= maxY; ++y) {
                 for (int z = minZ; z <= maxZ; ++z) {
-                    BlockState currState = this.getBlockAtFixed(world, x, y, z, blockBox);
+                    BlockState currState = this.getBlockAtFixed(world, x, y, z, boundingBox);
                     if (currState != null && !currState.isAir()) {
-                        this.addBlock(world, selector.get(random), x, y, z, blockBox);
+                        this.placeBlock(world, selector.get(random), x, y, z, boundingBox);
                     }
                 }
             }
@@ -353,12 +356,12 @@ public abstract class MineshaftPiece extends StructurePiece {
     /**
      * Has a chance of replacing each block in the provided area with the provided BlockState.
      */
-    protected void chanceFill(StructureWorldAccess world, BlockBox blockBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState blockState) {
+    protected void chanceFill(WorldGenLevel world, BoundingBox boundingBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState blockState) {
         for (int x = minX; x <= maxX; ++x) {
             for (int y = minY; y <= maxY; ++y) {
                 for (int z = minZ; z <= maxZ; ++z) {
                     if (random.nextFloat() < chance) {
-                        this.addBlock(world, blockState, x, y, z, blockBox);
+                        this.placeBlock(world, blockState, x, y, z, boundingBox);
                     }
                 }
             }
@@ -368,12 +371,12 @@ public abstract class MineshaftPiece extends StructurePiece {
     /**
      * Has a chance of replacing each block in the provided area with a block determined by the provided BlockSetSelector.
      */
-    protected void chanceFill(StructureWorldAccess world, BlockBox blockBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockSetSelector selector) {
+    protected void chanceFill(WorldGenLevel world, BoundingBox boundingBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockSetSelector selector) {
         for (int x = minX; x <= maxX; ++x) {
             for (int y = minY; y <= maxY; ++y) {
                 for (int z = minZ; z <= maxZ; ++z) {
                     if (random.nextFloat() < chance) {
-                        this.addBlock(world, selector.get(random), x, y, z, blockBox);
+                        this.placeBlock(world, selector.get(random), x, y, z, boundingBox);
                     }
                 }
             }
@@ -383,14 +386,14 @@ public abstract class MineshaftPiece extends StructurePiece {
     /**
      * Has a chance of replacing each air block in the provided area with the provided BlockState.
      */
-    protected void chanceReplaceAir(StructureWorldAccess world, BlockBox blockBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState blockState) {
+    protected void chanceReplaceAir(WorldGenLevel world, BoundingBox boundingBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState blockState) {
         for (int x = minX; x <= maxX; ++x) {
             for (int y = minY; y <= maxY; ++y) {
                 for (int z = minZ; z <= maxZ; ++z) {
                     if (random.nextFloat() < chance) {
-                        BlockState currState = this.getBlockAtFixed(world, x, y, z, blockBox);
+                        BlockState currState = this.getBlockAtFixed(world, x, y, z, boundingBox);
                         if (currState != null && currState.isAir()) {
-                            this.addBlock(world, blockState, x, y, z, blockBox);
+                            this.placeBlock(world, blockState, x, y, z, boundingBox);
                         }
                     }
                 }
@@ -401,14 +404,14 @@ public abstract class MineshaftPiece extends StructurePiece {
     /**
      * Has a chance of replacing each air block in the provided area with a block determined by the provided BlockSetSelector.
      */
-    protected void chanceReplaceAir(StructureWorldAccess world, BlockBox blockBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockSetSelector selector) {
+    protected void chanceReplaceAir(WorldGenLevel world, BoundingBox boundingBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockSetSelector selector) {
         for (int x = minX; x <= maxX; ++x) {
             for (int y = minY; y <= maxY; ++y) {
                 for (int z = minZ; z <= maxZ; ++z) {
                     if (random.nextFloat() < chance) {
-                        BlockState currState = this.getBlockAtFixed(world, x, y, z, blockBox);
+                        BlockState currState = this.getBlockAtFixed(world, x, y, z, boundingBox);
                         if (currState != null && currState.isAir()) {
-                            this.addBlock(world, selector.get(random), x, y, z, blockBox);
+                            this.placeBlock(world, selector.get(random), x, y, z, boundingBox);
                         }
                     }
                 }
@@ -419,14 +422,14 @@ public abstract class MineshaftPiece extends StructurePiece {
     /**
      * Has a chance of replacing each non-air block in the provided area with the provided BlockState.
      */
-    protected void chanceReplaceNonAir(StructureWorldAccess world, BlockBox blockBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState blockState) {
+    protected void chanceReplaceNonAir(WorldGenLevel world, BoundingBox boundingBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState blockState) {
         for (int x = minX; x <= maxX; ++x) {
             for (int y = minY; y <= maxY; ++y) {
                 for (int z = minZ; z <= maxZ; ++z) {
                     if (random.nextFloat() < chance) {
-                        BlockState currState = this.getBlockAtFixed(world, x, y, z, blockBox);
+                        BlockState currState = this.getBlockAtFixed(world, x, y, z, boundingBox);
                         if (currState != null && !currState.isAir()) {
-                            this.addBlock(world, blockState, x, y, z, blockBox);
+                            this.placeBlock(world, blockState, x, y, z, boundingBox);
                         }
                     }
                 }
@@ -437,14 +440,14 @@ public abstract class MineshaftPiece extends StructurePiece {
     /**
      * Has a chance of replacing each non-air block in the provided area with a block determined by the provided BlockSetSelector.
      */
-    protected void chanceReplaceNonAir(StructureWorldAccess world, BlockBox blockBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockSetSelector selector) {
+    protected void chanceReplaceNonAir(WorldGenLevel world, BoundingBox boundingBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockSetSelector selector) {
         for (int x = minX; x <= maxX; ++x) {
             for (int y = minY; y <= maxY; ++y) {
                 for (int z = minZ; z <= maxZ; ++z) {
                     if (random.nextFloat() < chance) {
-                        BlockState currState = this.getBlockAtFixed(world, x, y, z, blockBox);
+                        BlockState currState = this.getBlockAtFixed(world, x, y, z, boundingBox);
                         if (currState != null && !currState.isAir()) {
-                            this.addBlock(world, selector.get(random), x, y, z, blockBox);
+                            this.placeBlock(world, selector.get(random), x, y, z, boundingBox);
                         }
                     }
                 }
@@ -456,23 +459,23 @@ public abstract class MineshaftPiece extends StructurePiece {
      *                                      BLOCK SET/GET                                      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    protected void chanceAddBlock(StructureWorldAccess world, Random random, float chance, BlockState block, int x, int y, int z, BlockBox blockBox) {
+    protected void chanceAddBlock(WorldGenLevel world, Random random, float chance, BlockState block, int x, int y, int z, BoundingBox boundingBox) {
         if (random.nextFloat() < chance) {
-            this.addBlock(world, block, x, y, z, blockBox);
+            this.placeBlock(world, block, x, y, z, boundingBox);
         }
     }
 
     /**
-     * My "fixed" version of getBlockAt that returns null instead of air if block is out of bounds
+     * My "fixed" version of getBlock that returns null instead of air if block is out of bounds
      *
-     * @return the block at the given position, or null if it is outside of the blockBox
+     * @return the block at the given position, or null if it is outside of the BoundingBox
      */
-    protected BlockState getBlockAtFixed(BlockView blockView, int x, int y, int z, BlockBox blockBox) {
-        int i = this.applyXTransform(x, z);
-        int j = this.applyYTransform(y);
-        int k = this.applyZTransform(x, z);
+    protected BlockState getBlockAtFixed(BlockGetter blockGetter, int x, int y, int z, BoundingBox boundingBox) {
+        int i = this.getWorldX(x, z);
+        int j = this.getWorldY(y);
+        int k = this.getWorldZ(x, z);
         BlockPos blockPos = new BlockPos(i, j, k);
-        return !blockBox.contains(blockPos) ? null : blockView.getBlockState(blockPos);
+        return !boundingBox.isInside(blockPos) ? null : blockGetter.getBlockState(blockPos);
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -482,22 +485,22 @@ public abstract class MineshaftPiece extends StructurePiece {
     /**
      * Checks if there is liquid within a given box
      **/
-    protected boolean isTouchingLiquid(BlockView world, BlockBox box) {
-        int minX = Math.max(this.boundingBox.getMinX() - 1, box.getMinX());
-        int minY = Math.max(this.boundingBox.getMinY() - 1, box.getMinY());
-        int minZ = Math.max(this.boundingBox.getMinZ() - 1, box.getMinZ());
-        int maxX = Math.min(this.boundingBox.getMaxX() + 1, box.getMaxX());
-        int maxY = Math.min(this.boundingBox.getMaxY() + 1, box.getMaxY());
-        int maxZ = Math.min(this.boundingBox.getMaxZ() + 1, box.getMaxZ());
-        BlockPos.Mutable mutable = new BlockPos.Mutable();
+    protected boolean isTouchingLiquid(BlockGetter blockGetter, BoundingBox box) {
+        int minX = Math.max(this.boundingBox.minX() - 1, box.minX());
+        int minY = Math.max(this.boundingBox.minY() - 1, box.minY());
+        int minZ = Math.max(this.boundingBox.minZ() - 1, box.minZ());
+        int maxX = Math.min(this.boundingBox.maxX() + 1, box.maxX());
+        int maxY = Math.min(this.boundingBox.maxY() + 1, box.maxY());
+        int maxZ = Math.min(this.boundingBox.maxZ() + 1, box.maxZ());
+        BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
 
         for (int x = minX; x <= maxX; ++x) {
             for (int z = minZ; z <= maxZ; ++z) {
-                if (world.getBlockState(mutable.set(x, minY, z)).getMaterial().isLiquid()) {
+                if (blockGetter.getBlockState(mutable.set(x, minY, z)).getMaterial().isLiquid()) {
                     return true;
                 }
 
-                if (world.getBlockState(mutable.set(x, maxY, z)).getMaterial().isLiquid()) {
+                if (blockGetter.getBlockState(mutable.set(x, maxY, z)).getMaterial().isLiquid()) {
                     return true;
                 }
             }
@@ -505,11 +508,11 @@ public abstract class MineshaftPiece extends StructurePiece {
 
         for (int x = minX; x <= maxX; ++x) {
             for (int y = minY; y <= maxY; ++y) {
-                if (world.getBlockState(mutable.set(x, y, minZ)).getMaterial().isLiquid()) {
+                if (blockGetter.getBlockState(mutable.set(x, y, minZ)).getMaterial().isLiquid()) {
                     return true;
                 }
 
-                if (world.getBlockState(mutable.set(x, y, maxZ)).getMaterial().isLiquid()) {
+                if (blockGetter.getBlockState(mutable.set(x, y, maxZ)).getMaterial().isLiquid()) {
                     return true;
                 }
             }
@@ -517,11 +520,11 @@ public abstract class MineshaftPiece extends StructurePiece {
 
         for (int z = minZ; z <= maxZ; ++z) {
             for (int y = minY; y <= maxY; ++y) {
-                if (world.getBlockState(mutable.set(minX, y, z)).getMaterial().isLiquid()) {
+                if (blockGetter.getBlockState(mutable.set(minX, y, z)).getMaterial().isLiquid()) {
                     return true;
                 }
 
-                if (world.getBlockState(mutable.set(maxX, y, z)).getMaterial().isLiquid()) {
+                if (blockGetter.getBlockState(mutable.set(maxX, y, z)).getMaterial().isLiquid()) {
                     return true;
                 }
             }
@@ -530,8 +533,8 @@ public abstract class MineshaftPiece extends StructurePiece {
         return false;
     }
 
-    protected boolean isInOcean(StructureWorldAccess world, int localX, int localZ) {
-        BlockPos pos = new BlockPos.Mutable(applyXTransform(localX, localZ), 1, applyZTransform(localX, localZ));
-        return world.getBiome(pos).getCategory() == Biome.Category.OCEAN;
+    protected boolean isInOcean(WorldGenLevel world, int localX, int localZ) {
+        BlockPos pos = new BlockPos.MutableBlockPos(getWorldX(localX, localZ), 1, getWorldZ(localX, localZ));
+        return world.getBiome(pos).getBiomeCategory() == Biome.BiomeCategory.OCEAN;
     }
 }

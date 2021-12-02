@@ -1,11 +1,11 @@
 package com.yungnickyoung.minecraft.bettermineshafts.mixin;
 
-import net.minecraft.util.math.BlockBox;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin(BlockBox.class)
-public interface BlockBoxAccessor {
+@Mixin(BoundingBox.class)
+public interface BoundingBoxAccessor {
 
     @Accessor("minX")
     void setMinX(int minX);

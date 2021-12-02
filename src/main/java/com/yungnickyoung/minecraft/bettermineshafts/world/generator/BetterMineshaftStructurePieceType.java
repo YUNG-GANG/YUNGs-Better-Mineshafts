@@ -1,6 +1,6 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator;
 
-import net.minecraft.structure.StructurePieceType;
+import net.minecraft.world.level.levelgen.feature.StructurePieceType;
 
 public class BetterMineshaftStructurePieceType {
     public static StructurePieceType VERTICAL_ENTRANCE;

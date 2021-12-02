@@ -4,7 +4,7 @@ import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 
-@Config(name = "bettermineshafts-fabric-1_17")
+@Config(name = "bettermineshafts-fabric-1_18")
 public class Configuration implements ConfigData {
     public double mineshaftSpawnRate = .003;
 
