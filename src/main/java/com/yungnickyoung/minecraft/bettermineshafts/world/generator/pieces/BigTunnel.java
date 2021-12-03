@@ -159,8 +159,7 @@ public class BigTunnel extends MineshaftPiece {
 
     @Override
     public void postProcess(WorldGenLevel world, StructureFeatureManager structureFeatureManager, ChunkGenerator chunkGenerator, Random random, BoundingBox box, ChunkPos chunkPos, BlockPos blockPos) {
-        // Don't spawn if in ocean biome
-        if (this.isTouchingLiquid(world, boundingBox)) return;
+//        if (this.isTouchingLiquid(world, boundingBox)) return;
 
         // Randomize blocks
         this.chanceReplaceNonAir(world, box, random, this.getReplacementRate(), 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getMainSelector());

@@ -29,7 +29,7 @@ import java.util.Set;
 public abstract class MineshaftPiece extends StructurePiece {
     public BetterMineshaftStructureFeature.Type mineshaftType;
     protected static final BlockState AIR = Blocks.AIR.defaultBlockState();
-    private static final Set<Material> LIQUIDS = ImmutableSet.of(Material.LAVA, Material.WATER);
+    private static final Set<Material> NON_SOLID_MATERIALS = Set.of(Material.AIR, Material.WATER, Material.LAVA, Material.WATER_PLANT);
 
     public MineshaftPiece(StructurePieceType structurePieceType, int chainLength, BetterMineshaftStructureFeature.Type type, BoundingBox boundingBox) {
         super(structurePieceType, chainLength, boundingBox);
@@ -248,7 +248,7 @@ public abstract class MineshaftPiece extends StructurePiece {
         BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos(x, -1, z);
         BlockState state = this.getBlock(world, mutable.getX(), mutable.getY(), mutable.getZ(), box);
 
-        while (getWorldY(mutable.getY()) > 0 && (state.isAir() || LIQUIDS.contains(state.getMaterial()))) {
+        while (getWorldY(mutable.getY()) > world.getMinBuildHeight() && (NON_SOLID_MATERIALS.contains(state.getMaterial()))) {
             this.placeBlock(world, selector.get(random), x, mutable.getY(), z, box);
             mutable.move(Direction.DOWN);
             state = this.getBlock(world, mutable.getX(), mutable.getY(), mutable.getZ(), box);
@@ -439,15 +439,45 @@ public abstract class MineshaftPiece extends StructurePiece {
 
     /**
      * Has a chance of replacing each non-air block in the provided area with a block determined by the provided BlockSetSelector.
+     * Guaranteed to always replace liquid.
      */
     protected void chanceReplaceNonAir(WorldGenLevel world, BoundingBox boundingBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockSetSelector selector) {
         for (int x = minX; x <= maxX; ++x) {
             for (int y = minY; y <= maxY; ++y) {
                 for (int z = minZ; z <= maxZ; ++z) {
+                    BlockState currState = this.getBlockAtFixed(world, x, y, z, boundingBox);
+                    if (currState != null) {
+                        if ((currState.getMaterial() == Material.WATER || currState.getMaterial() == Material.LAVA) || (random.nextFloat() < chance && !currState.isAir())) {
+                            // Select random block state
+                            BlockState blockState = selector.get(random);
+
+                            // Don't place air where liquid was. This helps to avoid floating water.
+                            if (currState.getMaterial() == Material.WATER || currState.getMaterial() == Material.LAVA) {
+                                int numAttempts = 0;
+                                while ((blockState == Blocks.AIR.defaultBlockState() || blockState == Blocks.CAVE_AIR.defaultBlockState()) && numAttempts < 10) {
+                                    blockState = selector.get(random);
+                                    numAttempts++;
+                                }
+                            }
+                            this.placeBlock(world, blockState, x, y, z, boundingBox);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Has a chance of replacing each solid block in the provided area with the provided BlockState.
+     */
+    protected void chanceReplaceSolid(WorldGenLevel world, BoundingBox boundingBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockState blockState) {
+        for (int x = minX; x <= maxX; ++x) {
+            for (int y = minY; y <= maxY; ++y) {
+                for (int z = minZ; z <= maxZ; ++z) {
                     if (random.nextFloat() < chance) {
                         BlockState currState = this.getBlockAtFixed(world, x, y, z, boundingBox);
-                        if (currState != null && !currState.isAir()) {
-                            this.placeBlock(world, selector.get(random), x, y, z, boundingBox);
+                        if (currState != null && !NON_SOLID_MATERIALS.contains(currState.getMaterial())) {
+                            this.placeBlock(world, blockState, x, y, z, boundingBox);
                         }
                     }
                 }
@@ -471,10 +501,7 @@ public abstract class MineshaftPiece extends StructurePiece {
      * @return the block at the given position, or null if it is outside of the BoundingBox
      */
     protected BlockState getBlockAtFixed(BlockGetter blockGetter, int x, int y, int z, BoundingBox boundingBox) {
-        int i = this.getWorldX(x, z);
-        int j = this.getWorldY(y);
-        int k = this.getWorldZ(x, z);
-        BlockPos blockPos = new BlockPos(i, j, k);
+        BlockPos blockPos = this.getWorldPos(x, y, z);
         return !boundingBox.isInside(blockPos) ? null : blockGetter.getBlockState(blockPos);
     }
 
