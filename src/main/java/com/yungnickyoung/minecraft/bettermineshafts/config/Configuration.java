@@ -9,10 +9,10 @@ public class Configuration implements ConfigData {
     public double mineshaftSpawnRate = .003;
 
     @ConfigEntry.Gui.Tooltip(count = 2)
-    public int minY = 17;
+    public int minY = -55;
 
     @ConfigEntry.Gui.Tooltip
-    public int maxY = 37;
+    public int maxY = 30;
 
     @ConfigEntry.Gui.CollapsibleObject
     @ConfigEntry.Gui.Tooltip
