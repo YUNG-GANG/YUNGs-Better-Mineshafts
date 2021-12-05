@@ -188,39 +188,65 @@ public class BigTunnel extends MineshaftPiece {
         this.addBiomeDecorations(world, box, random, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END - 1, LOCAL_Z_END);
         this.addVines(world, box, random, 1, 0, 1, LOCAL_X_END - 1, LOCAL_Y_END, LOCAL_Z_END - 1);
         generateLanterns(world, box, random);
-        generateCobwebs(world, box, random);
     }
 
     private void generateSmallShaftEntrances(WorldGenLevel world, BoundingBox box, Random random) {
-        smallShaftLeftEntrances.forEach(entrancePos -> {
+        for (BlockPos entrancePos : smallShaftLeftEntrances) {
             int x = entrancePos.getX();
             int y = entrancePos.getY();
             int z = entrancePos.getZ();
 
-            this.fill(world, box, x, y, z, x, y, z + 2, AIR);
+            // Check if the area is covered. We only need to spawn supports in covered areas.
+            int numCovered = 0; // We require at least 2 blocks to be covered
+            for (int i = z; i <= z + 2; i++) {
+                for (int j = x; j <= x + 1; j++) {
+                    BlockState blockState = this.getBlock(world, j, y + 3, i, box);
+                    if (!blockState.isAir() && !blockState.is(Blocks.CHAIN)) {
+                        numCovered++;
+                    }
+                }
+            }
+
+
+            this.fill(world, box, x, y, z, x + 1, y + 2, z + 2, AIR);
+            if (numCovered < 2) continue;
+
             this.placeBlock(world, getSupportBlock(), x, y + 1, z, box);
             this.placeBlock(world, getSupportBlock(), x, y + 1, z + 2, box);
             this.fill(world, box, x + 1, y, z, x + 1, y + 1, z, getSupportBlock());
             this.fill(world, box, x + 1, y, z + 2, x + 1, y + 1, z + 2, getSupportBlock());
             this.chanceFill(world, box, random, .75f, x, y + 2, z, x + 1, y + 2, z + 2, getMainBlock());
             this.fill(world, box, x, y + 1, z + 1, x + 1, y + 1, z + 1, AIR);
-            this.replaceAirOrChains(world, box, x, y - 1, z, x + 1, y - 1, z + 2, getMainBlock());
-        });
+            this.replaceAirOrChains(world, box, x, y, z, x + 1, y, z + 2, getMainBlock()); // Floor connecting big shaft to small shaft
+        }
 
-        smallShaftRightEntrances.forEach(entrancePos -> {
+        for (BlockPos entrancePos : smallShaftRightEntrances) {
             int x = entrancePos.getX();
             int y = entrancePos.getY();
             int z = entrancePos.getZ();
 
-            this.replaceAirOrChains(world, box, x, y - 1, z, x + 1, y - 1, z + 2, getMainBlock());
-            this.fill(world, box, x + 1, y, z, x + 1, y, z + 2, AIR);
+            // Check if the area is covered. We only need to spawn supports in covered areas.
+            int numCovered = 0; // We require at least 2 blocks to be covered
+            for (int i = z; i <= z + 2; i++) {
+                for (int j = x; j <= x + 1; j++) {
+                    BlockState blockState = this.getBlock(world, j, y + 3, i, box);
+                    if (!blockState.isAir() && !blockState.is(Blocks.CHAIN)) {
+                        numCovered++;
+                    }
+                }
+            }
+
+            this.fill(world, box, x, y, z, x + 1, y + 2, z + 2, AIR);
+            if (numCovered < 2) continue;
+
             this.placeBlock(world, getSupportBlock(), x + 1, y + 1, z, box);
             this.placeBlock(world, getSupportBlock(), x + 1, y + 1, z + 2, box);
             this.fill(world, box, x, y, z, x, y + 1, z, getSupportBlock());
             this.fill(world, box, x, y, z + 2, x, y + 1, z + 2, getSupportBlock());
             this.chanceFill(world, box, random, .75f, x, y + 2, z, x + 1, y + 2, z + 2, getMainBlock());
             this.fill(world, box, x, y + 1, z + 1, x + 1, y + 1, z + 1, AIR);
-        });
+            this.replaceAirOrChains(world, box, x, y, z, x + 1, y, z + 2, getMainBlock()); // Floor connecting big shaft to small shaft
+        }
     }
 
     private void generateLegs(WorldGenLevel world, BoundingBox box, Random random) {
@@ -347,22 +373,6 @@ public class BigTunnel extends MineshaftPiece {
         });
     }
 
-    private void generateCobwebs(WorldGenLevel world, BoundingBox box, Random random) {
-        float chance = (float) BetterMineshafts.CONFIG.spawnRates.cobwebSpawnRate;
-        smallSupports.forEach(z -> {
-            this.chanceReplaceAir(world, box, random, chance, 2, 3, z - 1, LOCAL_X_END - 2, 4, z + 1, Blocks.COBWEB.defaultBlockState());
-            this.chanceReplaceAir(world, box, random, chance, 3, 5, z, LOCAL_X_END - 3, 5, z, Blocks.COBWEB.defaultBlockState());
-        });
-
-        bigSupports.forEach(z -> {
-            this.chanceReplaceAir(world, box, random, chance, 1, 1, z, 1, 4, z + 2, Blocks.COBWEB.defaultBlockState());
-            this.chanceReplaceAir(world, box, random, chance, LOCAL_X_END - 1, 1, z, LOCAL_X_END - 1, 4, z + 2, Blocks.COBWEB.defaultBlockState());
-            this.chanceReplaceAir(world, box, random, chance, 2, 5, z, LOCAL_X_END - 2, 5, z + 2, Blocks.COBWEB.defaultBlockState());
-            this.chanceReplaceAir(world, box, random, chance, 2, 4, z + 1, LOCAL_X_END - 2, 4, z + 1, Blocks.COBWEB.defaultBlockState());
-            this.chanceReplaceAir(world, box, random, chance, 3, 6, z + 1, LOCAL_X_END - 3, 6, z + 1, Blocks.COBWEB.defaultBlockState());
-        });
-    }
-
     private void generateChestCarts(WorldGenLevel world, BoundingBox box, Random random) {
         for (int z = 0; z <= LOCAL_Z_END; z++) {
             if (random.nextFloat() < BetterMineshafts.CONFIG.spawnRates.mainShaftChestMinecartSpawnRate) {
@@ -389,6 +399,7 @@ public class BigTunnel extends MineshaftPiece {
     }
 
     private void generateBigSupports(WorldGenLevel world, BoundingBox box, Random random) {
+        float cobwebChance = (float) BetterMineshafts.CONFIG.spawnRates.cobwebSpawnRate;
         BlockState supportBlock = getSupportBlock();
         if (supportBlock.getProperties().contains(BlockStateProperties.EAST_WALL) && supportBlock.getProperties().contains(BlockStateProperties.WEST_WALL)) {
             supportBlock = supportBlock.setValue(BlockStateProperties.EAST_WALL, WallSide.TALL).setValue(BlockStateProperties.WEST_WALL, WallSide.TALL);
@@ -397,6 +408,17 @@ public class BigTunnel extends MineshaftPiece {
         }
 
         for (int z : bigSupports) {
+            // Check if the area is covered. We only need to spawn supports in covered areas.
+            int numCovered = 0; // We require at least 2 blocks to be covered
+            for (int x = 2; x <= LOCAL_X_END - 2; x++) {
+                BlockState blockState = this.getBlock(world, x, 7, z, box);
+                if (!blockState.isAir() && !blockState.is(Blocks.CHAIN)) {
+                    numCovered++;
+                }
+            }
+
+            if (numCovered < 2) continue;
+
             // Bottom slabs
             this.chanceFill(world, box, random, .6f, 1, 1, z, 2, 1, z + 2, getMainSlab());
             this.chanceFill(world, box, random, .6f, LOCAL_X_END - 2, 1, z, LOCAL_X_END - 1, 1, z + 2, getMainSlab());
@@ -410,10 +432,18 @@ public class BigTunnel extends MineshaftPiece {
             this.fill(world, box, 1, 2, z + 1, 1, 3, z + 1, getSupportBlock());
             this.fill(world, box, LOCAL_X_END - 1, 2, z + 1, LOCAL_X_END - 1, 3, z + 1, getSupportBlock());
             this.chanceReplaceNonAir(world, box, random, .4f, 2, 5, z + 1, LOCAL_X_END - 2, 5, z + 1, supportBlock);
+
+            // Place cobwebs around support
+            this.chanceReplaceAir(world, box, random, cobwebChance, 1, 1, z, 1, 4, z + 2, Blocks.COBWEB.defaultBlockState());
+            this.chanceReplaceAir(world, box, random, cobwebChance, LOCAL_X_END - 1, 1, z, LOCAL_X_END - 1, 4, z + 2, Blocks.COBWEB.defaultBlockState());
+            this.chanceReplaceAir(world, box, random, cobwebChance, 2, 5, z, LOCAL_X_END - 2, 5, z + 2, Blocks.COBWEB.defaultBlockState());
+            this.chanceReplaceAir(world, box, random, cobwebChance, 2, 4, z + 1, LOCAL_X_END - 2, 4, z + 1, Blocks.COBWEB.defaultBlockState());
+            this.chanceReplaceAir(world, box, random, cobwebChance, 3, 6, z + 1, LOCAL_X_END - 3, 6, z + 1, Blocks.COBWEB.defaultBlockState());
         }
     }
 
     private void generateSmallSupports(WorldGenLevel world, BoundingBox box, Random random) {
+        float cobwebChance = (float) BetterMineshafts.CONFIG.spawnRates.cobwebSpawnRate;
         BlockState supportBlock = getSupportBlock();
         if (supportBlock.getProperties().contains(BlockStateProperties.EAST_WALL) && supportBlock.getProperties().contains(BlockStateProperties.WEST_WALL)) {
             supportBlock = supportBlock.setValue(BlockStateProperties.EAST_WALL, WallSide.TALL).setValue(BlockStateProperties.WEST_WALL, WallSide.TALL);
@@ -422,6 +452,18 @@ public class BigTunnel extends MineshaftPiece {
         }
 
         for (int z : smallSupports) {
+            // Check if the area is covered. We only need to spawn supports in covered areas.
+            int numCovered = 0; // We require at least 2 blocks to be covered
+            for (int x = 2; x <= LOCAL_X_END - 2; x++) {
+                BlockState blockState = this.getBlock(world, x, 7, z, box);
+                if (!blockState.isAir() && !blockState.is(Blocks.CHAIN)) {
+                    numCovered++;
+                }
+            }
+
+            if (numCovered < 2) continue;
+
+            // Place support
             this.placeBlock(world, getMainBlock(), 2, 1, z, box);
             this.placeBlock(world, getMainBlock(), LOCAL_X_END - 2, 1, z, box);
             this.placeBlock(world, getSupportBlock(), 2, 2, z, box);
@@ -433,6 +475,10 @@ public class BigTunnel extends MineshaftPiece {
             this.chanceFill(world, box, random, .4f, 2, 3, z, LOCAL_X_END - 2, 3, z, supportBlock);
             this.placeBlock(world, supportBlock, 3, 3, z, box);
             this.placeBlock(world, supportBlock, LOCAL_X_END - 3, 3, z, box);
+
+            // Place cobwebs around support
+            this.chanceReplaceAir(world, box, random, cobwebChance, 2, 3, z - 1, LOCAL_X_END - 2, 4, z + 1, Blocks.COBWEB.defaultBlockState());
+            this.chanceReplaceAir(world, box, random, cobwebChance, 3, 5, z, LOCAL_X_END - 3, 5, z, Blocks.COBWEB.defaultBlockState());
         }
     }
 

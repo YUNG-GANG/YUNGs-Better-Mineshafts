@@ -116,21 +116,12 @@ public class SmallTunnel extends MineshaftPiece {
         // Decorations
         generateSupports(world, box, random);
         generateRails(world, box, random);
-        generateCobwebs(world, box, random);
         generateChestCarts(world, box, random);
         generateTntCarts(world, box, random);
         this.addVines(world, box, random, 1, 0, 1, LOCAL_X_END - 1, LOCAL_Y_END, LOCAL_Z_END - 1);
         this.addBiomeDecorations(world, box, random, 1, 0, 0, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END - 1);
         generateTorches(world, box, random);
         generatePillarsOrChains(world, box, random);
-    }
-
-    private void generateCobwebs(WorldGenLevel world, BoundingBox box, Random random) {
-        float chance = (float) BetterMineshafts.CONFIG.spawnRates.cobwebSpawnRate;
-        supports.forEach(z -> {
-            this.chanceReplaceAir(world, box, random, chance, 1, 3, z - 1, 1, 3, z + 1, Blocks.COBWEB.defaultBlockState());
-            this.chanceReplaceAir(world, box, random, chance, 3, 3, z - 1, 3, 3, z + 1, Blocks.COBWEB.defaultBlockState());
-        });
     }
 
     private void generateChestCarts(WorldGenLevel world, BoundingBox box, Random random) {
@@ -147,6 +138,7 @@ public class SmallTunnel extends MineshaftPiece {
     }
 
     private void generateSupports(WorldGenLevel world, BoundingBox box, Random random) {
+        float cobwebChance = (float) BetterMineshafts.CONFIG.spawnRates.cobwebSpawnRate;
         BlockState supportBlock = getSupportBlock();
         if (supportBlock.getProperties().contains(BlockStateProperties.EAST_WALL) && supportBlock.getProperties().contains(BlockStateProperties.WEST_WALL)) {
             supportBlock = supportBlock.setValue(BlockStateProperties.EAST_WALL, WallSide.TALL).setValue(BlockStateProperties.WEST_WALL, WallSide.TALL);
@@ -155,10 +147,26 @@ public class SmallTunnel extends MineshaftPiece {
         }
 
         for (int z : this.supports) {
+            // Check if the area is covered. We only need to spawn supports in covered areas.
+            int numCovered = 0; // We require at least 2 of 3 to be covered
+            for (int x = 1; x <= 3; x++) {
+                BlockState blockState = this.getBlock(world, x, 4, z, box);
+                if (!blockState.isAir() && !blockState.is(Blocks.CHAIN)) {
+                    numCovered++;
+                }
+            }
+
+            if (numCovered < 2) continue;
+
+            // Place the support
             this.fill(world, box, 1, 1, z, 1, 2, z, getSupportBlock());
             this.fill(world, box, 3, 1, z, 3, 2, z, getSupportBlock());
             this.fill(world, box, 1, 3, z, 3, 3, z, getMainBlock());
             this.chanceReplaceNonAir(world, box, random, .25f, 1, 3, z, 3, 3, z, supportBlock);
+
+            // Spawn cobwebs around it
+            this.chanceReplaceAir(world, box, random, cobwebChance, 1, 3, z - 1, 1, 3, z + 1, Blocks.COBWEB.defaultBlockState());
+            this.chanceReplaceAir(world, box, random, cobwebChance, 3, 3, z - 1, 3, 3, z + 1, Blocks.COBWEB.defaultBlockState());
         }
     }
 
@@ -207,11 +215,11 @@ public class SmallTunnel extends MineshaftPiece {
         }
     }
 
-    private void generatePillarsOrChains(WorldGenLevel world, BoundingBox boundingBox, Random random) {
-        generatePillarDownOrChainUp(world, random, boundingBox, 1, 0, 1);
-        generatePillarDownOrChainUp(world, random, boundingBox, LOCAL_X_END - 1, 0, 1);
-        generatePillarDownOrChainUp(world, random, boundingBox, 1, 0, LOCAL_Z_END - 1);
-        generatePillarDownOrChainUp(world, random, boundingBox, LOCAL_X_END - 1, 0, LOCAL_Z_END - 1);
+    private void generatePillarsOrChains(WorldGenLevel world, BoundingBox box, Random random) {
+        generatePillarDownOrChainUp(world, random, box, 1, 0, 1);
+        generatePillarDownOrChainUp(world, random, box, LOCAL_X_END - 1, 0, 1);
+        generatePillarDownOrChainUp(world, random, box, 1, 0, LOCAL_Z_END - 1);
+        generatePillarDownOrChainUp(world, random, box, LOCAL_X_END - 1, 0, LOCAL_Z_END - 1);
     }
 
     private void buildSupports(Random random) {

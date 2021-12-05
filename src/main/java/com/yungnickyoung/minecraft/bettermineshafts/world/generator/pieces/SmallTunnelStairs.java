@@ -90,7 +90,7 @@ public class SmallTunnelStairs extends MineshaftPiece {
 
         for (int i = 0; i < 5; i++) {
             // Fill with air
-            this.fill(world, box, 1, i + 1, i, LOCAL_X_END - 1, i + 1 + 2, i, AIR);
+            this.fill(world, box, 1, i + 1, i, LOCAL_X_END - 1, i + 1 + 3, i, AIR);
 
             // Place floor blocks
             this.chanceReplaceNonAir(world, box, random, .5f, 1, i, i, LOCAL_X_END - 1, i, i, getMainSelector());
