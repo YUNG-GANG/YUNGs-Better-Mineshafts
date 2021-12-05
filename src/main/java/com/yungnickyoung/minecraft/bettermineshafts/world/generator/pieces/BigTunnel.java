@@ -209,6 +209,7 @@ public class BigTunnel extends MineshaftPiece {
 
 
             this.fill(world, box, x, y, z, x + 1, y + 2, z + 2, AIR);
+            this.replaceAirOrChains(world, box, x, y - 1, z, x + 1, y - 1, z + 2, getMainBlock()); // Floor connecting big shaft to small shaft
             if (numCovered < 2) continue;
 
             this.placeBlock(world, getSupportBlock(), x, y + 1, z, box);
@@ -217,7 +218,6 @@ public class BigTunnel extends MineshaftPiece {
             this.fill(world, box, x + 1, y, z + 2, x + 1, y + 1, z + 2, getSupportBlock());
             this.chanceFill(world, box, random, .75f, x, y + 2, z, x + 1, y + 2, z + 2, getMainBlock());
             this.fill(world, box, x, y + 1, z + 1, x + 1, y + 1, z + 1, AIR);
-            this.replaceAirOrChains(world, box, x, y, z, x + 1, y, z + 2, getMainBlock()); // Floor connecting big shaft to small shaft
         }
 
         for (BlockPos entrancePos : smallShaftRightEntrances) {
@@ -237,6 +237,7 @@ public class BigTunnel extends MineshaftPiece {
             }
 
             this.fill(world, box, x, y, z, x + 1, y + 2, z + 2, AIR);
+            this.replaceAirOrChains(world, box, x, y - 1, z, x + 1, y - 1, z + 2, this.getMainBlock()); // Floor connecting big shaft to small shaft
             if (numCovered < 2) continue;
 
             this.placeBlock(world, getSupportBlock(), x + 1, y + 1, z, box);
@@ -245,7 +246,6 @@ public class BigTunnel extends MineshaftPiece {
             this.fill(world, box, x, y, z + 2, x, y + 1, z + 2, getSupportBlock());
             this.chanceFill(world, box, random, .75f, x, y + 2, z, x + 1, y + 2, z + 2, getMainBlock());
             this.fill(world, box, x, y + 1, z + 1, x + 1, y + 1, z + 1, AIR);
-            this.replaceAirOrChains(world, box, x, y, z, x + 1, y, z + 2, getMainBlock()); // Floor connecting big shaft to small shaft
         }
     }
 
