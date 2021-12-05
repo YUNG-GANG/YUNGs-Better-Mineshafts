@@ -121,10 +121,10 @@ public abstract class MineshaftPiece extends StructurePiece {
 
     protected float getVineChance() {
         return switch (this.mineshaftType) {
-            case DESERT, RED_DESERT -> .1f;
-            case JUNGLE -> .6f;
-            case ICE, SNOW -> .05f;
-            default -> .25f;
+            case JUNGLE -> .5f;
+            case SNOW -> .05f;
+            case ICE, DESERT, RED_DESERT -> 0f;
+            default -> .1f;
         };
     }
 
