@@ -556,4 +556,45 @@ public class BlockSetSelectors {
             BetterMineshaftStructureFeature.Type.MUSHROOM,
             Blocks.BROWN_MUSHROOM_BLOCK.defaultBlockState()}
     }).collect(Collectors.toMap(data -> (BetterMineshaftStructureFeature.Type) data[0], data -> (BlockState) data[1]));
+
+    /**
+     * Main Blocks.
+     */
+    public static Map<BetterMineshaftStructureFeature.Type, BlockState> SMALL_LEG_BLOCK = Stream.of (new Object[][] {
+        {
+                BetterMineshaftStructureFeature.Type.NORMAL,
+                Blocks.STRIPPED_OAK_LOG.defaultBlockState()
+        },
+        {
+                BetterMineshaftStructureFeature.Type.MESA,
+                Blocks.STRIPPED_DARK_OAK_LOG.defaultBlockState()
+        },
+        {
+                BetterMineshaftStructureFeature.Type.JUNGLE,
+                Blocks.STRIPPED_JUNGLE_LOG.defaultBlockState()
+        },
+        {
+                BetterMineshaftStructureFeature.Type.SNOW,
+                Blocks.STRIPPED_SPRUCE_LOG.defaultBlockState()
+        },
+        {
+                BetterMineshaftStructureFeature.Type.ICE,
+                Blocks.PACKED_ICE.defaultBlockState()
+        },
+        {
+                BetterMineshaftStructureFeature.Type.DESERT,
+                Blocks.SMOOTH_SANDSTONE.defaultBlockState()
+        },
+        {
+                BetterMineshaftStructureFeature.Type.RED_DESERT,
+                Blocks.SMOOTH_RED_SANDSTONE.defaultBlockState()
+        },
+        {
+                BetterMineshaftStructureFeature.Type.SAVANNA,
+                Blocks.STRIPPED_ACACIA_LOG.defaultBlockState()
+        },
+        {
+                BetterMineshaftStructureFeature.Type.MUSHROOM,
+                Blocks.MUSHROOM_STEM.defaultBlockState()}
+    }).collect(Collectors.toMap(data -> (BetterMineshaftStructureFeature.Type) data[0], data -> (BlockState) data[1]));
 }

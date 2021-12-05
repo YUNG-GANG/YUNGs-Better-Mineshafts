@@ -82,11 +82,6 @@ public class SmallTunnelStairs extends MineshaftPiece {
 
     @Override
     public void postProcess(WorldGenLevel world, StructureFeatureManager structureFeatureManager, ChunkGenerator chunkGenerator, Random random, BoundingBox box, ChunkPos chunkPos, BlockPos blockPos) {
-        // Don't spawn if liquid in this box or if in ocean biome
-//        if (this.isTouchingLiquid(world, box)) return;
-//        if (this.isInOcean(world, 0, 0) || this.isInOcean(world, LOCAL_X_END, LOCAL_Z_END)) return;
-
-
         // Randomize blocks
         this.chanceReplaceNonAir(world, box, random, this.getReplacementRate(), 0, 1, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getMainSelector());
 
@@ -99,7 +94,7 @@ public class SmallTunnelStairs extends MineshaftPiece {
 
             // Place floor blocks
             this.chanceReplaceNonAir(world, box, random, .5f, 1, i, i, LOCAL_X_END - 1, i, i, getMainSelector());
-            this.replaceAir(world, box, 1, i, i, LOCAL_X_END - 1, i, i, getMainBlock());
+            this.replaceAirOrChains(world, box, 1, i, i, LOCAL_X_END - 1, i, i, getMainBlock());
 
             // Place rails
             if (i == 0) {

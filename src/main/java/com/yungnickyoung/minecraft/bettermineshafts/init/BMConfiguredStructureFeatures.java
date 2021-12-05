@@ -132,9 +132,11 @@ public class BMConfiguredStructureFeatures {
         ServerWorldEvents.LOAD.register(runAfterFabricAPIPhase, (MinecraftServer minecraftServer, ServerLevel serverLevel) -> {
             StructureSettings worldStructureConfig = serverLevel.getChunkSource().getGenerator().getSettings();
 
-            // Grab the map that holds what ConfigureStructures a structure has and what biomes it can spawn in.
+            // Make a copy of the structure-biome map, excluding vanilla mineshafts so they don't spawn.
             ImmutableMap.Builder<StructureFeature<?>, ImmutableMultimap<ConfiguredStructureFeature<?, ?>, ResourceKey<Biome>>> tempStructureToMultiMap = ImmutableMap.builder();
-            ((StructureSettingsAccessor) worldStructureConfig).getConfiguredStructures().entrySet().forEach(tempStructureToMultiMap::put);
+            ((StructureSettingsAccessor) worldStructureConfig).getConfiguredStructures().entrySet().stream()
+                    .filter(entry -> entry.getKey() != StructureFeature.MINESHAFT)
+                    .forEach(tempStructureToMultiMap::put);
 
             // Create the multimap of Configured Structures to biomes we will need.
             ImmutableMultimap.Builder<ConfiguredStructureFeature<?, ?>, ResourceKey<Biome>> tempConfiguredStructureBiomeMultiMap = ImmutableMultimap.builder();
@@ -150,9 +152,9 @@ public class BMConfiguredStructureFeatures {
                 }
 
                 // Only spawn in biomes with normal mineshafts
-                if (!((StructureSettingsAccessor) worldStructureConfig).getConfiguredStructures().get(StructureFeature.MINESHAFT).containsValue(biomeEntry.getKey())) {
-                    continue;
-                }
+//                if (!((StructureSettingsAccessor) worldStructureConfig).getConfiguredStructures().get(StructureFeature.MINESHAFT).containsValue(biomeEntry.getKey())) {
+//                    continue;
+//                }
 
                 // The "minecraft:badlands" biome requires an exact match, and is therefore a special exception
                 if (biomeName.toString().equals("minecraft:badlands")) {
@@ -199,6 +201,8 @@ public class BMConfiguredStructureFeatures {
 
             // Add our structure and its associated configured structures + containing biomes to the settings
             tempStructureToMultiMap.put(BMStructureFeatures.MINESHAFT_STRUCTURE, tempConfiguredStructureBiomeMultiMap.build());
+
+            // Save our updates
             ((StructureSettingsAccessor) worldStructureConfig).setConfiguredStructures(tempStructureToMultiMap.build());
 
 

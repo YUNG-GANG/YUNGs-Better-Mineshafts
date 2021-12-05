@@ -103,10 +103,6 @@ public class SmallTunnelTurn extends MineshaftPiece {
 
     @Override
     public void postProcess(WorldGenLevel world, StructureFeatureManager structureFeatureManager, ChunkGenerator chunkGenerator, Random random, BoundingBox box, ChunkPos chunkPos, BlockPos blockPos) {
-        // Don't spawn if liquid in this box or if in ocean biome
-//        if (this.isTouchingLiquid(world, box)) return;
-//        if (this.isInOcean(world, 0, 0) || this.isInOcean(world, LOCAL_X_END, LOCAL_Z_END)) return;
-
         Direction direction = this.getOrientation();
 
         // Randomize blocks
@@ -119,7 +115,7 @@ public class SmallTunnelTurn extends MineshaftPiece {
         this.fill(world, box, 1, 1, 0, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END - 1, AIR);
 
         // Fill in any air in floor with main block
-        this.replaceAir(world, box, 1, 0, 0, LOCAL_X_END - 1, 0, LOCAL_Z_END, getMainBlock());
+        this.replaceAirOrChains(world, box, 1, 0, 0, LOCAL_X_END - 1, 0, LOCAL_Z_END, getMainBlock());
 
         // Rails
         this.fill(world, box, 2, 1, 0, 2, 1, 1, Blocks.RAIL.defaultBlockState());

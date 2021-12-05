@@ -159,8 +159,6 @@ public class BigTunnel extends MineshaftPiece {
 
     @Override
     public void postProcess(WorldGenLevel world, StructureFeatureManager structureFeatureManager, ChunkGenerator chunkGenerator, Random random, BoundingBox box, ChunkPos chunkPos, BlockPos blockPos) {
-//        if (this.isTouchingLiquid(world, boundingBox)) return;
-
         // Randomize blocks
         this.chanceReplaceNonAir(world, box, random, this.getReplacementRate(), 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getMainSelector());
 
@@ -173,7 +171,7 @@ public class BigTunnel extends MineshaftPiece {
         this.fill(world, box, 3, LOCAL_Y_END - 1, 0, LOCAL_X_END - 3, LOCAL_Y_END - 1, LOCAL_Z_END, AIR);
 
         // Fill in any air in floor with main block
-        this.replaceAir(world, box, 1, 0, 0, LOCAL_X_END - 1, 0, LOCAL_Z_END, getMainBlock());
+        this.replaceAirOrChains(world, box, 1, 0, 0, LOCAL_X_END - 1, 0, LOCAL_Z_END, getMainBlock());
 
         // Core structure
         generateSmallShaftEntrances(world, box, random);
@@ -206,7 +204,7 @@ public class BigTunnel extends MineshaftPiece {
             this.fill(world, box, x + 1, y, z + 2, x + 1, y + 1, z + 2, getSupportBlock());
             this.chanceFill(world, box, random, .75f, x, y + 2, z, x + 1, y + 2, z + 2, getMainBlock());
             this.fill(world, box, x, y + 1, z + 1, x + 1, y + 1, z + 1, AIR);
-            this.replaceAir(world, box, x, y - 1, z, x + 1, y - 1, z + 2, getMainBlock());
+            this.replaceAirOrChains(world, box, x, y - 1, z, x + 1, y - 1, z + 2, getMainBlock());
         });
 
         smallShaftRightEntrances.forEach(entrancePos -> {
@@ -214,7 +212,7 @@ public class BigTunnel extends MineshaftPiece {
             int y = entrancePos.getY();
             int z = entrancePos.getZ();
 
-            this.replaceAir(world, box, x, y - 1, z, x + 1, y - 1, z + 2, getMainBlock());
+            this.replaceAirOrChains(world, box, x, y - 1, z, x + 1, y - 1, z + 2, getMainBlock());
             this.fill(world, box, x + 1, y, z, x + 1, y, z + 2, AIR);
             this.placeBlock(world, getSupportBlock(), x + 1, y + 1, z, box);
             this.placeBlock(world, getSupportBlock(), x + 1, y + 1, z + 2, box);
@@ -245,46 +243,46 @@ public class BigTunnel extends MineshaftPiece {
 
         // Left side
         generateLeg(world, random, box, 1, 0, legSelector);
-        this.replaceAir(world, box, 1, -1, 1, 1, -1, 5, supportBlock);
-        this.replaceAir(world, box, 1, -2, 1, 1, -2, 3, supportBlock);
-        this.replaceAir(world, box, 1, -3, 1, 1, -3, 2, supportBlock);
-        this.replaceAir(world, box, 1, -5, 1, 1, -4, 1, supportBlock);
-        this.replaceAir(world, box, 1, -1, 6, 1, -1, 10, supportBlock);
-        this.replaceAir(world, box, 1, -2, 8, 1, -2, 10, supportBlock);
-        this.replaceAir(world, box, 1, -3, 9, 1, -3, 10, supportBlock);
-        this.replaceAir(world, box, 1, -5, 10, 1, -4, 10, supportBlock);
+        this.replaceAirOrChains(world, box, 1, -1, 1, 1, -1, 5, supportBlock);
+        this.replaceAirOrChains(world, box, 1, -2, 1, 1, -2, 3, supportBlock);
+        this.replaceAirOrChains(world, box, 1, -3, 1, 1, -3, 2, supportBlock);
+        this.replaceAirOrChains(world, box, 1, -5, 1, 1, -4, 1, supportBlock);
+        this.replaceAirOrChains(world, box, 1, -1, 6, 1, -1, 10, supportBlock);
+        this.replaceAirOrChains(world, box, 1, -2, 8, 1, -2, 10, supportBlock);
+        this.replaceAirOrChains(world, box, 1, -3, 9, 1, -3, 10, supportBlock);
+        this.replaceAirOrChains(world, box, 1, -5, 10, 1, -4, 10, supportBlock);
         generateLeg(world, random, box, 1, 11, legSelector);
         generateLeg(world, random, box, 1, 12, legSelector);
-        this.replaceAir(world, box, 1, -1, 13, 1, -1, 17, supportBlock);
-        this.replaceAir(world, box, 1, -2, 13, 1, -2, 15, supportBlock);
-        this.replaceAir(world, box, 1, -3, 13, 1, -3, 14, supportBlock);
-        this.replaceAir(world, box, 1, -5, 13, 1, -4, 13, supportBlock);
-        this.replaceAir(world, box, 1, -1, 18, 1, -1, 22, supportBlock);
-        this.replaceAir(world, box, 1, -2, 20, 1, -2, 22, supportBlock);
-        this.replaceAir(world, box, 1, -3, 21, 1, -3, 22, supportBlock);
-        this.replaceAir(world, box, 1, -5, 22, 1, -4, 22, supportBlock);
+        this.replaceAirOrChains(world, box, 1, -1, 13, 1, -1, 17, supportBlock);
+        this.replaceAirOrChains(world, box, 1, -2, 13, 1, -2, 15, supportBlock);
+        this.replaceAirOrChains(world, box, 1, -3, 13, 1, -3, 14, supportBlock);
+        this.replaceAirOrChains(world, box, 1, -5, 13, 1, -4, 13, supportBlock);
+        this.replaceAirOrChains(world, box, 1, -1, 18, 1, -1, 22, supportBlock);
+        this.replaceAirOrChains(world, box, 1, -2, 20, 1, -2, 22, supportBlock);
+        this.replaceAirOrChains(world, box, 1, -3, 21, 1, -3, 22, supportBlock);
+        this.replaceAirOrChains(world, box, 1, -5, 22, 1, -4, 22, supportBlock);
         generateLeg(world, random, box, 1, LOCAL_Z_END, legSelector);
 
         // Right side
         generateLeg(world, random, box, LOCAL_X_END - 1, 0, legSelector);
-        this.replaceAir(world, box, LOCAL_X_END - 1, -1, 1, LOCAL_X_END - 1, -1, 5, supportBlock);
-        this.replaceAir(world, box, LOCAL_X_END - 1, -2, 1, LOCAL_X_END - 1, -2, 3, supportBlock);
-        this.replaceAir(world, box, LOCAL_X_END - 1, -3, 1, LOCAL_X_END - 1, -3, 2, supportBlock);
-        this.replaceAir(world, box, LOCAL_X_END - 1, -5, 1, LOCAL_X_END - 1, -4, 1, supportBlock);
-        this.replaceAir(world, box, LOCAL_X_END - 1, -1, 6, LOCAL_X_END - 1, -1, 10, supportBlock);
-        this.replaceAir(world, box, LOCAL_X_END - 1, -2, 8, LOCAL_X_END - 1, -2, 10, supportBlock);
-        this.replaceAir(world, box, LOCAL_X_END - 1, -3, 9, LOCAL_X_END - 1, -3, 10, supportBlock);
-        this.replaceAir(world, box, LOCAL_X_END - 1, -5, 10, LOCAL_X_END - 1, -4, 10, supportBlock);
+        this.replaceAirOrChains(world, box, LOCAL_X_END - 1, -1, 1, LOCAL_X_END - 1, -1, 5, supportBlock);
+        this.replaceAirOrChains(world, box, LOCAL_X_END - 1, -2, 1, LOCAL_X_END - 1, -2, 3, supportBlock);
+        this.replaceAirOrChains(world, box, LOCAL_X_END - 1, -3, 1, LOCAL_X_END - 1, -3, 2, supportBlock);
+        this.replaceAirOrChains(world, box, LOCAL_X_END - 1, -5, 1, LOCAL_X_END - 1, -4, 1, supportBlock);
+        this.replaceAirOrChains(world, box, LOCAL_X_END - 1, -1, 6, LOCAL_X_END - 1, -1, 10, supportBlock);
+        this.replaceAirOrChains(world, box, LOCAL_X_END - 1, -2, 8, LOCAL_X_END - 1, -2, 10, supportBlock);
+        this.replaceAirOrChains(world, box, LOCAL_X_END - 1, -3, 9, LOCAL_X_END - 1, -3, 10, supportBlock);
+        this.replaceAirOrChains(world, box, LOCAL_X_END - 1, -5, 10, LOCAL_X_END - 1, -4, 10, supportBlock);
         generateLeg(world, random, box, LOCAL_X_END - 1, 11, legSelector);
         generateLeg(world, random, box, LOCAL_X_END - 1, 12, legSelector);
-        this.replaceAir(world, box, LOCAL_X_END - 1, -1, 13, LOCAL_X_END - 1, -1, 17, supportBlock);
-        this.replaceAir(world, box, LOCAL_X_END - 1, -2, 13, LOCAL_X_END - 1, -2, 15, supportBlock);
-        this.replaceAir(world, box, LOCAL_X_END - 1, -3, 13, LOCAL_X_END - 1, -3, 14, supportBlock);
-        this.replaceAir(world, box, LOCAL_X_END - 1, -5, 13, LOCAL_X_END - 1, -4, 13, supportBlock);
-        this.replaceAir(world, box, LOCAL_X_END - 1, -1, 18, LOCAL_X_END - 1, -1, 22, supportBlock);
-        this.replaceAir(world, box, LOCAL_X_END - 1, -2, 20, LOCAL_X_END - 1, -2, 22, supportBlock);
-        this.replaceAir(world, box, LOCAL_X_END - 1, -3, 21, LOCAL_X_END - 1, -3, 22, supportBlock);
-        this.replaceAir(world, box, LOCAL_X_END - 1, -5, 22, LOCAL_X_END - 1, -4, 22, supportBlock);
+        this.replaceAirOrChains(world, box, LOCAL_X_END - 1, -1, 13, LOCAL_X_END - 1, -1, 17, supportBlock);
+        this.replaceAirOrChains(world, box, LOCAL_X_END - 1, -2, 13, LOCAL_X_END - 1, -2, 15, supportBlock);
+        this.replaceAirOrChains(world, box, LOCAL_X_END - 1, -3, 13, LOCAL_X_END - 1, -3, 14, supportBlock);
+        this.replaceAirOrChains(world, box, LOCAL_X_END - 1, -5, 13, LOCAL_X_END - 1, -4, 13, supportBlock);
+        this.replaceAirOrChains(world, box, LOCAL_X_END - 1, -1, 18, LOCAL_X_END - 1, -1, 22, supportBlock);
+        this.replaceAirOrChains(world, box, LOCAL_X_END - 1, -2, 20, LOCAL_X_END - 1, -2, 22, supportBlock);
+        this.replaceAirOrChains(world, box, LOCAL_X_END - 1, -3, 21, LOCAL_X_END - 1, -3, 22, supportBlock);
+        this.replaceAirOrChains(world, box, LOCAL_X_END - 1, -5, 22, LOCAL_X_END - 1, -4, 22, supportBlock);
         generateLeg(world, random, box, LOCAL_X_END - 1, LOCAL_Z_END, legSelector);
     }
 
@@ -294,27 +292,27 @@ public class BigTunnel extends MineshaftPiece {
             generateLeg(world, random, box, 2, z + 1, legSelector);
             generateLeg(world, random, box, LOCAL_X_END - 2, z + 1, legSelector);
 
-            this.replaceAir(world, box, random, 1, -1, z, LOCAL_X_END - 1, -1, z + 2, legSelector);
+            this.replaceAirOrChains(world, box, random, 1, -1, z, LOCAL_X_END - 1, -1, z + 2, legSelector);
 
-            this.replaceAir(world, box, random, 2, -1, z + 3, 2, -1, z + 3, legSelector);
-            this.replaceAir(world, box, random, LOCAL_X_END - 2, -1, z + 3, LOCAL_X_END - 2, -1, z + 3, legSelector);
+            this.replaceAirOrChains(world, box, random, 2, -1, z + 3, 2, -1, z + 3, legSelector);
+            this.replaceAirOrChains(world, box, random, LOCAL_X_END - 2, -1, z + 3, LOCAL_X_END - 2, -1, z + 3, legSelector);
 
-            this.replaceAir(world, box, random, 3, -1, z + 3, LOCAL_X_END - 3, -1, z + 6, legSelector);
+            this.replaceAirOrChains(world, box, random, 3, -1, z + 3, LOCAL_X_END - 3, -1, z + 6, legSelector);
 
-            this.replaceAir(world, box, random, 2, -1, z + 6, 2, -1, z + 6, legSelector);
-            this.replaceAir(world, box, random, LOCAL_X_END - 2, -1, z + 6, LOCAL_X_END - 2, -1, z + 6, legSelector);
+            this.replaceAirOrChains(world, box, random, 2, -1, z + 6, 2, -1, z + 6, legSelector);
+            this.replaceAirOrChains(world, box, random, LOCAL_X_END - 2, -1, z + 6, LOCAL_X_END - 2, -1, z + 6, legSelector);
 
-            this.replaceAir(world, box, random, 2, -2, z, 2, -2, z, legSelector);
-            this.replaceAir(world, box, random, LOCAL_X_END - 2, -2, z, LOCAL_X_END - 2, -2, z, legSelector);
+            this.replaceAirOrChains(world, box, random, 2, -2, z, 2, -2, z, legSelector);
+            this.replaceAirOrChains(world, box, random, LOCAL_X_END - 2, -2, z, LOCAL_X_END - 2, -2, z, legSelector);
 
-            this.replaceAir(world, box, random, 2, -2, z + 2, 2, -2, z + 2, legSelector);
-            this.replaceAir(world, box, random, LOCAL_X_END - 2, -2, z + 2, LOCAL_X_END - 2, -2, z + 2, legSelector);
+            this.replaceAirOrChains(world, box, random, 2, -2, z + 2, 2, -2, z + 2, legSelector);
+            this.replaceAirOrChains(world, box, random, LOCAL_X_END - 2, -2, z + 2, LOCAL_X_END - 2, -2, z + 2, legSelector);
 
-            this.replaceAir(world, box, random, 1, -2, z + 1, 1, -2, z + 1, legSelector);
-            this.replaceAir(world, box, random, LOCAL_X_END - 1, -2, z + 1, LOCAL_X_END - 1, -2, z + 1, legSelector);
+            this.replaceAirOrChains(world, box, random, 1, -2, z + 1, 1, -2, z + 1, legSelector);
+            this.replaceAirOrChains(world, box, random, LOCAL_X_END - 1, -2, z + 1, LOCAL_X_END - 1, -2, z + 1, legSelector);
 
-            this.replaceAir(world, box, random, 3, -2, z + 1, 3, -2, z + 1, legSelector);
-            this.replaceAir(world, box, random, LOCAL_X_END - 3, -2, z + 1, LOCAL_X_END - 3, -2, z + 1, legSelector);
+            this.replaceAirOrChains(world, box, random, 3, -2, z + 1, 3, -2, z + 1, legSelector);
+            this.replaceAirOrChains(world, box, random, LOCAL_X_END - 3, -2, z + 1, LOCAL_X_END - 3, -2, z + 1, legSelector);
         }
     }
 
@@ -326,23 +324,23 @@ public class BigTunnel extends MineshaftPiece {
                 case 0: // Left side
                 default:
                     // Row closest to wall
-                    this.replaceAir(world, box, 1, 1, z, 1, 2, z + 2, getGravel());
-                    this.replaceAir(world, box, 1, 3, z + 1, 1, 3 + random.nextInt(2), z + 1, getGravel());
+                    this.replaceAirOrChains(world, box, 1, 1, z, 1, 2, z + 2, getGravel());
+                    this.replaceAirOrChains(world, box, 1, 3, z + 1, 1, 3 + random.nextInt(2), z + 1, getGravel());
                     this.chanceReplaceAir(world, box, random, .5f, 1, 3, z, 1, 3, z + 2, getGravel());
                     // Middle row
-                    this.replaceAir(world, box, 2, 1, z + 1, 2, 2 + random.nextInt(2), z + 1, getGravel());
-                    this.replaceAir(world, box, 2, 1, z, 2, 1 + random.nextInt(2), z + 2, getGravel());
+                    this.replaceAirOrChains(world, box, 2, 1, z + 1, 2, 2 + random.nextInt(2), z + 1, getGravel());
+                    this.replaceAirOrChains(world, box, 2, 1, z, 2, 1 + random.nextInt(2), z + 2, getGravel());
                     // Innermost row
                     this.chanceReplaceAir(world, box, random, .5f, 3, 1, z, 3, 1, z + 2, getGravel());
                     break;
                 case 1: // Right side
                     // Row closest to wall
-                    this.replaceAir(world, box, LOCAL_X_END - 1, 1, z, LOCAL_X_END - 1, 2, z + 2, getGravel());
-                    this.replaceAir(world, box, LOCAL_X_END - 1, 3, z + 1, LOCAL_X_END - 1, 3 + random.nextInt(2), z + 1, getGravel());
+                    this.replaceAirOrChains(world, box, LOCAL_X_END - 1, 1, z, LOCAL_X_END - 1, 2, z + 2, getGravel());
+                    this.replaceAirOrChains(world, box, LOCAL_X_END - 1, 3, z + 1, LOCAL_X_END - 1, 3 + random.nextInt(2), z + 1, getGravel());
                     this.chanceReplaceAir(world, box, random, .5f, LOCAL_X_END - 1, 3, z, LOCAL_X_END - 1, 3, z + 2, getGravel());
                     // Middle row
-                    this.replaceAir(world, box, LOCAL_X_END - 2, 1, z + 1, LOCAL_X_END - 2, 2 + random.nextInt(2), z + 1, getGravel());
-                    this.replaceAir(world, box, LOCAL_X_END - 2, 1, z, LOCAL_X_END - 2, 1 + random.nextInt(2), z + 2, getGravel());
+                    this.replaceAirOrChains(world, box, LOCAL_X_END - 2, 1, z + 1, LOCAL_X_END - 2, 2 + random.nextInt(2), z + 1, getGravel());
+                    this.replaceAirOrChains(world, box, LOCAL_X_END - 2, 1, z, LOCAL_X_END - 2, 1 + random.nextInt(2), z + 2, getGravel());
                     // Innermost row
                     this.chanceReplaceAir(world, box, random, .5f, LOCAL_X_END - 3, 1, z, LOCAL_X_END - 3, 1, z + 2, getGravel());
             }
@@ -470,7 +468,7 @@ public class BigTunnel extends MineshaftPiece {
     private void generateSideRoomOpenings(WorldGenLevel world, BoundingBox chunkBox, Random random) {
         sideRoomEntrances.forEach(entranceBox -> {
             // Ensure floor in gap between tunnel and room
-            this.replaceAir(world, chunkBox, random, entranceBox.minX(), 0, entranceBox.minZ(), entranceBox.maxX(), 0, entranceBox.maxZ(), getBrickSelector());
+            this.replaceAirOrChains(world, chunkBox, random, entranceBox.minX(), 0, entranceBox.minZ(), entranceBox.maxX(), 0, entranceBox.maxZ(), getBrickSelector());
             switch (random.nextInt(3)) {
                 case 0:
                     // Completely open

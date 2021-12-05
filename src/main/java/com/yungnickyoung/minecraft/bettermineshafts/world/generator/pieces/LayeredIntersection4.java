@@ -113,10 +113,6 @@ public class LayeredIntersection4 extends MineshaftPiece {
 
     @Override
     public void postProcess(WorldGenLevel world, StructureFeatureManager structureFeatureManager, ChunkGenerator chunkGenerator, Random random, BoundingBox box, ChunkPos chunkPos, BlockPos blockPos) {
-        // Don't spawn if liquid in this box or if in ocean biome
-//        if (this.isTouchingLiquid(world, box)) return;
-//        if (this.isInOcean(world, 0, 0) || this.isInOcean(world, LOCAL_X_END, LOCAL_Z_END)) return;
-
         // Randomize blocks
         this.chanceReplaceNonAir(world, box, random, this.getReplacementRate(), 0, 1, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getMainSelector());
 
@@ -130,7 +126,7 @@ public class LayeredIntersection4 extends MineshaftPiece {
         this.fill(world, box, 0, 3, 2, 6, 6, 4, AIR);
 
         // Fill in any air in floor with main block
-        this.replaceNonAir(world, box, 2, 0, 0, 4, 2, LOCAL_Z_END, getMainBlock());
+        this.replaceAirOrChains(world, box, 2, 0, 0, 4, 2, LOCAL_Z_END, getMainBlock());
 
         // Sides for walking on
         this.fill(world, box, 2, 2, 0, 2, 3, 1, getMainBlock());

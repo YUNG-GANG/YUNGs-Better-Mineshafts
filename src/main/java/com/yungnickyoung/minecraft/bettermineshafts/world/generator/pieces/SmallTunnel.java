@@ -101,10 +101,6 @@ public class SmallTunnel extends MineshaftPiece {
 
     @Override
     public void postProcess(WorldGenLevel world, StructureFeatureManager structureFeatureManager, ChunkGenerator chunkGenerator, Random random, BoundingBox box, ChunkPos chunkPos, BlockPos blockPos) {
-        // Don't spawn if liquid in this box or if in ocean biome
-//        if (this.isTouchingLiquid(world, box)) return;
-//        if (this.isInOcean(world, 0, 0) || this.isInOcean(world, LOCAL_X_END, LOCAL_Z_END)) return;
-
         // Randomize blocks
         this.chanceReplaceNonAir(world, box, random, this.getReplacementRate(), 0, 1, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getMainSelector());
 
@@ -115,10 +111,7 @@ public class SmallTunnel extends MineshaftPiece {
         this.fill(world, box, 1, 1, 0, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END, AIR);
 
         // Fill in any air in floor with main block
-        this.replaceAir(world, box, 1, 0, 0, LOCAL_X_END - 1, 0, LOCAL_Z_END, getMainBlock());
-
-        // Fill in any air in floor with main block
-        this.replaceAir(world, box, 1, 0, 0, LOCAL_X_END - 1, 0, LOCAL_Z_END, getMainBlock());
+        this.replaceAirOrChains(world, box, 1, 0, 0, LOCAL_X_END - 1, 0, LOCAL_Z_END, getMainBlock());
 
         // Decorations
         generateSupports(world, box, random);
@@ -129,6 +122,7 @@ public class SmallTunnel extends MineshaftPiece {
         this.addVines(world, box, random, 1, 0, 1, LOCAL_X_END - 1, LOCAL_Y_END, LOCAL_Z_END - 1);
         this.addBiomeDecorations(world, box, random, 1, 0, 0, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END - 1);
         generateTorches(world, box, random);
+        generatePillarsOrChains(world, box, random);
     }
 
     private void generateCobwebs(WorldGenLevel world, BoundingBox box, Random random) {
@@ -200,17 +194,24 @@ public class SmallTunnel extends MineshaftPiece {
                 BlockPos adjPos = this.getWorldPos(0, 2, z);
                 boolean canPlace = world.getBlockState(pos).isAir() && world.getBlockState(adjPos) != AIR;
                 if (canPlace) {
-                    this.replaceAir(world, box, 1, 2, z, 1, 2, z, torchBlock.setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.EAST));
+                    this.replaceAirOrChains(world, box, 1, 2, z, 1, 2, z, torchBlock.setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.EAST));
                 }
             } else if (r < BetterMineshafts.CONFIG.spawnRates.torchSpawnRate) {
                 BlockPos pos = this.getWorldPos(LOCAL_X_END - 1, 2, z);
                 BlockPos adjPos = this.getWorldPos(LOCAL_X_END, 2, z);
                 boolean canPlace = world.getBlockState(pos).isAir() && world.getBlockState(adjPos) != AIR;
                 if (canPlace) {
-                    this.replaceAir(world, box, LOCAL_X_END - 1, 2, z, LOCAL_X_END - 1, 2, z, torchBlock.setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.WEST));
+                    this.replaceAirOrChains(world, box, LOCAL_X_END - 1, 2, z, LOCAL_X_END - 1, 2, z, torchBlock.setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.WEST));
                 }
             }
         }
+    }
+
+    private void generatePillarsOrChains(WorldGenLevel world, BoundingBox boundingBox, Random random) {
+        generatePillarDownOrChainUp(world, random, boundingBox, 1, 0, 1);
+        generatePillarDownOrChainUp(world, random, boundingBox, LOCAL_X_END - 1, 0, 1);
+        generatePillarDownOrChainUp(world, random, boundingBox, 1, 0, LOCAL_Z_END - 1);
+        generatePillarDownOrChainUp(world, random, boundingBox, LOCAL_X_END - 1, 0, LOCAL_Z_END - 1);
     }
 
     private void buildSupports(Random random) {

@@ -101,13 +101,9 @@ public class SideRoom extends MineshaftPiece {
 
     @Override
     public void postProcess(WorldGenLevel world, StructureFeatureManager structureFeatureManager, ChunkGenerator chunkGenerator, Random random, BoundingBox box, ChunkPos chunkPos, BlockPos blockPos) {
-        // Don't spawn if liquid in this box or if in ocean biome
-//        if (this.isTouchingLiquid(world, box)) return;
-//        if (this.isInOcean(world, 0, 0) || this.isInOcean(world, LOCAL_X_END, LOCAL_Z_END)) return;
-
         // Fill with stone then clean out with air. Track ceiling positions to see where we can place iron bar supports
         this.fill(world, box, random, 0, 0, 0, LOCAL_X_END, 1, LOCAL_Z_END, getBrickSelector()); // Floor
-        this.replaceNonAir(world, box, random, 0, 2, 0, LOCAL_X_END, LOCAL_Y_END - 1, LOCAL_Z_END, getBrickSelector()); // Fill w/ brick selector
+        this.chanceReplaceNonAir(world, box, random, 1.0f, 0, 2, 0, LOCAL_X_END, LOCAL_Y_END - 1, LOCAL_Z_END, getBrickSelector()); // Fill w/ brick selector
         this.fill(world, box, 1, 1, 1, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END, AIR); // Fill with air
         boolean[][] ceiling = new boolean[SECONDARY_AXIS_LEN][MAIN_AXIS_LEN]; // Ceiling
         for (int x = 0; x <= LOCAL_X_END; ++x) {

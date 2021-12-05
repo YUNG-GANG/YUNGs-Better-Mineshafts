@@ -105,10 +105,6 @@ public class LayeredIntersection5 extends MineshaftPiece {
 
     @Override
     public void postProcess(WorldGenLevel world, StructureFeatureManager structureFeatureManager, ChunkGenerator chunkGenerator, Random random, BoundingBox box, ChunkPos chunkPos, BlockPos blockPos) {
-        // Don't spawn if liquid in this box or if in ocean biome
-//        if (this.isTouchingLiquid(world, box)) return;
-//        if (this.isInOcean(world, 0, 0) || this.isInOcean(world, LOCAL_X_END, LOCAL_Z_END)) return;
-
         // Randomize blocks
         this.chanceReplaceNonAir(world, box, random, this.getReplacementRate(), 0, 1, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getMainSelector());
 
@@ -120,7 +116,7 @@ public class LayeredIntersection5 extends MineshaftPiece {
         this.fill(world, box, 0, 5, LOCAL_Z_END, LOCAL_X_END, LOCAL_Y_END - 1, LOCAL_Z_END, AIR);
 
         // First floor Bottom - fill in any air in floor with main block
-        this.replaceAir(world, box, 0, 0, 0, LOCAL_X_END, 0, LOCAL_Z_END - 1, getMainBlock());
+        this.replaceAirOrChains(world, box, 0, 0, 0, LOCAL_X_END, 0, LOCAL_Z_END - 1, getMainBlock());
 
         // First floor rails
         this.chanceAddBlock(world, random, .5f, Blocks.RAIL.defaultBlockState().setValue(RailBlock.SHAPE, RailShape.NORTH_SOUTH), 2, 1, 0, box);
@@ -135,11 +131,11 @@ public class LayeredIntersection5 extends MineshaftPiece {
         this.chanceReplaceNonAir(world, box, random, .5f, 0, 5, 0, LOCAL_X_END, 5, LOCAL_Z_END, getMainSelector());
         this.fill(world, box, 1, 5, 1, LOCAL_X_END - 1, 5, LOCAL_Z_END - 1, AIR);
 
-        // Supports
-        this.fill(world, box, 1, 1, 1, 1, LOCAL_Y_END - 1, 1, getSupportBlock());
-        this.fill(world, box, 3, 1, 1, 3, LOCAL_Y_END - 1, 1, getSupportBlock());
-        this.fill(world, box, 1, 1, 3, 1, LOCAL_Y_END - 1, 3, getSupportBlock());
-        this.fill(world, box, 3, 1, 3, 3, LOCAL_Y_END - 1, 3, getSupportBlock());
+        // Pillars
+        this.fill(world, box, random, 1, 1, 1, 1, LOCAL_Y_END - 1, 1, getLegSelector());
+        this.fill(world, box, random, 3, 1, 1, 3, LOCAL_Y_END - 1, 1, getLegSelector());
+        this.fill(world, box, random, 1, 1, 3, 1, LOCAL_Y_END - 1, 3, getLegSelector());
+        this.fill(world, box, random, 3, 1, 3, 3, LOCAL_Y_END - 1, 3, getLegSelector());
 
         // Ladders
         BlockState LADDER = Blocks.LADDER.defaultBlockState().setValue(LadderBlock.FACING, Direction.SOUTH);
@@ -148,5 +144,13 @@ public class LayeredIntersection5 extends MineshaftPiece {
         // Decorations
         this.addBiomeDecorations(world, box, random, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END - 1, LOCAL_Z_END);
         this.addVines(world, box, random, 1, 0, 1, LOCAL_X_END - 1, LOCAL_Y_END, LOCAL_Z_END - 1);
+        this.generatePillarsOrChains(world, box, random);
+    }
+
+    private void generatePillarsOrChains(WorldGenLevel world, BoundingBox boundingBox, Random random) {
+        generatePillarDownOrChainUp(world, random, boundingBox, 1, 1, 0, LOCAL_Y_END - 1, this.getSmallLegBlock());
+        generatePillarDownOrChainUp(world, random, boundingBox, LOCAL_X_END - 1, 1, 0, LOCAL_Y_END - 1, this.getSmallLegBlock());
+        generatePillarDownOrChainUp(world, random, boundingBox, 1, LOCAL_Z_END - 1, 0, LOCAL_Y_END - 1, this.getSmallLegBlock());
+        generatePillarDownOrChainUp(world, random, boundingBox, LOCAL_X_END - 1, LOCAL_Z_END - 1, 0, LOCAL_Y_END - 1, this.getSmallLegBlock());
     }
 }
