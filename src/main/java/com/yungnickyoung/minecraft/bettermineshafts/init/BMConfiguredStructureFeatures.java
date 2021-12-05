@@ -106,7 +106,6 @@ public class BMConfiguredStructureFeatures {
         // Add exceptional biome entries
         exceptionMap.put("ice", BMConfiguredStructureFeatures.ICE_MINESHAFT);
         exceptionMap.put("icy", BMConfiguredStructureFeatures.ICE_MINESHAFT);
-        exceptionMap.put("desert_lakes", BMConfiguredStructureFeatures.REDDESERT_MINESHAFT);
 
         // Add all other standard entries
         normalMap.put(Biome.BiomeCategory.MESA, BMConfiguredStructureFeatures.MESA_MINESHAFT);
