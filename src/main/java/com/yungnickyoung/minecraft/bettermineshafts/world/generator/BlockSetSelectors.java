@@ -107,7 +107,13 @@ public class BlockSetSelectors {
                 .addBlock(Blocks.MUSHROOM_STEM.defaultBlockState(), .33333f)
                 .addBlock(Blocks.BROWN_MUSHROOM_BLOCK.defaultBlockState(), .33333f)
                 .addBlock(Blocks.RED_MUSHROOM_BLOCK.defaultBlockState(), .33333f)
-        }
+        },
+        {
+            BetterMineshaftStructureFeature.Type.LUSH,
+            new BlockSetSelector(Blocks.OAK_PLANKS.defaultBlockState())
+                .addBlock(Blocks.MOSS_BLOCK.defaultBlockState(), 0.7f)
+                .addBlock(Blocks.CAVE_AIR.defaultBlockState(), 0.15f)
+        },
     }).collect(Collectors.toMap(data -> (BetterMineshaftStructureFeature.Type) data[0], data -> (BlockSetSelector) data[1]));
 
     /**
@@ -188,7 +194,12 @@ public class BlockSetSelectors {
         {
             BetterMineshaftStructureFeature.Type.MUSHROOM,
             BlockSetSelector.from(Blocks.MYCELIUM.defaultBlockState())
-        }
+        },
+        {
+            BetterMineshaftStructureFeature.Type.LUSH,
+            new BlockSetSelector(Blocks.OAK_PLANKS.defaultBlockState())
+                .addBlock(Blocks.MOSS_BLOCK.defaultBlockState(), 0.75f)
+        },
     }).collect(Collectors.toMap(data -> (BetterMineshaftStructureFeature.Type) data[0], data -> (BlockSetSelector) data[1]));
 
     /**
@@ -259,7 +270,16 @@ public class BlockSetSelectors {
             new BlockSetSelector(Blocks.RED_MUSHROOM_BLOCK.defaultBlockState())
                 .addBlock(Blocks.MUSHROOM_STEM.defaultBlockState(), .33333f)
                 .addBlock(Blocks.BROWN_MUSHROOM_BLOCK.defaultBlockState(), .33333f)
-                .addBlock(Blocks.RED_MUSHROOM_BLOCK.defaultBlockState(), .33333f)        }
+                .addBlock(Blocks.RED_MUSHROOM_BLOCK.defaultBlockState(), .33333f)
+        },
+        {
+            BetterMineshaftStructureFeature.Type.LUSH,
+            new BlockSetSelector(Blocks.OAK_PLANKS.defaultBlockState())
+                .addBlock(Blocks.MOSS_BLOCK.defaultBlockState(), 0.75f)
+                .addBlock(Blocks.STONE_BRICKS.defaultBlockState(), 0.05f)
+                .addBlock(Blocks.MOSSY_STONE_BRICKS.defaultBlockState(), 0.15f)
+                .addBlock(Blocks.CRACKED_STONE_BRICKS.defaultBlockState(), 0.05f)
+        },
     }).collect(Collectors.toMap(data -> (BetterMineshaftStructureFeature.Type) data[0], data -> (BlockSetSelector) data[1]));
 
     /**
@@ -308,7 +328,11 @@ public class BlockSetSelectors {
         {
             BetterMineshaftStructureFeature.Type.MUSHROOM,
             BlockSetSelector.from(Blocks.MUSHROOM_STEM.defaultBlockState())
-        }
+        },
+        {
+            BetterMineshaftStructureFeature.Type.LUSH,
+            BlockSetSelector.from(Blocks.STRIPPED_OAK_LOG.defaultBlockState().setValue(RotatedPillarBlock.AXIS, Direction.Axis.Y))
+        },
     }).collect(Collectors.toMap(data -> (BetterMineshaftStructureFeature.Type) data[0], data -> (BlockSetSelector) data[1]));
 
     /**
@@ -349,7 +373,12 @@ public class BlockSetSelectors {
         },
         {
             BetterMineshaftStructureFeature.Type.MUSHROOM,
-            Blocks.RED_MUSHROOM_BLOCK.defaultBlockState()}
+            Blocks.RED_MUSHROOM_BLOCK.defaultBlockState()
+        },
+        {
+            BetterMineshaftStructureFeature.Type.LUSH,
+            Blocks.OAK_PLANKS.defaultBlockState()
+        },
     }).collect(Collectors.toMap(data -> (BetterMineshaftStructureFeature.Type) data[0], data -> (BlockState) data[1]));
 
     /**
@@ -390,7 +419,12 @@ public class BlockSetSelectors {
         },
         {
             BetterMineshaftStructureFeature.Type.MUSHROOM,
-            Blocks.MUSHROOM_STEM.defaultBlockState()}
+            Blocks.MUSHROOM_STEM.defaultBlockState()
+        },
+        {
+            BetterMineshaftStructureFeature.Type.LUSH,
+            Blocks.OAK_FENCE.defaultBlockState()
+        },
     }).collect(Collectors.toMap(data -> (BetterMineshaftStructureFeature.Type) data[0], data -> (BlockState) data[1]));
 
     /**
@@ -431,7 +465,12 @@ public class BlockSetSelectors {
         },
         {
             BetterMineshaftStructureFeature.Type.MUSHROOM,
-            Blocks.BROWN_MUSHROOM.defaultBlockState()}
+            Blocks.BROWN_MUSHROOM.defaultBlockState()
+        },
+        {
+            BetterMineshaftStructureFeature.Type.LUSH,
+            Blocks.OAK_SLAB.defaultBlockState()
+        },
     }).collect(Collectors.toMap(data -> (BetterMineshaftStructureFeature.Type) data[0], data -> (BlockState) data[1]));
 
     /**
@@ -472,7 +511,12 @@ public class BlockSetSelectors {
         },
         {
             BetterMineshaftStructureFeature.Type.MUSHROOM,
-            Blocks.GRAVEL.defaultBlockState()}
+            Blocks.GRAVEL.defaultBlockState()
+        },
+        {
+            BetterMineshaftStructureFeature.Type.LUSH,
+            Blocks.GRAVEL.defaultBlockState()
+        },
     }).collect(Collectors.toMap(data -> (BetterMineshaftStructureFeature.Type) data[0], data -> (BlockState) data[1]));
 
     /**
@@ -513,7 +557,12 @@ public class BlockSetSelectors {
         },
         {
             BetterMineshaftStructureFeature.Type.MUSHROOM,
-            Blocks.BROWN_MUSHROOM_BLOCK.defaultBlockState()}
+            Blocks.BROWN_MUSHROOM_BLOCK.defaultBlockState()
+        },
+        {
+            BetterMineshaftStructureFeature.Type.LUSH,
+            Blocks.MOSSY_COBBLESTONE_WALL.defaultBlockState()
+        },
     }).collect(Collectors.toMap(data -> (BetterMineshaftStructureFeature.Type) data[0], data -> (BlockState) data[1]));
 
     /**
@@ -554,7 +603,12 @@ public class BlockSetSelectors {
         },
         {
             BetterMineshaftStructureFeature.Type.MUSHROOM,
-            Blocks.BROWN_MUSHROOM_BLOCK.defaultBlockState()}
+            Blocks.BROWN_MUSHROOM_BLOCK.defaultBlockState()
+        },
+        {
+            BetterMineshaftStructureFeature.Type.LUSH,
+            Blocks.MOSSY_STONE_BRICK_SLAB.defaultBlockState().setValue(SlabBlock.TYPE, SlabType.TOP)
+        },
     }).collect(Collectors.toMap(data -> (BetterMineshaftStructureFeature.Type) data[0], data -> (BlockState) data[1]));
 
     /**
@@ -595,6 +649,11 @@ public class BlockSetSelectors {
         },
         {
                 BetterMineshaftStructureFeature.Type.MUSHROOM,
-                Blocks.MUSHROOM_STEM.defaultBlockState()}
+                Blocks.MUSHROOM_STEM.defaultBlockState()
+        },
+        {
+            BetterMineshaftStructureFeature.Type.LUSH,
+            Blocks.STRIPPED_OAK_LOG.defaultBlockState()
+        },
     }).collect(Collectors.toMap(data -> (BetterMineshaftStructureFeature.Type) data[0], data -> (BlockState) data[1]));
 }

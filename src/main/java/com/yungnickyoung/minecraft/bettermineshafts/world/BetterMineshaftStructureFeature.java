@@ -77,7 +77,8 @@ public class BetterMineshaftStructureFeature extends StructureFeature<BetterMine
         DESERT("desert"),
         RED_DESERT("red_desert"),
         SAVANNA("savanna"),
-        MUSHROOM("mushroom");
+        MUSHROOM("mushroom"),
+        LUSH("lush");
 
         public static final Codec<Type> CODEC = StringRepresentable.fromEnum(Type::values, Type::byName);
         private static final Map<String, Type> BY_NAME = Arrays.stream(values()).collect(Collectors.toMap(Type::getName, type -> type));

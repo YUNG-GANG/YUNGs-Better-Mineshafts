@@ -54,14 +54,18 @@ public class BMConfiguredStructureFeatures {
         .configured(new BetterMineshaftFeatureConfig(BetterMineshafts.CONFIG.mineshaftSpawnRate, BetterMineshaftStructureFeature.Type.RED_DESERT));
 
     public static ConfiguredStructureFeature<?, ?> ICE_MINESHAFT = BMStructureFeatures.MINESHAFT_STRUCTURE
-        .configured(new BetterMineshaftFeatureConfig(BetterMineshafts.CONFIG.mineshaftSpawnRate, BetterMineshaftStructureFeature.Type.ICE));
+            .configured(new BetterMineshaftFeatureConfig(BetterMineshafts.CONFIG.mineshaftSpawnRate, BetterMineshaftStructureFeature.Type.ICE));
+
+    public static ConfiguredStructureFeature<?, ?> LUSH_MINSHAFT = BMStructureFeatures.MINESHAFT_STRUCTURE
+            .configured(new BetterMineshaftFeatureConfig(BetterMineshafts.CONFIG.mineshaftSpawnRate, BetterMineshaftStructureFeature.Type.LUSH));
 
     // List of all structure features to make updating spawn rate easy
     public static final List<ConfiguredStructureFeature<?, ?>> CONFIGURED_STRUCTURE_FEATURES =
         Arrays.asList(
             NORMAL_MINESHAFT, MESA_MINESHAFT, JUNGLE_MINESHAFT,
             SNOW_MINESHAFT, MUSHROOM_MINESHAFT, SAVANNA_MINESHAFT,
-            DESERT_MINESHAFT, REDDESERT_MINESHAFT, ICE_MINESHAFT
+            DESERT_MINESHAFT, REDDESERT_MINESHAFT, ICE_MINESHAFT,
+            LUSH_MINSHAFT
         );
 
     /**
@@ -94,6 +98,7 @@ public class BMConfiguredStructureFeatures {
         Registry.register(registry, new ResourceLocation(BetterMineshafts.MOD_ID, "mineshaft_reddesert"), REDDESERT_MINESHAFT);
         Registry.register(registry, new ResourceLocation(BetterMineshafts.MOD_ID, "mineshaft_ice"), ICE_MINESHAFT);
         Registry.register(registry, new ResourceLocation(BetterMineshafts.MOD_ID, "mineshaft_snow"), SNOW_MINESHAFT);
+        Registry.register(registry, new ResourceLocation(BetterMineshafts.MOD_ID, "mineshaft_lush"), LUSH_MINSHAFT);
     }
 
     /**
@@ -106,6 +111,7 @@ public class BMConfiguredStructureFeatures {
         // Add exceptional biome entries
         exceptionMap.put("ice", BMConfiguredStructureFeatures.ICE_MINESHAFT);
         exceptionMap.put("icy", BMConfiguredStructureFeatures.ICE_MINESHAFT);
+        exceptionMap.put("lush_caves", BMConfiguredStructureFeatures.LUSH_MINSHAFT);
 
         // Add all other standard entries
         normalMap.put(Biome.BiomeCategory.MESA, BMConfiguredStructureFeatures.MESA_MINESHAFT);
