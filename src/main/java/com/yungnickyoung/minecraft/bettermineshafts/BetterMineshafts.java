@@ -21,7 +21,7 @@ public class BetterMineshafts implements ModInitializer {
     public static ConcurrentSet<Integer> surfaceEntrances = new ConcurrentSet<>();
     public static AtomicInteger count = new AtomicInteger(0);
 
-    /** Better Caves config. Uses AutoConfig. **/
+    /** Better Mineshafts config. Uses AutoConfig. **/
     public static Configuration CONFIG;
 
     @Override
