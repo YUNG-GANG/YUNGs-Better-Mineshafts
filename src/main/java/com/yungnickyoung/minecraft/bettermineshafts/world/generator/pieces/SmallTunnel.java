@@ -122,6 +122,7 @@ public class SmallTunnel extends MineshaftPiece {
         this.addBiomeDecorations(world, box, random, 1, 0, 0, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END - 1);
         generateTorches(world, box, random);
         generatePillarsOrChains(world, box, random);
+        replaceExistingChainsWithChainBlock(world, box);
     }
 
     private void generateChestCarts(WorldGenLevel world, BoundingBox box, Random random) {
@@ -220,6 +221,20 @@ public class SmallTunnel extends MineshaftPiece {
         generatePillarDownOrChainUp(world, random, box, LOCAL_X_END - 1, 0, 1);
         generatePillarDownOrChainUp(world, random, box, 1, 0, LOCAL_Z_END - 1);
         generatePillarDownOrChainUp(world, random, box, LOCAL_X_END - 1, 0, LOCAL_Z_END - 1);
+    }
+
+    /**
+     * Replaces first layer of chains from piece below, if any, with the chainBlock (defaults to supportBlock).
+     * This is a small detail but creates consistency in layered tunnels out in the open.
+     */
+    private void replaceExistingChainsWithChainBlock(WorldGenLevel world, BoundingBox box) {
+        for (int x = 0; x <= LOCAL_X_END; x++) {
+            for (int z = 0; z <= LOCAL_Z_END; z++) {
+                if (this.getBlock(world, x, 1, z, box).is(Blocks.CHAIN)) {
+                    this.placeBlock(world, this.getSupportBlock(), x ,1, z, box);
+                }
+            }
+        }
     }
 
     private void buildSupports(Random random) {
