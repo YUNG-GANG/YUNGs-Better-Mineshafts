@@ -285,6 +285,55 @@ public abstract class MineshaftPiece extends StructurePiece {
         }
     }
 
+    protected boolean generateLegOrChain(WorldGenLevel world, Random random, BoundingBox box, int x, int z, BlockSetSelector selector) {
+        BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos(x, -1, z);
+        BlockState state = this.getBlock(world, mutable.getX(), mutable.getY(), mutable.getZ(), box);
+        boolean lavaBelow = false;
+        while (getWorldY(mutable.getY()) > world.getMinBuildHeight() + 1 && isReplaceableByStructures(state)) {
+            if (state.is(Blocks.LAVA)) {
+                lavaBelow = true;
+                break;
+            }
+            mutable.move(Direction.DOWN);
+            state = this.getBlock(world, mutable.getX(), mutable.getY(), mutable.getZ(), box);
+        }
+
+        // If lava below, generate chain up. Else, generate leg as normal.
+        if (lavaBelow) {
+            mutable = this.getWorldPos(x, 0, z);
+            if (!boundingBox.isInside(mutable)) return false;
+
+            if (mutable.getX() == 9621 && mutable.getZ() == -388) {
+                BetterMineshafts.LOGGER.info("wefwef");
+            }
+
+            int realChainY = this.getWorldY(0);
+            int length = 1;
+            boolean canGenerateChain = true;
+
+            while (canGenerateChain) {
+                boolean currBlockCanBeReplaced;
+                if (canGenerateChain) {
+                    mutable.setY(realChainY + length);
+                    BlockState currBlock = world.getBlockState(mutable);
+                    currBlockCanBeReplaced = this.isReplaceableByStructures(currBlock);
+                    if (!currBlockCanBeReplaced && this.canHangChainBelow(world, mutable, currBlock)) {
+                        world.setBlock(mutable.setY(realChainY + 1), this.getSupportBlock(), 2);
+                        fillColumnBetween(world, Blocks.CHAIN.defaultBlockState(), mutable, realChainY + 2, realChainY + length);
+                        return false;
+                    }
+                    canGenerateChain = length <= 50 && currBlockCanBeReplaced && mutable.getY() < world.getMaxBuildHeight() - 1;
+                }
+                ++length;
+            }
+        } else {
+            generateLeg(world, random, box, x, z, selector);
+            return true;
+        }
+
+        return false; // Return true if leg generated, false otherwise
+    }
+
     protected void generatePillarDownOrChainUp(WorldGenLevel world, Random random, BoundingBox boundingBox, int x, int z, int pillarStartY, int chainStartY, BlockState chainBlock) {
         BlockPos.MutableBlockPos mutable = this.getWorldPos(x, pillarStartY, z);
         if (!boundingBox.isInside(mutable)) return;

@@ -267,49 +267,68 @@ public class BigTunnel extends MineshaftPiece {
         // Get leg selector
         BlockSetSelector legSelector = getLegSelector();
 
+        // Begin generating legs. For each leg, if it successfully generates then we generate
+        // Some supporting blocks around it.
+
         // Left side
-        generateLeg(world, random, box, 1, 0, legSelector);
-        this.replaceAirOrChains(world, box, 1, -1, 1, 1, -1, 5, supportBlock);
-        this.replaceAirOrChains(world, box, 1, -2, 1, 1, -2, 3, supportBlock);
-        this.replaceAirOrChains(world, box, 1, -3, 1, 1, -3, 2, supportBlock);
-        this.replaceAirOrChains(world, box, 1, -5, 1, 1, -4, 1, supportBlock);
-        this.replaceAirOrChains(world, box, 1, -1, 6, 1, -1, 10, supportBlock);
-        this.replaceAirOrChains(world, box, 1, -2, 8, 1, -2, 10, supportBlock);
-        this.replaceAirOrChains(world, box, 1, -3, 9, 1, -3, 10, supportBlock);
-        this.replaceAirOrChains(world, box, 1, -5, 10, 1, -4, 10, supportBlock);
-        generateLeg(world, random, box, 1, 11, legSelector);
-        generateLeg(world, random, box, 1, 12, legSelector);
-        this.replaceAirOrChains(world, box, 1, -1, 13, 1, -1, 17, supportBlock);
-        this.replaceAirOrChains(world, box, 1, -2, 13, 1, -2, 15, supportBlock);
-        this.replaceAirOrChains(world, box, 1, -3, 13, 1, -3, 14, supportBlock);
-        this.replaceAirOrChains(world, box, 1, -5, 13, 1, -4, 13, supportBlock);
-        this.replaceAirOrChains(world, box, 1, -1, 18, 1, -1, 22, supportBlock);
-        this.replaceAirOrChains(world, box, 1, -2, 20, 1, -2, 22, supportBlock);
-        this.replaceAirOrChains(world, box, 1, -3, 21, 1, -3, 22, supportBlock);
-        this.replaceAirOrChains(world, box, 1, -5, 22, 1, -4, 22, supportBlock);
-        generateLeg(world, random, box, 1, LOCAL_Z_END, legSelector);
+        boolean generatedLeg = generateLegOrChain(world, random, box, 1, 0, legSelector);
+        if (generatedLeg) {
+            this.replaceAirOrChains(world, box, 1, -1, 1, 1, -1, 5, supportBlock);
+            this.replaceAirOrChains(world, box, 1, -2, 1, 1, -2, 3, supportBlock);
+            this.replaceAirOrChains(world, box, 1, -3, 1, 1, -3, 2, supportBlock);
+            this.replaceAirOrChains(world, box, 1, -5, 1, 1, -4, 1, supportBlock);
+        }
+        generatedLeg = generateLegOrChain(world, random, box, 1, 11, legSelector);
+        if (generatedLeg) {
+            this.replaceAirOrChains(world, box, 1, -1, 6, 1, -1, 10, supportBlock);
+            this.replaceAirOrChains(world, box, 1, -2, 8, 1, -2, 10, supportBlock);
+            this.replaceAirOrChains(world, box, 1, -3, 9, 1, -3, 10, supportBlock);
+            this.replaceAirOrChains(world, box, 1, -5, 10, 1, -4, 10, supportBlock);
+        }
+        generatedLeg = generateLegOrChain(world, random, box, 1, 12, legSelector);
+        if (generatedLeg) {
+            this.replaceAirOrChains(world, box, 1, -1, 13, 1, -1, 17, supportBlock);
+            this.replaceAirOrChains(world, box, 1, -2, 13, 1, -2, 15, supportBlock);
+            this.replaceAirOrChains(world, box, 1, -3, 13, 1, -3, 14, supportBlock);
+            this.replaceAirOrChains(world, box, 1, -5, 13, 1, -4, 13, supportBlock);
+        }
+        generatedLeg = generateLegOrChain(world, random, box, 1, LOCAL_Z_END, legSelector);
+        if (generatedLeg) {
+            this.replaceAirOrChains(world, box, 1, -1, 18, 1, -1, 22, supportBlock);
+            this.replaceAirOrChains(world, box, 1, -2, 20, 1, -2, 22, supportBlock);
+            this.replaceAirOrChains(world, box, 1, -3, 21, 1, -3, 22, supportBlock);
+            this.replaceAirOrChains(world, box, 1, -5, 22, 1, -4, 22, supportBlock);
+        }
 
         // Right side
-        generateLeg(world, random, box, LOCAL_X_END - 1, 0, legSelector);
-        this.replaceAirOrChains(world, box, LOCAL_X_END - 1, -1, 1, LOCAL_X_END - 1, -1, 5, supportBlock);
-        this.replaceAirOrChains(world, box, LOCAL_X_END - 1, -2, 1, LOCAL_X_END - 1, -2, 3, supportBlock);
-        this.replaceAirOrChains(world, box, LOCAL_X_END - 1, -3, 1, LOCAL_X_END - 1, -3, 2, supportBlock);
-        this.replaceAirOrChains(world, box, LOCAL_X_END - 1, -5, 1, LOCAL_X_END - 1, -4, 1, supportBlock);
-        this.replaceAirOrChains(world, box, LOCAL_X_END - 1, -1, 6, LOCAL_X_END - 1, -1, 10, supportBlock);
-        this.replaceAirOrChains(world, box, LOCAL_X_END - 1, -2, 8, LOCAL_X_END - 1, -2, 10, supportBlock);
-        this.replaceAirOrChains(world, box, LOCAL_X_END - 1, -3, 9, LOCAL_X_END - 1, -3, 10, supportBlock);
-        this.replaceAirOrChains(world, box, LOCAL_X_END - 1, -5, 10, LOCAL_X_END - 1, -4, 10, supportBlock);
-        generateLeg(world, random, box, LOCAL_X_END - 1, 11, legSelector);
-        generateLeg(world, random, box, LOCAL_X_END - 1, 12, legSelector);
-        this.replaceAirOrChains(world, box, LOCAL_X_END - 1, -1, 13, LOCAL_X_END - 1, -1, 17, supportBlock);
-        this.replaceAirOrChains(world, box, LOCAL_X_END - 1, -2, 13, LOCAL_X_END - 1, -2, 15, supportBlock);
-        this.replaceAirOrChains(world, box, LOCAL_X_END - 1, -3, 13, LOCAL_X_END - 1, -3, 14, supportBlock);
-        this.replaceAirOrChains(world, box, LOCAL_X_END - 1, -5, 13, LOCAL_X_END - 1, -4, 13, supportBlock);
-        this.replaceAirOrChains(world, box, LOCAL_X_END - 1, -1, 18, LOCAL_X_END - 1, -1, 22, supportBlock);
-        this.replaceAirOrChains(world, box, LOCAL_X_END - 1, -2, 20, LOCAL_X_END - 1, -2, 22, supportBlock);
-        this.replaceAirOrChains(world, box, LOCAL_X_END - 1, -3, 21, LOCAL_X_END - 1, -3, 22, supportBlock);
-        this.replaceAirOrChains(world, box, LOCAL_X_END - 1, -5, 22, LOCAL_X_END - 1, -4, 22, supportBlock);
-        generateLeg(world, random, box, LOCAL_X_END - 1, LOCAL_Z_END, legSelector);
+        generatedLeg = generateLegOrChain(world, random, box, LOCAL_X_END - 1, 0, legSelector);
+        if (generatedLeg) {
+            this.replaceAirOrChains(world, box, LOCAL_X_END - 1, -1, 1, LOCAL_X_END - 1, -1, 5, supportBlock);
+            this.replaceAirOrChains(world, box, LOCAL_X_END - 1, -2, 1, LOCAL_X_END - 1, -2, 3, supportBlock);
+            this.replaceAirOrChains(world, box, LOCAL_X_END - 1, -3, 1, LOCAL_X_END - 1, -3, 2, supportBlock);
+            this.replaceAirOrChains(world, box, LOCAL_X_END - 1, -5, 1, LOCAL_X_END - 1, -4, 1, supportBlock);
+        }
+        generatedLeg = generateLegOrChain(world, random, box, LOCAL_X_END - 1, 11, legSelector);
+        if (generatedLeg) {
+            this.replaceAirOrChains(world, box, LOCAL_X_END - 1, -1, 6, LOCAL_X_END - 1, -1, 10, supportBlock);
+            this.replaceAirOrChains(world, box, LOCAL_X_END - 1, -2, 8, LOCAL_X_END - 1, -2, 10, supportBlock);
+            this.replaceAirOrChains(world, box, LOCAL_X_END - 1, -3, 9, LOCAL_X_END - 1, -3, 10, supportBlock);
+            this.replaceAirOrChains(world, box, LOCAL_X_END - 1, -5, 10, LOCAL_X_END - 1, -4, 10, supportBlock);
+        }
+        generatedLeg = generateLegOrChain(world, random, box, LOCAL_X_END - 1, 12, legSelector);
+        if (generatedLeg) {
+            this.replaceAirOrChains(world, box, LOCAL_X_END - 1, -1, 13, LOCAL_X_END - 1, -1, 17, supportBlock);
+            this.replaceAirOrChains(world, box, LOCAL_X_END - 1, -2, 13, LOCAL_X_END - 1, -2, 15, supportBlock);
+            this.replaceAirOrChains(world, box, LOCAL_X_END - 1, -3, 13, LOCAL_X_END - 1, -3, 14, supportBlock);
+            this.replaceAirOrChains(world, box, LOCAL_X_END - 1, -5, 13, LOCAL_X_END - 1, -4, 13, supportBlock);
+        }
+        generatedLeg = generateLegOrChain(world, random, box, LOCAL_X_END - 1, LOCAL_Z_END, legSelector);
+        if (generatedLeg) {
+            this.replaceAirOrChains(world, box, LOCAL_X_END - 1, -1, 18, LOCAL_X_END - 1, -1, 22, supportBlock);
+            this.replaceAirOrChains(world, box, LOCAL_X_END - 1, -2, 20, LOCAL_X_END - 1, -2, 22, supportBlock);
+            this.replaceAirOrChains(world, box, LOCAL_X_END - 1, -3, 21, LOCAL_X_END - 1, -3, 22, supportBlock);
+            this.replaceAirOrChains(world, box, LOCAL_X_END - 1, -5, 22, LOCAL_X_END - 1, -4, 22, supportBlock);
+        }
     }
 
     private void generateLegsVariant(WorldGenLevel world, BoundingBox box, Random random) {
