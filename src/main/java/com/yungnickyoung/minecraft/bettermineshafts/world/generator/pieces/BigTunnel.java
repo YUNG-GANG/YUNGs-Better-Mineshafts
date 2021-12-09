@@ -263,6 +263,9 @@ public class BigTunnel extends MineshaftPiece {
         } else if (supportBlock.getProperties().contains(BlockStateProperties.NORTH) && supportBlock.getProperties().contains(BlockStateProperties.SOUTH)) {
             supportBlock = supportBlock.setValue(BlockStateProperties.NORTH, true).setValue(BlockStateProperties.SOUTH, true);
         }
+        if (supportBlock.getProperties().contains(BlockStateProperties.UP)) {
+            supportBlock = supportBlock.setValue(BlockStateProperties.UP, false);
+        }
 
         // Get leg selector
         BlockSetSelector legSelector = getLegSelector();

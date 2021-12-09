@@ -231,9 +231,9 @@ public class BlockSetSelectors {
         {
             BetterMineshaftStructureFeature.Type.SNOW,
             new BlockSetSelector(Blocks.SPRUCE_PLANKS.defaultBlockState())
-                .addBlock(Blocks.SNOW_BLOCK.defaultBlockState(), .5f)
-                .addBlock(Blocks.PACKED_ICE.defaultBlockState(), .25f)
-                .addBlock(Blocks.BLUE_ICE.defaultBlockState(), .25f)
+                .addBlock(Blocks.STONE_BRICKS.defaultBlockState(), 0.33333f)
+                .addBlock(Blocks.MOSSY_STONE_BRICKS.defaultBlockState(), 0.33333f)
+                .addBlock(Blocks.CRACKED_STONE_BRICKS.defaultBlockState(), 0.33333f)
         },
         {
             BetterMineshaftStructureFeature.Type.ICE,

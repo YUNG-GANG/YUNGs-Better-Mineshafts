@@ -303,10 +303,6 @@ public abstract class MineshaftPiece extends StructurePiece {
             mutable = this.getWorldPos(x, 0, z);
             if (!boundingBox.isInside(mutable)) return false;
 
-            if (mutable.getX() == 9621 && mutable.getZ() == -388) {
-                BetterMineshafts.LOGGER.info("wefwef");
-            }
-
             int realChainY = this.getWorldY(0);
             int length = 1;
             boolean canGenerateChain = true;

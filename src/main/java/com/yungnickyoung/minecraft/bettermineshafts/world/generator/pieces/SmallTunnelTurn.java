@@ -115,11 +115,10 @@ public class SmallTunnelTurn extends MineshaftPiece {
         this.fill(world, box, 1, 1, 0, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END - 1, AIR);
 
         // Fill in any air in floor with main block
-        this.replaceAirOrChains(world, box, 1, 0, 0, LOCAL_X_END - 1, 0, LOCAL_Z_END, getMainBlock());
+        this.replaceAirOrChains(world, box, 1, 0, 0, 3, 0, 3, getMainBlock());
 
         // Rails
         this.fill(world, box, 2, 1, 0, 2, 1, 1, Blocks.RAIL.defaultBlockState());
-
         if (this.turnDirection == TurnDirection.LEFT) {
             if (direction == Direction.NORTH || direction == Direction.EAST) {
                 generateLeftTurn(world, box);
@@ -137,19 +136,27 @@ public class SmallTunnelTurn extends MineshaftPiece {
         // Decorations
         this.addBiomeDecorations(world, box, random, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END - 1, LOCAL_Z_END);
         this.addVines(world, box, random, 1, 0, 1, LOCAL_X_END - 1, LOCAL_Y_END, LOCAL_Z_END - 1);
+        generatePillarsOrChains(world, box, random);
     }
 
     private void generateLeftTurn(WorldGenLevel world, BoundingBox box) {
         this.fill(world, box, 0, 1, 1, 0, LOCAL_Y_END - 1, LOCAL_Z_END - 1, AIR);
-        this.fill(world, box, 0, 0, 0, 0, 0, LOCAL_Z_END - 1, getMainBlock());
+        this.replaceAirOrChains(world, box, 0, 0, 1, 0, 0, 3, getMainBlock());
         this.fill(world, box, 2, 1, 2, 2, 1, 2, Blocks.RAIL.defaultBlockState().setValue(RailBlock.SHAPE, RailShape.SOUTH_WEST));
         this.fill(world, box, 0, 1, 2, 1, 1, 2, Blocks.RAIL.defaultBlockState().setValue(RailBlock.SHAPE, RailShape.EAST_WEST));
     }
 
     private void generateRightTurn(WorldGenLevel world, BoundingBox box) {
         this.fill(world, box, LOCAL_X_END, 1, 1, LOCAL_X_END, LOCAL_Y_END - 1, LOCAL_Z_END - 1, AIR);
-        this.fill(world, box, LOCAL_X_END, 0, 0, LOCAL_X_END, 0, LOCAL_Z_END - 1, getMainBlock());
+        this.replaceAirOrChains(world, box, 4, 0, 1, 4, 0, 3, getMainBlock());
         this.fill(world, box, 2, 1, 2, 2, 1, 2, Blocks.RAIL.defaultBlockState().setValue(RailBlock.SHAPE, RailShape.SOUTH_EAST));
         this.fill(world, box, LOCAL_X_END - 1, 1, 2, LOCAL_X_END, 1, 2, Blocks.RAIL.defaultBlockState().setValue(RailBlock.SHAPE, RailShape.EAST_WEST));
+    }
+
+    private void generatePillarsOrChains(WorldGenLevel world, BoundingBox box, Random random) {
+        generatePillarDownOrChainUp(world, random, box, 1, 0, 1);
+        generatePillarDownOrChainUp(world, random, box, LOCAL_X_END - 1, 0, 1);
+        generatePillarDownOrChainUp(world, random, box, 1, 0, LOCAL_Z_END - 1);
+        generatePillarDownOrChainUp(world, random, box, LOCAL_X_END - 1, 0, LOCAL_Z_END - 1);
     }
 }

@@ -129,7 +129,10 @@ public class VerticalEntrance extends MineshaftPiece {
      */
     private void generateVerticalShaft(WorldGenLevel world, Random random, BoundingBox box) {
         // Randomize blocks
-        this.fill(world, box, random, SHAFT_LOCAL_XZ_START, 0, SHAFT_LOCAL_XZ_START, SHAFT_LOCAL_XZ_END, localYEnd, SHAFT_LOCAL_XZ_END, getMainSelector());
+        this.chanceReplaceNonAir(world, box, random, this.getReplacementRate(), SHAFT_LOCAL_XZ_START, 0, SHAFT_LOCAL_XZ_START, SHAFT_LOCAL_XZ_END, localYEnd, SHAFT_LOCAL_XZ_END, getMainSelector());
+
+        // Fill any holes in wall with main block
+        this.replaceAirOrChains(world, box, SHAFT_LOCAL_XZ_START, 0, SHAFT_LOCAL_XZ_START, SHAFT_LOCAL_XZ_END, localYEnd, SHAFT_LOCAL_XZ_END, getMainBlock());
 
         // Fill with air
         this.fill(world, box, SHAFT_LOCAL_XZ_START + 1, 1, SHAFT_LOCAL_XZ_START + 1, SHAFT_LOCAL_XZ_END - 1, localYEnd - 1, SHAFT_LOCAL_XZ_END - 1, AIR);
@@ -152,6 +155,12 @@ public class VerticalEntrance extends MineshaftPiece {
         // Decorations
         this.addBiomeDecorations(world, box, random, SHAFT_LOCAL_XZ_START + 1, 0, SHAFT_LOCAL_XZ_START + 1, SHAFT_LOCAL_XZ_END - 1, 1, SHAFT_LOCAL_XZ_END - 1);
         this.addVines(world, box, random, SHAFT_LOCAL_XZ_START + 1, 0, SHAFT_LOCAL_XZ_START + 1, SHAFT_LOCAL_XZ_END - 1, localYEnd - 4, SHAFT_LOCAL_XZ_END - 1);
+
+        // Leg supports underneath to prevent floating
+        generateLeg(world, random, box, SHAFT_LOCAL_XZ_START, SHAFT_LOCAL_XZ_START, getLegSelector());
+        generateLeg(world, random, box, SHAFT_LOCAL_XZ_START, SHAFT_LOCAL_XZ_END, getLegSelector());
+        generateLeg(world, random, box, SHAFT_LOCAL_XZ_END, SHAFT_LOCAL_XZ_START, getLegSelector());
+        generateLeg(world, random, box, SHAFT_LOCAL_XZ_END, SHAFT_LOCAL_XZ_END, getLegSelector());
     }
 
     /**

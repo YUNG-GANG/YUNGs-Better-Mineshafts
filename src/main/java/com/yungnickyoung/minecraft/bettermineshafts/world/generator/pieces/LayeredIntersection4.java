@@ -125,9 +125,6 @@ public class LayeredIntersection4 extends MineshaftPiece {
         this.fill(world, box, 2, 3, 0, 4, 6, 6, AIR);
         this.fill(world, box, 0, 3, 2, 6, 6, 4, AIR);
 
-        // Fill in any air in floor with main block
-        this.replaceAirOrChains(world, box, 2, 0, 0, 4, 2, LOCAL_Z_END, getMainBlock());
-
         // Sides for walking on
         this.fill(world, box, 2, 2, 0, 2, 3, 1, getMainBlock());
         this.chanceReplaceNonAir(world, box, random, .1f, 2, 2, 0, 2, 3, 1, getBrickSelector());
