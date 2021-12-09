@@ -13,9 +13,7 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.StructureFeatureManager;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.RailBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.RailShape;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
@@ -232,7 +230,7 @@ public class VerticalEntrance extends MineshaftPiece {
         this.addVines(world, box, random, tunnelStartX + 1, tunnelFloorAltitude, tunnelStartZ + 1, tunnelEndX - 1, tunnelFloorAltitude + 4, tunnelEndZ - 1);
 
         // ################################################################
-        // #                       Supports & Rails                       #
+        // #                           Supports                          #
         // ################################################################
         // Note that while normally, building (i.e. determining placement) of things like supports is done before generation,
         // that is not the case here since localZEnd is not known until generation.
@@ -290,22 +288,6 @@ public class VerticalEntrance extends MineshaftPiece {
                     this.chanceReplaceAir(world, box, random, .15f, x - 1, tunnelFloorAltitude + 3, tunnelStartZ + 1, x + 1, tunnelFloorAltitude + 3, tunnelStartZ + 1, Blocks.COBWEB.defaultBlockState());
                     this.chanceReplaceAir(world, box, random, .15f, x - 1, tunnelFloorAltitude + 3, tunnelStartZ + 3, x + 1, tunnelFloorAltitude + 3, tunnelStartZ + 3, Blocks.COBWEB.defaultBlockState());
                     x += 3;
-                }
-            }
-        }
-
-        // Generate rails.
-        RailShape railShape = relativeTunnelDir.getAxis() == Direction.Axis.Z ? RailShape.NORTH_SOUTH : RailShape.EAST_WEST;
-        if (facing.getAxis() == tunnelDirection.getAxis()) {
-            for (int z = 0; z < tunnelEndZ - tunnelStartZ + 1; z++) {
-                if (validPositions[z] && random.nextFloat() < .5) {
-                    this.placeBlock(world, Blocks.RAIL.defaultBlockState().setValue(RailBlock.SHAPE, railShape), tunnelStartX + 2, tunnelFloorAltitude + 1, tunnelStartZ + z, box);
-                }
-            }
-        } else {
-            for (int x = 0; x < tunnelEndX - tunnelStartX + 1; x++) {
-                if (validPositions[x] && random.nextFloat() < .5) {
-                    this.placeBlock(world, Blocks.RAIL.defaultBlockState().setValue(RailBlock.SHAPE, railShape), tunnelStartX + x, tunnelFloorAltitude + 1, tunnelStartZ + 2, box);
                 }
             }
         }
