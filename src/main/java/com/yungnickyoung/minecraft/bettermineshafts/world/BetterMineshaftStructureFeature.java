@@ -50,7 +50,7 @@ public class BetterMineshaftStructureFeature extends StructureFeature<BetterMine
             case 3 -> direction = Direction.WEST;
         }
         int y = context.random().nextInt(BetterMineshafts.CONFIG.maxY - BetterMineshafts.CONFIG.minY + 1) + BetterMineshafts.CONFIG.minY;
-        BlockPos.MutableBlockPos startingPos = new BlockPos.MutableBlockPos(context.chunkPos().getBlockX(2), y, context.chunkPos().getBlockZ(2));
+        BlockPos.MutableBlockPos startingPos = new BlockPos.MutableBlockPos(context.chunkPos().getBlockX(3), y, context.chunkPos().getBlockZ(3));
 
         // Entrypoint
         MineshaftPiece entryPoint = new VerticalEntrance(
