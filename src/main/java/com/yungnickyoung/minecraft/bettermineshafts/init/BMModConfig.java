@@ -1,5 +1,6 @@
 package com.yungnickyoung.minecraft.bettermineshafts.init;
 
+import com.google.common.collect.Lists;
 import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshafts;
 import com.yungnickyoung.minecraft.bettermineshafts.config.BMConfig;
 import com.yungnickyoung.minecraft.bettermineshafts.config.BMSettings;
@@ -10,6 +11,8 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
 
 import java.io.File;
@@ -26,10 +29,54 @@ public class BMModConfig {
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, BMConfig.SPEC, "bettermineshafts-forge-1_18.toml");
         // Refresh JSON config on world load so that user doesn't have to restart MC
         MinecraftForge.EVENT_BUS.addListener(BMModConfig::onWorldLoad);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(BMModConfig::configChanged);
     }
 
     private static void onWorldLoad(WorldEvent.Load event) {
         loadVariantsJSON();
+    }
+
+    /**
+     * Parses the whitelisted dimensions & blacklisted biomes strings and updates the stored values.
+     */
+    public static void configChanged(ModConfigEvent event) {
+        ModConfig config = event.getConfig();
+
+        if (config.getSpec() == BMConfig.SPEC) {
+            // Dimension whitelisting
+            String rawStringList = BMConfig.whitelistedDimensions.get();
+            int strLen = rawStringList.length();
+
+            // Validate the string's format
+            if (strLen < 2 || rawStringList.charAt(0) != '[' || rawStringList.charAt(strLen - 1) != ']') {
+                BetterMineshafts.LOGGER.error("INVALID VALUE FOR SETTING 'Whitelisted Dimensions'. Using [minecraft:overworld] instead...");
+                BetterMineshafts.whitelistedDimensions = Lists.newArrayList("minecraft:overworld");
+                return;
+            }
+
+            // Parse string to list
+            BetterMineshafts.whitelistedDimensions = Lists.newArrayList(rawStringList.substring(1, strLen - 1).split(",\\s*"));
+
+            // Biome blacklisting
+            rawStringList = BMConfig.blacklistedBiomes.get();
+            strLen = rawStringList.length();
+
+            // Validate the string's format
+            if (strLen < 2 || rawStringList.charAt(0) != '[' || rawStringList.charAt(strLen - 1) != ']') {
+                BetterMineshafts.LOGGER.error("INVALID VALUE FOR SETTING 'Blacklisted Biomes'. Using default instead...");
+                BetterMineshafts.blacklistedBiomes = Lists.newArrayList(
+                        "minecraft:ocean", "minecraft:frozen_ocean", "minecraft:deep_ocean",
+                        "minecraft:warm_ocean", "minecraft:lukewarm_ocean", "minecraft:cold_ocean",
+                        "minecraft:deep_lukewarm_ocean", "minecraft:deep_cold_ocean", "minecraft:deep_frozen_ocean",
+                        "minecraft:beach", "minecraft:snowy_beach",
+                        "minecraft:river", "minecraft:frozen_river"
+                );
+                return;
+            }
+
+            // Parse string to list
+            BetterMineshafts.blacklistedBiomes = Lists.newArrayList(rawStringList.substring(1, strLen - 1).split(",\\s*"));
+        }
     }
 
     private static void initCustomFiles() {
