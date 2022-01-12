@@ -111,7 +111,9 @@ public class BMModStructureFeatures {
 
         // Make a copy of the structure-biome map
         ImmutableMap.Builder<StructureFeature<?>, ImmutableMultimap<ConfiguredStructureFeature<?, ?>, ResourceKey<Biome>>> tempStructureToMultiMap = ImmutableMap.builder();
-        ((StructureSettingsAccessor) worldStructureSettings).getConfiguredStructures().entrySet().forEach(tempStructureToMultiMap::put);
+        ((StructureSettingsAccessor) worldStructureSettings).getConfiguredStructures().entrySet().stream()
+                .filter(entry -> entry.getKey() != BETTER_MINESHAFT.get() && entry.getKey() != StructureFeature.MINESHAFT)
+                .forEach(tempStructureToMultiMap::put);
 
         // Create multimaps of Configured Structures to biomes
         ImmutableMultimap.Builder<ConfiguredStructureFeature<?, ?>, ResourceKey<Biome>> structureBiomeMap = ImmutableMultimap.builder();

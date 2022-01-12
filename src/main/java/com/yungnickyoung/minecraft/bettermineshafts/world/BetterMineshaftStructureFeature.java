@@ -21,6 +21,7 @@ import net.minecraft.world.level.levelgen.structure.pieces.PieceGenerator;
 import net.minecraft.world.level.levelgen.structure.pieces.PieceGeneratorSupplier;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilder;
 import net.minecraftforge.common.BiomeDictionary;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,7 +39,7 @@ public class BetterMineshaftStructureFeature extends StructureFeature<NoneFeatur
     }
 
     @Override
-    public GenerationStep.Decoration step() {
+    public GenerationStep.@NotNull Decoration step() {
         return GenerationStep.Decoration.UNDERGROUND_STRUCTURES;
     }
 
@@ -104,6 +105,8 @@ public class BetterMineshaftStructureFeature extends StructureFeature<NoneFeatur
         registryKey = ResourceKey.create(Registry.BIOME_REGISTRY, biome.getRegistryName());
 
         // Search tag lists of variants top-down, short-circuiting if we find a matching tag list.
+        // Each variant has can have multiple tag lists. In order for a variant to match,
+        // a biome must contain ALL of the tags in ANY SINGLE ONE of a variant's tag lists.
         boolean found;
         for (MineshaftVariantSettings variant : MineshaftVariants.get().getVariants()) {
             for (List<BiomeDictionary.Type> tagList : variant.biomeTags) {
