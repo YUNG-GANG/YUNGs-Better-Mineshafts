@@ -1,35 +1,50 @@
 package com.yungnickyoung.minecraft.bettermineshafts;
 
-import com.yungnickyoung.minecraft.bettermineshafts.config.Configuration;
-import com.yungnickyoung.minecraft.bettermineshafts.init.BMConfig;
-import com.yungnickyoung.minecraft.bettermineshafts.init.BMConfiguredStructureFeatures;
-import com.yungnickyoung.minecraft.bettermineshafts.init.BMStructureFeatures;
-import com.yungnickyoung.minecraft.bettermineshafts.init.BMStructureFeaturePieces;
+import com.google.common.collect.Lists;
+import com.yungnickyoung.minecraft.bettermineshafts.init.BMModConfig;
+import com.yungnickyoung.minecraft.bettermineshafts.init.BMModStructureFeaturePieces;
+import com.yungnickyoung.minecraft.bettermineshafts.init.BMModStructureFeatures;
 import io.netty.util.internal.ConcurrentSet;
-import net.fabricmc.api.ModInitializer;
+import net.minecraft.world.level.biome.Biomes;
+import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.fml.common.Mod;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class BetterMineshafts implements ModInitializer {
+@Mod(BetterMineshafts.MOD_ID)
+public class BetterMineshafts {
     public static final String MOD_ID = "bettermineshafts";
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
-    public static final boolean DEBUG_LOG = false;
+
+    /**
+     * Lists of whitelisted dimensions and blacklisted biomes.
+     * Will be reinitialized later w/ values from config.
+     */
+    public static List<String> whitelistedDimensions = Lists.newArrayList("minecraft:overworld");
+    public static List<String> blacklistedBiomes = Lists.newArrayList(
+            "minecraft:ocean", "minecraft:frozen_ocean", "minecraft:deep_ocean",
+            "minecraft:warm_ocean", "minecraft:lukewarm_ocean", "minecraft:cold_ocean",
+            "minecraft:deep_lukewarm_ocean", "minecraft:deep_cold_ocean", "minecraft:deep_frozen_ocean",
+            "minecraft:beach", "minecraft:snowy_beach",
+            "minecraft:river", "minecraft:frozen_river"
+    );
 
     /** Debug info **/
     public static ConcurrentSet<Integer> surfaceEntrances = new ConcurrentSet<>();
     public static AtomicInteger count = new AtomicInteger(0);
+    public static final boolean DEBUG_LOG = false;
 
-    /** Better Mineshafts config. Uses AutoConfig. **/
-    public static Configuration CONFIG;
+    public BetterMineshafts() {
+        init();
+    }
 
-    @Override
-    public void onInitialize() {
-        // Initialization & Registration
-        BMConfig.init();
-        BMStructureFeatures.init();
-        BMConfiguredStructureFeatures.init();
-        BMStructureFeaturePieces.init();
+    private void init() {
+        BiomeDictionary.addTypes(Biomes.LUSH_CAVES, BiomeDictionary.Type.LUSH);
+        BMModConfig.init();
+        BMModStructureFeatures.init();
+        BMModStructureFeaturePieces.init();
     }
 }

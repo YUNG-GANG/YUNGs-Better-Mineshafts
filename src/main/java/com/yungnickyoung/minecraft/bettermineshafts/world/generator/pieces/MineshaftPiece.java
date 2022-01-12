@@ -1,8 +1,7 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
-import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshafts;
-import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftStructureFeature;
-import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BlockSetSelectors;
+import com.yungnickyoung.minecraft.bettermineshafts.world.variant.MineshaftVariantSettings;
+import com.yungnickyoung.minecraft.bettermineshafts.world.variant.MineshaftVariants;
 import com.yungnickyoung.minecraft.yungsapi.world.BlockSetSelector;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -16,8 +15,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FallingBlock;
 import net.minecraft.world.level.block.VineBlock;
-import net.minecraft.world.level.block.entity.BarrelBlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.levelgen.feature.StructurePieceType;
@@ -27,27 +25,33 @@ import net.minecraft.world.level.levelgen.structure.StructurePieceAccessor;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
 import net.minecraft.world.level.material.Material;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Random;
 import java.util.Set;
 
+@ParametersAreNonnullByDefault
 public abstract class MineshaftPiece extends StructurePiece {
-    public BetterMineshaftStructureFeature.Type mineshaftType;
+    public MineshaftVariantSettings settings;
     protected static final BlockState AIR = Blocks.AIR.defaultBlockState();
     private static final Set<Material> NON_SOLID_MATERIALS = Set.of(Material.AIR, Material.WATER, Material.LAVA, Material.WATER_PLANT);
 
-    public MineshaftPiece(StructurePieceType structurePieceType, int chainLength, BetterMineshaftStructureFeature.Type type, BoundingBox boundingBox) {
+    public MineshaftPiece(StructurePieceType structurePieceType, int chainLength, MineshaftVariantSettings settings, BoundingBox boundingBox) {
         super(structurePieceType, chainLength, boundingBox);
-        this.mineshaftType = type;
+        this.settings = settings;
     }
 
     public MineshaftPiece(StructurePieceType structurePieceType, CompoundTag compoundTag) {
         super(structurePieceType, compoundTag);
-        this.mineshaftType = BetterMineshaftStructureFeature.Type.byId(compoundTag.getInt("MST"));
+        int index = compoundTag.getInt("MST");
+        this.settings = index < MineshaftVariants.get().getVariants().size() && index >= 0
+                ? MineshaftVariants.get().getVariants().get(index)
+                : MineshaftVariants.get().getDefault();
     }
 
     @Override
     protected void addAdditionalSaveData(StructurePieceSerializationContext structurePieceSerializationContext, CompoundTag compoundTag) {
-        compoundTag.putInt("MST", this.mineshaftType.ordinal());
+        int index = MineshaftVariants.get().getVariants().indexOf(this.settings);
+        compoundTag.putInt("MST", index);
     }
 
     /**
@@ -64,19 +68,19 @@ public abstract class MineshaftPiece extends StructurePiece {
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     protected BlockSetSelector getMainSelector() {
-        return BlockSetSelectors.MAIN_SELECTOR.get(this.mineshaftType);
+        return settings.mainSelector;
     }
 
     protected BlockSetSelector getFloorSelector() {
-        return BlockSetSelectors.FLOOR_SELECTOR.get(this.mineshaftType);
+        return settings.floorSelector;
     }
 
     protected BlockSetSelector getBrickSelector() {
-        return BlockSetSelectors.BRICK_SELECTOR.get(this.mineshaftType);
+        return settings.brickSelector;
     }
 
     protected BlockSetSelector getLegSelector() {
-        return BlockSetSelectors.LEG_SELECTOR.get(this.mineshaftType);
+        return settings.legSelector;
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -84,60 +88,35 @@ public abstract class MineshaftPiece extends StructurePiece {
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     protected BlockState getMainBlock() {
-        return BlockSetSelectors.MAIN_BLOCK.get(this.mineshaftType);
+        return settings.mainBlock;
     }
 
     protected BlockState getSupportBlock() {
-        return BlockSetSelectors.SUPPORT_BLOCK.get(this.mineshaftType);
+        return settings.supportBlock;
     }
 
     protected BlockState getMainSlab() {
-        return BlockSetSelectors.SLAB_BLOCK.get(this.mineshaftType);
+        return settings.slabBlock;
     }
 
     protected BlockState getGravel() {
-        return BlockSetSelectors.GRAVEL_BLOCK.get(this.mineshaftType);
+        return settings.gravelBlock;
     }
 
     protected BlockState getMainDoorwayWall() {
-        return BlockSetSelectors.STONE_WALL_BLOCK.get(this.mineshaftType);
+        return settings.stoneWallBlock;
     }
 
     protected BlockState getMainDoorwaySlab() {
-        return BlockSetSelectors.STONE_SLAB_BLOCK.get(this.mineshaftType);
-    }
-
-    protected BlockState getSmallLegBlock() {
-        return BlockSetSelectors.SMALL_LEG_BLOCK.get(this.mineshaftType);
+        return settings.stoneSlabBlock;
     }
 
     protected BlockState getTrapdoor() {
-        return switch (this.mineshaftType) {
-            case MESA, RED_DESERT -> Blocks.DARK_OAK_TRAPDOOR.defaultBlockState();
-            case JUNGLE -> Blocks.JUNGLE_TRAPDOOR.defaultBlockState();
-            case SNOW, ICE -> Blocks.SPRUCE_TRAPDOOR.defaultBlockState();
-            case SAVANNA -> Blocks.ACACIA_TRAPDOOR.defaultBlockState();
-            default -> Blocks.OAK_TRAPDOOR.defaultBlockState();
-        };
+        return settings.trapdoorBlock;
     }
 
-    protected float getVineChance() {
-        return switch (this.mineshaftType) {
-            case JUNGLE -> .5f;
-            case SNOW -> .05f;
-            case ICE, DESERT, RED_DESERT, LUSH -> 0f;
-            default -> .1f;
-        };
-    }
-
-    protected float getReplacementRate() {
-        return
-            this.mineshaftType == BetterMineshaftStructureFeature.Type.SNOW
-                || this.mineshaftType == BetterMineshaftStructureFeature.Type.ICE
-                || this.mineshaftType == BetterMineshaftStructureFeature.Type.MUSHROOM
-                || this.mineshaftType == BetterMineshaftStructureFeature.Type.LUSH
-                ? .95f
-                : .6f;
+    protected BlockState getSmallLegBlock() {
+        return settings.smallLegBlock;
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -147,11 +126,7 @@ public abstract class MineshaftPiece extends StructurePiece {
     protected boolean addBarrel(WorldGenLevel world, BoundingBox boundingBox, Random random, BlockPos pos, ResourceLocation lootTableId) {
         if (boundingBox.isInside(pos) && world.getBlockState(pos).getBlock() != Blocks.BARREL) {
             world.setBlock(pos, Blocks.BARREL.defaultBlockState().setValue(BlockStateProperties.FACING, Direction.UP), 2);
-            BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof BarrelBlockEntity) {
-                ((BarrelBlockEntity) blockEntity).setLootTable(lootTableId, random.nextLong());
-            }
-
+            RandomizableContainerBlockEntity.setLootTable(world, random, pos, lootTableId);
             return true;
         } else {
             return false;
@@ -189,8 +164,7 @@ public abstract class MineshaftPiece extends StructurePiece {
     /**
      * Randomly add vines with a given chance in a given area, doing passes for all four horizontal directions.
      */
-    protected void addVines(WorldGenLevel world, BoundingBox boundingBox, Random random, int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
-        float chance = getVineChance();
+    protected void addVines(WorldGenLevel world, BoundingBox boundingBox, Random random, float chance, int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
         this.addVines(world, boundingBox, Direction.EAST, random, chance, minX, minY, minZ, maxX, maxY, maxZ);
         this.addVines(world, boundingBox, Direction.WEST, random, chance, minX, minY, minZ, maxX, maxY, maxZ);
         this.addVines(world, boundingBox, Direction.NORTH, random, chance, minX, minY, minZ, maxX, maxY, maxZ);
@@ -209,13 +183,13 @@ public abstract class MineshaftPiece extends StructurePiece {
                     BlockState stateBelow = this.getBlock(world, x, y - 1, z, box);
 
                     // Snow layers
-                    if (mineshaftType == BetterMineshaftStructureFeature.Type.SNOW) {
-                        if (state.isAir() && Blocks.SNOW.canSurvive(AIR, world, blockPos)) {
+                    if (settings.snowChance > 0) {
+                        if (random.nextFloat() < settings.snowChance && state.isAir() && Blocks.SNOW.canSurvive(AIR, world, blockPos)) {
                             this.placeBlock(world, Blocks.SNOW.defaultBlockState().setValue(BlockStateProperties.LAYERS, random.nextInt(2) + 1), x, y, z, box);
                         }
                     }
 
-                    if (mineshaftType == BetterMineshaftStructureFeature.Type.LUSH) {
+                    if (settings.lushDecorations) {
                         // Moss & ground plants
                         if (box.isInside(blockPos) && random.nextFloat() < .005f) {
                             CaveFeatures.MOSS_PATCH.place(world, world.getLevel().getChunkSource().getGenerator(), random, blockPos);
@@ -238,33 +212,29 @@ public abstract class MineshaftPiece extends StructurePiece {
                     }
 
                     // Cacti
-                    if (mineshaftType == BetterMineshaftStructureFeature.Type.DESERT || mineshaftType == BetterMineshaftStructureFeature.Type.RED_DESERT) {
-                        if (random.nextFloat() < .1f) {
-                            if (state.isAir() && Blocks.CACTUS.canSurvive(AIR, world, blockPos)) {
-                                this.placeBlock(world, Blocks.CACTUS.defaultBlockState().setValue(BlockStateProperties.AGE_15, 0), x, y, z, box);
-                                if (random.nextFloat() < .5f && this.getBlock(world, x, y + 1, z, box).is(Blocks.AIR)) {
-                                    this.placeBlock(world, Blocks.CACTUS.defaultBlockState().setValue(BlockStateProperties.AGE_15, 0), x, y + 1, z, box);
-                                }
+                    if (settings.cactusChance > 0 && random.nextFloat() < settings.cactusChance) {
+                        if (state.isAir() && Blocks.CACTUS.canSurvive(AIR, world, blockPos)) {
+                            this.placeBlock(world, Blocks.CACTUS.defaultBlockState().setValue(BlockStateProperties.AGE_15, 0), x, y, z, box);
+                            if (random.nextFloat() < .5f && this.getBlock(world, x, y + 1, z, box).is(Blocks.AIR)) {
+                                this.placeBlock(world, Blocks.CACTUS.defaultBlockState().setValue(BlockStateProperties.AGE_15, 0), x, y + 1, z, box);
                             }
                         }
                     }
 
                     // Dead bushes
-                    if (mineshaftType == BetterMineshaftStructureFeature.Type.MESA || mineshaftType == BetterMineshaftStructureFeature.Type.DESERT || mineshaftType == BetterMineshaftStructureFeature.Type.RED_DESERT) {
-                        if (random.nextFloat() < .1f) {
-                            if (state.isAir() && (stateBelow.is(Blocks.SAND) || stateBelow.is(Blocks.RED_SAND) || stateBelow.is(Blocks.TERRACOTTA) || stateBelow.is(Blocks.WHITE_TERRACOTTA) || stateBelow.is(Blocks.ORANGE_TERRACOTTA) || stateBelow.is(Blocks.YELLOW_TERRACOTTA) || stateBelow.is(Blocks.BROWN_TERRACOTTA) || stateBelow.is(Blocks.DIRT))) {
-                                this.placeBlock(world, Blocks.DEAD_BUSH.defaultBlockState(), x, y, z, box);
-                            }
+                    if (settings.deadBushChance > 0 && random.nextFloat() < settings.deadBushChance) {
+                        if (state.isAir() && (stateBelow.is(Blocks.SAND) || stateBelow.is(Blocks.RED_SAND) || stateBelow.is(Blocks.TERRACOTTA) || stateBelow.is(Blocks.WHITE_TERRACOTTA) || stateBelow.is(Blocks.ORANGE_TERRACOTTA) || stateBelow.is(Blocks.YELLOW_TERRACOTTA) || stateBelow.is(Blocks.BROWN_TERRACOTTA) || stateBelow.is(Blocks.DIRT))) {
+                            this.placeBlock(world, Blocks.DEAD_BUSH.defaultBlockState(), x, y, z, box);
                         }
                     }
 
                     // Mushrooms
-                    if (mineshaftType == BetterMineshaftStructureFeature.Type.MUSHROOM) {
+                    if (settings.mushroomChance > 0) {
                         if (state.isAir() && Blocks.RED_MUSHROOM.canSurvive(AIR, world, blockPos)) {
                             float r = random.nextFloat();
-                            if (r < .2f) {
+                            if (r < settings.mushroomChance / 2) {
                                 this.placeBlock(world, Blocks.RED_MUSHROOM.defaultBlockState(), x, y, z, box);
-                            } else if (r < .4f) {
+                            } else if (r < settings.mushroomChance) {
                                 this.placeBlock(world, Blocks.BROWN_MUSHROOM.defaultBlockState(), x, y, z, box);
                             }
                         }

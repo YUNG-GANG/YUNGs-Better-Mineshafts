@@ -2,10 +2,10 @@ package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
-import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshafts;
-import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftStructureFeature;
+import com.yungnickyoung.minecraft.bettermineshafts.config.BMConfig;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
+import com.yungnickyoung.minecraft.bettermineshafts.world.variant.MineshaftVariantSettings;
 import com.yungnickyoung.minecraft.yungsapi.world.BlockSetSelector;
 import com.yungnickyoung.minecraft.yungsapi.world.BoundingBoxHelper;
 import net.minecraft.core.BlockPos;
@@ -19,7 +19,7 @@ import net.minecraft.world.entity.vehicle.MinecartTNT;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.StructureFeatureManager;
 import net.minecraft.world.level.WorldGenLevel;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.WallSide;
@@ -30,9 +30,11 @@ import net.minecraft.world.level.levelgen.structure.StructurePieceAccessor;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Random;
 
+@ParametersAreNonnullByDefault
 public class BigTunnel extends MineshaftPiece {
     private final List<BlockPos> smallShaftLeftEntrances = Lists.newLinkedList();
     private final List<BlockPos> smallShaftRightEntrances = Lists.newLinkedList();
@@ -86,8 +88,8 @@ public class BigTunnel extends MineshaftPiece {
         }
     }
 
-    public BigTunnel(int chainLength, Random random, BoundingBox blockBox, Direction direction, BetterMineshaftStructureFeature.Type type) {
-        super(BetterMineshaftStructurePieceType.BIG_TUNNEL, chainLength, type, blockBox);
+    public BigTunnel(int chainLength, Random random, BoundingBox blockBox, Direction direction, MineshaftVariantSettings settings) {
+        super(BetterMineshaftStructurePieceType.BIG_TUNNEL, chainLength, settings, blockBox);
         this.setOrientation(direction);
     }
 
@@ -160,10 +162,10 @@ public class BigTunnel extends MineshaftPiece {
     @Override
     public void postProcess(WorldGenLevel world, StructureFeatureManager structureFeatureManager, ChunkGenerator chunkGenerator, Random random, BoundingBox box, ChunkPos chunkPos, BlockPos blockPos) {
         // Randomize blocks
-        this.chanceReplaceNonAir(world, box, random, this.getReplacementRate(), 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getMainSelector());
+        this.chanceReplaceNonAir(world, box, random, settings.replacementRate, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, getMainSelector());
 
         // Randomize floor
-        this.chanceReplaceNonAir(world, box, random, this.getReplacementRate(), 0, 0, 0, LOCAL_X_END, 0, LOCAL_Z_END, getFloorSelector());
+        this.chanceReplaceNonAir(world, box, random, settings.replacementRate, 0, 0, 0, LOCAL_X_END, 0, LOCAL_Z_END, getFloorSelector());
 
         // Fill with air
         this.fill(world, box, 1, 1, 0, LOCAL_X_END - 1, LOCAL_Y_END - 3, LOCAL_Z_END, AIR);
@@ -186,7 +188,7 @@ public class BigTunnel extends MineshaftPiece {
         generateTntCarts(world, box, random);
         generateGravelDeposits(world, box, random);
         this.addBiomeDecorations(world, box, random, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END - 1, LOCAL_Z_END);
-        this.addVines(world, box, random, 1, 0, 1, LOCAL_X_END - 1, LOCAL_Y_END, LOCAL_Z_END - 1);
+        this.addVines(world, box, random, settings.vineChance, 1, 0, 1, LOCAL_X_END - 1, LOCAL_Y_END, LOCAL_Z_END - 1);
         generateLanterns(world, box, random);
     }
 
@@ -251,11 +253,14 @@ public class BigTunnel extends MineshaftPiece {
 
     private void generateLegs(WorldGenLevel world, BoundingBox box, Random random) {
         // Ice and mushroom biome variants have different legs
-        if (this.mineshaftType == BetterMineshaftStructureFeature.Type.ICE || this.mineshaftType == BetterMineshaftStructureFeature.Type.MUSHROOM) {
-            generateLegsVariant(world, box, random);
-            return;
+        if (settings.legVariant == 1) {
+            generateLegsVariant1(world, box, random);
+        } else {
+            generateLegsVariant2(world, box, random);
         }
+    }
 
+    private void generateLegsVariant1(WorldGenLevel world, BoundingBox box, Random random) {
         // Configure support block
         BlockState supportBlock = getSupportBlock();
         if (supportBlock.getProperties().contains(BlockStateProperties.NORTH_WALL) && supportBlock.getProperties().contains(BlockStateProperties.SOUTH_WALL)) {
@@ -334,7 +339,7 @@ public class BigTunnel extends MineshaftPiece {
         }
     }
 
-    private void generateLegsVariant(WorldGenLevel world, BoundingBox box, Random random) {
+    private void generateLegsVariant2(WorldGenLevel world, BoundingBox box, Random random) {
         BlockSetSelector legSelector = getLegSelector();
         for (int z = 0; z <= LOCAL_Z_END; z += 7) {
             generateLeg(world, random, box, 2, z + 1, legSelector);
@@ -397,7 +402,7 @@ public class BigTunnel extends MineshaftPiece {
 
     private void generateChestCarts(WorldGenLevel world, BoundingBox box, Random random) {
         for (int z = 0; z <= LOCAL_Z_END; z++) {
-            if (random.nextFloat() < BetterMineshafts.CONFIG.spawnRates.mainShaftChestMinecartSpawnRate) {
+            if (random.nextFloat() < BMConfig.spawnRates.mainShaftChestMinecartSpawnRate.get()) {
                 BlockPos blockPos = this.getWorldPos(LOCAL_X_END / 2, 1, z);
                 if (box.isInside(blockPos) && !world.getBlockState(blockPos.below()).isAir()) {
                     MinecartChest chestMinecartEntity = new MinecartChest(world.getLevel(), ((float) blockPos.getX() + 0.5F), ((float) blockPos.getY() + 0.5F), ((float) blockPos.getZ() + 0.5F));
@@ -410,7 +415,7 @@ public class BigTunnel extends MineshaftPiece {
 
     private void generateTntCarts(WorldGenLevel world, BoundingBox box, Random random) {
         for (int z = 0; z <= LOCAL_Z_END; z++) {
-            if (random.nextFloat() < BetterMineshafts.CONFIG.spawnRates.mainShaftTntMinecartSpawnRate) {
+            if (random.nextFloat() < BMConfig.spawnRates.mainShaftTntMinecartSpawnRate.get()) {
                 BlockPos blockPos = this.getWorldPos(LOCAL_X_END / 2, 1, z);
                 if (box.isInside(blockPos) && !world.getBlockState(blockPos.below()).isAir()) {
                     MinecartTNT tntMinecartEntity = new MinecartTNT(world.getLevel(), ((float) blockPos.getX() + 0.5F), ((float) blockPos.getY() + 0.5F), ((float) blockPos.getZ() + 0.5F));
@@ -421,7 +426,7 @@ public class BigTunnel extends MineshaftPiece {
     }
 
     private void generateBigSupports(WorldGenLevel world, BoundingBox box, Random random) {
-        float cobwebChance = (float) BetterMineshafts.CONFIG.spawnRates.cobwebSpawnRate;
+        float cobwebChance = BMConfig.spawnRates.cobwebSpawnRate.get().floatValue();
         BlockState supportBlock = getSupportBlock();
         if (supportBlock.getProperties().contains(BlockStateProperties.EAST_WALL) && supportBlock.getProperties().contains(BlockStateProperties.WEST_WALL)) {
             supportBlock = supportBlock.setValue(BlockStateProperties.EAST_WALL, WallSide.TALL).setValue(BlockStateProperties.WEST_WALL, WallSide.TALL);
@@ -465,7 +470,7 @@ public class BigTunnel extends MineshaftPiece {
     }
 
     private void generateSmallSupports(WorldGenLevel world, BoundingBox box, Random random) {
-        float cobwebChance = (float) BetterMineshafts.CONFIG.spawnRates.cobwebSpawnRate;
+        float cobwebChance = BMConfig.spawnRates.cobwebSpawnRate.get().floatValue();
         BlockState supportBlock = getSupportBlock();
         if (supportBlock.getProperties().contains(BlockStateProperties.EAST_WALL) && supportBlock.getProperties().contains(BlockStateProperties.WEST_WALL)) {
             supportBlock = supportBlock.setValue(BlockStateProperties.EAST_WALL, WallSide.TALL).setValue(BlockStateProperties.WEST_WALL, WallSide.TALL);
@@ -508,8 +513,7 @@ public class BigTunnel extends MineshaftPiece {
         BlockState LANTERN = Blocks.LANTERN.defaultBlockState().setValue(BlockStateProperties.HANGING, true);
         for (int z = 0; z <= LOCAL_Z_END; z++) {
             for (int x = 3; x <= LOCAL_X_END - 3; x++) {
-                // Check rate * 3 because this used to spawn in any of the 3 middle blocks, so the * 3 matches the spawn rate for the previous logic
-                if (random.nextFloat() < BetterMineshafts.CONFIG.spawnRates.lanternSpawnRate * 3) {
+                if (random.nextFloat() < BMConfig.spawnRates.lanternSpawnRate.get()) {
                     if (!this.getBlock(world, x, LOCAL_Y_END, z, box).isAir()) {
                         this.placeBlock(world, LANTERN, x, LOCAL_Y_END - 1, z, box);
                         z += 20;
@@ -608,7 +612,7 @@ public class BigTunnel extends MineshaftPiece {
         Direction nextPieceDirection;
         StructurePiece newPiece;
         for (int n = 0; n < (pieceLen - 1) - 10; n++) {
-            if (random.nextFloat() < BetterMineshafts.CONFIG.spawnRates.workstationSpawnRate) {
+            if (random.nextFloat() < BMConfig.spawnRates.workstationSpawnRate.get()) {
                 switch (direction) {
                     case NORTH:
                     default:
@@ -649,7 +653,7 @@ public class BigTunnel extends MineshaftPiece {
         Direction nextPieceDirection;
         StructurePiece newPiece;
         for (int n = 0; n < (pieceLen - 1) - 10; n++) {
-            if (random.nextFloat() < BetterMineshafts.CONFIG.spawnRates.workstationSpawnRate) {
+            if (random.nextFloat() < BMConfig.spawnRates.workstationSpawnRate.get()) {
                 switch (direction) {
                     case NORTH:
                     default:
@@ -690,7 +694,7 @@ public class BigTunnel extends MineshaftPiece {
         Direction nextPieceDirection;
         StructurePiece newPiece;
         for (int n = 0; n < (pieceLen - 1) - 4; n++) {
-            if (random.nextFloat() < BetterMineshafts.CONFIG.spawnRates.smallShaftSpawnRate) {
+            if (random.nextFloat() < BMConfig.spawnRates.smallShaftSpawnRate.get()) {
                 switch (direction) {
                     case NORTH:
                     default:
@@ -732,7 +736,7 @@ public class BigTunnel extends MineshaftPiece {
         Direction nextPieceDirection;
         StructurePiece newPiece;
         for (int n = 5; n < pieceLen; n++) {
-            if (random.nextFloat() < BetterMineshafts.CONFIG.spawnRates.smallShaftSpawnRate) {
+            if (random.nextFloat() < BMConfig.spawnRates.smallShaftSpawnRate.get()) {
                 switch (direction) {
                     case NORTH:
                     default:

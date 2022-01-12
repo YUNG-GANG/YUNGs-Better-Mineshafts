@@ -1,33 +1,51 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world;
 
-import com.mojang.serialization.Codec;
 import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshafts;
+import com.yungnickyoung.minecraft.bettermineshafts.config.BMConfig;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.MineshaftPiece;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.VerticalEntrance;
+import com.yungnickyoung.minecraft.bettermineshafts.world.variant.MineshaftVariantSettings;
+import com.yungnickyoung.minecraft.bettermineshafts.world.variant.MineshaftVariants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.QuartPos;
-import net.minecraft.util.StringRepresentable;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.LegacyRandomSource;
 import net.minecraft.world.level.levelgen.WorldgenRandom;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.level.levelgen.structure.pieces.PieceGenerator;
 import net.minecraft.world.level.levelgen.structure.pieces.PieceGeneratorSupplier;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilder;
+import net.minecraftforge.common.BiomeDictionary;
 
-import java.util.Arrays;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Optional;
 
-public class BetterMineshaftStructureFeature extends StructureFeature<BetterMineshaftFeatureConfig> {
-    public BetterMineshaftStructureFeature(Codec<BetterMineshaftFeatureConfig> codec) {
-        super(codec, PieceGeneratorSupplier.simple(BetterMineshaftStructureFeature::checkLocation, BetterMineshaftStructureFeature::generatePieces));
+public class BetterMineshaftStructureFeature extends StructureFeature<NoneFeatureConfiguration> {
+    public BetterMineshaftStructureFeature() {
+        super(NoneFeatureConfiguration.CODEC, context -> {
+            // Only generate if location is valid
+            if (!checkLocation(context)) {
+                return Optional.empty();
+            }
+
+            return Optional.of(BetterMineshaftStructureFeature::generatePieces);
+        });
     }
 
-    private static boolean checkLocation(PieceGeneratorSupplier.Context<BetterMineshaftFeatureConfig> context) {
+    @Override
+    public GenerationStep.Decoration step() {
+        return GenerationStep.Decoration.UNDERGROUND_STRUCTURES;
+    }
+
+    private static boolean checkLocation(PieceGeneratorSupplier.Context<NoneFeatureConfiguration> context) {
         WorldgenRandom worldgenRandom = new WorldgenRandom(new LegacyRandomSource(0L));
         worldgenRandom.setLargeFeatureSeed(context.seed(), context.chunkPos().x, context.chunkPos().z);
-        return worldgenRandom.nextDouble() < context.config().probability &&
+        return worldgenRandom.nextDouble() < BMConfig.mineshaftSpawnRate.get() &&
                 context.validBiome().test(context.chunkGenerator().getNoiseBiome(
                         QuartPos.fromBlock(context.chunkPos().getMiddleBlockX()),
                         QuartPos.fromBlock(50),
@@ -35,7 +53,7 @@ public class BetterMineshaftStructureFeature extends StructureFeature<BetterMine
                 );
     }
 
-    private static void generatePieces(StructurePiecesBuilder structurePiecesBuilder, PieceGenerator.Context<BetterMineshaftFeatureConfig> context) {
+    private static void generatePieces(StructurePiecesBuilder structurePiecesBuilder, PieceGenerator.Context<NoneFeatureConfiguration> context) {
         Direction direction = Direction.NORTH;
 
         // Randomly choose starting direction.
@@ -49,8 +67,14 @@ public class BetterMineshaftStructureFeature extends StructureFeature<BetterMine
             case 2 -> direction = Direction.EAST;
             case 3 -> direction = Direction.WEST;
         }
-        int y = context.random().nextInt(BetterMineshafts.CONFIG.maxY - BetterMineshafts.CONFIG.minY + 1) + BetterMineshafts.CONFIG.minY;
+        int x = context.chunkPos().getMiddleBlockX();
+        int z = context.chunkPos().getMiddleBlockZ();
+        int y = context.random().nextInt(BMConfig.maxY.get() - BMConfig.minY.get() + 1) + BMConfig.minY.get();
         BlockPos.MutableBlockPos startingPos = new BlockPos.MutableBlockPos(context.chunkPos().getBlockX(3), y, context.chunkPos().getBlockZ(3));
+
+        // Determine mineshaft variant based on biome
+        Biome biome = context.chunkGenerator().getNoiseBiome(QuartPos.fromBlock(x), QuartPos.fromBlock(y), QuartPos.fromBlock(z));
+        MineshaftVariantSettings settings = getSettingsForBiome(biome);
 
         // Entrypoint
         MineshaftPiece entryPoint = new VerticalEntrance(
@@ -58,7 +82,7 @@ public class BetterMineshaftStructureFeature extends StructureFeature<BetterMine
                 context.random(),
                 startingPos,
                 direction,
-                context.config().type
+                settings
         );
 
         structurePiecesBuilder.addPiece(entryPoint);
@@ -68,41 +92,37 @@ public class BetterMineshaftStructureFeature extends StructureFeature<BetterMine
         entryPoint.addChildren(entryPoint, structurePiecesBuilder, context.random());
     }
 
-    public enum Type implements StringRepresentable {
-        NORMAL("normal"),
-        MESA("mesa"),
-        JUNGLE("jungle"),
-        SNOW("snow"),
-        ICE("ice"),
-        DESERT("desert"),
-        RED_DESERT("red_desert"),
-        SAVANNA("savanna"),
-        MUSHROOM("mushroom"),
-        LUSH("lush");
+    private static MineshaftVariantSettings getSettingsForBiome(Biome biome) {
+        ResourceKey<Biome> registryKey;
 
-        public static final Codec<Type> CODEC = StringRepresentable.fromEnum(Type::values, Type::byName);
-        private static final Map<String, Type> BY_NAME = Arrays.stream(values()).collect(Collectors.toMap(Type::getName, type -> type));
-
-        private final String name;
-
-        Type(String name) {
-            this.name = name;
+        // Ensure biome registry name isn't null. This should never happen.
+        if (biome.getRegistryName() == null) {
+            BetterMineshafts.LOGGER.error("Found null registry name for biome {}. This shouldn't happen!", biome);
+            return MineshaftVariants.get().getDefault();
         }
 
-        private static Type byName(String name) {
-            return BY_NAME.get(name);
+        registryKey = ResourceKey.create(Registry.BIOME_REGISTRY, biome.getRegistryName());
+
+        // Search tag lists of variants top-down, short-circuiting if we find a matching tag list.
+        boolean found;
+        for (MineshaftVariantSettings variant : MineshaftVariants.get().getVariants()) {
+            for (List<BiomeDictionary.Type> tagList : variant.biomeTags) {
+                found = true;
+                for (BiomeDictionary.Type tag : tagList) {
+                    // Check tag
+                    if (!BiomeDictionary.hasType(registryKey, tag)) {
+                        found = false;
+                        break;
+                    }
+                }
+
+                if (found) {
+                    return variant;
+                }
+            }
         }
 
-        public static Type byId(int index) {
-            return index >= 0 && index < values().length ? values()[index] : NORMAL;
-        }
-
-        public String getName() {
-            return this.name;
-        }
-
-        public String getSerializedName() {
-            return this.name;
-        }
+        // No match --> return default
+        return MineshaftVariants.get().getDefault();
     }
 }

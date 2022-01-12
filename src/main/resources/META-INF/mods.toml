@@ -1,0 +1,31 @@
+modLoader="javafml"
+loaderVersion="[39,)"
+license="LGPLv3"
+issueTrackerURL="https://github.com/yungnickyoung/YUNGs-Better-Mineshafts/issues"
+
+[[mods]]
+	modId="bettermineshafts"
+	version="${file.jarVersion}"
+	displayName="YUNG's Better Mineshafts"
+	credits="Thanks so much to all my patrons!"
+	authors="YUNGNICKYOUNG"
+	description="The long-awaited and much-needed abandoned mineshaft overhaul!"
+	logoFile="logo.png"
+    displayURL="https://www.curseforge.com/minecraft/mc-mods/yungs-better-mineshafts"
+
+[[dependencies.bettermineshafts]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.18.1,1.19)"
+
+[[dependencies.bettermineshafts]]
+    modId="forge"
+    mandatory=true
+    versionRange="[39.0.0,)"
+
+[[dependencies.bettermineshafts]]
+    modId="yungsapi"
+    versionRange="[1.18.1-Forge-22,)"
+    mandatory=true
+    ordering="NONE"
+    side="BOTH"

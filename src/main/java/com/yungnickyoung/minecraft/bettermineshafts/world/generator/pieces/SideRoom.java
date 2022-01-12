@@ -1,9 +1,9 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
-import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshafts;
-import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftStructureFeature;
+import com.yungnickyoung.minecraft.bettermineshafts.config.BMConfig;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
+import com.yungnickyoung.minecraft.bettermineshafts.world.variant.MineshaftVariantSettings;
 import com.yungnickyoung.minecraft.yungsapi.world.BoundingBoxHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -27,10 +27,12 @@ import net.minecraft.world.level.levelgen.structure.StructurePieceAccessor;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+@ParametersAreNonnullByDefault
 public class SideRoom extends MineshaftPiece {
     private boolean hasDownstairs;
     private static final int
@@ -47,8 +49,8 @@ public class SideRoom extends MineshaftPiece {
         this.hasDownstairs = compoundTag.getBoolean("hasDownstairs");
     }
 
-    public SideRoom(int pieceChainLen, Random random, BoundingBox blockBox, Direction direction, BetterMineshaftStructureFeature.Type type) {
-        super(BetterMineshaftStructurePieceType.SIDE_ROOM, pieceChainLen, type, blockBox);
+    public SideRoom(int pieceChainLen, Random random, BoundingBox blockBox, Direction direction, MineshaftVariantSettings settings) {
+        super(BetterMineshaftStructurePieceType.SIDE_ROOM, pieceChainLen, settings, blockBox);
         this.setOrientation(direction);
     }
 
@@ -72,7 +74,7 @@ public class SideRoom extends MineshaftPiece {
     @Override
     public void addChildren(StructurePiece structurePiece, StructurePieceAccessor structurePieceAccessor, Random random) {
         // Chance of generating side room dungeon downstairs
-        if (random.nextFloat() < BetterMineshafts.CONFIG.spawnRates.workstationDungeonSpawnRate) {
+        if (random.nextFloat() < BMConfig.spawnRates.workstationDungeonSpawnRate.get()) {
             Direction direction = this.getOrientation();
             if (direction == null) {
                 return;
@@ -154,7 +156,7 @@ public class SideRoom extends MineshaftPiece {
         // Decorations
         generateIronBarSupports(world, box, random, ceiling);
         this.addBiomeDecorations(world, box, random, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END - 1, LOCAL_Z_END);
-        this.addVines(world, box, random, 1, 0, 1, LOCAL_X_END - 1, LOCAL_Y_END, LOCAL_Z_END - 1);
+        this.addVines(world, box, random, settings.vineChance, 1, 0, 1, LOCAL_X_END - 1, LOCAL_Y_END, LOCAL_Z_END - 1);
     }
 
     private void generateLegs(WorldGenLevel world, Random random, BoundingBox box) {

@@ -9,7 +9,7 @@ import net.minecraft.world.level.levelgen.feature.StructurePieceType;
 
 import java.util.Locale;
 
-public class BMStructureFeaturePieces {
+public class BMModStructureFeaturePieces {
     public static void init() {
         BetterMineshaftStructurePieceType.VERTICAL_ENTRANCE      = register("BMSVerticalEntrance", VerticalEntrance::new);
         BetterMineshaftStructurePieceType.BIG_TUNNEL             = register("BMSBigTunnel", BigTunnel::new);

@@ -1,8 +1,9 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
 import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshafts;
-import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftStructureFeature;
+import com.yungnickyoung.minecraft.bettermineshafts.config.BMConfig;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
+import com.yungnickyoung.minecraft.bettermineshafts.world.variant.MineshaftVariantSettings;
 import com.yungnickyoung.minecraft.yungsapi.world.BoundingBoxHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -18,19 +19,21 @@ import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.levelgen.structure.StructurePieceAccessor;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Arrays;
 import java.util.Random;
 
+@ParametersAreNonnullByDefault
 public class OreDeposit extends MineshaftPiece {
     public enum OreType {
-        COBBLE(0, Blocks.COBBLESTONE.defaultBlockState(), BetterMineshafts.CONFIG.ores.cobble),
-        COAL(1, Blocks.COAL_ORE.defaultBlockState(), BetterMineshafts.CONFIG.ores.coal + COBBLE.threshold),
-        IRON(2, Blocks.IRON_ORE.defaultBlockState(), BetterMineshafts.CONFIG.ores.iron + COAL.threshold),
-        REDSTONE(3, Blocks.REDSTONE_ORE.defaultBlockState(), BetterMineshafts.CONFIG.ores.redstone + IRON.threshold),
-        GOLD(4, Blocks.GOLD_ORE.defaultBlockState(), BetterMineshafts.CONFIG.ores.gold + REDSTONE.threshold),
-        LAPIS(5, Blocks.LAPIS_ORE.defaultBlockState(), BetterMineshafts.CONFIG.ores.lapis + GOLD.threshold),
-        EMERALD(6, Blocks.EMERALD_ORE.defaultBlockState(), BetterMineshafts.CONFIG.ores.emerald + LAPIS.threshold),
-        DIAMOND(7, Blocks.DIAMOND_ORE.defaultBlockState(), BetterMineshafts.CONFIG.ores.diamond + EMERALD.threshold);
+        COBBLE(0, Blocks.COBBLESTONE.defaultBlockState(), BMConfig.ores.cobble.get()),
+        COAL(1, Blocks.COAL_ORE.defaultBlockState(), BMConfig.ores.coal.get() + COBBLE.threshold),
+        IRON(2, Blocks.IRON_ORE.defaultBlockState(), BMConfig.ores.iron.get() + COAL.threshold),
+        REDSTONE(3, Blocks.REDSTONE_ORE.defaultBlockState(), BMConfig.ores.redstone.get() + IRON.threshold),
+        GOLD(4, Blocks.GOLD_ORE.defaultBlockState(), BMConfig.ores.gold.get() + REDSTONE.threshold),
+        LAPIS(5, Blocks.LAPIS_ORE.defaultBlockState(), BMConfig.ores.lapis.get() + GOLD.threshold),
+        EMERALD(6, Blocks.EMERALD_ORE.defaultBlockState(), BMConfig.ores.emerald.get() + LAPIS.threshold),
+        DIAMOND(7, Blocks.DIAMOND_ORE.defaultBlockState(), BMConfig.ores.diamond.get() + EMERALD.threshold);
 
         private final int value;
         private final BlockState block;
@@ -68,8 +71,8 @@ public class OreDeposit extends MineshaftPiece {
         this.oreType = OreType.valueOf(compoundTag.getInt("OreType"));
     }
 
-    public OreDeposit(int chunkPieceLen, Random random, BoundingBox blockBox, Direction direction, BetterMineshaftStructureFeature.Type type) {
-        super(BetterMineshaftStructurePieceType.ORE_DEPOSIT, chunkPieceLen, type, blockBox);
+    public OreDeposit(int chunkPieceLen, Random random, BoundingBox blockBox, Direction direction, MineshaftVariantSettings settings) {
+        super(BetterMineshaftStructurePieceType.ORE_DEPOSIT, chunkPieceLen, settings, blockBox);
         this.setOrientation(direction);
     }
 
