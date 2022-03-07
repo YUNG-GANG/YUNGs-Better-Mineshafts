@@ -1,0 +1,7 @@
+{
+  "type": "bettermineshafts:mineshaft",
+  "config": {},
+  "biomes": "#bettermineshafts:has_structure/has_better_mineshaft",
+  "adapt_noise": false,
+  "spawn_overrides": {}
+}

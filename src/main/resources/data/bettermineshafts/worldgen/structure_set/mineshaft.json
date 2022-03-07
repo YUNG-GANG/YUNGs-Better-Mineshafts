@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "bettermineshafts:mineshaft",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "salt": 593751784,
+    "spacing": 1,
+    "separation": 0,
+    "type": "minecraft:random_spread"
+  }
+}

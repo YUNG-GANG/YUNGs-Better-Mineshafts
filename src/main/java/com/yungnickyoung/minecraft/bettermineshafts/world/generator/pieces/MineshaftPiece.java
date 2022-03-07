@@ -18,11 +18,11 @@ import net.minecraft.world.level.block.VineBlock;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.levelgen.feature.StructurePieceType;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.levelgen.structure.StructurePieceAccessor;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
+import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
 import net.minecraft.world.level.material.Material;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -192,17 +192,17 @@ public abstract class MineshaftPiece extends StructurePiece {
                     if (settings.lushDecorations) {
                         // Moss & ground plants
                         if (box.isInside(blockPos) && random.nextFloat() < .005f) {
-                            CaveFeatures.MOSS_PATCH.place(world, world.getLevel().getChunkSource().getGenerator(), random, blockPos);
+                            CaveFeatures.MOSS_PATCH.value().place(world, world.getLevel().getChunkSource().getGenerator(), random, blockPos);
                         }
 
                         // Clay, water, dripleaf
                         if (box.isInside(blockPos) && random.nextFloat() < .005f) {
-                            CaveFeatures.LUSH_CAVES_CLAY.place(world, world.getLevel().getChunkSource().getGenerator(), random, blockPos);
+                            CaveFeatures.LUSH_CAVES_CLAY.value().place(world, world.getLevel().getChunkSource().getGenerator(), random, blockPos);
                         }
 
                         // Moss ceiling & cave vines
                         if (box.isInside(blockPos) && random.nextFloat() < .005f) {
-                            CaveFeatures.MOSS_PATCH_CEILING.place(world, world.getLevel().getChunkSource().getGenerator(), random, blockPos);
+                            CaveFeatures.MOSS_PATCH_CEILING.value().place(world, world.getLevel().getChunkSource().getGenerator(), random, blockPos);
                         }
 
                         // Moss layers

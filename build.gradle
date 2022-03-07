@@ -24,7 +24,7 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 minecraft {
-	mappings channel: 'official', version: '1.18.1'
+	mappings channel: "official", version: "${minecraft_version}"
 	// accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg') // Currently, this location cannot be changed from the default.
 
 	runs {
@@ -88,7 +88,7 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 //}
 
 dependencies {
-	minecraft 'net.minecraftforge:forge:1.18.1-39.0.7'
+	minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 	implementation fg.deobf("com.yungnickyoung.minecraft.yungsapi:YungsApi:${yungs_api_version}")
 //	 implementation fg.deobf("yungsapi:YungsApi:1.18.1-Forge-23") // Local file dep for testing purposes
 	if (System.getProperty("idea.sync.active") != "true") {

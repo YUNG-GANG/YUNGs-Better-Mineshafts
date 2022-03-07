@@ -74,7 +74,7 @@ public class BetterMineshaftStructureFeature extends StructureFeature<NoneFeatur
         BlockPos.MutableBlockPos startingPos = new BlockPos.MutableBlockPos(context.chunkPos().getBlockX(3), y, context.chunkPos().getBlockZ(3));
 
         // Determine mineshaft variant based on biome
-        Biome biome = context.chunkGenerator().getNoiseBiome(QuartPos.fromBlock(x), QuartPos.fromBlock(y), QuartPos.fromBlock(z));
+        Biome biome = context.chunkGenerator().getNoiseBiome(QuartPos.fromBlock(x), QuartPos.fromBlock(y), QuartPos.fromBlock(z)).value();
         MineshaftVariantSettings settings = getSettingsForBiome(biome);
 
         // Entrypoint
