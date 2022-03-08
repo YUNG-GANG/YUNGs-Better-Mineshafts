@@ -1,7 +1,6 @@
 {
 	"pack": {
 		"description": "bettermineshafts resources",
-		"pack_format": 6,
-        "_comment": ""
+		"pack_format": 8
 	}
 }
