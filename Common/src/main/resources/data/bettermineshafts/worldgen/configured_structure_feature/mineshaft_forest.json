@@ -2,15 +2,15 @@
   "type": "bettermineshafts:mineshaft",
   "config": {
     "flammableLegs": true,
-    "replacementRate": 0.9,
+    "replacementRate": 0.95,
     "legVariant": "edge",
     "decorationChances": {
-      "vineChance": 0,
-      "snowChance": 1,
+      "vineChance": 0.5,
+      "snowChance": 0,
       "cactusChance": 0,
       "deadBushChance": 0,
       "mushroomChance": 0,
-      "gravelPileChance": 0.1,
+      "gravelPileChance": 0.8,
       "lushDecorations": false,
       "dripstoneDecorations": false
     },
@@ -25,19 +25,19 @@
         "Name": "minecraft:spruce_slab"
       },
       "gravelBlockState": {
-        "Name": "minecraft:snow_block"
+        "Name": "minecraft:spruce_leaves"
       },
       "stoneWallBlockState": {
-        "Name": "minecraft:stone_brick_wall"
+        "Name": "minecraft:mossy_cobblestone_wall"
       },
       "stoneSlabBlockState": {
-        "Name": "minecraft:stone_brick_slab"
+        "Name": "minecraft:mossy_cobblestone_slab"
       },
       "trapdoorBlockState": {
-        "Name": "minecraft:spruce_trapdoor"
+        "Name": "minecraft:oak_trapdoor"
       },
       "smallLegBlockState": {
-        "Name": "minecraft:stripped_spruce_log",
+        "Name": "minecraft:oak_log",
         "Properties": {
           "axis": "y"
         }
@@ -51,33 +51,36 @@
         "entries": [
           {
             "blockState": {
-              "Name": "minecraft:cobblestone"
+              "Name": "minecraft:spruce_leaves"
+            },
+            "probability": 0.7
+          },
+          {
+            "blockState": {
+              "Name": "minecraft:oak_log",
+              "Properties": {
+                "axis": "x"
+              }
             },
             "probability": 0.05
           },
           {
             "blockState": {
-              "Name": "minecraft:snow_block"
+              "Name": "minecraft:oak_log",
+              "Properties": {
+                "axis": "y"
+              }
             },
-            "probability": 0.25
+            "probability": 0.05
           },
           {
             "blockState": {
-              "Name": "minecraft:packed_ice"
+              "Name": "minecraft:oak_log",
+              "Properties": {
+                "axis": "z"
+              }
             },
-            "probability": 0.2
-          },
-          {
-            "blockState": {
-              "Name": "minecraft:cracked_stone_bricks"
-            },
-            "probability": 0.1
-          },
-          {
-            "blockState": {
-              "Name": "minecraft:cave_air"
-            },
-            "probability": 0.2
+            "probability": 0.05
           }
         ]
       },
@@ -88,58 +91,55 @@
         "entries": [
           {
             "blockState": {
-              "Name": "minecraft:cobblestone"
+              "Name": "minecraft:spruce_leaves"
+            },
+            "probability": 0.7
+          },
+          {
+            "blockState": {
+              "Name": "minecraft:oak_log",
+              "Properties": {
+                "axis": "x"
+              }
             },
             "probability": 0.05
           },
           {
             "blockState": {
-              "Name": "minecraft:snow_block"
+              "Name": "minecraft:oak_log",
+              "Properties": {
+                "axis": "y"
+              }
             },
-            "probability": 0.25
+            "probability": 0.05
           },
           {
             "blockState": {
-              "Name": "minecraft:packed_ice"
+              "Name": "minecraft:oak_log",
+              "Properties": {
+                "axis": "z"
+              }
             },
-            "probability": 0.2
-          },
-          {
-            "blockState": {
-              "Name": "minecraft:cracked_stone_bricks"
-            },
-            "probability": 0.1
+            "probability": 0.05
           }
         ]
       },
       "brickRandomizer": {
         "defaultBlockState": {
-          "Name": "minecraft:stone_bricks"
+          "Name": "minecraft:cobblestone"
         },
         "entries": [
           {
             "blockState": {
-              "Name": "minecraft:stone_bricks"
+              "Name": "minecraft:mossy_cobblestone"
             },
-            "probability": 0.333
-          },
-          {
-            "blockState": {
-              "Name": "minecraft:mossy_stone_bricks"
-            },
-            "probability": 0.333
-          },
-          {
-            "blockState": {
-              "Name": "minecraft:cracked_stone_bricks"
-            },
-            "probability": 0.333
+            "probability": 0.5
           }
         ]
       },
       "legRandomizer": {
         "defaultBlockState": {
-          "Name": "minecraft:stripped_spruce_log",
+          "Name": "minecraft:oak_log",
           "Properties": {
             "axis": "y"
           }
@@ -148,7 +148,7 @@
       }
     }
   },
-  "biomes": "#bettermineshafts:has_structure/has_mineshaft_spruce_snowy",
+  "biomes": "#bettermineshafts:has_structure/has_mineshaft_forest",
   "adapt_noise": false,
   "spawn_overrides": {}
 }

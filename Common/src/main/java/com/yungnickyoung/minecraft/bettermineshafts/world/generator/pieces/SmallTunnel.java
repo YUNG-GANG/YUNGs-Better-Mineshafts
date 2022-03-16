@@ -25,6 +25,7 @@ import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.levelgen.structure.StructurePieceAccessor;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
+import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 
 import java.util.ArrayList;
@@ -173,7 +174,14 @@ public class SmallTunnel extends BetterMineshaftPiece {
 
     private void generateRails(WorldGenLevel world, BoundingBox box, Random random) {
         // Place rails in center
-        this.chanceFill(world, box, random, .5f, 2, 1, 0, 2, 1, LOCAL_Z_END, Blocks.RAIL.defaultBlockState());
+        BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
+        for (int z = 0; z <= LOCAL_Z_END; z++) {
+            mutable.set(this.getWorldX(2, z), this.getWorldY(1), this.getWorldZ(2, z));
+            if (random.nextFloat() < 0.5f && this.getBlock(world, LOCAL_X_END / 2, 1, z, box).getMaterial() == Material.AIR && Blocks.RAIL.canSurvive(AIR, world, mutable)) {
+                this.placeBlock(world, Blocks.RAIL.defaultBlockState(), 2, 1, z, boundingBox);
+            }
+        }
+
         // Place powered rails
         for (int n = 0; n <= LOCAL_Z_END; n++) {
             this.chanceAddBlock(world, random, .07f, Blocks.POWERED_RAIL.defaultBlockState().setValue(PoweredRailBlock.POWERED, true), 2, 1, n, box);

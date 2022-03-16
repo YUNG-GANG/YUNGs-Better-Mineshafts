@@ -5,9 +5,9 @@ import com.mojang.datafixers.util.Pair;
 import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshaftsCommon;
 import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftStructureFeature;
 import com.yungnickyoung.minecraft.bettermineshafts.world.config.BetterMineshaftFeatureConfiguration;
-import com.yungnickyoung.minecraft.yungsapi.world.BlockStateRandomizer;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
+import com.yungnickyoung.minecraft.yungsapi.world.BlockStateRandomizer;
 import com.yungnickyoung.minecraft.yungsapi.world.BoundingBoxHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -29,6 +29,7 @@ import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.levelgen.structure.StructurePieceAccessor;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
+import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 
 import java.util.List;
@@ -182,13 +183,13 @@ public class BigTunnel extends BetterMineshaftPiece {
         generateSmallSupports(world, box, random);
 
         // Decorations
-        generateRails(world, box, random);
         generateChestCarts(world, box, random);
         generateTntCarts(world, box, random);
         generateGravelDeposits(world, box, random);
         this.addBiomeDecorations(world, box, random, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END - 1, LOCAL_Z_END);
         this.addVines(world, box, random, config.decorationChances.vineChance, 1, 0, 1, LOCAL_X_END - 1, LOCAL_Y_END, LOCAL_Z_END - 1);
         generateLanterns(world, box, random);
+        generateRails(world, box, random);
     }
 
     private void generateSmallShaftEntrances(WorldGenLevel world, BoundingBox box, Random random) {
@@ -513,7 +514,7 @@ public class BigTunnel extends BetterMineshaftPiece {
         for (int z = 0; z <= LOCAL_Z_END; z++) {
             for (int x = 3; x <= LOCAL_X_END - 3; x++) {
                 if (random.nextFloat() < BetterMineshaftsCommon.CONFIG.spawnRates.lanternSpawnRate) {
-                    if (!this.getBlock(world, x, LOCAL_Y_END, z, box).isAir()) {
+                    if (LANTERN.canSurvive(world, this.getWorldPos(x, LOCAL_Y_END - 1, z))) {
                         this.placeBlock(world, LANTERN, x, LOCAL_Y_END - 1, z, box);
                         z += 20;
                     }
@@ -524,7 +525,14 @@ public class BigTunnel extends BetterMineshaftPiece {
 
     private void generateRails(WorldGenLevel world, BoundingBox box, Random random) {
         // Place rails in center
-        this.chanceFill(world, box, random, .5f, LOCAL_X_END / 2, 1, 0, LOCAL_X_END / 2, 1, LOCAL_Z_END, Blocks.RAIL.defaultBlockState());
+        BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
+        for (int z = 0; z <= LOCAL_Z_END; z++) {
+            mutable.set(this.getWorldX(LOCAL_X_END / 2, z), this.getWorldY(1), this.getWorldZ(LOCAL_X_END / 2, z));
+            if (random.nextFloat() < 0.5f && this.getBlock(world, LOCAL_X_END / 2, 1, z, box).getMaterial() == Material.AIR && Blocks.RAIL.canSurvive(AIR, world, mutable)) {
+                this.placeBlock(world, Blocks.RAIL.defaultBlockState(), LOCAL_X_END / 2, 1, z, boundingBox);
+            }
+        }
+
         // Place powered rails
         int blocksSinceLastRail = 0;
         for (int n = 0; n <= LOCAL_Z_END; n++) {
@@ -559,14 +567,14 @@ public class BigTunnel extends BetterMineshaftPiece {
 
     private void buildGravelDeposits(Random random) {
         for (int z = 0; z <= LOCAL_Z_END - 2; z++) {
-            int r = random.nextInt(20);
+            float r = random.nextFloat();
             int currPos = z;
-            if (r == 0) { // Left side
+            if (r < config.decorationChances.gravelPileChance / 2) { // Left side
                 gravelDeposits.add(new Pair<>(currPos, 0));
-                z += 5;
-            } else if (r == 1) { // Right side
+                z += 2;
+            } else if (r < config.decorationChances.gravelPileChance) { // Right side
                 gravelDeposits.add(new Pair<>(currPos, 1));
-                z += 5;
+                z += 2;
             }
         }
     }

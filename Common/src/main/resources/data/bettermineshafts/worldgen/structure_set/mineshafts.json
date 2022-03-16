@@ -43,6 +43,14 @@
     {
       "structure": "bettermineshafts:mineshaft_spruce_snowy",
       "weight": 1
+    },
+    {
+      "structure": "bettermineshafts:mineshaft_forest",
+      "weight": 1
+    },
+    {
+      "structure": "bettermineshafts:mineshaft_dripstone",
+      "weight": 1
     }
   ],
   "placement": {

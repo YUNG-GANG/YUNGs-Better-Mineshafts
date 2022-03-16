@@ -46,7 +46,9 @@ public class BetterMineshaftFeatureConfiguration implements FeatureConfiguration
                         Codec.floatRange(0.0F, 1.0F).fieldOf("cactusChance").forGetter((config) -> config.cactusChance),
                         Codec.floatRange(0.0F, 1.0F).fieldOf("deadBushChance").forGetter((config) -> config.deadBushChance),
                         Codec.floatRange(0.0F, 1.0F).fieldOf("mushroomChance").forGetter((config) -> config.mushroomChance),
-                        Codec.BOOL.fieldOf("lushDecorations").forGetter((config) -> config.lushDecorations))
+                        Codec.floatRange(0.0F, 1.0F).fieldOf("gravelPileChance").forGetter((config) -> config.gravelPileChance),
+                        Codec.BOOL.fieldOf("lushDecorations").forGetter((config) -> config.lushDecorations),
+                        Codec.BOOL.fieldOf("dripstoneDecorations").forGetter((config) -> config.dripstoneDecorations))
                 .apply(instance, MineshaftDecorationChances::new));
 
         public float vineChance;
@@ -54,16 +56,21 @@ public class BetterMineshaftFeatureConfiguration implements FeatureConfiguration
         public float cactusChance;
         public float deadBushChance;
         public float mushroomChance;
+        public float gravelPileChance;
         public boolean lushDecorations;
+        public boolean dripstoneDecorations;
 
         public MineshaftDecorationChances(float vineChance, float snowChance, float cactusChance, float deadBushChance,
-                                          float mushroomChance, boolean lushDecorations) {
+                                          float mushroomChance, float gravelPileChance,
+                                          boolean lushDecorations, boolean dripstoneDecorations) {
             this.vineChance = vineChance;
             this.snowChance = snowChance;
             this.cactusChance = cactusChance;
             this.deadBushChance = deadBushChance;
             this.mushroomChance = mushroomChance;
+            this.gravelPileChance = gravelPileChance;
             this.lushDecorations = lushDecorations;
+            this.dripstoneDecorations = dripstoneDecorations;
         }
     }
 

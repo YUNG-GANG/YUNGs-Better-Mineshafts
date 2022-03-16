@@ -51,7 +51,9 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
                         compoundTag.getFloat("cactusChance"),
                         compoundTag.getFloat("deadBushChance"),
                         compoundTag.getFloat("mushroomChance"),
-                        compoundTag.getBoolean("lushDecorations")),
+                        compoundTag.getFloat("gravelPileChance"),
+                        compoundTag.getBoolean("lushDecorations"),
+                        compoundTag.getBoolean("dripstoneDecorations")),
                 new BetterMineshaftFeatureConfiguration.MineshaftBlockStates(
                         Block.BLOCK_STATE_REGISTRY.byId(compoundTag.getInt("mainBlockId")),
                         Block.BLOCK_STATE_REGISTRY.byId(compoundTag.getInt("supportBlockId")),
@@ -78,7 +80,9 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
         compoundTag.putFloat("cactusChance", this.config.decorationChances.cactusChance);
         compoundTag.putFloat("deadBushChance", this.config.decorationChances.deadBushChance);
         compoundTag.putFloat("mushroomChance", this.config.decorationChances.mushroomChance);
+        compoundTag.putFloat("gravelPileChance", this.config.decorationChances.gravelPileChance);
         compoundTag.putBoolean("lushDecorations", this.config.decorationChances.lushDecorations);
+        compoundTag.putBoolean("dripstoneDecorations", this.config.decorationChances.dripstoneDecorations);
         compoundTag.putInt("mainBlockId", Block.BLOCK_STATE_REGISTRY.getId(this.config.blockStates.mainBlockState));
         compoundTag.putInt("supportBlockId", Block.BLOCK_STATE_REGISTRY.getId(this.config.blockStates.supportBlockState));
         compoundTag.putInt("slabBlockId", Block.BLOCK_STATE_REGISTRY.getId(this.config.blockStates.slabBlockState));
@@ -191,6 +195,16 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
                         // Moss layers
                         if (stateBelow.is(config.blockStates.mainBlockState.getBlock()) && state.isAir() && stateBelow.isFaceSturdy(world, blockPos.below(), Direction.UP)) {
                             this.placeBlock(world, Blocks.MOSS_CARPET.defaultBlockState(), x, y, z, box);
+                        }
+                    }
+
+                    if (config.decorationChances.dripstoneDecorations) {
+                        if (box.isInside(blockPos) && random.nextFloat() < .02f) {
+                            CaveFeatures.DRIPSTONE_CLUSTER.value().place(world, world.getLevel().getChunkSource().getGenerator(), random, blockPos);
+                        }
+
+                        if (box.isInside(blockPos) && random.nextFloat() < .02f) {
+                            CaveFeatures.POINTED_DRIPSTONE.value().place(world, world.getLevel().getChunkSource().getGenerator(), random, blockPos);
                         }
                     }
 
@@ -360,7 +374,9 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
                 for (int z = minZ; z <= maxZ; ++z) {
                     // Don't allow overwriting placed chains
                     if (this.getBlock(world, x, y, z, boundingBox) == Blocks.CHAIN.defaultBlockState()) continue;
-                    this.placeBlock(world, blockState, x, y, z, boundingBox);
+                    if (blockState.canSurvive(world, this.getWorldPos(x, y, z))) {
+                        this.placeBlock(world, blockState, x, y, z, boundingBox);
+                    }
                 }
             }
         }
@@ -375,7 +391,10 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
                 for (int z = minZ; z <= maxZ; ++z) {
                     // Don't allow overwriting placed chains
                     if (this.getBlock(world, x, y, z, boundingBox) == Blocks.CHAIN.defaultBlockState()) continue;
-                    this.placeBlock(world, selector.get(random), x, y, z, boundingBox);
+                    BlockState blockState = selector.get(random);
+                    if (blockState.canSurvive(world, this.getWorldPos(x, y, z))) {
+                        this.placeBlock(world, blockState, x, y, z, boundingBox);
+                    }
                 }
             }
         }
@@ -390,7 +409,9 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
                 for (int z = minZ; z <= maxZ; ++z) {
                     BlockState currState = this.getBlockAtFixed(world, x, y, z, boundingBox);
                     if (currState != null && (currState.isAir() || currState == Blocks.CHAIN.defaultBlockState())) {
-                        this.placeBlock(world, blockState, x, y, z, boundingBox);
+                        if (blockState.canSurvive(world, this.getWorldPos(x, y, z))) {
+                            this.placeBlock(world, blockState, x, y, z, boundingBox);
+                        }
                     }
                 }
             }
@@ -406,7 +427,10 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
                 for (int z = minZ; z <= maxZ; ++z) {
                     BlockState currState = this.getBlockAtFixed(world, x, y, z, boundingBox);
                     if (currState != null && (currState.isAir() || currState == Blocks.CHAIN.defaultBlockState())) {
-                        this.placeBlock(world, selector.get(random), x, y, z, boundingBox);
+                        BlockState blockState = selector.get(random);
+                        if (blockState.canSurvive(world, this.getWorldPos(x, y, z))) {
+                            this.placeBlock(world, blockState, x, y, z, boundingBox);
+                        }
                     }
                 }
             }
@@ -436,7 +460,7 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
         for (int x = minX; x <= maxX; ++x) {
             for (int y = minY; y <= maxY; ++y) {
                 for (int z = minZ; z <= maxZ; ++z) {
-                    if (random.nextFloat() < chance) {
+                    if (random.nextFloat() < chance && blockState.canSurvive(world, this.getWorldPos(x, y, z))) {
                         this.placeBlock(world, blockState, x, y, z, boundingBox);
                     }
                 }
@@ -549,7 +573,7 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     protected void chanceAddBlock(WorldGenLevel world, Random random, float chance, BlockState block, int x, int y, int z, BoundingBox boundingBox) {
-        if (random.nextFloat() < chance) {
+        if (random.nextFloat() < chance && block.canSurvive(world, this.getWorldPos(x, y, z))) {
             this.placeBlock(world, block, x, y, z, boundingBox);
         }
     }

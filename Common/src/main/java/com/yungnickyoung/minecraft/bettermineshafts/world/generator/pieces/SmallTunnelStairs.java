@@ -98,11 +98,11 @@ public class SmallTunnelStairs extends BetterMineshaftPiece {
 
             // Place rails
             if (i == 0) {
-                this.placeBlock(world, Blocks.POWERED_RAIL.defaultBlockState().setValue(PoweredRailBlock.POWERED, true).setValue(PoweredRailBlock.SHAPE, RailShape.ASCENDING_NORTH), 2, i + 1, i, box);
+                this.chanceAddBlock(world, random, 0.5f, Blocks.POWERED_RAIL.defaultBlockState().setValue(PoweredRailBlock.POWERED, true).setValue(PoweredRailBlock.SHAPE, RailShape.ASCENDING_NORTH), 2, i + 1, i, box);
             } else if (i == 4) {
-                this.placeBlock(world, Blocks.RAIL.defaultBlockState().setValue(RailBlock.SHAPE, RailShape.NORTH_SOUTH), 2, i + 1, i, box);
+                this.chanceAddBlock(world, random, 0.5f, Blocks.RAIL.defaultBlockState().setValue(RailBlock.SHAPE, RailShape.NORTH_SOUTH), 2, i + 1, i, box);
             } else {
-                this.placeBlock(world, Blocks.RAIL.defaultBlockState().setValue(RailBlock.SHAPE, RailShape.ASCENDING_NORTH), 2, i + 1, i, box);
+                this.chanceAddBlock(world, random, 0.5f, Blocks.RAIL.defaultBlockState().setValue(RailBlock.SHAPE, RailShape.ASCENDING_NORTH), 2, i + 1, i, box);
             }
         }
 

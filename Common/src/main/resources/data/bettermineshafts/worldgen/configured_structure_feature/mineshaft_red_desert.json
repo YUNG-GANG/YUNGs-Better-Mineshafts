@@ -10,7 +10,9 @@
       "cactusChance": 0.1,
       "deadBushChance": 0.1,
       "mushroomChance": 0,
-      "lushDecorations": false
+      "gravelPileChance": 0.2,
+      "lushDecorations": false,
+      "dripstoneDecorations": false
     },
     "blockStates": {
       "mainBlockState": {
