@@ -2,9 +2,6 @@ package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
 import com.yungnickyoung.minecraft.bettermineshafts.world.BetterMineshaftStructureFeature;
 import com.yungnickyoung.minecraft.bettermineshafts.world.config.BetterMineshaftFeatureConfiguration;
-import com.yungnickyoung.minecraft.bettermineshafts.world.config.MineshaftBlockStates;
-import com.yungnickyoung.minecraft.bettermineshafts.world.config.MineshaftBlockstateRandomizers;
-import com.yungnickyoung.minecraft.bettermineshafts.world.config.MineshaftDecorationChances;
 import com.yungnickyoung.minecraft.yungsapi.world.BlockStateRandomizer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -48,14 +45,14 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
                 compoundTag.getBoolean("flammableLegs"),
                 compoundTag.getFloat("replacementRate"),
                 BetterMineshaftStructureFeature.LegVariant.byId(compoundTag.getInt("legVariantIndex")),
-                new MineshaftDecorationChances(
+                new BetterMineshaftFeatureConfiguration.MineshaftDecorationChances(
                         compoundTag.getFloat("vineChance"),
                         compoundTag.getFloat("snowChance"),
                         compoundTag.getFloat("cactusChance"),
                         compoundTag.getFloat("deadBushChance"),
                         compoundTag.getFloat("mushroomChance"),
                         compoundTag.getBoolean("lushDecorations")),
-                new MineshaftBlockStates(
+                new BetterMineshaftFeatureConfiguration.MineshaftBlockStates(
                         Block.BLOCK_STATE_REGISTRY.byId(compoundTag.getInt("mainBlockId")),
                         Block.BLOCK_STATE_REGISTRY.byId(compoundTag.getInt("supportBlockId")),
                         Block.BLOCK_STATE_REGISTRY.byId(compoundTag.getInt("slabBlockId")),
@@ -64,7 +61,7 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
                         Block.BLOCK_STATE_REGISTRY.byId(compoundTag.getInt("stoneSlabBlockId")),
                         Block.BLOCK_STATE_REGISTRY.byId(compoundTag.getInt("trapdoorBlockId")),
                         Block.BLOCK_STATE_REGISTRY.byId(compoundTag.getInt("smallLegBlockId"))),
-                new MineshaftBlockstateRandomizers(
+                new BetterMineshaftFeatureConfiguration.MineshaftBlockstateRandomizers(
                         new BlockStateRandomizer(compoundTag.getCompound("mainSelector")),
                         new BlockStateRandomizer(compoundTag.getCompound("floorSelector")),
                         new BlockStateRandomizer(compoundTag.getCompound("brickSelector")),
