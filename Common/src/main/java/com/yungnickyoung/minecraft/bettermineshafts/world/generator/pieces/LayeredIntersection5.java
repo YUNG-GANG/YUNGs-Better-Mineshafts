@@ -119,12 +119,12 @@ public class LayeredIntersection5 extends BetterMineshaftPiece {
         this.replaceAirOrChains(world, box, 0, 0, 0, LOCAL_X_END, 0, LOCAL_Z_END - 1, config.blockStates.mainBlockState);
 
         // First floor rails
-        this.chanceAddBlock(world, random, .5f, Blocks.RAIL.defaultBlockState().setValue(RailBlock.SHAPE, RailShape.NORTH_SOUTH), 2, 1, 0, box);
-        this.chanceAddBlock(world, random, .5f, Blocks.RAIL.defaultBlockState().setValue(RailBlock.SHAPE, RailShape.NORTH_SOUTH), 2, 1, 1, box);
-        this.chanceAddBlock(world, random, .5f, Blocks.RAIL.defaultBlockState().setValue(RailBlock.SHAPE, RailShape.EAST_WEST), 0, 1, 2, box);
-        this.chanceAddBlock(world, random, .5f, Blocks.RAIL.defaultBlockState().setValue(RailBlock.SHAPE, RailShape.EAST_WEST), 1, 1, 2, box);
-        this.chanceAddBlock(world, random, .5f, Blocks.RAIL.defaultBlockState().setValue(RailBlock.SHAPE, RailShape.EAST_WEST), 3, 1, 2, box);
-        this.chanceAddBlock(world, random, .5f, Blocks.RAIL.defaultBlockState().setValue(RailBlock.SHAPE, RailShape.EAST_WEST), 4, 1, 2, box);
+        this.chanceReplaceAir(world, random, .5f, Blocks.RAIL.defaultBlockState().setValue(RailBlock.SHAPE, RailShape.NORTH_SOUTH), 2, 1, 0, box);
+        this.chanceReplaceAir(world, random, .5f, Blocks.RAIL.defaultBlockState().setValue(RailBlock.SHAPE, RailShape.NORTH_SOUTH), 2, 1, 1, box);
+        this.chanceReplaceAir(world, random, .5f, Blocks.RAIL.defaultBlockState().setValue(RailBlock.SHAPE, RailShape.EAST_WEST), 0, 1, 2, box);
+        this.chanceReplaceAir(world, random, .5f, Blocks.RAIL.defaultBlockState().setValue(RailBlock.SHAPE, RailShape.EAST_WEST), 1, 1, 2, box);
+        this.chanceReplaceAir(world, random, .5f, Blocks.RAIL.defaultBlockState().setValue(RailBlock.SHAPE, RailShape.EAST_WEST), 3, 1, 2, box);
+        this.chanceReplaceAir(world, random, .5f, Blocks.RAIL.defaultBlockState().setValue(RailBlock.SHAPE, RailShape.EAST_WEST), 4, 1, 2, box);
 
         // Second floor bottom
         this.fill(world, box, 0, 5, 0, LOCAL_X_END, 5, LOCAL_Z_END, config.blockStates.mainBlockState);

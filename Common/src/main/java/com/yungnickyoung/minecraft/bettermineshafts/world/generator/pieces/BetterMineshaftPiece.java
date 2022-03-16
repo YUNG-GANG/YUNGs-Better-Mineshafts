@@ -578,6 +578,12 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
         }
     }
 
+    protected void chanceReplaceAir(WorldGenLevel world, Random random, float chance, BlockState block, int x, int y, int z, BoundingBox boundingBox) {
+        if (random.nextFloat() < chance && block.canSurvive(world, this.getWorldPos(x, y, z)) && block.is(Blocks.AIR) || block.is(Blocks.CAVE_AIR)) {
+            this.placeBlock(world, block, x, y, z, boundingBox);
+        }
+    }
+
     /**
      * My "fixed" version of getBlock that returns null instead of air if block is out of bounds
      *

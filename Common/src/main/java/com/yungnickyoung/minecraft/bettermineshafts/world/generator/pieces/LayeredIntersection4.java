@@ -145,13 +145,13 @@ public class LayeredIntersection4 extends BetterMineshaftPiece {
         this.placeBlock(world, config.blockStates.mainBlockState, 3, 2, 6, box);
 
         // Bottom rails
-        this.chanceAddBlock(world, random, .5f, Blocks.RAIL.defaultBlockState().setValue(BlockStateProperties.RAIL_SHAPE, RailShape.ASCENDING_SOUTH), 3, 3, 0, box);
-        this.chanceAddBlock(world, random, .5f, Blocks.RAIL.defaultBlockState().setValue(BlockStateProperties.RAIL_SHAPE, RailShape.ASCENDING_SOUTH), 3, 2, 1, box);
-        this.chanceAddBlock(world, random, .5f, Blocks.RAIL.defaultBlockState().setValue(BlockStateProperties.RAIL_SHAPE, RailShape.ASCENDING_SOUTH), 3, 1, 2, box);
-        this.chanceAddBlock(world, random, .5f, Blocks.POWERED_RAIL.defaultBlockState().setValue(BlockStateProperties.RAIL_SHAPE_STRAIGHT, RailShape.NORTH_SOUTH).setValue(BlockStateProperties.POWERED, true), 3, 1, 3, box);
-        this.chanceAddBlock(world, random, .5f, Blocks.RAIL.defaultBlockState().setValue(BlockStateProperties.RAIL_SHAPE, RailShape.ASCENDING_NORTH), 3, 1, 4, box);
-        this.chanceAddBlock(world, random, .5f, Blocks.RAIL.defaultBlockState().setValue(BlockStateProperties.RAIL_SHAPE, RailShape.ASCENDING_NORTH), 3, 2, 5, box);
-        this.chanceAddBlock(world, random, .5f, Blocks.RAIL.defaultBlockState().setValue(BlockStateProperties.RAIL_SHAPE, RailShape.ASCENDING_NORTH), 3, 3, 6, box);
+        this.chanceReplaceAir(world, random, .5f, Blocks.RAIL.defaultBlockState().setValue(BlockStateProperties.RAIL_SHAPE, RailShape.ASCENDING_SOUTH), 3, 3, 0, box);
+        this.chanceReplaceAir(world, random, .5f, Blocks.RAIL.defaultBlockState().setValue(BlockStateProperties.RAIL_SHAPE, RailShape.ASCENDING_SOUTH), 3, 2, 1, box);
+        this.chanceReplaceAir(world, random, .5f, Blocks.RAIL.defaultBlockState().setValue(BlockStateProperties.RAIL_SHAPE, RailShape.ASCENDING_SOUTH), 3, 1, 2, box);
+        this.chanceReplaceAir(world, random, .5f, Blocks.POWERED_RAIL.defaultBlockState().setValue(BlockStateProperties.RAIL_SHAPE_STRAIGHT, RailShape.NORTH_SOUTH).setValue(BlockStateProperties.POWERED, true), 3, 1, 3, box);
+        this.chanceReplaceAir(world, random, .5f, Blocks.RAIL.defaultBlockState().setValue(BlockStateProperties.RAIL_SHAPE, RailShape.ASCENDING_NORTH), 3, 1, 4, box);
+        this.chanceReplaceAir(world, random, .5f, Blocks.RAIL.defaultBlockState().setValue(BlockStateProperties.RAIL_SHAPE, RailShape.ASCENDING_NORTH), 3, 2, 5, box);
+        this.chanceReplaceAir(world, random, .5f, Blocks.RAIL.defaultBlockState().setValue(BlockStateProperties.RAIL_SHAPE, RailShape.ASCENDING_NORTH), 3, 3, 6, box);
 
         // Top wood
         this.fill(world, box, 0, 3, 2, 1, 3, 4, config.blockStates.mainBlockState);
@@ -159,11 +159,11 @@ public class LayeredIntersection4 extends BetterMineshaftPiece {
         this.fill(world, box, 5, 3, 2, 6, 3, 4, config.blockStates.mainBlockState);
 
         // Top rails
-        this.chanceAddBlock(world, random, .5f, Blocks.POWERED_RAIL.defaultBlockState().setValue(PoweredRailBlock.SHAPE, RailShape.EAST_WEST).setValue(PoweredRailBlock.POWERED, true), 0, 4, 3, box);
-        this.chanceAddBlock(world, random, .5f, Blocks.RAIL.defaultBlockState().setValue(RailBlock.SHAPE, RailShape.ASCENDING_EAST), 1, 4, 3, box);
+        this.chanceReplaceAir(world, random, .5f, Blocks.POWERED_RAIL.defaultBlockState().setValue(PoweredRailBlock.SHAPE, RailShape.EAST_WEST).setValue(PoweredRailBlock.POWERED, true), 0, 4, 3, box);
+        this.chanceReplaceAir(world, random, .5f, Blocks.RAIL.defaultBlockState().setValue(RailBlock.SHAPE, RailShape.ASCENDING_EAST), 1, 4, 3, box);
         this.chanceFill(world, box, random, .5f, 2, 5, 3, 4, 5, 3, Blocks.RAIL.defaultBlockState().setValue(RailBlock.SHAPE, RailShape.EAST_WEST));
-        this.chanceAddBlock(world, random, .5f, Blocks.RAIL.defaultBlockState().setValue(RailBlock.SHAPE, RailShape.ASCENDING_WEST), 5, 4, 3, box);
-        this.chanceAddBlock(world, random, .5f, Blocks.POWERED_RAIL.defaultBlockState().setValue(PoweredRailBlock.SHAPE, RailShape.EAST_WEST).setValue(PoweredRailBlock.POWERED, true), 6, 4, 3, box);
+        this.chanceReplaceAir(world, random, .5f, Blocks.RAIL.defaultBlockState().setValue(RailBlock.SHAPE, RailShape.ASCENDING_WEST), 5, 4, 3, box);
+        this.chanceReplaceAir(world, random, .5f, Blocks.POWERED_RAIL.defaultBlockState().setValue(PoweredRailBlock.SHAPE, RailShape.EAST_WEST).setValue(PoweredRailBlock.POWERED, true), 6, 4, 3, box);
 
         // Decorations
         this.addBiomeDecorations(world, box, random, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END - 1, LOCAL_Z_END);
