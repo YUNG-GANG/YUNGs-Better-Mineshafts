@@ -44,11 +44,6 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
 
     public BetterMineshaftPiece(StructurePieceType structurePieceType, CompoundTag compoundTag) {
         super(structurePieceType, compoundTag);
-//        int index = compoundTag.getInt("MST");
-//        this.config = legVariantIndex < MineshaftVariants.get().getVariants().size() && index >= 0
-//                ? MineshaftVariants.get().getVariants().get(index)
-//                : MineshaftVariants.get().getDefault();
-
         this.config = new BetterMineshaftFeatureConfiguration(
                 compoundTag.getBoolean("flammableLegs"),
                 compoundTag.getFloat("replacementRate"),
@@ -78,9 +73,6 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
 
     @Override
     protected void addAdditionalSaveData(StructurePieceSerializationContext structurePieceSerializationContext, CompoundTag compoundTag) {
-//        int index = MineshaftVariants.get().getVariants().indexOf(this.config);
-//        compoundTag.putInt("MST", index);
-
         compoundTag.putBoolean("flammableLegs", this.config.flammableLegs);
         compoundTag.putFloat("replacementRate", this.config.replacementRate);
         compoundTag.putInt("legVariantIndex", config.legVariant.ordinal());
