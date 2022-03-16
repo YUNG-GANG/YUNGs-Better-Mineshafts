@@ -19,7 +19,7 @@ public class BetterMineshaftGenerator {
         int rand = random.nextInt(100);
         BetterMineshaftFeatureConfiguration config = ((BetterMineshaftPiece) structurePiece).config;
 
-        if (rand >= 10 || chainLength < 1) {
+        if (rand >= 10 || chainLength < 2) {
             BoundingBox boundingBox = BigTunnel.determineBoxPosition(x, y, z, direction);
             BetterMineshaftPiece newPiece = new BigTunnel(chainLength + 1, random, boundingBox, direction, config);
             structurePieceAccessor.addPiece(newPiece);

@@ -102,7 +102,6 @@ public class BetterMineshaftFeatureConfiguration implements FeatureConfiguration
         }
     }
 
-
     public static class MineshaftBlockstateRandomizers {
         public static final Codec<MineshaftBlockstateRandomizers> CODEC = RecordCodecBuilder.create((instance) -> instance
                 .group(
