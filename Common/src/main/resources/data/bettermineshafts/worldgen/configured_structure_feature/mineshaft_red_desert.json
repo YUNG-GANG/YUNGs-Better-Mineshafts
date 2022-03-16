@@ -1,0 +1,183 @@
+{
+  "type": "bettermineshafts:mineshaft",
+  "config": {
+    "flammableLegs": false,
+    "replacementRate": 0.6,
+    "legVariant": "edge",
+    "decorationChances": {
+      "vineChance": 0,
+      "snowChance": 0,
+      "cactusChance": 0.1,
+      "deadBushChance": 0.1,
+      "mushroomChance": 0,
+      "lushDecorations": false
+    },
+    "blockStates": {
+      "mainBlockState": {
+        "Name": "minecraft:red_sandstone"
+      },
+      "supportBlockState": {
+        "Name": "minecraft:red_sandstone_wall"
+      },
+      "slabBlockState": {
+        "Name": "minecraft:red_sandstone_slab"
+      },
+      "gravelBlockState": {
+        "Name": "minecraft:red_sand"
+      },
+      "stoneWallBlockState": {
+        "Name": "minecraft:red_sandstone_wall"
+      },
+      "stoneSlabBlockState": {
+        "Name": "minecraft:red_sandstone_slab"
+      },
+      "trapdoorBlockState": {
+        "Name": "minecraft:dark_oak_trapdoor"
+      },
+      "smallLegBlockState": {
+        "Name": "minecraft:smooth_red_sandstone"
+      }
+    },
+    "blockStateRandomizers": {
+      "mainRandomizer": {
+        "defaultBlockState": {
+          "Name": "minecraft:red_sandstone"
+        },
+        "entries": [
+          {
+            "blockState": {
+              "Name": "minecraft:chiseled_red_sandstone"
+            },
+            "probability": 0.1
+          },
+          {
+            "blockState": {
+              "Name": "minecraft:cut_red_sandstone"
+            },
+            "probability": 0.1
+          },
+          {
+            "blockState": {
+              "Name": "minecraft:smooth_red_sandstone"
+            },
+            "probability": 0.1
+          },
+          {
+            "blockState": {
+              "Name": "minecraft:stone_bricks"
+            },
+            "probability": 0.05
+          },
+          {
+            "blockState": {
+              "Name": "minecraft:cracked_stone_bricks"
+            },
+            "probability": 0.05
+          },
+          {
+            "blockState": {
+              "Name": "minecraft:cave_air"
+            },
+            "probability": 0.2
+          }
+        ]
+      },
+      "floorRandomizer": {
+        "defaultBlockState": {
+          "Name": "minecraft:red_sandstone"
+        },
+        "entries": [
+          {
+            "blockState": {
+              "Name": "minecraft:red_sand"
+            },
+            "probability": 0.3
+          },
+          {
+            "blockState": {
+              "Name": "minecraft:chiseled_red_sandstone"
+            },
+            "probability": 0.1
+          },
+          {
+            "blockState": {
+              "Name": "minecraft:cut_red_sandstone"
+            },
+            "probability": 0.1
+          },
+          {
+            "blockState": {
+              "Name": "minecraft:smooth_red_sandstone"
+            },
+            "probability": 0.1
+          },
+          {
+            "blockState": {
+              "Name": "minecraft:stone_bricks"
+            },
+            "probability": 0.05
+          },
+          {
+            "blockState": {
+              "Name": "minecraft:cracked_stone_bricks"
+            },
+            "probability": 0.05
+          }
+        ]
+      },
+      "brickRandomizer": {
+        "defaultBlockState": {
+          "Name": "minecraft:red_sandstone"
+        },
+        "entries": [
+          {
+            "blockState": {
+              "Name": "minecraft:chiseled_red_sandstone"
+            },
+            "probability": 0.1
+          },
+          {
+            "blockState": {
+              "Name": "minecraft:cut_red_sandstone"
+            },
+            "probability": 0.2
+          },
+          {
+            "blockState": {
+              "Name": "minecraft:smooth_red_sandstone"
+            },
+            "probability": 0.2
+          }
+        ]
+      },
+      "legRandomizer": {
+        "defaultBlockState": {
+          "Name": "minecraft:red_sandstone"
+        },
+        "entries": [
+          {
+            "blockState": {
+              "Name": "minecraft:chiseled_red_sandstone"
+            },
+            "probability": 0.1
+          },
+          {
+            "blockState": {
+              "Name": "minecraft:cut_red_sandstone"
+            },
+            "probability": 0.2
+          },
+          {
+            "blockState": {
+              "Name": "minecraft:smooth_red_sandstone"
+            },
+            "probability": 0.2
+          }
+        ]
+      }
+    }
+  },
+  "biomes": "#bettermineshafts:has_structure/has_mineshaft_red_desert",
+  "adapt_noise": false,
+  "spawn_overrides": {}
+}

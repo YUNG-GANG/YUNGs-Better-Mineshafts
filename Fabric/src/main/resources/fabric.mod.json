@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "bettermineshafts",
+  "version": "${version}",
+  "name": "YUNG's Better Mineshafts",
+  "description": "The long-awaited and much-needed abandoned mineshaft overhaul!",
+  "authors": [
+    "YUNGNICKYOUNG"
+  ],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/yungs-better-mineshafts-fabric",
+    "sources": "https://github.com/yungnickyoung/YUNGs-Better-Mineshafts",
+    "issues": "https://github.com/yungnickyoung/YUNGs-Better-Mineshafts/issues",
+    "discord": "discord.gg/rns3beq"
+  },
+  "license": "LGPLv3",
+  "icon": "icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.yungnickyoung.minecraft.bettermineshafts.BetterMineshaftsFabric"
+    ],
+    "modmenu": [
+      "com.yungnickyoung.minecraft.bettermineshafts.config.gui.BMModMenu"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.13.3",
+    "fabric": ">=0.47.8",
+    "minecraft": ">=1.18.2",
+    "cloth-config2": ">=6.2.57",
+    "java": ">=17",
+    "yungsapi": ">=1.18.2-Fabric-2.0.3"
+  },
+  "mixins": [
+    "bettermineshafts.mixins.json",
+    "bettermineshafts_fabric.mixins.json"
+  ]
+}

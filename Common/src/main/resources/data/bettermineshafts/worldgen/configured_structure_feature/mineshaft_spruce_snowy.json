@@ -1,0 +1,152 @@
+{
+  "type": "bettermineshafts:mineshaft",
+  "config": {
+    "flammableLegs": true,
+    "replacementRate": 0.9,
+    "legVariant": "edge",
+    "decorationChances": {
+      "vineChance": 0,
+      "snowChance": 1,
+      "cactusChance": 0,
+      "deadBushChance": 0,
+      "mushroomChance": 0,
+      "lushDecorations": false
+    },
+    "blockStates": {
+      "mainBlockState": {
+        "Name": "minecraft:spruce_planks"
+      },
+      "supportBlockState": {
+        "Name": "minecraft:spruce_fence"
+      },
+      "slabBlockState": {
+        "Name": "minecraft:spruce_slab"
+      },
+      "gravelBlockState": {
+        "Name": "minecraft:snow_block"
+      },
+      "stoneWallBlockState": {
+        "Name": "minecraft:stone_brick_wall"
+      },
+      "stoneSlabBlockState": {
+        "Name": "minecraft:stone_brick_slab"
+      },
+      "trapdoorBlockState": {
+        "Name": "minecraft:spruce_trapdoor"
+      },
+      "smallLegBlockState": {
+        "Name": "minecraft:stripped_spruce_log",
+        "Properties": {
+          "axis": "y"
+        }
+      }
+    },
+    "blockStateRandomizers": {
+      "mainRandomizer": {
+        "defaultBlockState": {
+          "Name": "minecraft:spruce_planks"
+        },
+        "entries": [
+          {
+            "blockState": {
+              "Name": "minecraft:cobblestone"
+            },
+            "probability": 0.05
+          },
+          {
+            "blockState": {
+              "Name": "minecraft:snow_block"
+            },
+            "probability": 0.25
+          },
+          {
+            "blockState": {
+              "Name": "minecraft:packed_ice"
+            },
+            "probability": 0.2
+          },
+          {
+            "blockState": {
+              "Name": "minecraft:cracked_stone_bricks"
+            },
+            "probability": 0.1
+          },
+          {
+            "blockState": {
+              "Name": "minecraft:cave_air"
+            },
+            "probability": 0.2
+          }
+        ]
+      },
+      "floorRandomizer": {
+        "defaultBlockState": {
+          "Name": "minecraft:spruce_planks"
+        },
+        "entries": [
+          {
+            "blockState": {
+              "Name": "minecraft:cobblestone"
+            },
+            "probability": 0.05
+          },
+          {
+            "blockState": {
+              "Name": "minecraft:snow_block"
+            },
+            "probability": 0.25
+          },
+          {
+            "blockState": {
+              "Name": "minecraft:packed_ice"
+            },
+            "probability": 0.2
+          },
+          {
+            "blockState": {
+              "Name": "minecraft:cracked_stone_bricks"
+            },
+            "probability": 0.1
+          }
+        ]
+      },
+      "brickRandomizer": {
+        "defaultBlockState": {
+          "Name": "minecraft:stone_bricks"
+        },
+        "entries": [
+          {
+            "blockState": {
+              "Name": "minecraft:stone_bricks"
+            },
+            "probability": 0.333
+          },
+          {
+            "blockState": {
+              "Name": "minecraft:mossy_stone_bricks"
+            },
+            "probability": 0.333
+          },
+          {
+            "blockState": {
+              "Name": "minecraft:cracked_stone_bricks"
+            },
+            "probability": 0.333
+          }
+        ]
+      },
+      "legRandomizer": {
+        "defaultBlockState": {
+          "Name": "minecraft:stripped_spruce_log",
+          "Properties": {
+            "axis": "y"
+          }
+        },
+        "entries": []
+      }
+    }
+  },
+  "biomes": "#bettermineshafts:has_structure/has_mineshaft_spruce_snowy",
+  "adapt_noise": false,
+  "spawn_overrides": {}
+}

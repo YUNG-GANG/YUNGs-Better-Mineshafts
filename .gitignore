@@ -1,31 +1,27 @@
 # gradle
-
 .gradle/
 build/
 out/
 classes/
 
 # eclipse
-
 *.launch
 
 # idea
-
-.idea/
+.idea/*
+!.idea/scopes
 *.iml
 *.ipr
 *.iws
 
 # vscode
-
 .settings/
 .vscode/
 bin/
 .classpath
 .project
 
-# fabric
-
+# other
 run/
 logs/
 libs/

@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.yungnickyoung.minecraft.bettermineshafts.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "bettermineshafts.refmap.json",
+  "mixins": [
+    "DisableVanillaMineshaftsMixinForge"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

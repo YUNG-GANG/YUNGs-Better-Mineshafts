@@ -1,0 +1,54 @@
+{
+  "structures": [
+    {
+      "structure": "bettermineshafts:mineshaft_acacia",
+      "weight": 1
+    },
+    {
+      "structure": "bettermineshafts:mineshaft_desert",
+      "weight": 1
+    },
+    {
+      "structure": "bettermineshafts:mineshaft_ice",
+      "weight": 1
+    },
+    {
+      "structure": "bettermineshafts:mineshaft_jungle",
+      "weight": 1
+    },
+    {
+      "structure": "bettermineshafts:mineshaft_lush",
+      "weight": 1
+    },
+    {
+      "structure": "bettermineshafts:mineshaft_mesa",
+      "weight": 1
+    },
+    {
+      "structure": "bettermineshafts:mineshaft_mushroom",
+      "weight": 1
+    },
+    {
+      "structure": "bettermineshafts:mineshaft_oak",
+      "weight": 1
+    },
+    {
+      "structure": "bettermineshafts:mineshaft_red_desert",
+      "weight": 1
+    },
+    {
+      "structure": "bettermineshafts:mineshaft_spruce",
+      "weight": 1
+    },
+    {
+      "structure": "bettermineshafts:mineshaft_spruce_snowy",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "salt": 593751784,
+    "spacing": 1,
+    "separation": 0,
+    "type": "minecraft:random_spread"
+  }
+}
