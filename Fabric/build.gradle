@@ -8,6 +8,7 @@ version = "${minecraft_version}-Fabric-${version}"
 group = maven_group
 
 repositories {
+    mavenCentral()
     maven { url "https://maven.fabricmc.net" }
     maven { url "https://maven.shedaniel.me/" }
     maven { url "https://maven.terraformersmc.com/releases/" }
@@ -27,10 +28,12 @@ dependencies {
     modImplementation ("com.terraformersmc:modmenu:${project.modmenu_version_fabric}") { transitive = false }
 
     implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
-    implementation project(":Common")
+    compileOnly project(":Common")
 }
 
 loom {
+    mixin.defaultRefmapName = "${mod_id}.refmap.json"
+
     runs {
         client {
             client()
@@ -46,7 +49,6 @@ loom {
         }
     }
 }
-
 
 processResources {
     from project(":Common").sourceSets.main.resources
