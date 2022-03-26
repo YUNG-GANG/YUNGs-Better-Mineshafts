@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(ChunkGenerator.class)
 public class DisableVanillaMineshaftsMixinForge {
     @Inject(method = "tryGenerateStructure", at = @At(value = "HEAD"), cancellable = true)
-    void disableVanillaStrongholds(StructureSet.StructureSelectionEntry structureSetEntry,
+    void disableVanillaMineshafts(StructureSet.StructureSelectionEntry structureSetEntry,
                                    StructureFeatureManager structureFeatureManager,
                                    RegistryAccess registryAccess,
                                    StructureManager structureManager,
