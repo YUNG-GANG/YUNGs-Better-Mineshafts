@@ -148,7 +148,11 @@ public class SideRoom extends BetterMineshaftPiece {
         // Entrance to spider lair
         if (this.hasDownstairs) {
             this.placeBlock(world, Blocks.LADDER.defaultBlockState().setValue(LadderBlock.FACING, Direction.NORTH), 6, 0, 1, box);
-            this.placeBlock(world, config.blockStates.trapdoorBlockState.setValue(TrapDoorBlock.FACING, Direction.NORTH), 6, 1, 1, box);
+            BlockState trapdoorBlockState = config.blockStates.trapdoorBlockState;
+            if (trapdoorBlockState.hasProperty(TrapDoorBlock.FACING)) {
+                trapdoorBlockState = trapdoorBlockState.setValue(TrapDoorBlock.FACING, Direction.NORTH);
+            }
+            this.placeBlock(world, trapdoorBlockState, 6, 1, 1, box);
         }
 
         // Decorations
