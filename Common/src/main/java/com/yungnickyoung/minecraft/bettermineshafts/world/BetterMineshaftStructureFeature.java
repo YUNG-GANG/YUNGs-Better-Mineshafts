@@ -63,10 +63,10 @@ public class BetterMineshaftStructureFeature extends StructureFeature<BetterMine
         // Entrypoint
         BetterMineshaftPiece entryPoint = new VerticalEntrance(
                 -1,
-                context.random(),
                 startingPos,
                 direction,
-                context.config()
+                context.config(),
+                context.heightAccessor().getMaxBuildHeight()
         );
 
         structurePiecesBuilder.addPiece(entryPoint);

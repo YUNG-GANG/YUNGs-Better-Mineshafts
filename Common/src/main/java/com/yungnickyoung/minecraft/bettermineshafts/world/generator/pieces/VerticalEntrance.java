@@ -56,8 +56,8 @@ public class VerticalEntrance extends BetterMineshaftPiece {
         this.hasTunnel = compoundTag.getBoolean("hasTunnel");
     }
 
-    public VerticalEntrance(int pieceChainLen, Random random, BlockPos.MutableBlockPos centerPos, Direction direction, BetterMineshaftFeatureConfiguration config) {
-        super(BetterMineshaftStructurePieceType.VERTICAL_ENTRANCE, pieceChainLen, config, getInitialBoundingBox(centerPos));
+    public VerticalEntrance(int pieceChainLen, BlockPos.MutableBlockPos centerPos, Direction direction, BetterMineshaftFeatureConfiguration config, int maxBuildHeight) {
+        super(BetterMineshaftStructurePieceType.VERTICAL_ENTRANCE, pieceChainLen, config, getInitialBoundingBox(centerPos, maxBuildHeight));
         this.setOrientation(direction);
         this.centerPos = centerPos; // position passed in is center of shaft piece (unlike all other pieces, where it is a corner)
     }
@@ -73,8 +73,8 @@ public class VerticalEntrance extends BetterMineshaftPiece {
         compoundTag.putBoolean("hasTunnel", hasTunnel);
     }
 
-    private static BoundingBox getInitialBoundingBox(BlockPos centerPos) {
-        return new BoundingBox(centerPos.getX() - 24, centerPos.getY(), centerPos.getZ() - 24, centerPos.getX() + 24, 256, centerPos.getZ() + 24);
+    private static BoundingBox getInitialBoundingBox(BlockPos centerPos, int maxBuildHeight) {
+        return new BoundingBox(centerPos.getX() - 24, centerPos.getY(), centerPos.getZ() - 24, centerPos.getX() + 24, maxBuildHeight, centerPos.getZ() + 24);
     }
 
     @Override
