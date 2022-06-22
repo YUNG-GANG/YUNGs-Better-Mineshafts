@@ -1,0 +1,154 @@
+{
+  "type": "bettermineshafts:mineshaft",
+  "biomes": "#bettermineshafts:has_structure/better_mineshaft_overgrown",
+  "step": "underground_structures",
+  "spawn_overrides": {},
+  "config": {
+    "flammableLegs": true,
+    "replacementRate": 0.95,
+    "legVariant": "edge",
+    "decorationChances": {
+      "vineChance": 0.5,
+      "snowChance": 0,
+      "cactusChance": 0,
+      "deadBushChance": 0,
+      "mushroomChance": 0,
+      "gravelPileChance": 0.8,
+      "lushDecorations": false,
+      "dripstoneDecorations": false
+    },
+    "blockStates": {
+      "mainBlockState": {
+        "Name": "minecraft:spruce_planks"
+      },
+      "supportBlockState": {
+        "Name": "minecraft:spruce_fence"
+      },
+      "slabBlockState": {
+        "Name": "minecraft:spruce_slab"
+      },
+      "gravelBlockState": {
+        "Name": "minecraft:spruce_leaves"
+      },
+      "stoneWallBlockState": {
+        "Name": "minecraft:mossy_cobblestone_wall"
+      },
+      "stoneSlabBlockState": {
+        "Name": "minecraft:mossy_cobblestone_slab"
+      },
+      "trapdoorBlockState": {
+        "Name": "minecraft:oak_trapdoor"
+      },
+      "smallLegBlockState": {
+        "Name": "minecraft:oak_log",
+        "Properties": {
+          "axis": "y"
+        }
+      }
+    },
+    "blockStateRandomizers": {
+      "mainRandomizer": {
+        "defaultBlockState": {
+          "Name": "minecraft:spruce_planks"
+        },
+        "entries": [
+          {
+            "blockState": {
+              "Name": "minecraft:spruce_leaves"
+            },
+            "probability": 0.7
+          },
+          {
+            "blockState": {
+              "Name": "minecraft:oak_log",
+              "Properties": {
+                "axis": "x"
+              }
+            },
+            "probability": 0.05
+          },
+          {
+            "blockState": {
+              "Name": "minecraft:oak_log",
+              "Properties": {
+                "axis": "y"
+              }
+            },
+            "probability": 0.05
+          },
+          {
+            "blockState": {
+              "Name": "minecraft:oak_log",
+              "Properties": {
+                "axis": "z"
+              }
+            },
+            "probability": 0.05
+          }
+        ]
+      },
+      "floorRandomizer": {
+        "defaultBlockState": {
+          "Name": "minecraft:spruce_planks"
+        },
+        "entries": [
+          {
+            "blockState": {
+              "Name": "minecraft:spruce_leaves"
+            },
+            "probability": 0.7
+          },
+          {
+            "blockState": {
+              "Name": "minecraft:oak_log",
+              "Properties": {
+                "axis": "x"
+              }
+            },
+            "probability": 0.05
+          },
+          {
+            "blockState": {
+              "Name": "minecraft:oak_log",
+              "Properties": {
+                "axis": "y"
+              }
+            },
+            "probability": 0.05
+          },
+          {
+            "blockState": {
+              "Name": "minecraft:oak_log",
+              "Properties": {
+                "axis": "z"
+              }
+            },
+            "probability": 0.05
+          }
+        ]
+      },
+      "brickRandomizer": {
+        "defaultBlockState": {
+          "Name": "minecraft:cobblestone"
+        },
+        "entries": [
+          {
+            "blockState": {
+              "Name": "minecraft:mossy_cobblestone"
+            },
+            "probability": 0.5
+          }
+        ]
+      },
+      "legRandomizer": {
+        "defaultBlockState": {
+          "Name": "minecraft:oak_log",
+          "Properties": {
+            "axis": "y"
+          }
+        },
+        "entries": []
+      }
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:plains",
+    "minecraft:sunflower_plains",
+    "minecraft:swamp",
+    "minecraft:meadow",
+    {
+      "id": "terralith:brushland",
+      "required": false
+    },
+    {
+      "id": "projectvibrantjourneys:prairie",
+      "required": false
+    },
+    {
+      "id": "#c:plains",
+      "required": false
+    }
+  ]
+}

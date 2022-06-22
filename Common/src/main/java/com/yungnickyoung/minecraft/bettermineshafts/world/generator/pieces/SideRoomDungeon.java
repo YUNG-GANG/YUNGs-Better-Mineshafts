@@ -1,14 +1,15 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
 import com.yungnickyoung.minecraft.bettermineshafts.mixin.BoundingBoxAccessor;
-import com.yungnickyoung.minecraft.bettermineshafts.world.config.BetterMineshaftFeatureConfiguration;
+import com.yungnickyoung.minecraft.bettermineshafts.world.config.BetterMineshaftConfiguration;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.StructureFeatureManager;
+import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LadderBlock;
@@ -21,8 +22,6 @@ import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.levelgen.structure.StructurePieceAccessor;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
-
-import java.util.Random;
 
 public class SideRoomDungeon extends BetterMineshaftPiece {
     private static final int
@@ -38,7 +37,7 @@ public class SideRoomDungeon extends BetterMineshaftPiece {
         super(BetterMineshaftStructurePieceType.SIDE_ROOM_DUNGEON, compoundTag);
     }
 
-    public SideRoomDungeon(int pieceChainLen, Random random, BoundingBox blockBox, Direction direction, BetterMineshaftFeatureConfiguration config) {
+    public SideRoomDungeon(int pieceChainLen, BoundingBox blockBox, Direction direction, BetterMineshaftConfiguration config) {
         super(BetterMineshaftStructurePieceType.SIDE_ROOM_DUNGEON, pieceChainLen, config, blockBox);
         this.setOrientation(direction);
     }
@@ -48,7 +47,7 @@ public class SideRoomDungeon extends BetterMineshaftPiece {
         super.addAdditionalSaveData(structurePieceSerializationContext, compoundTag);
     }
 
-    public static BoundingBox determineBoxPosition(StructurePieceAccessor structurePieceAccessor, Random random, int x, int y, int z, Direction direction) {
+    public static BoundingBox determineBoxPosition(StructurePieceAccessor structurePieceAccessor, int x, int y, int z, Direction direction) {
         BoundingBox blockBox = new BoundingBox(x, y, z, x, y + Y_AXIS_LEN - 1, z);
 
         switch (direction) {
@@ -83,16 +82,16 @@ public class SideRoomDungeon extends BetterMineshaftPiece {
     }
 
     @Override
-    public void addChildren(StructurePiece structurePiece, StructurePieceAccessor structurePieceAccessor, Random random) {
+    public void addChildren(StructurePiece structurePiece, StructurePieceAccessor structurePieceAccessor, RandomSource randomSource) {
     }
 
     @Override
-    public void postProcess(WorldGenLevel world, StructureFeatureManager structureFeatureManager, ChunkGenerator chunkGenerator, Random random, BoundingBox box, ChunkPos chunkPos, BlockPos blockPos) {
+    public void postProcess(WorldGenLevel world, StructureManager structureManager, ChunkGenerator chunkGenerator, RandomSource randomSource, BoundingBox box, ChunkPos chunkPos, BlockPos blockPos) {
         // Fill with stone then clean out with air
-        this.fill(world, box, random, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, config.blockStateRandomizers.brickRandomizer);
+        this.fill(world, box, randomSource, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END, LOCAL_Z_END, config.blockStateRandomizers.brickRandomizer);
         this.fill(world, box, 1, 1, 1, LOCAL_X_END - 1, LOCAL_Y_END - 1, LOCAL_Z_END - 1, AIR);
 
-        generateLegs(world, random, box);
+        generateLegs(world, randomSource, box);
 
         // Ladders
         BlockState LADDER = Blocks.LADDER.defaultBlockState().setValue(LadderBlock.FACING, Direction.NORTH);
@@ -107,25 +106,25 @@ public class SideRoomDungeon extends BetterMineshaftPiece {
         }
 
         // Cobwebs immediately surrounding chests
-        this.chanceReplaceAir(world, box, random, .9f, 3, 1, 4, 5, 2, 6, Blocks.COBWEB.defaultBlockState());
+        this.chanceReplaceAir(world, box, randomSource, .9f, 3, 1, 4, 5, 2, 6, Blocks.COBWEB.defaultBlockState());
 
         // Fill room randomly with cobwebs
-        this.chanceReplaceAir(world, box, random, .1f, 1, 1, 1, LOCAL_X_END - 1, 2, LOCAL_Z_END, Blocks.COBWEB.defaultBlockState());
+        this.chanceReplaceAir(world, box, randomSource, .1f, 1, 1, 1, LOCAL_X_END - 1, 2, LOCAL_Z_END, Blocks.COBWEB.defaultBlockState());
 
         // Chests
-        this.createChest(world, box, random, 1, 1, LOCAL_Z_END - 1, BuiltInLootTables.ABANDONED_MINESHAFT);
-        if (random.nextInt(2) == 0) { // Chance of second chest
-            this.createChest(world, box, random, LOCAL_X_END - 1, 1, LOCAL_Z_END - 1, BuiltInLootTables.ABANDONED_MINESHAFT);
+        this.createChest(world, box, randomSource, 1, 1, LOCAL_Z_END - 1, BuiltInLootTables.ABANDONED_MINESHAFT);
+        if (randomSource.nextInt(2) == 0) { // Chance of second chest
+            this.createChest(world, box, randomSource, LOCAL_X_END - 1, 1, LOCAL_Z_END - 1, BuiltInLootTables.ABANDONED_MINESHAFT);
         }
 
         // Decorations
-        this.addBiomeDecorations(world, box, random, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END - 1, LOCAL_Z_END);
+        this.addBiomeDecorations(world, box, randomSource, 0, 0, 0, LOCAL_X_END, LOCAL_Y_END - 1, LOCAL_Z_END);
     }
 
-    private void generateLegs(WorldGenLevel world, Random random, BoundingBox box) {
-        generateLeg(world, random, box, 1, 1, config.blockStateRandomizers.brickRandomizer);
-        generateLeg(world, random, box, 1, LOCAL_Z_END - 1, config.blockStateRandomizers.brickRandomizer);
-        generateLeg(world, random, box, LOCAL_X_END - 1, 1, config.blockStateRandomizers.brickRandomizer);
-        generateLeg(world, random, box, LOCAL_X_END - 1, LOCAL_Z_END - 1, config.blockStateRandomizers.brickRandomizer);
+    private void generateLegs(WorldGenLevel world, RandomSource randomSource, BoundingBox box) {
+        generateLeg(world, randomSource, box, 1, 1, config.blockStateRandomizers.brickRandomizer);
+        generateLeg(world, randomSource, box, 1, LOCAL_Z_END - 1, config.blockStateRandomizers.brickRandomizer);
+        generateLeg(world, randomSource, box, LOCAL_X_END - 1, 1, config.blockStateRandomizers.brickRandomizer);
+        generateLeg(world, randomSource, box, LOCAL_X_END - 1, LOCAL_Z_END - 1, config.blockStateRandomizers.brickRandomizer);
     }
 }

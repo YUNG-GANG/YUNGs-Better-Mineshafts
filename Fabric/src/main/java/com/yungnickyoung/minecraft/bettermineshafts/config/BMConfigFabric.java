@@ -4,11 +4,9 @@ import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 
-@Config(name = "bettermineshafts-fabric-1_18")
+@Config(name = "bettermineshafts-fabric-1_19")
 public class BMConfigFabric implements ConfigData {
-    public double mineshaftSpawnRate = .003;
-
-    @ConfigEntry.Gui.Tooltip(count = 2)
+    @ConfigEntry.Gui.Tooltip
     public int minY = -55;
 
     @ConfigEntry.Gui.Tooltip

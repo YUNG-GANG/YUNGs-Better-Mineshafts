@@ -1,14 +1,15 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
-import com.yungnickyoung.minecraft.bettermineshafts.world.config.BetterMineshaftFeatureConfiguration;
+import com.yungnickyoung.minecraft.bettermineshafts.world.config.BetterMineshaftConfiguration;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
 import com.yungnickyoung.minecraft.yungsapi.world.BoundingBoxHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.StructureFeatureManager;
+import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -20,8 +21,6 @@ import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.levelgen.structure.StructurePieceAccessor;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
-
-import java.util.Random;
 
 public class ZombieVillagerRoom extends BetterMineshaftPiece {
     private static final int
@@ -37,7 +36,7 @@ public class ZombieVillagerRoom extends BetterMineshaftPiece {
         super(BetterMineshaftStructurePieceType.ZOMBIE_VILLAGER_ROOM, compoundTag);
     }
 
-    public ZombieVillagerRoom(int chunkPieceLen, Random random, BoundingBox blockBox, Direction direction, BetterMineshaftFeatureConfiguration config) {
+    public ZombieVillagerRoom(int chunkPieceLen, BoundingBox blockBox, Direction direction, BetterMineshaftConfiguration config) {
         super(BetterMineshaftStructurePieceType.ZOMBIE_VILLAGER_ROOM, chunkPieceLen, config, blockBox);
         this.setOrientation(direction);
     }
@@ -47,7 +46,7 @@ public class ZombieVillagerRoom extends BetterMineshaftPiece {
         super.addAdditionalSaveData(structurePieceSerializationContext, compoundTag);
     }
 
-    public static BoundingBox determineBoxPosition(StructurePieceAccessor structurePieceAccessor, Random random, int x, int y, int z, Direction direction) {
+    public static BoundingBox determineBoxPosition(StructurePieceAccessor structurePieceAccessor, int x, int y, int z, Direction direction) {
         BoundingBox blockBox = BoundingBoxHelper.boxFromCoordsWithRotation(x, y, z, SECONDARY_AXIS_LEN, Y_AXIS_LEN, MAIN_AXIS_LEN, direction);
 
         // The following func call returns null if this new blockbox does not intersect with any pieces in the list.
@@ -59,11 +58,11 @@ public class ZombieVillagerRoom extends BetterMineshaftPiece {
     }
 
     @Override
-    public void addChildren(StructurePiece structurePiece, StructurePieceAccessor structurePieceAccessor, Random random) {
+    public void addChildren(StructurePiece structurePiece, StructurePieceAccessor structurePieceAccessor, RandomSource randomSource) {
     }
 
     @Override
-    public void postProcess(WorldGenLevel world, StructureFeatureManager structureFeatureManager, ChunkGenerator chunkGenerator, Random random, BoundingBox box, ChunkPos chunkPos, BlockPos blockPos) {
+    public void postProcess(WorldGenLevel world, StructureManager structureManager, ChunkGenerator chunkGenerator, RandomSource randomSource, BoundingBox box, ChunkPos chunkPos, BlockPos blockPos) {
         // Outermost walls
         this.fill(world, box, 1, 0, 0, 5, 2, 0, Blocks.STONE.defaultBlockState());
         this.fill(world, box, 0, 0, 1, 0, 2, 5, Blocks.STONE.defaultBlockState());
@@ -71,15 +70,15 @@ public class ZombieVillagerRoom extends BetterMineshaftPiece {
         this.fill(world, box, 1, 0, LOCAL_Z_END, 5, 2, LOCAL_Z_END, Blocks.STONE.defaultBlockState());
         // Randomize
         // Cobble
-        this.chanceReplaceNonAir(world, box, random, .4f, 1, 0, 0, 5, 2, 0, Blocks.COBBLESTONE.defaultBlockState());
-        this.chanceReplaceNonAir(world, box, random, .4f, 0, 0, 1, 0, 2, 5, Blocks.COBBLESTONE.defaultBlockState());
-        this.chanceReplaceNonAir(world, box, random, .4f, LOCAL_X_END, 0, 1, LOCAL_X_END, 2, 5, Blocks.COBBLESTONE.defaultBlockState());
-        this.chanceReplaceNonAir(world, box, random, .4f, 1, 0, LOCAL_Z_END, 5, 2, LOCAL_Z_END, Blocks.COBBLESTONE.defaultBlockState());
+        this.chanceReplaceNonAir(world, box, randomSource, .4f, 1, 0, 0, 5, 2, 0, Blocks.COBBLESTONE.defaultBlockState());
+        this.chanceReplaceNonAir(world, box, randomSource, .4f, 0, 0, 1, 0, 2, 5, Blocks.COBBLESTONE.defaultBlockState());
+        this.chanceReplaceNonAir(world, box, randomSource, .4f, LOCAL_X_END, 0, 1, LOCAL_X_END, 2, 5, Blocks.COBBLESTONE.defaultBlockState());
+        this.chanceReplaceNonAir(world, box, randomSource, .4f, 1, 0, LOCAL_Z_END, 5, 2, LOCAL_Z_END, Blocks.COBBLESTONE.defaultBlockState());
         // Stone brick
-        this.chanceReplaceNonAir(world, box, random, .1f, 1, 0, 0, 5, 2, 0, Blocks.STONE_BRICKS.defaultBlockState());
-        this.chanceReplaceNonAir(world, box, random, .1f, 0, 0, 1, 0, 2, 5, Blocks.STONE_BRICKS.defaultBlockState());
-        this.chanceReplaceNonAir(world, box, random, .1f, LOCAL_X_END, 0, 1, LOCAL_X_END, 2, 5, Blocks.STONE_BRICKS.defaultBlockState());
-        this.chanceReplaceNonAir(world, box, random, .1f, 1, 0, LOCAL_Z_END, 5, 2, LOCAL_Z_END, Blocks.STONE_BRICKS.defaultBlockState());
+        this.chanceReplaceNonAir(world, box, randomSource, .1f, 1, 0, 0, 5, 2, 0, Blocks.STONE_BRICKS.defaultBlockState());
+        this.chanceReplaceNonAir(world, box, randomSource, .1f, 0, 0, 1, 0, 2, 5, Blocks.STONE_BRICKS.defaultBlockState());
+        this.chanceReplaceNonAir(world, box, randomSource, .1f, LOCAL_X_END, 0, 1, LOCAL_X_END, 2, 5, Blocks.STONE_BRICKS.defaultBlockState());
+        this.chanceReplaceNonAir(world, box, randomSource, .1f, 1, 0, LOCAL_Z_END, 5, 2, LOCAL_Z_END, Blocks.STONE_BRICKS.defaultBlockState());
 
         // Slabs on top of outermost walls
         this.fill(world, box, 2, 3, 0, 4, 3, 0, Blocks.STONE_SLAB.defaultBlockState());
@@ -87,10 +86,10 @@ public class ZombieVillagerRoom extends BetterMineshaftPiece {
         this.fill(world, box, LOCAL_X_END, 3, 2, LOCAL_X_END, 3, 4, Blocks.STONE_SLAB.defaultBlockState());
         this.fill(world, box, 2, 3, LOCAL_Z_END, 4, 3, LOCAL_Z_END, Blocks.STONE_SLAB.defaultBlockState());
         // Randomize
-        this.chanceFill(world, box, random, .5f, 2, 3, 0, 4, 3, 0, Blocks.COBBLESTONE_SLAB.defaultBlockState());
-        this.chanceFill(world, box, random, .5f, 0, 3, 2, 0, 3, 4, Blocks.COBBLESTONE_SLAB.defaultBlockState());
-        this.chanceFill(world, box, random, .5f, LOCAL_X_END, 3, 2, LOCAL_X_END, 3, 4, Blocks.COBBLESTONE_SLAB.defaultBlockState());
-        this.chanceFill(world, box, random, .5f, 2, 3, LOCAL_Z_END, 4, 3, LOCAL_Z_END, Blocks.COBBLESTONE_SLAB.defaultBlockState());
+        this.chanceFill(world, box, randomSource, .5f, 2, 3, 0, 4, 3, 0, Blocks.COBBLESTONE_SLAB.defaultBlockState());
+        this.chanceFill(world, box, randomSource, .5f, 0, 3, 2, 0, 3, 4, Blocks.COBBLESTONE_SLAB.defaultBlockState());
+        this.chanceFill(world, box, randomSource, .5f, LOCAL_X_END, 3, 2, LOCAL_X_END, 3, 4, Blocks.COBBLESTONE_SLAB.defaultBlockState());
+        this.chanceFill(world, box, randomSource, .5f, 2, 3, LOCAL_Z_END, 4, 3, LOCAL_Z_END, Blocks.COBBLESTONE_SLAB.defaultBlockState());
 
         // Second wall/ceiling layer, formed with upside-down stairs
         // Cardinal directions
@@ -106,7 +105,7 @@ public class ZombieVillagerRoom extends BetterMineshaftPiece {
 
         // Third ceiling layer, formed with bottom-half slabs
         this.fill(world, box, 2, 4, 2, 4, 4, 4, Blocks.STONE_SLAB.defaultBlockState());
-        this.chanceFill(world, box, random, .5f, 2, 4, 2, 4, 4, 4, Blocks.COBBLESTONE_SLAB.defaultBlockState());
+        this.chanceFill(world, box, randomSource, .5f, 2, 4, 2, 4, 4, 4, Blocks.COBBLESTONE_SLAB.defaultBlockState());
         this.placeBlock(world, AIR, 3, 4, 3, box);
 
         // Top middle roof block
@@ -115,8 +114,8 @@ public class ZombieVillagerRoom extends BetterMineshaftPiece {
         // Floor
         this.fill(world, box, 1, 0, 1, 5, 0, 5, Blocks.STONE.defaultBlockState());
         // Randomize
-        this.chanceFill(world, box, random, .4f, 1, 0, 1, 5, 0, 5, Blocks.COBBLESTONE.defaultBlockState());
-        this.chanceFill(world, box, random, .1f, 1, 0, 1, 5, 0, 5, Blocks.STONE_BRICKS.defaultBlockState());
+        this.chanceFill(world, box, randomSource, .4f, 1, 0, 1, 5, 0, 5, Blocks.COBBLESTONE.defaultBlockState());
+        this.chanceFill(world, box, randomSource, .1f, 1, 0, 1, 5, 0, 5, Blocks.STONE_BRICKS.defaultBlockState());
 
         // Fill with air
         this.fill(world, box, 1, 1, 1, 5, 2, 5, AIR);
@@ -149,7 +148,7 @@ public class ZombieVillagerRoom extends BetterMineshaftPiece {
         this.placeBlock(world, Blocks.REDSTONE_TORCH.defaultBlockState(), 1, 2, 1, box);
 
         // Barrel
-        this.addBarrel(world, box, random, 5, 1, 1, BuiltInLootTables.ABANDONED_MINESHAFT);
+        this.addBarrel(world, box, randomSource, 5, 1, 1, BuiltInLootTables.ABANDONED_MINESHAFT);
 
         // Button for door (inside)
         this.placeBlock(world, Blocks.STONE_BUTTON.defaultBlockState(), 2, 2, 1, box);
@@ -158,14 +157,14 @@ public class ZombieVillagerRoom extends BetterMineshaftPiece {
         this.placeBlock(world, Blocks.ANVIL.defaultBlockState(), 5, 1, 2, box);
 
         // Decoration block (smithing table, crafting table, blast furnace)
-        if (random.nextFloat() < .33f)
+        if (randomSource.nextFloat() < .33f)
             this.placeBlock(world, Blocks.SMITHING_TABLE.defaultBlockState(), 2, 1, 5, box);
-        else if (random.nextFloat() < .67f)
+        else if (randomSource.nextFloat() < .67f)
             this.placeBlock(world, Blocks.CRAFTING_TABLE.defaultBlockState(), 2, 1, 5, box);
         else
             this.placeBlock(world, Blocks.BLAST_FURNACE.defaultBlockState(), 2, 1, 5, box);
 
         // Cobwebs
-        this.chanceFill(world, box, random, .3f, 2, 3, 2, 4, 3, 4, Blocks.COBWEB.defaultBlockState());
+        this.chanceFill(world, box, randomSource, .3f, 2, 3, 2, 4, 3, 4, Blocks.COBWEB.defaultBlockState());
     }
 }

@@ -1,7 +1,6 @@
 package com.yungnickyoung.minecraft.bettermineshafts.module;
 
 public class ConfigModule {
-    public double mineshaftSpawnRate = 0.003;
     public int minY = -55;
     public int maxY = 30;
     public final Ores ores = new Ores();

@@ -1,0 +1,21 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:snowy_taiga",
+    "minecraft:snowy_plains",
+    "minecraft:snowy_slopes",
+    "minecraft:jagged_peaks",
+    {
+      "id": "terralith:cold_shrubland",
+      "required": false
+    },
+    {
+      "id": "terralith:rocky_shrubland",
+      "required": false
+    },
+    {
+      "id": "terralith:wintry_forest",
+      "required": false
+    }
+  ]
+}

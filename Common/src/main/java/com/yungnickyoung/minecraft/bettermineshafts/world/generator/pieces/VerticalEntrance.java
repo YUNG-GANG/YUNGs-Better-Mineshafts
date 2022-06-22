@@ -1,7 +1,7 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
 import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshaftsCommon;
-import com.yungnickyoung.minecraft.bettermineshafts.world.config.BetterMineshaftFeatureConfiguration;
+import com.yungnickyoung.minecraft.bettermineshafts.world.config.BetterMineshaftConfiguration;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
 import com.yungnickyoung.minecraft.yungsapi.world.SurfaceHelper;
@@ -9,8 +9,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ColumnPos;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.StructureFeatureManager;
+import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -19,8 +20,6 @@ import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.levelgen.structure.StructurePieceAccessor;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
-
-import java.util.Random;
 
 public class VerticalEntrance extends BetterMineshaftPiece {
     private final BlockPos centerPos;
@@ -56,7 +55,7 @@ public class VerticalEntrance extends BetterMineshaftPiece {
         this.hasTunnel = compoundTag.getBoolean("hasTunnel");
     }
 
-    public VerticalEntrance(int pieceChainLen, BlockPos.MutableBlockPos centerPos, Direction direction, BetterMineshaftFeatureConfiguration config, int maxBuildHeight) {
+    public VerticalEntrance(int pieceChainLen, BlockPos.MutableBlockPos centerPos, Direction direction, BetterMineshaftConfiguration config, int maxBuildHeight) {
         super(BetterMineshaftStructurePieceType.VERTICAL_ENTRANCE, pieceChainLen, config, getInitialBoundingBox(centerPos, maxBuildHeight));
         this.setOrientation(direction);
         this.centerPos = centerPos; // position passed in is center of shaft piece (unlike all other pieces, where it is a corner)
@@ -78,7 +77,7 @@ public class VerticalEntrance extends BetterMineshaftPiece {
     }
 
     @Override
-    public void addChildren(StructurePiece structurePiece, StructurePieceAccessor structurePieceAccessor, Random random) {
+    public void addChildren(StructurePiece structurePiece, StructurePieceAccessor structurePieceAccessor, RandomSource randomSource) {
         Direction direction = this.getOrientation();
         if (direction == null) {
             return;
@@ -87,21 +86,21 @@ public class VerticalEntrance extends BetterMineshaftPiece {
         switch (direction) {
             case NORTH:
             default:
-                BetterMineshaftGenerator.generateAndAddBigTunnelPiece(structurePiece, structurePieceAccessor, random, this.centerPos.getX() - 4, this.centerPos.getY(), this.centerPos.getZ() - 3, direction, this.genDepth);
+                BetterMineshaftGenerator.generateAndAddBigTunnelPiece(structurePiece, structurePieceAccessor, randomSource, this.centerPos.getX() - 4, this.centerPos.getY(), this.centerPos.getZ() - 3, direction, this.genDepth);
                 break;
             case SOUTH:
-                BetterMineshaftGenerator.generateAndAddBigTunnelPiece(structurePiece, structurePieceAccessor, random, this.centerPos.getX() + 4, this.centerPos.getY(), this.centerPos.getZ() + 3, direction, this.genDepth);
+                BetterMineshaftGenerator.generateAndAddBigTunnelPiece(structurePiece, structurePieceAccessor, randomSource, this.centerPos.getX() + 4, this.centerPos.getY(), this.centerPos.getZ() + 3, direction, this.genDepth);
                 break;
             case WEST:
-                BetterMineshaftGenerator.generateAndAddBigTunnelPiece(structurePiece, structurePieceAccessor, random, this.centerPos.getX() - 3, this.centerPos.getY(), this.centerPos.getZ() + 4, direction, this.genDepth);
+                BetterMineshaftGenerator.generateAndAddBigTunnelPiece(structurePiece, structurePieceAccessor, randomSource, this.centerPos.getX() - 3, this.centerPos.getY(), this.centerPos.getZ() + 4, direction, this.genDepth);
                 break;
             case EAST:
-                BetterMineshaftGenerator.generateAndAddBigTunnelPiece(structurePiece, structurePieceAccessor, random, this.centerPos.getX() + 3, this.centerPos.getY(), this.centerPos.getZ() - 4, direction, this.genDepth);
+                BetterMineshaftGenerator.generateAndAddBigTunnelPiece(structurePiece, structurePieceAccessor, randomSource, this.centerPos.getX() + 3, this.centerPos.getY(), this.centerPos.getZ() - 4, direction, this.genDepth);
         }
     }
 
     @Override
-    public void postProcess(WorldGenLevel world, StructureFeatureManager structureFeatureManager, ChunkGenerator chunkGenerator, Random random, BoundingBox boundingBox, ChunkPos chunkPos, BlockPos blockPos) {
+    public void postProcess(WorldGenLevel world, StructureManager structureManager, ChunkGenerator chunkGenerator, RandomSource randomSource, BoundingBox boundingBox, ChunkPos chunkPos, BlockPos blockPos) {
         if (BetterMineshaftsCommon.DEBUG_LOG) {
             BetterMineshaftsCommon.count.incrementAndGet();
         }
@@ -117,19 +116,19 @@ public class VerticalEntrance extends BetterMineshaftPiece {
         }
 
         if (this.hasTunnel) {
-            generateVerticalShaft(world, random, boundingBox);
+            generateVerticalShaft(world, randomSource, boundingBox);
             // Build surface tunnel.
             // This must be done dynamically since its length depends on terrain.
-            generateSurfaceTunnel(world, random, boundingBox);
+            generateSurfaceTunnel(world, randomSource, boundingBox);
         }
     }
 
     /**
      * Generates the vertical shaft with a ladder.
      */
-    private void generateVerticalShaft(WorldGenLevel world, Random random, BoundingBox box) {
+    private void generateVerticalShaft(WorldGenLevel world, RandomSource randomSource, BoundingBox box) {
         // Randomize blocks
-        this.chanceReplaceNonAir(world, box, random, config.replacementRate, SHAFT_LOCAL_XZ_START, 0, SHAFT_LOCAL_XZ_START, SHAFT_LOCAL_XZ_END, localYEnd, SHAFT_LOCAL_XZ_END, config.blockStateRandomizers.mainRandomizer);
+        this.chanceReplaceNonAir(world, box, randomSource, config.replacementRate, SHAFT_LOCAL_XZ_START, 0, SHAFT_LOCAL_XZ_START, SHAFT_LOCAL_XZ_END, localYEnd, SHAFT_LOCAL_XZ_END, config.blockStateRandomizers.mainRandomizer);
 
         // Fill any holes in wall with main block
         this.replaceAirOrChains(world, box, SHAFT_LOCAL_XZ_START, 0, SHAFT_LOCAL_XZ_START, SHAFT_LOCAL_XZ_END, localYEnd, SHAFT_LOCAL_XZ_END, config.blockStates.mainBlockState);
@@ -150,14 +149,14 @@ public class VerticalEntrance extends BetterMineshaftPiece {
         this.fill(world, box, SHAFT_LOCAL_XZ_START + 2, 1, SHAFT_LOCAL_XZ_START + 4, SHAFT_LOCAL_XZ_START + 2, 2, SHAFT_LOCAL_XZ_START + 4, AIR);
 
         // Decorations
-        this.addBiomeDecorations(world, box, random, SHAFT_LOCAL_XZ_START + 1, 0, SHAFT_LOCAL_XZ_START + 1, SHAFT_LOCAL_XZ_END - 1, 1, SHAFT_LOCAL_XZ_END - 1);
-        this.addVines(world, box, random, config.decorationChances.vineChance, SHAFT_LOCAL_XZ_START + 1, 0, SHAFT_LOCAL_XZ_START + 1, SHAFT_LOCAL_XZ_END - 1, localYEnd - 4, SHAFT_LOCAL_XZ_END - 1);
+        this.addBiomeDecorations(world, box, randomSource, SHAFT_LOCAL_XZ_START + 1, 0, SHAFT_LOCAL_XZ_START + 1, SHAFT_LOCAL_XZ_END - 1, 1, SHAFT_LOCAL_XZ_END - 1);
+        this.addVines(world, box, randomSource, config.decorationChances.vineChance, SHAFT_LOCAL_XZ_START + 1, 0, SHAFT_LOCAL_XZ_START + 1, SHAFT_LOCAL_XZ_END - 1, localYEnd - 4, SHAFT_LOCAL_XZ_END - 1);
 
         // Leg supports underneath to prevent floating
-        generateLeg(world, random, box, SHAFT_LOCAL_XZ_START, SHAFT_LOCAL_XZ_START, config.blockStateRandomizers.legRandomizer);
-        generateLeg(world, random, box, SHAFT_LOCAL_XZ_START, SHAFT_LOCAL_XZ_END, config.blockStateRandomizers.legRandomizer);
-        generateLeg(world, random, box, SHAFT_LOCAL_XZ_END, SHAFT_LOCAL_XZ_START, config.blockStateRandomizers.legRandomizer);
-        generateLeg(world, random, box, SHAFT_LOCAL_XZ_END, SHAFT_LOCAL_XZ_END, config.blockStateRandomizers.legRandomizer);
+        generateLeg(world, randomSource, box, SHAFT_LOCAL_XZ_START, SHAFT_LOCAL_XZ_START, config.blockStateRandomizers.legRandomizer);
+        generateLeg(world, randomSource, box, SHAFT_LOCAL_XZ_START, SHAFT_LOCAL_XZ_END, config.blockStateRandomizers.legRandomizer);
+        generateLeg(world, randomSource, box, SHAFT_LOCAL_XZ_END, SHAFT_LOCAL_XZ_START, config.blockStateRandomizers.legRandomizer);
+        generateLeg(world, randomSource, box, SHAFT_LOCAL_XZ_END, SHAFT_LOCAL_XZ_END, config.blockStateRandomizers.legRandomizer);
     }
 
     /**
@@ -166,7 +165,7 @@ public class VerticalEntrance extends BetterMineshaftPiece {
      * as is normally the case. Rotation logic must be handled manually for this piece because the piece's orientation
      * relies on the surrounding terrain, which can't be determined until generation time.
      */
-    private void generateSurfaceTunnel(WorldGenLevel world, Random random, BoundingBox box) {
+    private void generateSurfaceTunnel(WorldGenLevel world, RandomSource randomSource, BoundingBox box) {
         int tunnelStartX = 0,
             tunnelStartZ = 0,
             tunnelEndX = 0,
@@ -210,7 +209,7 @@ public class VerticalEntrance extends BetterMineshaftPiece {
         // ################################################################
 
         // Randomize blocks
-        this.chanceReplaceNonAir(world, box, random, .6f, tunnelStartX, tunnelFloorAltitude, tunnelStartZ, tunnelEndX, tunnelFloorAltitude + 4, tunnelEndZ, config.blockStateRandomizers.mainRandomizer);
+        this.chanceReplaceNonAir(world, box, randomSource, .6f, tunnelStartX, tunnelFloorAltitude, tunnelStartZ, tunnelEndX, tunnelFloorAltitude + 4, tunnelEndZ, config.blockStateRandomizers.mainRandomizer);
 
         if (facing.getAxis() == tunnelDirection.getAxis()) {
             // Fill in any air in floor with main block
@@ -227,7 +226,7 @@ public class VerticalEntrance extends BetterMineshaftPiece {
         }
 
         // Vines
-        this.addVines(world, box, random, config.decorationChances.vineChance, tunnelStartX + 1, tunnelFloorAltitude, tunnelStartZ + 1, tunnelEndX - 1, tunnelFloorAltitude + 4, tunnelEndZ - 1);
+        this.addVines(world, box, randomSource, config.decorationChances.vineChance, tunnelStartX + 1, tunnelFloorAltitude, tunnelStartZ + 1, tunnelEndX - 1, tunnelFloorAltitude + 4, tunnelEndZ - 1);
 
         // ################################################################
         // #                           Supports                          #
@@ -258,35 +257,35 @@ public class VerticalEntrance extends BetterMineshaftPiece {
         // Generate supports.
         if (facing.getAxis() == tunnelDirection.getAxis()) {
             for (int z = tunnelStartZ; z <= tunnelEndZ; z++) {
-                int r = random.nextInt(4);
+                int r = randomSource.nextInt(4);
                 // TOOD - fix z to account for direction of shaft
                 if (r == 0 && validPositions[z - tunnelStartZ]) {
                     // Support
                     this.fill(world, box, tunnelStartX + 1, tunnelFloorAltitude + 1, z, tunnelStartX + 1, tunnelFloorAltitude + 2, z, config.blockStates.supportBlockState);
                     this.fill(world, box, tunnelStartX + 3, tunnelFloorAltitude + 1, z, tunnelStartX + 3, tunnelFloorAltitude + 2, z, config.blockStates.supportBlockState);
                     this.fill(world, box, tunnelStartX + 1, tunnelFloorAltitude + 3, z, tunnelStartX + 3, tunnelFloorAltitude + 3, z, config.blockStates.mainBlockState);
-                    this.chanceReplaceNonAir(world, box, random, .25f, tunnelStartX + 1, tunnelFloorAltitude + 3, z, tunnelStartX + 3, tunnelFloorAltitude + 3, z, config.blockStates.supportBlockState);
+                    this.chanceReplaceNonAir(world, box, randomSource, .25f, tunnelStartX + 1, tunnelFloorAltitude + 3, z, tunnelStartX + 3, tunnelFloorAltitude + 3, z, config.blockStates.supportBlockState);
 
                     // Cobwebs
-                    this.chanceReplaceAir(world, box, random, .15f, tunnelStartX + 1, tunnelFloorAltitude + 3, z - 1, tunnelStartX + 1, tunnelFloorAltitude + 3, z + 1, Blocks.COBWEB.defaultBlockState());
-                    this.chanceReplaceAir(world, box, random, .15f, tunnelStartX + 3, tunnelFloorAltitude + 3, z - 1, tunnelStartX + 3, tunnelFloorAltitude + 3, z + 1, Blocks.COBWEB.defaultBlockState());
+                    this.chanceReplaceAir(world, box, randomSource, .15f, tunnelStartX + 1, tunnelFloorAltitude + 3, z - 1, tunnelStartX + 1, tunnelFloorAltitude + 3, z + 1, Blocks.COBWEB.defaultBlockState());
+                    this.chanceReplaceAir(world, box, randomSource, .15f, tunnelStartX + 3, tunnelFloorAltitude + 3, z - 1, tunnelStartX + 3, tunnelFloorAltitude + 3, z + 1, Blocks.COBWEB.defaultBlockState());
                     z += 3;
                 }
             }
         } else {
             for (int x = tunnelStartX; x <= tunnelEndX; x++) {
-                int r = random.nextInt(4);
+                int r = randomSource.nextInt(4);
                 // TOOD - fix z to account for direction of shaft
                 if (r == 0 && validPositions[x - tunnelStartX]) {
                     // Support
                     this.fill(world, box, x, tunnelFloorAltitude + 1, tunnelStartZ + 1, x, tunnelFloorAltitude + 2, tunnelStartZ + 1, config.blockStates.supportBlockState);
                     this.fill(world, box, x, tunnelFloorAltitude + 1, tunnelStartZ + 3, x, tunnelFloorAltitude + 2, tunnelStartZ + 3, config.blockStates.supportBlockState);
                     this.fill(world, box, x, tunnelFloorAltitude + 3, tunnelStartZ + 1, x, tunnelFloorAltitude + 3, tunnelStartZ + 3, config.blockStates.mainBlockState);
-                    this.chanceReplaceNonAir(world, box, random, .25f, x, tunnelFloorAltitude + 3, tunnelStartZ + 1, x, tunnelFloorAltitude + 3, tunnelStartZ + 3, config.blockStates.supportBlockState);
+                    this.chanceReplaceNonAir(world, box, randomSource, .25f, x, tunnelFloorAltitude + 3, tunnelStartZ + 1, x, tunnelFloorAltitude + 3, tunnelStartZ + 3, config.blockStates.supportBlockState);
 
                     // Cobwebs
-                    this.chanceReplaceAir(world, box, random, .15f, x - 1, tunnelFloorAltitude + 3, tunnelStartZ + 1, x + 1, tunnelFloorAltitude + 3, tunnelStartZ + 1, Blocks.COBWEB.defaultBlockState());
-                    this.chanceReplaceAir(world, box, random, .15f, x - 1, tunnelFloorAltitude + 3, tunnelStartZ + 3, x + 1, tunnelFloorAltitude + 3, tunnelStartZ + 3, Blocks.COBWEB.defaultBlockState());
+                    this.chanceReplaceAir(world, box, randomSource, .15f, x - 1, tunnelFloorAltitude + 3, tunnelStartZ + 1, x + 1, tunnelFloorAltitude + 3, tunnelStartZ + 1, Blocks.COBWEB.defaultBlockState());
+                    this.chanceReplaceAir(world, box, randomSource, .15f, x - 1, tunnelFloorAltitude + 3, tunnelStartZ + 3, x + 1, tunnelFloorAltitude + 3, tunnelStartZ + 3, Blocks.COBWEB.defaultBlockState());
                     x += 3;
                 }
             }

@@ -18,11 +18,11 @@ import java.nio.file.Paths;
 
 public class ConfigModuleForge {
     public static final String CUSTOM_CONFIG_PATH = "bettermineshafts";
-    public static final String VERSION_PATH = "forge-1_18_2";
+    public static final String VERSION_PATH = "forge-1_19";
 
     public static void init() {
         initCustomFiles();
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, BMConfigForge.SPEC, "bettermineshafts-forge-1_18.toml");
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, BMConfigForge.SPEC, "bettermineshafts-forge-1_19.toml");
         MinecraftForge.EVENT_BUS.addListener(ConfigModuleForge::onWorldLoad);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(ConfigModuleForge::onConfigChange);
     }
@@ -104,7 +104,6 @@ public class ConfigModuleForge {
     }
 
     private static void bakeConfig() {
-        BetterMineshaftsCommon.CONFIG.mineshaftSpawnRate = BMConfigForge.mineshaftSpawnRate.get();
         BetterMineshaftsCommon.CONFIG.minY = BMConfigForge.minY.get();
         BetterMineshaftsCommon.CONFIG.maxY = BMConfigForge.maxY.get();
         BetterMineshaftsCommon.CONFIG.ores.enabled = BMConfigForge.ores.enabled.get();
