@@ -77,13 +77,6 @@ minecraft {
 
 sourceSets.main.resources.srcDir 'src/generated/resources'
 
-// Local file repository for using test builds of YUNG's API
-repositories {
-    flatDir {
-        dirs 'libs'
-    }
-}
-
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 //    implementation fg.deobf("com.yungnickyoung.minecraft.yungsapi:YungsApi:${minecraft_version}-Forge-${yungsapi_version}")
