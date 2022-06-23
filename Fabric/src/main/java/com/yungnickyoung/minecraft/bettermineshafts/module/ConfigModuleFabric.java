@@ -21,6 +21,7 @@ public class ConfigModuleFabric {
     }
 
     private static void bakeConfig(BMConfigFabric configFabric) {
+        BetterMineshaftsCommon.CONFIG.disableVanillaMineshafts = configFabric.disableVanillaMineshafts;
         BetterMineshaftsCommon.CONFIG.minY = configFabric.minY;
         BetterMineshaftsCommon.CONFIG.maxY = configFabric.maxY;
         BetterMineshaftsCommon.CONFIG.ores.enabled = configFabric.ores.enabled;

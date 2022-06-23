@@ -104,6 +104,7 @@ public class ConfigModuleForge {
     }
 
     private static void bakeConfig() {
+        BetterMineshaftsCommon.CONFIG.disableVanillaMineshafts = BMConfigForge.disableVanillaMineshafts.get();
         BetterMineshaftsCommon.CONFIG.minY = BMConfigForge.minY.get();
         BetterMineshaftsCommon.CONFIG.maxY = BMConfigForge.maxY.get();
         BetterMineshaftsCommon.CONFIG.ores.enabled = BMConfigForge.ores.enabled.get();

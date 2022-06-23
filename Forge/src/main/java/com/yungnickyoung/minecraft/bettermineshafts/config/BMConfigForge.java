@@ -6,6 +6,7 @@ public final class BMConfigForge {
     public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
     public static final ForgeConfigSpec SPEC;
 
+    public static final ForgeConfigSpec.ConfigValue<Boolean> disableVanillaMineshafts;
     public static final ForgeConfigSpec.ConfigValue<Integer> minY;
     public static final ForgeConfigSpec.ConfigValue<Integer> maxY;
     public static final ConfigOresForge ores;
@@ -13,6 +14,13 @@ public final class BMConfigForge {
 
     static {
         BUILDER.push("YUNG's Better Mineshafts");
+
+        disableVanillaMineshafts = BUILDER
+                .worldRestart()
+                .comment(
+                        " Whether or not vanilla mineshafts should be disabled.\n" +
+                        " Default: true")
+                .define("Disable Vanilla Mineshafts", true);
 
         minY = BUILDER
                 .worldRestart()

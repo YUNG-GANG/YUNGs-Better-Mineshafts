@@ -1,6 +1,7 @@
 package com.yungnickyoung.minecraft.bettermineshafts.module;
 
 public class ConfigModule {
+    public boolean disableVanillaMineshafts = true;
     public int minY = -55;
     public int maxY = 30;
     public final Ores ores = new Ores();

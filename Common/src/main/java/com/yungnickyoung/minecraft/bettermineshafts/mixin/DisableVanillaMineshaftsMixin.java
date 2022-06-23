@@ -1,5 +1,6 @@
 package com.yungnickyoung.minecraft.bettermineshafts.mixin;
 
+import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshaftsCommon;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.SectionPos;
 import net.minecraft.world.level.ChunkPos;
@@ -30,7 +31,7 @@ public class DisableVanillaMineshaftsMixin {
             SectionPos sectionPos,
             CallbackInfoReturnable<Boolean> cir
     ) {
-        if (structureSetEntry.structure().value().type() == StructureType.MINESHAFT) {
+        if (BetterMineshaftsCommon.CONFIG.disableVanillaMineshafts && structureSetEntry.structure().value().type() == StructureType.MINESHAFT) {
             cir.setReturnValue(false);
         }
     }

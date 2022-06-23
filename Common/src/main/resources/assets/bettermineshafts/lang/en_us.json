@@ -1,4 +1,6 @@
 {
+  "Use /locate structure #bettermineshafts:better_mineshafts instead!": "Use /locate structure #bettermineshafts:better_mineshafts instead!",
+
   "text.autoconfig.bettermineshafts-fabric-1_19.title": "YUNG's Better Mineshafts",
   "text.autoconfig.bettermineshafts-fabric-1_19.category.default": "Main Settings",
   "text.autoconfig.bettermineshafts-fabric-1_19.category.spawnrates": "Spawn Rates & More",
@@ -7,6 +9,8 @@
   "text.autoconfig.bettermineshafts-fabric-1_19.option.minY.@Tooltip": "The lowest the floor of a mineshaft can be.",
   "text.autoconfig.bettermineshafts-fabric-1_19.option.maxY": "Maximum y-coordinate",
   "text.autoconfig.bettermineshafts-fabric-1_19.option.maxY.@Tooltip": "The highest the floor of a mineshaft can be.",
+  "text.autoconfig.bettermineshafts-fabric-1_19.option.disableVanillaMineshafts": "Disable Vanilla Mineshafts",
+  "text.autoconfig.bettermineshafts-fabric-1_19.option.disableVanillaMineshafts.@Tooltip": "Whether or not vanilla mineshafts should be disabled.",
   "text.autoconfig.bettermineshafts-fabric-1_19.option.spawnRates": "Spawn Rates & More",
   "text.autoconfig.bettermineshafts-fabric-1_19.option.spawnRates.@Tooltip": "Customize spawn rates for various mineshaft parts and decorations.",
   "text.autoconfig.bettermineshafts-fabric-1_19.option.ores": "Ore Deposits",
