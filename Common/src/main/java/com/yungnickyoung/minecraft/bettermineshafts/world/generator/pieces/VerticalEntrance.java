@@ -3,7 +3,7 @@ package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshaftsCommon;
 import com.yungnickyoung.minecraft.bettermineshafts.world.config.BetterMineshaftConfiguration;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
-import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
+import com.yungnickyoung.minecraft.bettermineshafts.module.StructurePieceTypeModule;
 import com.yungnickyoung.minecraft.yungsapi.world.SurfaceHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -38,7 +38,7 @@ public class VerticalEntrance extends BetterMineshaftPiece {
         SHAFT_LOCAL_XZ_END = 26;
 
     public VerticalEntrance(CompoundTag compoundTag) {
-        super(BetterMineshaftStructurePieceType.VERTICAL_ENTRANCE, compoundTag);
+        super(StructurePieceTypeModule.VERTICAL_ENTRANCE, compoundTag);
         int centerPosX = compoundTag.getIntArray("centerPos")[0];
         int centerPosY = compoundTag.getIntArray("centerPos")[1];
         int centerPosZ = compoundTag.getIntArray("centerPos")[2];
@@ -56,7 +56,7 @@ public class VerticalEntrance extends BetterMineshaftPiece {
     }
 
     public VerticalEntrance(int pieceChainLen, BlockPos.MutableBlockPos centerPos, Direction direction, BetterMineshaftConfiguration config, int maxBuildHeight) {
-        super(BetterMineshaftStructurePieceType.VERTICAL_ENTRANCE, pieceChainLen, config, getInitialBoundingBox(centerPos, maxBuildHeight));
+        super(StructurePieceTypeModule.VERTICAL_ENTRANCE, pieceChainLen, config, getInitialBoundingBox(centerPos, maxBuildHeight));
         this.setOrientation(direction);
         this.centerPos = centerPos; // position passed in is center of shaft piece (unlike all other pieces, where it is a corner)
     }

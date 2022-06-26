@@ -2,7 +2,7 @@ package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
 import com.yungnickyoung.minecraft.bettermineshafts.world.config.BetterMineshaftConfiguration;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
-import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
+import com.yungnickyoung.minecraft.bettermineshafts.module.StructurePieceTypeModule;
 import com.yungnickyoung.minecraft.yungsapi.world.BoundingBoxHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -50,12 +50,12 @@ public class SmallTunnelTurn extends BetterMineshaftPiece {
         LOCAL_Z_END = MAIN_AXIS_LEN - 1;
 
     public SmallTunnelTurn(CompoundTag compoundTag) {
-        super(BetterMineshaftStructurePieceType.SMALL_TUNNEL_TURN, compoundTag);
+        super(StructurePieceTypeModule.SMALL_TUNNEL_TURN, compoundTag);
         this.turnDirection = TurnDirection.valueOf(compoundTag.getInt("TurnDirection"));
     }
 
     public SmallTunnelTurn(int chunkPieceLen, RandomSource randomSource, BoundingBox blockBox, Direction direction, BetterMineshaftConfiguration config) {
-        super(BetterMineshaftStructurePieceType.SMALL_TUNNEL_TURN, chunkPieceLen, config, blockBox);
+        super(StructurePieceTypeModule.SMALL_TUNNEL_TURN, chunkPieceLen, config, blockBox);
         this.setOrientation(direction);
         this.turnDirection = randomSource.nextBoolean() ? TurnDirection.LEFT : TurnDirection.RIGHT;
     }

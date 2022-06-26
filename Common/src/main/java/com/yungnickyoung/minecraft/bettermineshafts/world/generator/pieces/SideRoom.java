@@ -3,7 +3,7 @@ package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshaftsCommon;
 import com.yungnickyoung.minecraft.bettermineshafts.world.config.BetterMineshaftConfiguration;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
-import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
+import com.yungnickyoung.minecraft.bettermineshafts.module.StructurePieceTypeModule;
 import com.yungnickyoung.minecraft.yungsapi.world.BoundingBoxHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -43,12 +43,12 @@ public class SideRoom extends BetterMineshaftPiece {
         LOCAL_Z_END = MAIN_AXIS_LEN - 1;
 
     public SideRoom(CompoundTag compoundTag) {
-        super(BetterMineshaftStructurePieceType.SIDE_ROOM, compoundTag);
+        super(StructurePieceTypeModule.SIDE_ROOM, compoundTag);
         this.hasDownstairs = compoundTag.getBoolean("hasDownstairs");
     }
 
     public SideRoom(int pieceChainLen, BoundingBox blockBox, Direction direction, BetterMineshaftConfiguration config) {
-        super(BetterMineshaftStructurePieceType.SIDE_ROOM, pieceChainLen, config, blockBox);
+        super(StructurePieceTypeModule.SIDE_ROOM, pieceChainLen, config, blockBox);
         this.setOrientation(direction);
     }
 

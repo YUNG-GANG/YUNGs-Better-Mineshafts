@@ -4,7 +4,7 @@ import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshaftsCommon;
-import com.yungnickyoung.minecraft.bettermineshafts.module.StructureModule;
+import com.yungnickyoung.minecraft.bettermineshafts.module.StructureTypeModule;
 import com.yungnickyoung.minecraft.bettermineshafts.world.config.BetterMineshaftConfiguration;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.BetterMineshaftPiece;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces.VerticalEntrance;
@@ -49,7 +49,7 @@ public class BetterMineshaftStructure extends Structure {
 
     @Override
     public StructureType<?> type() {
-        return StructureModule.BETTER_MINESHAFT;
+        return StructureTypeModule.BETTER_MINESHAFT;
     }
 
     private void generatePieces(StructurePiecesBuilder structurePiecesBuilder, Structure.GenerationContext context) {

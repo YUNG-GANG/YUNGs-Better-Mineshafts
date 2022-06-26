@@ -1,7 +1,7 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
 import com.yungnickyoung.minecraft.bettermineshafts.world.config.BetterMineshaftConfiguration;
-import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
+import com.yungnickyoung.minecraft.bettermineshafts.module.StructurePieceTypeModule;
 import com.yungnickyoung.minecraft.yungsapi.world.BoundingBoxHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -33,11 +33,11 @@ public class ZombieVillagerRoom extends BetterMineshaftPiece {
         LOCAL_Z_END = MAIN_AXIS_LEN - 1;
 
     public ZombieVillagerRoom(CompoundTag compoundTag) {
-        super(BetterMineshaftStructurePieceType.ZOMBIE_VILLAGER_ROOM, compoundTag);
+        super(StructurePieceTypeModule.ZOMBIE_VILLAGER_ROOM, compoundTag);
     }
 
     public ZombieVillagerRoom(int chunkPieceLen, BoundingBox blockBox, Direction direction, BetterMineshaftConfiguration config) {
-        super(BetterMineshaftStructurePieceType.ZOMBIE_VILLAGER_ROOM, chunkPieceLen, config, blockBox);
+        super(StructurePieceTypeModule.ZOMBIE_VILLAGER_ROOM, chunkPieceLen, config, blockBox);
         this.setOrientation(direction);
     }
 

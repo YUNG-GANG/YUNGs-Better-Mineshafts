@@ -3,9 +3,9 @@ package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
 import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshaftsCommon;
+import com.yungnickyoung.minecraft.bettermineshafts.module.StructurePieceTypeModule;
 import com.yungnickyoung.minecraft.bettermineshafts.world.config.BetterMineshaftConfiguration;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
-import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
 import com.yungnickyoung.minecraft.yungsapi.world.BlockStateRandomizer;
 import com.yungnickyoung.minecraft.yungsapi.world.BoundingBoxHelper;
 import net.minecraft.core.BlockPos;
@@ -50,7 +50,7 @@ public class BigTunnel extends BetterMineshaftPiece {
         LOCAL_Z_END = MAIN_AXIS_LEN - 1;
 
     public BigTunnel(CompoundTag compoundTag) {
-        super(BetterMineshaftStructurePieceType.BIG_TUNNEL, compoundTag);
+        super(StructurePieceTypeModule.BIG_TUNNEL, compoundTag);
 
         ListTag listTag1 = compoundTag.getList("SmallShaftLeftEntrances", 11);
         ListTag listTag2 = compoundTag.getList("SmallShaftRightEntrances", 11);
@@ -87,7 +87,7 @@ public class BigTunnel extends BetterMineshaftPiece {
     }
 
     public BigTunnel(int chainLength, BoundingBox blockBox, Direction direction, BetterMineshaftConfiguration config) {
-        super(BetterMineshaftStructurePieceType.BIG_TUNNEL, chainLength, config, blockBox);
+        super(StructurePieceTypeModule.BIG_TUNNEL, chainLength, config, blockBox);
         this.setOrientation(direction);
     }
 

@@ -2,7 +2,7 @@ package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
 import com.yungnickyoung.minecraft.bettermineshafts.mixin.BoundingBoxAccessor;
 import com.yungnickyoung.minecraft.bettermineshafts.world.config.BetterMineshaftConfiguration;
-import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
+import com.yungnickyoung.minecraft.bettermineshafts.module.StructurePieceTypeModule;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -34,11 +34,11 @@ public class SideRoomDungeon extends BetterMineshaftPiece {
         LOCAL_Z_END = MAIN_AXIS_LEN - 1;
 
     public SideRoomDungeon(CompoundTag compoundTag) {
-        super(BetterMineshaftStructurePieceType.SIDE_ROOM_DUNGEON, compoundTag);
+        super(StructurePieceTypeModule.SIDE_ROOM_DUNGEON, compoundTag);
     }
 
     public SideRoomDungeon(int pieceChainLen, BoundingBox blockBox, Direction direction, BetterMineshaftConfiguration config) {
-        super(BetterMineshaftStructurePieceType.SIDE_ROOM_DUNGEON, pieceChainLen, config, blockBox);
+        super(StructurePieceTypeModule.SIDE_ROOM_DUNGEON, pieceChainLen, config, blockBox);
         this.setOrientation(direction);
     }
 

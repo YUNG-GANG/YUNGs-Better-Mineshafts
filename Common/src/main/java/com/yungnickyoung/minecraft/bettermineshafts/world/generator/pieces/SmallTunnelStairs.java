@@ -2,7 +2,7 @@ package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
 import com.yungnickyoung.minecraft.bettermineshafts.world.config.BetterMineshaftConfiguration;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
-import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
+import com.yungnickyoung.minecraft.bettermineshafts.module.StructurePieceTypeModule;
 import com.yungnickyoung.minecraft.yungsapi.world.BoundingBoxHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -32,11 +32,11 @@ public class SmallTunnelStairs extends BetterMineshaftPiece {
         LOCAL_Z_END = MAIN_AXIS_LEN - 1;
 
     public SmallTunnelStairs(CompoundTag compoundTag) {
-        super(BetterMineshaftStructurePieceType.SMALL_TUNNEL_STAIRS, compoundTag);
+        super(StructurePieceTypeModule.SMALL_TUNNEL_STAIRS, compoundTag);
     }
 
     public SmallTunnelStairs(int chunkPieceLen, BoundingBox blockBox, Direction direction, BetterMineshaftConfiguration config) {
-        super(BetterMineshaftStructurePieceType.SMALL_TUNNEL_STAIRS, chunkPieceLen, config, blockBox);
+        super(StructurePieceTypeModule.SMALL_TUNNEL_STAIRS, chunkPieceLen, config, blockBox);
         this.setOrientation(direction);
     }
 

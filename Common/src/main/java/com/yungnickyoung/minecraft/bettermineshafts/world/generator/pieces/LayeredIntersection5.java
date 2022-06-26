@@ -3,7 +3,7 @@ package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 import com.yungnickyoung.minecraft.bettermineshafts.mixin.BoundingBoxAccessor;
 import com.yungnickyoung.minecraft.bettermineshafts.world.config.BetterMineshaftConfiguration;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
-import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftStructurePieceType;
+import com.yungnickyoung.minecraft.bettermineshafts.module.StructurePieceTypeModule;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -33,11 +33,11 @@ public class LayeredIntersection5 extends BetterMineshaftPiece {
         LOCAL_Z_END = MAIN_AXIS_LEN - 1;
 
     public LayeredIntersection5(CompoundTag compoundTag) {
-        super(BetterMineshaftStructurePieceType.LAYERED_INTERSECTION_5, compoundTag);
+        super(StructurePieceTypeModule.LAYERED_INTERSECTION_5, compoundTag);
     }
 
     public LayeredIntersection5(int pieceChainLen, BoundingBox blockBox, Direction direction, BetterMineshaftConfiguration config) {
-        super(BetterMineshaftStructurePieceType.LAYERED_INTERSECTION_5, pieceChainLen, config, blockBox);
+        super(StructurePieceTypeModule.LAYERED_INTERSECTION_5, pieceChainLen, config, blockBox);
         this.setOrientation(direction);
     }
 
