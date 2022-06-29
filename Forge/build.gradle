@@ -79,8 +79,8 @@ sourceSets.main.resources.srcDir 'src/generated/resources'
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-//    implementation fg.deobf("com.yungnickyoung.minecraft.yungsapi:YungsApi:${minecraft_version}-Forge-${yungsapi_version}")
-    implementation fg.deobf("com.yungnickyoung.minecraft.yungsapi:YungsApi:1.19-Forge-3.0-beta0")
+    implementation fg.deobf("com.yungnickyoung.minecraft.yungsapi:YungsApi:${minecraft_version}-Forge-${yungsapi_version}")
+//    implementation fg.deobf("com.yungnickyoung.minecraft.yungsapi:YungsApi:1.19-Forge-3.0-beta0")
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
     compileOnly project(":Common")
 }
