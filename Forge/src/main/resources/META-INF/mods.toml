@@ -25,7 +25,7 @@ issueTrackerURL="https://github.com/yungnickyoung/YUNGs-Better-Mineshafts/issues
 
 [[dependencies.bettermineshafts]]
     modId="yungsapi"
-    versionRange="[1.18.2-Forge-3.0,)"
+    versionRange="[1.19-Forge-3.4.0,)"
     mandatory=true
     ordering="NONE"
     side="BOTH"

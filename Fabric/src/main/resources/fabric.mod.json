@@ -30,7 +30,7 @@
     "minecraft": ">=1.19",
     "cloth-config2": ">=7.0.72",
     "java": ">=17",
-    "yungsapi": ">=1.18.2-Fabric-3.0"
+    "yungsapi": ">=1.19-Fabric-3.4.0"
   },
   "mixins": [
     "bettermineshafts.mixins.json",
