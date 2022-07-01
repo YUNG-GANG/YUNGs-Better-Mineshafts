@@ -1,4 +1,6 @@
 {
+  "Use /locate #bettermineshafts:better_mineshafts instead!": "Use /locate #bettermineshafts:better_mineshafts instead!",
+
   "text.autoconfig.bettermineshafts-fabric-1_18.title": "YUNG's Better Mineshafts",
   "text.autoconfig.bettermineshafts-fabric-1_18.category.default": "Main Settings",
   "text.autoconfig.bettermineshafts-fabric-1_18.category.spawnrates": "Spawn Rates & More",
@@ -9,6 +11,8 @@
   "text.autoconfig.bettermineshafts-fabric-1_18.option.minY.@Tooltip[1]": "If you set this too low the mineshafts will get burned by lava!",
   "text.autoconfig.bettermineshafts-fabric-1_18.option.maxY": "Maximum y-coordinate",
   "text.autoconfig.bettermineshafts-fabric-1_18.option.maxY.@Tooltip": "The highest the floor of a mineshaft can be.",
+  "text.autoconfig.bettermineshafts-fabric-1_18.option.disableVanillaMineshafts": "Disable Vanilla Mineshafts",
+  "text.autoconfig.bettermineshafts-fabric-1_18.option.disableVanillaMineshafts.@Tooltip": "Whether or not vanilla mineshafts should be disabled.",
   "text.autoconfig.bettermineshafts-fabric-1_18.option.spawnRates": "Spawn Rates & More",
   "text.autoconfig.bettermineshafts-fabric-1_18.option.spawnRates.@Tooltip": "Customize spawn rates for various mineshaft parts and decorations.",
   "text.autoconfig.bettermineshafts-fabric-1_18.option.ores": "Ore Deposits",

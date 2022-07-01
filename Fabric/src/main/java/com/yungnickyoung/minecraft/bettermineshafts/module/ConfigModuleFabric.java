@@ -24,6 +24,7 @@ public class ConfigModuleFabric {
         BetterMineshaftsCommon.CONFIG.mineshaftSpawnRate = configFabric.mineshaftSpawnRate;
         BetterMineshaftsCommon.CONFIG.minY = configFabric.minY;
         BetterMineshaftsCommon.CONFIG.maxY = configFabric.maxY;
+        BetterMineshaftsCommon.CONFIG.disableVanillaMineshafts = configFabric.disableVanillaMineshafts;
         BetterMineshaftsCommon.CONFIG.ores.enabled = configFabric.ores.enabled;
         BetterMineshaftsCommon.CONFIG.ores.cobble = configFabric.ores.cobble;
         BetterMineshaftsCommon.CONFIG.ores.coal = configFabric.ores.coal;

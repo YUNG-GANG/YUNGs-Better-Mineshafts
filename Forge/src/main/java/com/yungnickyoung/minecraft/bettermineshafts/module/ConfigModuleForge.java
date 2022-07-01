@@ -107,6 +107,7 @@ public class ConfigModuleForge {
         BetterMineshaftsCommon.CONFIG.mineshaftSpawnRate = BMConfigForge.mineshaftSpawnRate.get();
         BetterMineshaftsCommon.CONFIG.minY = BMConfigForge.minY.get();
         BetterMineshaftsCommon.CONFIG.maxY = BMConfigForge.maxY.get();
+        BetterMineshaftsCommon.CONFIG.disableVanillaMineshafts = BMConfigForge.disableVanillaMineshafts.get();
         BetterMineshaftsCommon.CONFIG.ores.enabled = BMConfigForge.ores.enabled.get();
         BetterMineshaftsCommon.CONFIG.ores.cobble = BMConfigForge.ores.cobble.get();
         BetterMineshaftsCommon.CONFIG.ores.coal = BMConfigForge.ores.coal.get();

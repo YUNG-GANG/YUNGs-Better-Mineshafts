@@ -6,6 +6,7 @@
   "refmap": "bettermineshafts.refmap.json",
   "mixins": [
     "BoundingBoxAccessor",
+    "LocateVanillaMineshaftCommandMixin",
     "SuppressLogMixin"
   ],
   "injectors": {

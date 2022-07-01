@@ -14,6 +14,9 @@ public class BMConfigFabric implements ConfigData {
     @ConfigEntry.Gui.Tooltip
     public int maxY = 30;
 
+    @ConfigEntry.Gui.Tooltip
+    public boolean disableVanillaMineshafts = true;
+
     @ConfigEntry.Gui.CollapsibleObject
     @ConfigEntry.Gui.Tooltip
     public ConfigSpawnRatesFabric spawnRates = new ConfigSpawnRatesFabric();

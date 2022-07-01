@@ -4,6 +4,7 @@ public class ConfigModule {
     public double mineshaftSpawnRate = 0.003;
     public int minY = -55;
     public int maxY = 30;
+    public boolean disableVanillaMineshafts = true;
     public final Ores ores = new Ores();
     public final SpawnRates spawnRates = new SpawnRates();
 

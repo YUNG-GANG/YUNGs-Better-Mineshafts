@@ -1,5 +1,6 @@
 package com.yungnickyoung.minecraft.bettermineshafts.mixin;
 
+import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshaftsCommon;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.SectionPos;
@@ -27,7 +28,7 @@ public class DisableVanillaMineshaftsMixinFabric {
                                    ChunkPos chunkPos,
                                    SectionPos sectionPos,
                                    CallbackInfoReturnable<Boolean> cir) {
-        if (Registry.STRUCTURE_FEATURE.getKey(structureSetEntry.structure().value().feature).equals(new ResourceLocation("mineshaft"))) {
+        if (BetterMineshaftsCommon.CONFIG.disableVanillaMineshafts && Registry.STRUCTURE_FEATURE.getKey(structureSetEntry.structure().value().feature).equals(new ResourceLocation("mineshaft"))) {
             cir.setReturnValue(false);
         }
     }
