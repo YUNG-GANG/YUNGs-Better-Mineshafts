@@ -2,6 +2,7 @@ package com.yungnickyoung.minecraft.bettermineshafts;
 
 import com.yungnickyoung.minecraft.bettermineshafts.module.ConfigModule;
 import com.yungnickyoung.minecraft.bettermineshafts.services.Services;
+import com.yungnickyoung.minecraft.yungsapi.api.YungAutoRegister;
 import io.netty.util.internal.ConcurrentSet;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,6 +21,7 @@ public class BetterMineshaftsCommon {
     public static final boolean DEBUG_LOG = false;
 
     public static void init() {
+        YungAutoRegister.scanPackageForAnnotations("com.yungnickyoung.minecraft.bettermineshafts.module");
         Services.MODULES.loadModules();
     }
 }

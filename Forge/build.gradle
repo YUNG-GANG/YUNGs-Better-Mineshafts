@@ -91,6 +91,21 @@ tasks.withType(JavaCompile) {
 
 processResources {
     from project(":Common").sourceSets.main.resources
+    inputs.property "version", project.version
+    inputs.property "yungsapi_version", project.yungsapi_version
+    inputs.property "minecraft_version", project.minecraft_version
+    inputs.property "mod_description", project.mod_description
+    inputs.property "mod_full_name", project.mod_full_name
+    inputs.property "mod_id", project.mod_id
+
+    filesMatching("META-INF/mods.toml") {
+        expand "version": project.version,
+                "yungsapi_version": project.yungsapi_version,
+                "minecraft_version": project.minecraft_version,
+                "mod_description": project.mod_description,
+                "mod_full_name": project.mod_full_name,
+                "mod_id": project.mod_id
+    }
 }
 
 mixin {

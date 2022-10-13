@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "id": "bettermineshafts",
+  "id": "${mod_id}",
   "version": "${version}",
-  "name": "YUNG's Better Mineshafts",
-  "description": "The long-awaited and much-needed abandoned mineshaft overhaul!",
+  "name": "${mod_full_name}",
+  "description": "${mod_description}",
   "authors": [
     "YUNGNICKYOUNG"
   ],
@@ -30,7 +30,7 @@
     "minecraft": ">=1.19.2",
     "cloth-config2": ">=8.0.75",
     "java": ">=17",
-    "yungsapi": ">=1.19.2-Fabric-3.5.0"
+    "yungsapi": ">=${minecraft_version}-Fabric-${yungsapi_version}"
   },
   "mixins": [
     "bettermineshafts.mixins.json",
