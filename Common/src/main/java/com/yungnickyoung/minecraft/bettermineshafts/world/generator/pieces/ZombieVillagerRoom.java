@@ -2,7 +2,7 @@ package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
 import com.yungnickyoung.minecraft.bettermineshafts.world.config.BetterMineshaftConfiguration;
 import com.yungnickyoung.minecraft.bettermineshafts.module.StructurePieceTypeModule;
-import com.yungnickyoung.minecraft.yungsapi.world.BoundingBoxHelper;
+import com.yungnickyoung.minecraft.yungsapi.world.util.BoundingBoxHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -140,7 +140,7 @@ public class ZombieVillagerRoom extends BetterMineshaftPiece {
         world.setBlock(spawnerPos, Blocks.SPAWNER.defaultBlockState(), 2);
         BlockEntity blockEntity = world.getBlockEntity(spawnerPos);
         if (blockEntity instanceof SpawnerBlockEntity) {
-            ((SpawnerBlockEntity) blockEntity).getSpawner().setEntityId(EntityType.ZOMBIE_VILLAGER);
+            ((SpawnerBlockEntity) blockEntity).setEntityId(EntityType.ZOMBIE_VILLAGER, randomSource);
         }
 
         // Wall with redstone torch in corner

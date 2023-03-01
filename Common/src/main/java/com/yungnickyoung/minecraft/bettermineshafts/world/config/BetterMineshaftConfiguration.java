@@ -2,7 +2,7 @@ package com.yungnickyoung.minecraft.bettermineshafts.world.config;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.yungnickyoung.minecraft.yungsapi.world.BlockStateRandomizer;
+import com.yungnickyoung.minecraft.yungsapi.api.world.randomize.BlockStateRandomizer;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 public class BetterMineshaftConfiguration {
     public static final Codec<BetterMineshaftConfiguration> CODEC = RecordCodecBuilder.create((instance) -> instance
             .group(
-                    Codec.BOOL.fieldOf("flammableLegs").forGetter((config) -> config.flammableLegs),
                     Codec.floatRange(0.0F, 1.0F).fieldOf("replacementRate").forGetter((config) -> config.replacementRate),
                     LegVariant.CODEC.fieldOf("legVariant").forGetter((config) -> config.legVariant),
                     MineshaftDecorationChances.CODEC.fieldOf("decorationChances").forGetter((config) -> config.decorationChances),
@@ -21,19 +20,17 @@ public class BetterMineshaftConfiguration {
                     MineshaftBlockstateRandomizers.CODEC.fieldOf("blockStateRandomizers").forGetter((config) -> config.blockStateRandomizers))
             .apply(instance, BetterMineshaftConfiguration::new));
 
-    public boolean flammableLegs;
     public float replacementRate;
     public LegVariant legVariant;
     public MineshaftDecorationChances decorationChances;
     public MineshaftBlockStates blockStates;
     public MineshaftBlockstateRandomizers blockStateRandomizers;
 
-    public BetterMineshaftConfiguration(boolean flammableLegs, float replacementRate,
+    public BetterMineshaftConfiguration(float replacementRate,
                                         LegVariant legVariant,
                                         MineshaftDecorationChances decorationChances,
                                         MineshaftBlockStates blockStates,
                                         MineshaftBlockstateRandomizers blockStateRandomizers) {
-        this.flammableLegs = flammableLegs;
         this.replacementRate = replacementRate;
         this.legVariant = legVariant;
         this.decorationChances = decorationChances;

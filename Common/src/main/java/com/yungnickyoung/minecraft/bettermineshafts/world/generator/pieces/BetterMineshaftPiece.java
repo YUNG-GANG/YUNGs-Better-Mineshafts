@@ -1,9 +1,11 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
 import com.yungnickyoung.minecraft.bettermineshafts.world.config.BetterMineshaftConfiguration;
-import com.yungnickyoung.minecraft.yungsapi.world.BlockStateRandomizer;
+import com.yungnickyoung.minecraft.yungsapi.api.world.randomize.BlockStateRandomizer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.features.CaveFeatures;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -18,6 +20,7 @@ import net.minecraft.world.level.block.VineBlock;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.levelgen.structure.StructurePieceAccessor;
@@ -41,7 +44,6 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
     public BetterMineshaftPiece(StructurePieceType structurePieceType, CompoundTag compoundTag) {
         super(structurePieceType, compoundTag);
         this.config = new BetterMineshaftConfiguration(
-                compoundTag.getBoolean("flammableLegs"),
                 compoundTag.getFloat("replacementRate"),
                 BetterMineshaftConfiguration.LegVariant.byId(compoundTag.getInt("legVariantIndex")),
                 new BetterMineshaftConfiguration.MineshaftDecorationChances(
@@ -71,7 +73,6 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
 
     @Override
     protected void addAdditionalSaveData(StructurePieceSerializationContext structurePieceSerializationContext, CompoundTag compoundTag) {
-        compoundTag.putBoolean("flammableLegs", this.config.flammableLegs);
         compoundTag.putFloat("replacementRate", this.config.replacementRate);
         compoundTag.putInt("legVariantIndex", config.legVariant.ordinal());
         compoundTag.putFloat("vineChance", this.config.decorationChances.vineChance);
@@ -161,6 +162,8 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
      * Add decorations specific to a biome variant, such as snow.
      */
     protected void addBiomeDecorations(WorldGenLevel world, BoundingBox box, RandomSource randomSource, int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
+        Registry<ConfiguredFeature<?, ?>> registry = world.registryAccess().registry(Registries.CONFIGURED_FEATURE).get();
+
         for (int x = minX; x <= maxX; x++) {
             for (int y = minY; y <= maxY; y++) {
                 for (int z = minZ; z <= maxZ; z++) {
@@ -178,17 +181,17 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
                     if (config.decorationChances.lushDecorations) {
                         // Moss & ground plants
                         if (box.isInside(blockPos) && randomSource.nextFloat() < .005f) {
-                            CaveFeatures.MOSS_PATCH.value().place(world, world.getLevel().getChunkSource().getGenerator(), randomSource, blockPos);
+                            registry.get(CaveFeatures.MOSS_PATCH).place(world, world.getLevel().getChunkSource().getGenerator(), randomSource, blockPos);
                         }
 
                         // Clay, water, dripleaf
                         if (box.isInside(blockPos) && randomSource.nextFloat() < .005f) {
-                            CaveFeatures.LUSH_CAVES_CLAY.value().place(world, world.getLevel().getChunkSource().getGenerator(), randomSource, blockPos);
+                            registry.get(CaveFeatures.LUSH_CAVES_CLAY).place(world, world.getLevel().getChunkSource().getGenerator(), randomSource, blockPos);
                         }
 
                         // Moss ceiling & cave vines
                         if (box.isInside(blockPos) && randomSource.nextFloat() < .005f) {
-                            CaveFeatures.MOSS_PATCH_CEILING.value().place(world, world.getLevel().getChunkSource().getGenerator(), randomSource, blockPos);
+                            registry.get(CaveFeatures.MOSS_PATCH_CEILING).place(world, world.getLevel().getChunkSource().getGenerator(), randomSource, blockPos);
                         }
 
                         // Moss layers
@@ -199,11 +202,11 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
 
                     if (config.decorationChances.dripstoneDecorations) {
                         if (box.isInside(blockPos) && randomSource.nextFloat() < .02f) {
-                            CaveFeatures.DRIPSTONE_CLUSTER.value().place(world, world.getLevel().getChunkSource().getGenerator(), randomSource, blockPos);
+                            registry.get(CaveFeatures.DRIPSTONE_CLUSTER).place(world, world.getLevel().getChunkSource().getGenerator(), randomSource, blockPos);
                         }
 
                         if (box.isInside(blockPos) && randomSource.nextFloat() < .02f) {
-                            CaveFeatures.POINTED_DRIPSTONE.value().place(world, world.getLevel().getChunkSource().getGenerator(), randomSource, blockPos);
+                            registry.get(CaveFeatures.POINTED_DRIPSTONE).place(world, world.getLevel().getChunkSource().getGenerator(), randomSource, blockPos);
                         }
                     }
 

@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[43,)"
+loaderVersion="[44,)"
 license="LGPLv3"
 issueTrackerURL="https://github.com/yungnickyoung/YUNGs-Better-Mineshafts/issues"
 
@@ -16,12 +16,12 @@ issueTrackerURL="https://github.com/yungnickyoung/YUNGs-Better-Mineshafts/issues
 [[dependencies.${mod_id}]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.19.2,1.20)"
+    versionRange="[1.19.3,1.20)"
 
 [[dependencies.${mod_id}]]
     modId="forge"
     mandatory=true
-    versionRange="[43.1.1,)"
+    versionRange="[44.1.0,)"
 
 [[dependencies.${mod_id}]]
     modId="yungsapi"

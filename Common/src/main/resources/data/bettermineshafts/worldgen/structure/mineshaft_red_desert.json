@@ -4,7 +4,6 @@
   "step": "underground_structures",
   "spawn_overrides": {},
   "config": {
-    "flammableLegs": false,
     "replacementRate": 0.6,
     "legVariant": "edge",
     "decorationChances": {

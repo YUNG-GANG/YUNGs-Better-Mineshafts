@@ -4,7 +4,7 @@ import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshaftsCommon;
 import com.yungnickyoung.minecraft.bettermineshafts.world.config.BetterMineshaftConfiguration;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
 import com.yungnickyoung.minecraft.bettermineshafts.module.StructurePieceTypeModule;
-import com.yungnickyoung.minecraft.yungsapi.world.BoundingBoxHelper;
+import com.yungnickyoung.minecraft.yungsapi.world.util.BoundingBoxHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;

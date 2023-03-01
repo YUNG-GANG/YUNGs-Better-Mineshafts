@@ -1,11 +1,13 @@
 plugins {
-    id 'fabric-loom' version '0.12-SNAPSHOT'
+    id 'fabric-loom' version '1.0-SNAPSHOT'
     id 'idea'
 }
 
 archivesBaseName = "${mod_name}"
 version = "${minecraft_version}-Fabric-${version}"
 group = maven_group
+
+def useLocalYungsApi = findProject(':yungsapi') != null
 
 repositories {
     maven { url "https://maven.fabricmc.net" }
@@ -16,8 +18,17 @@ repositories {
 dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
     mappings loom.officialMojangMappings()
-    modImplementation "com.yungnickyoung.minecraft.yungsapi:YungsApi:${minecraft_version}-Fabric-${yungsapi_version}"
-//    modImplementation files("libs/YungsApi-1.19.2-Fabric-3.5.0-beta0.jar")
+
+    // YUNG's API
+    if (useLocalYungsApi) {
+        modImplementation files("libs/YungsApi-${minecraft_version}-Fabric-${yungsapi_version}.jar")
+    } else {
+        modImplementation "com.yungnickyoung.minecraft.yungsapi:YungsApi:${minecraft_version}-Fabric-${yungsapi_version}"
+    }
+    implementation("org.reflections:reflections:0.10.2")
+    include("org.reflections:reflections:0.10.2")
+
+    // Fabric
     modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
 

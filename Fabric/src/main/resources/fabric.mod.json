@@ -25,10 +25,10 @@
     ]
   },
   "depends": {
-    "fabricloader": ">=0.14",
-    "fabric": ">=0.60.0",
-    "minecraft": ">=1.19.2",
-    "cloth-config2": ">=8.0.75",
+    "fabricloader": ">=0.14.14",
+    "fabric": ">=0.75.1",
+    "minecraft": ">=1.19.3",
+    "cloth-config2": ">=9.0.94",
     "java": ">=17",
     "yungsapi": ">=${minecraft_version}-Fabric-${yungsapi_version}"
   },
