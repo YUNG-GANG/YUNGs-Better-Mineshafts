@@ -25,12 +25,12 @@
     ]
   },
   "depends": {
-    "fabricloader": ">=0.14.14",
-    "fabric": ">=0.75.1",
-    "minecraft": ">=1.19.3",
-    "cloth-config2": ">=9.0.94",
+    "fabricloader": ">=${fabric_loader_version}",
+    "fabric": ">=${fabric_version}",
+    "minecraft": ">=${mc_version}",
+    "cloth-config2": ">=${clothconfig_version_fabric}",
     "java": ">=17",
-    "yungsapi": ">=${minecraft_version}-Fabric-${yungsapi_version}"
+    "yungsapi": ">=${mc_version}-Fabric-${yungsapi_version}"
   },
   "mixins": [
     "bettermineshafts.mixins.json",
