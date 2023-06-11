@@ -240,7 +240,7 @@ public class VerticalEntrance extends BetterMineshaftPiece {
             validPositions = new boolean[tunnelEndZ - tunnelStartZ + 1];
             for (int z = 0; z < validPositions.length; z++) {
                 BlockState floorBlock = this.getBlock(world, tunnelStartX + 2, tunnelFloorAltitude, tunnelStartZ + z, box);
-                if (floorBlock.getMaterial().isSolid()) {
+                if (floorBlock.isSolid()) {
                     validPositions[z] = true;
                 }
             }
@@ -248,7 +248,7 @@ public class VerticalEntrance extends BetterMineshaftPiece {
             validPositions = new boolean[tunnelEndX - tunnelStartX + 1];
             for (int x = 0; x < validPositions.length; x++) {
                 BlockState floorBlock = this.getBlock(world, tunnelStartX + x, tunnelFloorAltitude, tunnelStartZ + 2, box);
-                if (floorBlock.getMaterial().isSolid()) {
+                if (floorBlock.isSolid()) {
                     validPositions[x] = true;
                 }
             }

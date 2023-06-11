@@ -26,15 +26,11 @@ import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.levelgen.structure.StructurePieceAccessor;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
-import net.minecraft.world.level.material.Material;
-
-import java.util.Set;
 
 public abstract class BetterMineshaftPiece extends StructurePiece {
     public BetterMineshaftConfiguration config;
 
     protected static final BlockState AIR = Blocks.AIR.defaultBlockState();
-    private static final Set<Material> NON_SOLID_MATERIALS = Set.of(Material.AIR, Material.WATER, Material.LAVA, Material.WATER_PLANT);
 
     public BetterMineshaftPiece(StructurePieceType structurePieceType, int chainLength, BetterMineshaftConfiguration config, BoundingBox boundingBox) {
         super(structurePieceType, chainLength, boundingBox);
@@ -352,7 +348,7 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
 
     protected boolean isReplaceableByStructures(BlockState blockState) {
         return blockState.isAir() ||
-                blockState.getMaterial().isLiquid() ||
+                blockState.liquid() ||
                 blockState.is(Blocks.GLOW_LICHEN) ||
                 blockState.is(Blocks.SEAGRASS) ||
                 blockState.is(Blocks.TALL_SEAGRASS) ||
@@ -513,7 +509,7 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
                 for (int z = minZ; z <= maxZ; ++z) {
                     BlockState currState = this.getBlockAtFixed(world, x, y, z, boundingBox);
                     if (currState != null && currState != Blocks.CHAIN.defaultBlockState()) {
-                        if ((currState.getMaterial() == Material.WATER || currState.getMaterial() == Material.LAVA) || (randomSource.nextFloat() < chance && !currState.isAir())) {
+                        if (currState.liquid() || (randomSource.nextFloat() < chance && !currState.isAir())) {
                             this.placeBlock(world, blockState, x, y, z, boundingBox);
                         }
                     }
@@ -532,12 +528,12 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
                 for (int z = minZ; z <= maxZ; ++z) {
                     BlockState currState = this.getBlockAtFixed(world, x, y, z, boundingBox);
                     if (currState != null && currState != Blocks.CHAIN.defaultBlockState()) {
-                        if ((currState.getMaterial() == Material.WATER || currState.getMaterial() == Material.LAVA) || (randomSource.nextFloat() < chance && !currState.isAir())) {
+                        if (currState.liquid() || (randomSource.nextFloat() < chance && !currState.isAir())) {
                             // Select random block state
                             BlockState blockState = selector.get(randomSource);
 
                             // Don't place air where liquid was. This helps to avoid floating water.
-                            if (currState.getMaterial() == Material.WATER || currState.getMaterial() == Material.LAVA) {
+                            if (currState.liquid()) {
                                 int numAttempts = 0;
                                 while ((blockState == Blocks.AIR.defaultBlockState() || blockState == Blocks.CAVE_AIR.defaultBlockState()) && numAttempts < 10) {
                                     blockState = selector.get(randomSource);
@@ -561,7 +557,7 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
                 for (int z = minZ; z <= maxZ; ++z) {
                     if (randomSource.nextFloat() < chance) {
                         BlockState currState = this.getBlockAtFixed(world, x, y, z, boundingBox);
-                        if (currState != null && currState != Blocks.CHAIN.defaultBlockState() && !NON_SOLID_MATERIALS.contains(currState.getMaterial())) {
+                        if (currState != null && currState != Blocks.CHAIN.defaultBlockState() && currState.isSolid()) {
                             this.placeBlock(world, blockState, x, y, z, boundingBox);
                         }
                     }
