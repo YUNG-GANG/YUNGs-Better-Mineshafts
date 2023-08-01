@@ -1,7 +1,11 @@
 plugins {
     id 'fabric-loom' version '1.2-SNAPSHOT'
     id 'idea'
+    id 'net.darkhax.curseforgegradle' version "${cursegradle_version}"
+    id 'com.modrinth.minotaur' version '2.+'
 }
+
+def modVersion = version
 
 archivesBaseName = "${mod_name}"
 version = "${mc_version}-Fabric-${version}"
@@ -95,3 +99,52 @@ jar {
         rename { "${it}_${mod_name}" }
     }
 }
+
+artifacts {
+    archives(tasks.remapJar)
+    archives(tasks.remapSourcesJar)
+}
+
+String[] compatibleVersions = project.compatible_versions.split(',')
+task publishCurseForgeFabric(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
+    dependsOn(tasks.remapJar)
+    apiToken = curseforgeApiKey
+
+    debugMode = false
+
+    def mainFile = upload(curseforge_project_id_fabric, tasks.remapJar.archiveFile)
+    mainFile.changelogType = 'markdown'
+    mainFile.changelog = file("../CHANGELOG.md")
+    mainFile.releaseType = 'release'
+    mainFile.addRequirement('yungs-api-fabric')
+    mainFile.addRequirement('fabric-api')
+    mainFile.addRequirement('cloth-config')
+    mainFile.addOptional('modmenu')
+    mainFile.displayName = "[${mc_version}] ${mod_full_name} v${modVersion} (Fabric)"
+    compatibleVersions.each { version ->
+        mainFile.addGameVersion(version)
+    }
+}
+
+List compatibleVersionsList = project.compatible_versions.split(',')
+modrinth {
+    token = modrinthToken
+    projectId = modrinth_project_id
+    versionNumber = version
+    versionName = "[${mc_version}] v${modVersion} (Fabric)"
+    versionType = "release"
+    uploadFile = remapJar
+    gameVersions = compatibleVersionsList
+    debugMode = false
+    changelog = file("../CHANGELOG.md").text
+    dependencies { // A special DSL for creating dependencies
+        // scope.type
+        // The scope can be `required`, `optional`, `incompatible`, or `embedded`
+        // The type can either be `project` or `version`
+        required.project "yungs-api"
+        required.project "fabric-api"
+        required.project "cloth-config"
+        optional.project "modmenu"
+    }
+}
+tasks.modrinth.dependsOn(tasks.remapJar)

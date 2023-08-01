@@ -10,9 +10,13 @@ buildscript {
 plugins {
     id 'eclipse'
     id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id 'net.darkhax.curseforgegradle' version "${cursegradle_version}"
+    id 'com.modrinth.minotaur' version '2.+'
 }
 
 apply plugin: 'org.spongepowered.mixin'
+
+def modVersion = version
 
 archivesBaseName = "${mod_name}"
 version = "${mc_version}-Forge-${version}"
@@ -123,3 +127,41 @@ mixin {
 }
 
 jar.finalizedBy('reobfJar')
+
+String[] compatibleVersions = project.compatible_versions.split(',')
+task publishCurseForgeForge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
+    dependsOn(tasks.jar)
+    apiToken = curseforgeApiKey
+
+    debugMode = false
+
+    def mainFile = upload(curseforge_project_id_forge, tasks.jar.archiveFile)
+    mainFile.changelogType = 'markdown'
+    mainFile.changelog = file("../CHANGELOG.md")
+    mainFile.releaseType = 'release'
+    mainFile.addRequirement('yungs-api')
+    mainFile.displayName = "[${mc_version}] ${mod_full_name} v${modVersion} (Forge)"
+    compatibleVersions.each { version ->
+        mainFile.addGameVersion(version)
+    }
+}
+
+List compatibleVersionsList = project.compatible_versions.split(',')
+modrinth {
+    token = modrinthToken
+    projectId = modrinth_project_id
+    versionNumber = version
+    versionName = "[${mc_version}] v${modVersion} (Forge)"
+    versionType = "release"
+    uploadFile = jar
+    gameVersions = compatibleVersionsList
+    debugMode = false
+    changelog = file("../CHANGELOG.md").text
+    dependencies { // A special DSL for creating dependencies
+        // scope.type
+        // The scope can be `required`, `optional`, `incompatible`, or `embedded`
+        // The type can either be `project` or `version`
+        required.project "yungs-api"
+    }
+}
+tasks.modrinth.dependsOn(tasks.jar)

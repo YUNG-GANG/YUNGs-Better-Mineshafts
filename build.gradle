@@ -38,4 +38,10 @@ subprojects {
     tasks.withType(GenerateModuleMetadata) {
         enabled = false
     }
+    task publishCurseForge(dependsOn: [':Forge:publishCurseForgeForge', ':Fabric:publishCurseForgeFabric']) {
+    }
+    task publishModrinth(dependsOn: [':Forge:modrinth', ':Fabric:modrinth']) {
+    }
+    task publishCurseAndModrinth(dependsOn: ['publishCurseForge', 'publishModrinth']) {
+    }
 }
