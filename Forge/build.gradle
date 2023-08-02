@@ -137,7 +137,7 @@ task publishCurseForgeForge(type: net.darkhax.curseforgegradle.TaskPublishCurseF
 
     def mainFile = upload(curseforge_project_id_forge, tasks.jar.archiveFile)
     mainFile.changelogType = 'markdown'
-    mainFile.changelog = file("../CHANGELOG.md")
+    mainFile.changelog = file("../CHANGELOG.md").exists() ? file("../CHANGELOG.md").text : "No changelog provided"
     mainFile.releaseType = 'release'
     mainFile.addRequirement('yungs-api')
     mainFile.displayName = "[${mc_version}] ${mod_full_name} v${modVersion} (Forge)"
@@ -156,7 +156,7 @@ modrinth {
     uploadFile = jar
     gameVersions = compatibleVersionsList
     debugMode = false
-    changelog = file("../CHANGELOG.md").text
+    changelog = file("../CHANGELOG.md").exists() ? file("../CHANGELOG.md").text : "No changelog provided"
     dependencies { // A special DSL for creating dependencies
         // scope.type
         // The scope can be `required`, `optional`, `incompatible`, or `embedded`
