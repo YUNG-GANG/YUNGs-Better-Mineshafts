@@ -177,7 +177,7 @@ public class SmallTunnel extends BetterMineshaftPiece {
         for (int z = 0; z <= LOCAL_Z_END; z++) {
             mutable.set(this.getWorldX(2, z), this.getWorldY(1), this.getWorldZ(2, z));
             if (randomSource.nextFloat() < 0.5f && (this.getBlock(world, LOCAL_X_END / 2, 1, z, box).is(Blocks.AIR) || this.getBlock(world, LOCAL_X_END / 2, 1, z, box).is(Blocks.CAVE_AIR)) && Blocks.RAIL.canSurvive(AIR, world, mutable)) {
-                this.placeBlock(world, Blocks.RAIL.defaultBlockState(), 2, 1, z, boundingBox);
+                this.placeBlock(world, Blocks.RAIL.defaultBlockState(), 2, 1, z, box);
             }
         }
 
