@@ -35,5 +35,12 @@
   "mixins": [
     "bettermineshafts.mixins.json",
     "bettermineshafts_fabric.mixins.json"
-  ]
+  ],
+  "custom": {
+    "catalogue": {
+      "icon": {
+        "image": "icon_catalogue.png"
+      }
+    }
+  }
 }
