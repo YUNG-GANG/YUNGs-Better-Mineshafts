@@ -39,8 +39,10 @@
   "custom": {
     "catalogue": {
       "icon": {
-        "image": "icon_catalogue.png"
-      }
+        "image": "catalogue_icon.png"
+      },
+      "banner": "logo.png",
+      "background": "catalogue_background.png"
     }
   }
 }

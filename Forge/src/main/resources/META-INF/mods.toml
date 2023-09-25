@@ -14,7 +14,8 @@ issueTrackerURL="https://github.com/yungnickyoung/YUNGs-Better-Mineshafts/issues
     displayURL="https://www.curseforge.com/minecraft/mc-mods/yungs-better-mineshafts-forge"
 
 [modproperties.${mod_id}]
-    catalogueImageIcon="icon_catalogue.png"
+    catalogueImageIcon="catalogue_icon.png"
+    catalogueBackground="catalogue_background.png"
 
 [[dependencies.${mod_id}]]
     modId="minecraft"
