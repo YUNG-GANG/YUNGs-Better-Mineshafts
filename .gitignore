@@ -25,3 +25,5 @@ bin/
 run/
 logs/
 libs/
+
+CHANGELOG.md
