@@ -17,6 +17,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FallingBlock;
 import net.minecraft.world.level.block.VineBlock;
+import net.minecraft.world.level.block.entity.BarrelBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -109,7 +112,10 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
     protected boolean addBarrel(WorldGenLevel world, BoundingBox boundingBox, RandomSource randomSource, BlockPos pos, ResourceLocation lootTableId) {
         if (boundingBox.isInside(pos) && world.getBlockState(pos).getBlock() != Blocks.BARREL) {
             world.setBlock(pos, Blocks.BARREL.defaultBlockState().setValue(BlockStateProperties.FACING, Direction.UP), 2);
-            RandomizableContainerBlockEntity.setLootTable(world, randomSource, pos, lootTableId);
+            BlockEntity blockEntity = world.getBlockEntity(pos);
+            if (blockEntity instanceof BarrelBlockEntity barrelBlockEntity) {
+                barrelBlockEntity.setLootTable(lootTableId, randomSource.nextLong());
+            }
             return true;
         } else {
             return false;
