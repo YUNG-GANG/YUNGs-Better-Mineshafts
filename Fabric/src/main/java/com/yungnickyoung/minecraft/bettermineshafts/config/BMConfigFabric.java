@@ -4,7 +4,7 @@ import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 
-@Config(name = "bettermineshafts-fabric-1_20")
+@Config(name = "bettermineshafts-fabric-1_20_4")
 public class BMConfigFabric implements ConfigData {
     @ConfigEntry.Gui.Tooltip
     public int minY = -55;
