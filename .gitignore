@@ -23,6 +23,7 @@ bin/
 
 # other
 run/
+runs/
 logs/
 libs/
 
