@@ -70,6 +70,20 @@ processResources {
                 "mod_id": project.mod_id,
                 "neoforge_version": project.neoforge_version
     }
+
+    doLast {
+        // Mixins for NeoForge don't need refmapping and no refmap file will exist. This is to avoid a console warning
+        def pattern = ~/"refmap"\s*:\s*".*?"\s*,/
+        // Traverse all subdirectories to find mixin jsons
+        fileTree(dir: '.', includes: ['**/*.mixins.json']).forEach { file ->
+            if (file.path.contains('/build/')) {
+                // Copy all lines excluding refmap line
+                file.text = file.readLines().findAll { line ->
+                    !pattern.matcher(line).find()
+                }.join('\n')
+            }
+        }
+    }
 }
 
 tasks.withType(Javadoc).matching(notNeoTask).configureEach {
