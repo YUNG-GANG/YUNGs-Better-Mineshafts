@@ -113,7 +113,8 @@ task publishCurseForgeNeoForge(type: TaskPublishCurseForge) {
     mainFile.changelogType = 'markdown'
     mainFile.changelog = file("../CHANGELOG.md").exists() ? file("../CHANGELOG.md").text : "No changelog provided"
     mainFile.releaseType = 'release'
-    mainFile.addRequirement('yungs-api')
+    mainFile.addRequirement('yungs-api-neoforge')
+    mainFile.addModLoader('neoforge')
     mainFile.displayName = "[${mc_version}] ${mod_full_name} v${modVersion} (NeoForge)"
     compatibleVersions.each { version ->
         mainFile.addGameVersion(version)
