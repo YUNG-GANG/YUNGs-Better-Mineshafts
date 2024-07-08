@@ -48,27 +48,28 @@ public class LayeredIntersection4 extends BetterMineshaftPiece {
 
     public static BoundingBox determineBoxPosition(StructurePieceAccessor structurePieceAccessor, int x, int y, int z, Direction direction) {
         BoundingBox blockBox = new BoundingBox(x, y - 3, z, x, (y - 3) + Y_AXIS_LEN - 1, z);
+        BoundingBoxAccessor blockBoxAccessor = (BoundingBoxAccessor) blockBox;
         switch (direction) {
             case NORTH:
             default:
-                ((BoundingBoxAccessor) blockBox).setMaxX(x + 5);
-                ((BoundingBoxAccessor) blockBox).setMinX(x - 1);
-                ((BoundingBoxAccessor) blockBox).setMinZ(z - (MAIN_AXIS_LEN - 1));
+                blockBoxAccessor.setMaxX(x + 5);
+                blockBoxAccessor.setMinX(x - 1);
+                blockBoxAccessor.setMinZ(z - (MAIN_AXIS_LEN - 1));
                 break;
             case SOUTH:
-                ((BoundingBoxAccessor) blockBox).setMaxX(x + 1);
-                ((BoundingBoxAccessor) blockBox).setMinX(x - 5);
-                ((BoundingBoxAccessor) blockBox).setMaxZ(z + (MAIN_AXIS_LEN - 1));
+                blockBoxAccessor.setMaxX(x + 1);
+                blockBoxAccessor.setMinX(x - 5);
+                blockBoxAccessor.setMaxZ(z + (MAIN_AXIS_LEN - 1));
                 break;
             case WEST:
-                ((BoundingBoxAccessor) blockBox).setMinX(x - (MAIN_AXIS_LEN - 1));
-                ((BoundingBoxAccessor) blockBox).setMaxZ(z);
-                ((BoundingBoxAccessor) blockBox).setMinZ(z - 5);
+                blockBoxAccessor.setMinX(x - (MAIN_AXIS_LEN - 1));
+                blockBoxAccessor.setMaxZ(z);
+                blockBoxAccessor.setMinZ(z - 5);
                 break;
             case EAST:
-                ((BoundingBoxAccessor) blockBox).setMaxX(x + (MAIN_AXIS_LEN - 1));
-                ((BoundingBoxAccessor) blockBox).setMaxZ(z + 4);
-                ((BoundingBoxAccessor) blockBox).setMinZ(z - 1);
+                blockBoxAccessor.setMaxX(x + (MAIN_AXIS_LEN - 1));
+                blockBoxAccessor.setMaxZ(z + 4);
+                blockBoxAccessor.setMinZ(z - 1);
         }
 
         // The following func call returns null if this new blockbox does not intersect with any pieces in the list.

@@ -3,6 +3,7 @@ package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
 import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshaftsCommon;
+import com.yungnickyoung.minecraft.bettermineshafts.mixin.BlockBehaviourAccessor;
 import com.yungnickyoung.minecraft.bettermineshafts.module.StructurePieceTypeModule;
 import com.yungnickyoung.minecraft.bettermineshafts.world.config.BetterMineshaftConfiguration;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
@@ -41,13 +42,13 @@ public class BigTunnel extends BetterMineshaftPiece {
     private final List<Integer> smallSupports = Lists.newLinkedList(); // local z coords
     private final List<Pair<Integer, Integer>> gravelDeposits = Lists.newLinkedList(); // Pair<z coordinate, side> where side 0 = left, 1 = right
     private static final int
-        SECONDARY_AXIS_LEN = 9,
-        Y_AXIS_LEN = 8,
-        MAIN_AXIS_LEN = 24;
+            SECONDARY_AXIS_LEN = 9,
+            Y_AXIS_LEN = 8,
+            MAIN_AXIS_LEN = 24;
     private static final int
-        LOCAL_X_END = SECONDARY_AXIS_LEN - 1,
-        LOCAL_Y_END = Y_AXIS_LEN - 1,
-        LOCAL_Z_END = MAIN_AXIS_LEN - 1;
+            LOCAL_X_END = SECONDARY_AXIS_LEN - 1,
+            LOCAL_Y_END = Y_AXIS_LEN - 1,
+            LOCAL_Z_END = MAIN_AXIS_LEN - 1;
 
     public BigTunnel(CompoundTag compoundTag) {
         super(StructurePieceTypeModule.BIG_TUNNEL, compoundTag);
@@ -526,7 +527,7 @@ public class BigTunnel extends BetterMineshaftPiece {
         BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
         for (int z = 0; z <= LOCAL_Z_END; z++) {
             mutable.set(this.getWorldX(LOCAL_X_END / 2, z), this.getWorldY(1), this.getWorldZ(LOCAL_X_END / 2, z));
-            if (randomSource.nextFloat() < 0.5f && (this.getBlock(world, LOCAL_X_END / 2, 1, z, box).is(Blocks.AIR) || this.getBlock(world, LOCAL_X_END / 2, 1, z, box).is(Blocks.CAVE_AIR)) && Blocks.RAIL.canSurvive(AIR, world, mutable)) {
+            if (randomSource.nextFloat() < 0.5f && (this.getBlock(world, LOCAL_X_END / 2, 1, z, box).is(Blocks.AIR) || this.getBlock(world, LOCAL_X_END / 2, 1, z, box).is(Blocks.CAVE_AIR)) && ((BlockBehaviourAccessor) Blocks.RAIL).callCanSurvive(AIR, world, mutable)) {
                 this.placeBlock(world, Blocks.RAIL.defaultBlockState(), LOCAL_X_END / 2, 1, z, box);
             }
         }

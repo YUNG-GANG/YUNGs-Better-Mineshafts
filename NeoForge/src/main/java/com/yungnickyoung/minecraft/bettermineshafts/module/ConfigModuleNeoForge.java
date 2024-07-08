@@ -3,15 +3,15 @@ package com.yungnickyoung.minecraft.bettermineshafts.module;
 import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshaftsCommon;
 import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshaftsNeoForge;
 import com.yungnickyoung.minecraft.bettermineshafts.config.BMConfigNeoForge;
-import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.level.LevelEvent;
 
 public class ConfigModuleNeoForge {
-    public static void init() {
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, BMConfigNeoForge.SPEC, "bettermineshafts-neoforge-1_20_4.toml");
+    public static void init(ModContainer container) {
+        container.registerConfig(ModConfig.Type.COMMON, BMConfigNeoForge.SPEC, "bettermineshafts-neoforge-1_21.toml");
         NeoForge.EVENT_BUS.addListener(ConfigModuleNeoForge::onWorldLoad);
         BetterMineshaftsNeoForge.loadingContextEventBus.addListener(ConfigModuleNeoForge::onConfigChange);
     }

@@ -1,28 +1,32 @@
-import net.darkhax.curseforgegradle.TaskPublishCurseForge
-
 plugins {
-    id 'idea'
-    id 'maven-publish'
-    id 'net.neoforged.gradle.userdev' version '7.0.81'
-    id 'java-library'
-    id 'net.darkhax.curseforgegradle' version "${curseforgegradle_version}"
-    id 'com.modrinth.minotaur' version '2.+'
+    id 'multiloader-loader'
+    id 'net.neoforged.gradle.userdev' version '7.0.145'
+    id 'net.darkhax.curseforgegradle'
+    id 'com.modrinth.minotaur'
 }
-
-def modVersion = version
-
-archivesBaseName = "${mod_name}"
-version = "${mc_version}-NeoForge-${version}"
-group = maven_group
 
 // Automatically enable neoforge AccessTransformers if the file exists
 // This location is hardcoded in FML and can not be changed.
 // https://github.com/neoforged/FancyModLoader/blob/a952595eaaddd571fbc53f43847680b00894e0c1/loader/src/main/java/net/neoforged/fml/loading/moddiscovery/ModFile.java#L118
-if (file('src/main/resources/META-INF/accesstransformer.cfg').exists()) {
-    minecraft.accessTransformers.file file('src/main/resources/META-INF/accesstransformer.cfg')
+def at = file('src/main/resources/META-INF/accesstransformer.cfg')
+if (at.exists()) {
+    accessTransformers.add(at.absolutePath)
 }
+
 runs {
     configureEach {
+        // Recommended logging data for a userdev environment
+        // The markers can be added/remove as needed separated by commas.
+        // "SCAN": For mods scan.
+        // "REGISTRIES": For firing of registry events.
+        // "REGISTRYDUMP": For getting the contents of all registries.
+        systemProperty 'forge.logging.markers', 'REGISTRIES'
+
+        // Recommended logging level for the console
+        // You can set various levels here.
+        // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
+        systemProperty 'forge.logging.console.level', 'debug'
+
         modSource project.sourceSets.main
     }
     client {
@@ -44,70 +48,15 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 dependencies {
     implementation "net.neoforged:neoforge:${neoforge_version}"
-    compileOnly project(":Common")
     implementation "com.yungnickyoung.minecraft.yungsapi:YungsApi:${mc_version}-NeoForge-${yungsapi_version}"
 }
 
-// NeoGradle compiles the game, but we don't want to add our common code to the game's code
-Spec<Task> notNeoTask = { Task it -> !it.name.startsWithIgnoreCase("neo") } as Spec<Task>
-
-tasks.withType(JavaCompile).matching(notNeoTask).configureEach {
-    source(project(":Common").sourceSets.main.allSource)
-}
-
-processResources {
-    from project(":Common").sourceSets.main.resources
-    inputs.property "version", project.version
-    inputs.property "yungsapi_version", project.yungsapi_version
-    inputs.property "mc_version", project.mc_version
-    inputs.property "mod_description", project.mod_description
-    inputs.property "mod_full_name", project.mod_full_name
-    inputs.property "mod_id", project.mod_id
-    inputs.property "neoforge_version", project.neoforge_version
-
-    filesMatching("META-INF/mods.toml") {
-        expand "version": project.version,
-                "yungsapi_version": project.yungsapi_version,
-                "mc_version": project.mc_version,
-                "mod_description": project.mod_description,
-                "mod_full_name": project.mod_full_name,
-                "mod_id": project.mod_id,
-                "neoforge_version": project.neoforge_version
-    }
-
-    doLast {
-        // Mixins for NeoForge don't need refmapping and no refmap file will exist. This is to avoid a console warning
-        def pattern = ~/"refmap"\s*:\s*".*?"\s*,/
-        // Traverse all subdirectories to find mixin jsons
-        fileTree(dir: '.', includes: ['**/*.mixins.json']).forEach { file ->
-            if (file.path.contains('/build/')) {
-                // Copy all lines excluding refmap line
-                file.text = file.readLines().findAll { line ->
-                    !pattern.matcher(line).find()
-                }.join('\n')
-            }
-        }
-    }
-}
-
-tasks.withType(Javadoc).matching(notNeoTask).configureEach {
-    source(project(":Common").sourceSets.main.allJava)
-}
-
-tasks.named("sourcesJar", Jar) {
-    from(project(":Common").sourceSets.main.allSource)
-}
-
-tasks.withType(ProcessResources).matching(notNeoTask).configureEach {
-    from project(":Common").sourceSets.main.resources
-}
-
 String[] compatibleVersions = project.compatible_versions.split(',')
-task publishCurseForgeNeoForge(type: TaskPublishCurseForge) {
+task publishCurseForgeNeoForge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
     dependsOn(tasks.jar)
     apiToken = curseforgeApiKey
 
-    debugMode = false
+    debugMode = debug_publish.toBoolean()
 
     def mainFile = upload(curseforge_project_id_neoforge, tasks.jar.archiveFile)
     mainFile.changelogType = 'markdown'
@@ -115,7 +64,7 @@ task publishCurseForgeNeoForge(type: TaskPublishCurseForge) {
     mainFile.releaseType = 'release'
     mainFile.addRequirement('yungs-api-neoforge')
     mainFile.addModLoader('neoforge')
-    mainFile.displayName = "[${mc_version}] ${mod_full_name} v${modVersion} (NeoForge)"
+    mainFile.displayName = "[${mc_version}] ${mod_full_name} v${rawVersion} (NeoForge)"
     compatibleVersions.each { version ->
         mainFile.addGameVersion(version)
     }
@@ -126,11 +75,11 @@ modrinth {
     token = modrinthToken
     projectId = modrinth_project_id
     versionNumber = version
-    versionName = "[${mc_version}] v${modVersion} (NeoForge)"
+    versionName = "[${mc_version}] v${rawVersion} (NeoForge)"
     versionType = "release"
     uploadFile = jar
     gameVersions = compatibleVersionsList
-    debugMode = false
+    debugMode = debug_publish.toBoolean()
     changelog = file("../CHANGELOG.md").exists() ? file("../CHANGELOG.md").text : "No changelog provided"
     dependencies { // A special DSL for creating dependencies
         // scope.type

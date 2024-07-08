@@ -1,27 +1,23 @@
 plugins {
-    id 'fabric-loom' version '1.5-SNAPSHOT'
-    id 'idea'
-    id 'net.darkhax.curseforgegradle' version "${curseforgegradle_version}"
-    id 'com.modrinth.minotaur' version '2.+'
+    id 'multiloader-loader'
+    id 'fabric-loom'
+    id 'net.darkhax.curseforgegradle'
+    id 'com.modrinth.minotaur'
 }
-
-def modVersion = version
-
-archivesBaseName = "${mod_name}"
-version = "${mc_version}-Fabric-${version}"
-group = maven_group
 
 def useLocalYungsApi = findProject(':yungsapi') != null
 
 repositories {
-    maven { url "https://maven.fabricmc.net" }
     maven { url "https://maven.shedaniel.me/" }
     maven { url "https://maven.terraformersmc.com/releases/" }
 }
 
 dependencies {
     minecraft "com.mojang:minecraft:${mc_version}"
-    mappings loom.officialMojangMappings()
+    mappings loom.layered {
+        officialMojangMappings()
+        parchment("org.parchmentmc.data:parchment-${parchment_minecraft}:${parchment_version}@zip")
+    }
 
     // YUNG's API
     if (useLocalYungsApi) {
@@ -41,68 +37,32 @@ dependencies {
 
     // ModMenu
     modImplementation ("com.terraformersmc:modmenu:${project.modmenu_version_fabric}") { transitive = false }
-
-    implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
-    compileOnly project(":Common")
 }
 
 loom {
-    mixin.defaultRefmapName = "${mod_id}.refmap.json"
+    def aw = project(':Common').file("src/main/resources/${mod_id}.accesswidener")
+    if (aw.exists()) {
+        accessWidenerPath.set(aw)
+    }
+
+    mixin {
+        defaultRefmapName.set("${mod_id}.refmap.json")
+    }
 
     runs {
         client {
             client()
             setConfigName("Fabric Client")
             ideConfigGenerated(true)
-            runDir("run")
+            runDir("runs/client")
         }
         server {
             server()
             setConfigName("Fabric Server")
             ideConfigGenerated(true)
-            runDir("run")
+            runDir("runs/server")
         }
     }
-}
-
-processResources {
-    from project(":Common").sourceSets.main.resources
-    inputs.property "version", project.version
-    inputs.property "yungsapi_version", project.yungsapi_version
-    inputs.property "mc_version", project.mc_version
-    inputs.property "mod_description", project.mod_description
-    inputs.property "mod_full_name", project.mod_full_name
-    inputs.property "mod_id", project.mod_id
-    inputs.property "fabric_version", project.fabric_version
-    inputs.property "fabric_loader_version", project.fabric_loader_version
-    inputs.property "clothconfig_version_fabric", project.clothconfig_version_fabric
-
-    filesMatching("fabric.mod.json") {
-        expand "version": project.version,
-                "yungsapi_version": project.yungsapi_version,
-                "mc_version": project.mc_version,
-                "mod_description": project.mod_description,
-                "mod_full_name": project.mod_full_name,
-                "mod_id": project.mod_id,
-                "fabric_version": project.fabric_version,
-                "fabric_loader_version": project.fabric_loader_version,
-                "clothconfig_version_fabric": project.clothconfig_version_fabric
-    }
-}
-
-tasks.withType(JavaCompile) {
-    source(project(":Common").sourceSets.main.allSource)
-}
-
-jar {
-    from("LICENSE") {
-        rename { "${it}_${mod_name}" }
-    }
-}
-
-artifacts {
-    archives(tasks.remapJar)
-    archives(tasks.remapSourcesJar)
 }
 
 String[] compatibleVersions = project.compatible_versions.split(',')
@@ -110,7 +70,7 @@ task publishCurseForgeFabric(type: net.darkhax.curseforgegradle.TaskPublishCurse
     dependsOn(tasks.remapJar)
     apiToken = curseforgeApiKey
 
-    debugMode = false
+    debugMode = debug_publish.toBoolean()
 
     def mainFile = upload(curseforge_project_id_fabric, tasks.remapJar.archiveFile)
     mainFile.changelogType = 'markdown'
@@ -120,7 +80,7 @@ task publishCurseForgeFabric(type: net.darkhax.curseforgegradle.TaskPublishCurse
     mainFile.addRequirement('fabric-api')
     mainFile.addRequirement('cloth-config')
     mainFile.addOptional('modmenu')
-    mainFile.displayName = "[${mc_version}] ${mod_full_name} v${modVersion} (Fabric)"
+    mainFile.displayName = "[${mc_version}] ${mod_full_name} v${rawVersion} (Fabric)"
     compatibleVersions.each { version ->
         mainFile.addGameVersion(version)
     }
@@ -131,11 +91,11 @@ modrinth {
     token = modrinthToken
     projectId = modrinth_project_id
     versionNumber = version
-    versionName = "[${mc_version}] v${modVersion} (Fabric)"
+    versionName = "[${mc_version}] v${rawVersion} (Fabric)"
     versionType = "release"
     uploadFile = remapJar
     gameVersions = compatibleVersionsList
-    debugMode = false
+    debugMode = debug_publish.toBoolean()
     changelog = file("../CHANGELOG.md").exists() ? file("../CHANGELOG.md").text : "No changelog provided"
     dependencies { // A special DSL for creating dependencies
         // scope.type

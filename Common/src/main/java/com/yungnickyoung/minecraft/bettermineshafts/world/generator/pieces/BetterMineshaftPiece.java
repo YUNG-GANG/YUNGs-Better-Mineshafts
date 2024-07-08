@@ -1,5 +1,6 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
+import com.yungnickyoung.minecraft.bettermineshafts.mixin.BlockBehaviourAccessor;
 import com.yungnickyoung.minecraft.bettermineshafts.world.config.BetterMineshaftConfiguration;
 import com.yungnickyoung.minecraft.yungsapi.api.world.randomize.BlockStateRandomizer;
 import net.minecraft.core.BlockPos;
@@ -8,7 +9,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.features.CaveFeatures;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
@@ -19,8 +20,6 @@ import net.minecraft.world.level.block.FallingBlock;
 import net.minecraft.world.level.block.VineBlock;
 import net.minecraft.world.level.block.entity.BarrelBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.ChestBlockEntity;
-import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
@@ -29,6 +28,7 @@ import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.levelgen.structure.StructurePieceAccessor;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
+import net.minecraft.world.level.storage.loot.LootTable;
 
 public abstract class BetterMineshaftPiece extends StructurePiece {
     public BetterMineshaftConfiguration config;
@@ -109,7 +109,7 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
      *                                  GENERATION UTIL METHODS                                *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    protected boolean addBarrel(WorldGenLevel world, BoundingBox boundingBox, RandomSource randomSource, BlockPos pos, ResourceLocation lootTableId) {
+    protected boolean addBarrel(WorldGenLevel world, BoundingBox boundingBox, RandomSource randomSource, BlockPos pos, ResourceKey<LootTable> lootTableId) {
         if (boundingBox.isInside(pos) && world.getBlockState(pos).getBlock() != Blocks.BARREL) {
             world.setBlock(pos, Blocks.BARREL.defaultBlockState().setValue(BlockStateProperties.FACING, Direction.UP), 2);
             BlockEntity blockEntity = world.getBlockEntity(pos);
@@ -122,7 +122,7 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
         }
     }
 
-    protected boolean addBarrel(WorldGenLevel world, BoundingBox boundingBox, RandomSource randomSource, int x, int y, int z, ResourceLocation lootTableId) {
+    protected boolean addBarrel(WorldGenLevel world, BoundingBox boundingBox, RandomSource randomSource, int x, int y, int z, ResourceKey<LootTable> lootTableId) {
         return this.addBarrel(world, boundingBox, randomSource, this.getWorldPos(x, y, z), lootTableId);
     }
 
@@ -137,9 +137,9 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
                     mutable.set(this.getWorldX(x, z), this.getWorldY(y), this.getWorldZ(x, z)).move(facing);
                     BlockState nextBlock = this.getBlock(world, x + facing.getStepX(), y + facing.getStepY(), z + facing.getStepZ(), boundingBox);
                     if (
-                        this.getBlock(world, x, y, z, boundingBox).isAir()
-                            && Block.isFaceFull(nextBlock.getCollisionShape(world, mutable), facing.getOpposite())
-                            && nextBlock.getBlock().defaultBlockState() != Blocks.LADDER.defaultBlockState()
+                            this.getBlock(world, x, y, z, boundingBox).isAir()
+                                    && Block.isFaceFull(nextBlock.getCollisionShape(world, mutable), facing.getOpposite())
+                                    && nextBlock.getBlock().defaultBlockState() != Blocks.LADDER.defaultBlockState()
                     ) {
                         if (randomSource.nextFloat() < chance) {
                             this.placeBlock(world, Blocks.VINE.defaultBlockState().setValue(VineBlock.getPropertyForFace(facing.getAxis() == Direction.Axis.X ? facing : facing.getOpposite()), true), x, y, z, boundingBox);
@@ -175,7 +175,7 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
 
                     // Snow layers
                     if (config.decorationChances.snowChance > 0) {
-                        if (randomSource.nextFloat() < config.decorationChances.snowChance && state.isAir() && Blocks.SNOW.canSurvive(AIR, world, blockPos)) {
+                        if (randomSource.nextFloat() < config.decorationChances.snowChance && state.isAir() && ((BlockBehaviourAccessor) Blocks.SNOW).callCanSurvive(AIR, world, blockPos)) {
                             this.placeBlock(world, Blocks.SNOW.defaultBlockState().setValue(BlockStateProperties.LAYERS, randomSource.nextInt(2) + 1), x, y, z, box);
                         }
                     }
@@ -214,7 +214,7 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
 
                     // Cacti
                     if (config.decorationChances.cactusChance > 0 && randomSource.nextFloat() < config.decorationChances.cactusChance) {
-                        if (state.isAir() && Blocks.CACTUS.canSurvive(AIR, world, blockPos)) {
+                        if (state.isAir() && ((BlockBehaviourAccessor) Blocks.CACTUS).callCanSurvive(AIR, world, blockPos)) {
                             this.placeBlock(world, Blocks.CACTUS.defaultBlockState().setValue(BlockStateProperties.AGE_15, 0), x, y, z, box);
                             if (randomSource.nextFloat() < .5f && this.getBlock(world, x, y + 1, z, box).is(Blocks.AIR)) {
                                 this.placeBlock(world, Blocks.CACTUS.defaultBlockState().setValue(BlockStateProperties.AGE_15, 0), x, y + 1, z, box);
@@ -231,7 +231,7 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
 
                     // Mushrooms
                     if (config.decorationChances.mushroomChance > 0) {
-                        if (state.isAir() && Blocks.RED_MUSHROOM.canSurvive(AIR, world, blockPos)) {
+                        if (state.isAir() && ((BlockBehaviourAccessor) Blocks.RED_MUSHROOM).callCanSurvive(AIR, world, blockPos)) {
                             float r = randomSource.nextFloat();
                             if (r < config.decorationChances.mushroomChance / 2) {
                                 this.placeBlock(world, Blocks.RED_MUSHROOM.defaultBlockState(), x, y, z, box);

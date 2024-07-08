@@ -1,7 +1,7 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world;
 
 import com.mojang.datafixers.util.Either;
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshaftsCommon;
 import com.yungnickyoung.minecraft.bettermineshafts.module.StructureTypeModule;
@@ -20,7 +20,7 @@ import net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilde
 import java.util.Optional;
 
 public class BetterMineshaftStructure extends Structure {
-    public static final Codec<BetterMineshaftStructure> CODEC = RecordCodecBuilder.create((builder) -> builder
+    public static final MapCodec<BetterMineshaftStructure> CODEC = RecordCodecBuilder.mapCodec((builder) -> builder
             .group(
                     settingsCodec(builder),
                     BetterMineshaftConfiguration.CODEC.fieldOf("config").forGetter((structure) -> structure.config)

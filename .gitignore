@@ -8,7 +8,7 @@ classes/
 *.launch
 
 # idea
-.idea/*
+.idea
 !.idea/scopes
 *.iml
 *.ipr

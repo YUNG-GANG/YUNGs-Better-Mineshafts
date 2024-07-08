@@ -1,9 +1,10 @@
 package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 
 import com.yungnickyoung.minecraft.bettermineshafts.BetterMineshaftsCommon;
+import com.yungnickyoung.minecraft.bettermineshafts.mixin.BlockBehaviourAccessor;
+import com.yungnickyoung.minecraft.bettermineshafts.module.StructurePieceTypeModule;
 import com.yungnickyoung.minecraft.bettermineshafts.world.config.BetterMineshaftConfiguration;
 import com.yungnickyoung.minecraft.bettermineshafts.world.generator.BetterMineshaftGenerator;
-import com.yungnickyoung.minecraft.bettermineshafts.module.StructurePieceTypeModule;
 import com.yungnickyoung.minecraft.yungsapi.world.util.BoundingBoxHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -34,13 +35,13 @@ import java.util.List;
 public class SmallTunnel extends BetterMineshaftPiece {
     private final List<Integer> supports = new ArrayList<>(); // local z coords
     private static final int
-        SECONDARY_AXIS_LEN = 5,
-        Y_AXIS_LEN = 5,
-        MAIN_AXIS_LEN = 8;
+            SECONDARY_AXIS_LEN = 5,
+            Y_AXIS_LEN = 5,
+            MAIN_AXIS_LEN = 8;
     private static final int
-        LOCAL_X_END = SECONDARY_AXIS_LEN - 1,
-        LOCAL_Y_END = Y_AXIS_LEN - 1,
-        LOCAL_Z_END = MAIN_AXIS_LEN - 1;
+            LOCAL_X_END = SECONDARY_AXIS_LEN - 1,
+            LOCAL_Y_END = Y_AXIS_LEN - 1,
+            LOCAL_Z_END = MAIN_AXIS_LEN - 1;
 
     public SmallTunnel(CompoundTag compoundTag) {
         super(StructurePieceTypeModule.SMALL_TUNNEL, compoundTag);
@@ -176,7 +177,7 @@ public class SmallTunnel extends BetterMineshaftPiece {
         BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
         for (int z = 0; z <= LOCAL_Z_END; z++) {
             mutable.set(this.getWorldX(2, z), this.getWorldY(1), this.getWorldZ(2, z));
-            if (randomSource.nextFloat() < 0.5f && (this.getBlock(world, LOCAL_X_END / 2, 1, z, box).is(Blocks.AIR) || this.getBlock(world, LOCAL_X_END / 2, 1, z, box).is(Blocks.CAVE_AIR)) && Blocks.RAIL.canSurvive(AIR, world, mutable)) {
+            if (randomSource.nextFloat() < 0.5f && (this.getBlock(world, LOCAL_X_END / 2, 1, z, box).is(Blocks.AIR) || this.getBlock(world, LOCAL_X_END / 2, 1, z, box).is(Blocks.CAVE_AIR)) && ((BlockBehaviourAccessor) Blocks.RAIL).callCanSurvive(AIR, world, mutable)) {
                 this.placeBlock(world, Blocks.RAIL.defaultBlockState(), 2, 1, z, box);
             }
         }
@@ -238,7 +239,7 @@ public class SmallTunnel extends BetterMineshaftPiece {
         for (int x = 0; x <= LOCAL_X_END; x++) {
             for (int z = 0; z <= LOCAL_Z_END; z++) {
                 if (this.getBlock(world, x, 1, z, box).is(Blocks.CHAIN)) {
-                    this.placeBlock(world, this.config.blockStates.supportBlockState, x ,1, z, box);
+                    this.placeBlock(world, this.config.blockStates.supportBlockState, x, 1, z, box);
                 }
             }
         }
