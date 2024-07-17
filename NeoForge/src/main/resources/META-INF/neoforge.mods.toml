@@ -36,4 +36,4 @@ issueTrackerURL="https://github.com/yungnickyoung/YUNGs-Better-Mineshafts/issues
     side="BOTH"
 
 [[mixins]]
-    config = "bettermineshafts.mixins.json"
+    config = "${mod_id}.mixins.json"

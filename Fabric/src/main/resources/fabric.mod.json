@@ -29,7 +29,7 @@
     "fabric": ">=${fabric_version}",
     "minecraft": ">=${mc_version}",
     "cloth-config2": ">=${clothconfig_version_fabric}",
-    "java": ">=17",
+    "java": ">=${java_version}",
     "yungsapi": ">=${mc_version}-Fabric-${yungsapi_version}"
   },
   "mixins": [
