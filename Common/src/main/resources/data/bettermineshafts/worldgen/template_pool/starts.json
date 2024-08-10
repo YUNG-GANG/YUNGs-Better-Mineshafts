@@ -1,0 +1,15 @@
+{
+  "name": "bettermineshafts:starts",
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "location": "bettermineshafts:surface_shaft/surface_shaft_top",
+        "processors": "bettermineshafts:main",
+        "projection": "rigid",
+        "element_type": "yungsapi:yung_single_element"
+      }
+    }
+  ]
+}

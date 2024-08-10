@@ -1,0 +1,29 @@
+{
+  "name": "bettermineshafts:main_shaft",
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "location": "bettermineshafts:main_shaft/main_shaft_5",
+        "processors": "bettermineshafts:main",
+        "projection": "rigid",
+        "enhanced_terrain_adaptation": {
+          "type": "yungsapi:custom",
+          "kernel_size": 8,
+          "kernel_distance": 4,
+          "top": "carve",
+          "bottom": "none",
+          "bottom_offset": 1,
+          "padding": {
+            "x": -2,
+            "top": -2,
+            "bottom": 0,
+            "z": -1
+          }
+        },
+        "element_type": "yungsapi:yung_single_element"
+      }
+    }
+  ]
+}

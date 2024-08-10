@@ -1,0 +1,18 @@
+{
+  "structures": [
+    {
+      "structure": "bettermineshafts:test",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "yungsapi:enhanced_random_spread",
+    "salt": 784827271,
+    "spacing": 5,
+    "separation": 3,
+    "enhanced_exclusion_zone": {
+      "other_set": [],
+      "chunk_count": 1
+    }
+  }
+}

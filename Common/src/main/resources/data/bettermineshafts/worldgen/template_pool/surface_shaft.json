@@ -1,0 +1,47 @@
+{
+  "name": "bettermineshafts:surface_shaft",
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 80,
+      "element": {
+        "location": "bettermineshafts:surface_shaft/surface_shaft",
+        "processors": "bettermineshafts:main",
+        "projection": "rigid",
+        "condition": {
+          "type": "yungsapi:depth",
+          "max_possible_depth": 20
+        },
+        "element_type": "yungsapi:yung_single_element"
+      }
+    },
+    {
+      "weight": 15,
+      "element": {
+        "location": "bettermineshafts:surface_shaft/surface_shaft_broken",
+        "processors": "bettermineshafts:main",
+        "projection": "rigid",
+        "condition": {
+          "type": "yungsapi:depth",
+          "max_possible_depth": 20
+        },
+        "name": "surface_shaft_broken",
+        "max_count": 2,
+        "element_type": "yungsapi:yung_single_element"
+      }
+    },
+    {
+      "weight": 5,
+      "element": {
+        "location": "bettermineshafts:surface_shaft/surface_shaft_bottom",
+        "processors": "bettermineshafts:main",
+        "projection": "rigid",
+        "condition": {
+          "type": "yungsapi:depth",
+          "min_required_depth": 7
+        },
+        "element_type": "yungsapi:yung_single_element"
+      }
+    }
+  ]
+}

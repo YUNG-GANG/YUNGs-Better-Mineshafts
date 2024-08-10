@@ -1,0 +1,62 @@
+{
+  "name": "bettermineshafts:test",
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "location": "bettermineshafts:test",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "modifiers": [
+          {
+            "condition": {
+              "type": "yungsapi:biome",
+              "biome_tag": "bettermineshafts:has_structure/better_mineshaft_lush"
+            },
+            "target_selector": {
+              "type": "yungsapi:self"
+            },
+            "actions": [
+              {
+                "type": "yungsapi:transform",
+                "output": ["bettermineshafts:test_lush"]
+              }
+            ]
+          },
+          {
+            "condition": {
+              "type": "yungsapi:biome",
+              "biome_tag": "bettermineshafts:has_structure/better_mineshaft_desert"
+            },
+            "target_selector": {
+              "type": "yungsapi:self"
+            },
+            "actions": [
+              {
+                "type": "yungsapi:transform",
+                "output": ["bettermineshafts:test_desert"]
+              }
+            ]
+          },
+          {
+            "condition": {
+              "type": "yungsapi:biome",
+              "biome_tag": "bettermineshafts:has_structure/better_mineshaft_spruce"
+            },
+            "target_selector": {
+              "type": "yungsapi:self"
+            },
+            "actions": [
+              {
+                "type": "yungsapi:transform",
+                "output": ["bettermineshafts:test_spruce"]
+              }
+            ]
+          }
+        ],
+        "element_type": "yungsapi:yung_single_element"
+      }
+    }
+  ]
+}

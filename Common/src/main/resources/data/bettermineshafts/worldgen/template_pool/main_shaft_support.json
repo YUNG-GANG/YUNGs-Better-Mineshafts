@@ -1,0 +1,30 @@
+{
+  "name": "bettermineshafts:main_shaft_support",
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "location": "bettermineshafts:main_shaft_support/main_shaft_support_0",
+        "processors": "bettermineshafts:main",
+        "projection": "rigid",
+        "enhanced_terrain_adaptation": {
+          "type": "yungsapi:none"
+//          "type": "yungsapi:custom",
+//          "kernel_size": 4,
+//          "kernel_distance": 4,
+//          "top": "carve",
+//          "bottom": "none",
+//          "bottom_offset": 1,
+//          "padding": {
+//            "x": 0,
+//            "top": -2,
+//            "bottom": 0,
+//            "z": 0
+//          }
+        },
+        "element_type": "yungsapi:yung_single_element"
+      }
+    }
+  ]
+}

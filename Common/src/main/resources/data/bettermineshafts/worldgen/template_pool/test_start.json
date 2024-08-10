@@ -1,0 +1,15 @@
+{
+  "name": "bettermineshafts:test_start",
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "location": "bettermineshafts:test",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "yungsapi:yung_single_element"
+      }
+    }
+  ]
+}

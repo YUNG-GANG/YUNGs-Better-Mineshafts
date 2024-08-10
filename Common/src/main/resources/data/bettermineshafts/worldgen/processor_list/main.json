@@ -1,0 +1,261 @@
+{
+  "processors": [
+    // OAK PLANKS
+    {
+      "processor_type": "minecraft:rule",
+      "rules": [
+        // if stone at location -> stay stone
+        {
+          "input_predicate": {
+            "predicate_type": "minecraft:block_match",
+            "block": "minecraft:oak_planks"
+          },
+          "location_predicate": {
+            "predicate_type": "minecraft:block_match",
+            "block": "minecraft:stone"
+          },
+          "output_state": {
+            "Name": "minecraft:stone"
+          }
+        },
+        // if diorite at location -> stay diorite
+        {
+          "input_predicate": {
+            "predicate_type": "minecraft:block_match",
+            "block": "minecraft:oak_planks"
+          },
+          "location_predicate": {
+            "predicate_type": "minecraft:block_match",
+            "block": "minecraft:diorite"
+          },
+          "output_state": {
+            "Name": "minecraft:diorite"
+          }
+        },
+        // if andesite at location -> stay andesite
+        {
+          "input_predicate": {
+            "predicate_type": "minecraft:block_match",
+            "block": "minecraft:oak_planks"
+          },
+          "location_predicate": {
+            "predicate_type": "minecraft:block_match",
+            "block": "minecraft:andesite"
+          },
+          "output_state": {
+            "Name": "minecraft:andesite"
+          }
+        },
+        // if granite at location -> stay granite
+        {
+          "input_predicate": {
+            "predicate_type": "minecraft:block_match",
+            "block": "minecraft:oak_planks"
+          },
+          "location_predicate": {
+            "predicate_type": "minecraft:block_match",
+            "block": "minecraft:granite"
+          },
+          "output_state": {
+            "Name": "minecraft:granite"
+          }
+        },
+        // if air at location -> small chance of staying air
+        {
+          "input_predicate": {
+            "predicate_type": "minecraft:block_match",
+            "block": "minecraft:oak_planks"
+          },
+          "location_predicate": {
+            "predicate_type": "minecraft:random_block_match",
+            "block": "minecraft:air",
+            "probability": 0.01
+          },
+          "output_state": {
+            "Name": "minecraft:air"
+          }
+        }
+      ]
+    },
+    // WHITE STAINED GLASS
+    {
+      "processor_type": "minecraft:rule",
+      "rules": [
+        // 10% chance to become cobwebs
+        {
+          "input_predicate": {
+            "predicate_type": "minecraft:random_block_match",
+            "block": "minecraft:white_stained_glass",
+            "probability": 0.1
+          },
+          "location_predicate": {
+            "predicate_type": "minecraft:always_true"
+          },
+          "output_state": {
+            "Name": "minecraft:cobweb"
+          }
+        },
+        // all other white stained glass becomes air
+        {
+          "input_predicate": {
+            "predicate_type": "minecraft:block_match",
+            "block": "minecraft:white_stained_glass"
+          },
+          "location_predicate": {
+            "predicate_type": "minecraft:always_true"
+          },
+          "output_state": {
+            "Name": "minecraft:air"
+          }
+        }
+      ]
+    },
+    // LANTERNS
+    {
+      "processor_type": "minecraft:rule",
+      "rules": [
+        // 90% chance to become air
+        {
+          "input_predicate": {
+            "predicate_type": "minecraft:random_block_match",
+            "block": "minecraft:lantern",
+            "probability": 0.9
+          },
+          "location_predicate": {
+            "predicate_type": "minecraft:always_true"
+          },
+          "output_state": {
+            "Name": "minecraft:air"
+          }
+        }
+      ]
+    },
+    // BAMBOO PLANKS
+    {
+      "processor_type": "minecraft:rule",
+      "rules": [
+        // if stone at location -> 10% chance to become stone slab, otherwise stay stone
+        {
+          "input_predicate": {
+            "predicate_type": "minecraft:block_match",
+            "block": "minecraft:bamboo_planks"
+          },
+          "location_predicate": {
+            "predicate_type": "minecraft:random_block_match",
+            "block": "minecraft:stone",
+            "probability": 0.1
+          },
+          "output_state": {
+            "Name": "minecraft:stone_slab",
+            "Properties": {
+              "waterlogged": false,
+              "type": "bottom"
+            }
+          }
+        },
+        {
+          "input_predicate": {
+            "predicate_type": "minecraft:block_match",
+            "block": "minecraft:bamboo_planks"
+          },
+          "location_predicate": {
+            "predicate_type": "minecraft:block_match",
+            "block": "minecraft:stone"
+          },
+          "output_state": {
+            "Name": "minecraft:stone"
+          }
+        },
+        // if deepslate at location -> 10% chance to become deepslate slab, otherwise stay deepslate
+        {
+          "input_predicate": {
+            "predicate_type": "minecraft:block_match",
+            "block": "minecraft:bamboo_planks"
+          },
+          "location_predicate": {
+            "predicate_type": "minecraft:random_block_match",
+            "block": "minecraft:deepslate",
+            "probability": 0.1
+          },
+          "output_state": {
+            "Name": "minecraft:cobbled_deepslate_slab",
+            "Properties": {
+              "waterlogged": false,
+              "type": "bottom"
+            }
+          }
+        },
+        {
+          "input_predicate": {
+            "predicate_type": "minecraft:block_match",
+            "block": "minecraft:bamboo_planks"
+          },
+          "location_predicate": {
+            "predicate_type": "minecraft:block_match",
+            "block": "minecraft:deepslate"
+          },
+          "output_state": {
+            "Name": "minecraft:deepslate"
+          }
+        },
+        // if air at location -> 10% chance to become air
+        {
+          "input_predicate": {
+            "predicate_type": "minecraft:block_match",
+            "block": "minecraft:bamboo_planks"
+          },
+          "location_predicate": {
+            "predicate_type": "minecraft:random_block_match",
+            "block": "minecraft:air",
+            "probability": 0.1
+          },
+          "output_state": {
+            "Name": "minecraft:air"
+          }
+        },
+        // all other bamboo planks become oak planks
+        {
+          "input_predicate": {
+            "predicate_type": "minecraft:block_match",
+            "block": "minecraft:bamboo_planks"
+          },
+          "location_predicate": {
+            "predicate_type": "minecraft:always_true"
+          },
+          "output_state": {
+            "Name": "minecraft:oak_planks"
+          }
+        }
+      ]
+    },
+    // OAK STAIRS
+    {
+      "processor_type": "minecraft:rule",
+      "rules": [
+        // 10% chance to become oak slab bottom
+        {
+          "input_predicate": {
+            "predicate_type": "minecraft:random_blockstate_match",
+            "block_state": {
+              "Name": "minecraft:oak_stairs",
+              "Properties": {
+                "half": "bottom",
+                "shape": "straight"
+              }
+            },
+            "probability": 0.1
+          },
+          "location_predicate": {
+            "predicate_type": "minecraft:always_true"
+          },
+          "output_state": {
+            "Name": "minecraft:oak_slab",
+            "Properties": {
+              "type": "bottom"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

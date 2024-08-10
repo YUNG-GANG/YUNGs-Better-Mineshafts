@@ -1,0 +1,20 @@
+{
+  "type": "yungsapi:yung_jigsaw",
+  "biomes": "#minecraft:has_structure/mineshaft",
+  "step": "surface_structures",
+  "start_pool": "bettermineshafts:starts",
+//  "start_jigsaw_name": "betterfortresses:anchor",
+  "size": 50,
+  "x_offset_in_chunk": 4,
+  "z_offset_in_chunk": 4,
+  "project_start_to_heightmap": "WORLD_SURFACE_WG",
+  "start_height": {
+    "absolute": 0
+  },
+  "enhanced_terrain_adaptation": {
+    "type": "yungsapi:none"
+  },
+  "max_distance_from_center": 116,
+  "liquid_settings": "ignore_waterlogging",
+  "spawn_overrides": {}
+}
