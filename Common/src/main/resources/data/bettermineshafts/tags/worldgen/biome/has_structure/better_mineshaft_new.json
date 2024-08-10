@@ -1,0 +1,119 @@
+{
+  "replace": false,
+  "values": [
+    // Mountain
+    "#minecraft:is_mountain",
+    {
+      "id": "#byg:is_mountain",
+      "required": false
+    },
+    // Mesa/Badlands
+    "#minecraft:is_badlands",
+    {
+      "id": "#forge:is_mesa",
+      "required": false
+    },
+    {
+      "id": "#c:in_mesa",
+      "required": false
+    },
+    {
+      "id": "#forge:is_badlands",
+      "required": false
+    },
+    {
+      "id": "#c:badlands",
+      "required": false
+    },
+    {
+      "id": "#byg:is_badlands",
+      "required": false
+    },
+    "#minecraft:is_hill",
+    // Taiga
+    "#minecraft:is_taiga",
+    {
+      "id": "#byg:is_taiga",
+      "required": false
+    },
+    // Jungle
+    "#minecraft:is_jungle",
+    {
+      "id": "#forge:is_jungle",
+      "required": false
+    },
+    {
+      "id": "#c:in_jungle",
+      "required": false
+    },
+    {
+      "id": "#byg:is_jungle",
+      "required": false
+    },
+    // Forest
+    "#minecraft:is_forest",
+    {
+      "id": "#byg:is_forest",
+      "required": false
+    },
+    // Savanna
+    "#minecraft:is_savanna",
+    {
+      "id": "#forge:is_savanna",
+      "required": false
+    },
+    {
+      "id": "#c:savanna",
+      "required": false
+    },
+    {
+      "id": "#byg:is_savanna",
+      "required": false
+    },
+    // Desert
+    "minecraft:desert",
+    {
+      "id": "#forge:is_desert",
+      "required": false
+    },
+    {
+      "id": "#c:desert",
+      "required": false
+    },
+    {
+      "id": "#byg:is_desert",
+      "required": false
+    },
+    // Plains
+    "minecraft:plains",
+    "minecraft:snowy_plains",
+    "minecraft:sunflower_plains",
+    "minecraft:meadow",
+    {
+      "id": "terralith:brushland",
+      "required": false
+    },
+    {
+      "id": "projectvibrantjourneys:prairie",
+      "required": false
+    },
+    {
+      "id": "#c:plains",
+      "required": false
+    },
+    {
+      "id": "#byg:is_plain",
+      "required": false
+    },
+    // Swamp
+    "minecraft:swamp",
+    "minecraft:mangrove_swamp",
+    {
+      "id": "#byg:is_swamp",
+      "required": false
+    },
+    // Cave biomes
+    "minecraft:lush_caves",
+    "minecraft:dripstone_caves"
+  ]
+}

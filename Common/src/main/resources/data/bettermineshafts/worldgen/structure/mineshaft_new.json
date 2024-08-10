@@ -1,6 +1,6 @@
 {
   "type": "yungsapi:yung_jigsaw",
-  "biomes": "#minecraft:has_structure/mineshaft",
+  "biomes": "#bettermineshafts:has_structure/better_mineshaft_new",
   "step": "surface_structures",
   "start_pool": "bettermineshafts:starts",
 //  "start_jigsaw_name": "betterfortresses:anchor",
