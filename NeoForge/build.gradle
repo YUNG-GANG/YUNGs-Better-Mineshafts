@@ -10,7 +10,7 @@ plugins {
 // https://github.com/neoforged/FancyModLoader/blob/a952595eaaddd571fbc53f43847680b00894e0c1/loader/src/main/java/net/neoforged/fml/loading/moddiscovery/ModFile.java#L118
 def at = file('src/main/resources/META-INF/accesstransformer.cfg')
 if (at.exists()) {
-    accessTransformers.add(at.absolutePath)
+    minecraft.accessTransformers.file at
 }
 
 runs {

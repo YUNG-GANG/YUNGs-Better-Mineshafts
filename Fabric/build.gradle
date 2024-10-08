@@ -40,7 +40,7 @@ dependencies {
 }
 
 loom {
-    def aw = project(':Common').file("src/main/resources/${mod_id}.accesswidener")
+    def aw = file("src/main/resources/${mod_id}.accesswidener")
     if (aw.exists()) {
         accessWidenerPath.set(aw)
     }
