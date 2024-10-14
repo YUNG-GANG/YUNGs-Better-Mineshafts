@@ -94,10 +94,12 @@ processResources {
             "group": project.group, //Else we target the task's group.
             "mc_version": mc_version,
             "mc_version_range": mc_version_range,
+            "mc_version_range_fabric": mc_version_range_fabric,
             "fabric_version": fabric_version,
             "fabric_loader_version": fabric_loader_version,
             "clothconfig_version_fabric": clothconfig_version_fabric,
             "neoforge_version": neoforge_version,
+            "neoforge_version_range": neoforge_version_range,
             "neoforge_loader_version_range": neoforge_loader_version_range,
             "forge_version": forge_version,
             "forge_loader_version_range": forge_loader_version_range,

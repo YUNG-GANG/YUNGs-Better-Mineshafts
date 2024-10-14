@@ -20,12 +20,12 @@ issueTrackerURL="https://github.com/yungnickyoung/YUNGs-Better-Mineshafts/issues
 [[dependencies.${mod_id}]]
     modId="minecraft"
     mandatory=true
-    versionRange="[${mc_version},1.22)"
+    versionRange="${mc_version_range}"
 
 [[dependencies.${mod_id}]]
     modId="forge"
     mandatory=true
-    versionRange="[${forge_version},)"
+    versionRange="${forge_loader_version_range}"
 
 [[dependencies.${mod_id}]]
     modId="yungsapi"

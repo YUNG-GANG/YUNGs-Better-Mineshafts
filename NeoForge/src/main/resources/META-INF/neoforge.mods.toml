@@ -20,12 +20,12 @@ issueTrackerURL="https://github.com/yungnickyoung/YUNGs-Better-Mineshafts/issues
 [[dependencies.${mod_id}]]
     modId="minecraft"
     type="required"
-    versionRange="[${mc_version},1.22)"
+    versionRange="${mc_version_range}"
 
 [[dependencies.${mod_id}]]
     modId="neoforge"
     type="required"
-    versionRange="[${neoforge_version},)"
+    versionRange="${neoforge_version_range}"
     ordering = "NONE"
 
 [[dependencies.${mod_id}]]
