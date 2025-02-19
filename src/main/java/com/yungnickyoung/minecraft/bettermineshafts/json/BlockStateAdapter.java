@@ -108,32 +108,31 @@ public class BlockStateAdapter extends TypeAdapter<IBlockState> {
                 while (blockClass != Block.class && !found) {
                     Field[] fields = blockClass.getDeclaredFields();
                     for (Field field : fields) {
+                        if (!IProperty.class.isAssignableFrom(field.getType())) {
+                            continue;
+                        }
                         field.setAccessible(true);
-                        Object _field;
+                        IProperty<T> property;
                         try {
-                            _field = field.get(blockState);
+                            property = (IProperty<T>) field.get(blockState);
                         } catch (Exception e) {
                             try {
-                                _field = field.get(blockState.getBlock());
+                                property = (IProperty<T>) field.get(blockState.getBlock());
                             } catch (Exception ignored) {
                                 continue;
                             }
                         }
 
-                        if (_field instanceof IProperty) {
-                            IProperty<T> property = (IProperty<T>) _field;
-
-                            if (property.getName().equals(key)) {
-                                Object val = property.parseValue(value).orNull();
-                                Class<T> blockEnumClass = property.getValueClass();
-                                try {
-                                    blockState = blockState.withProperty(property, Objects.requireNonNull(blockEnumClass.cast(val)));
-                                } catch (Exception e) {
-                                    continue;
-                                }
-                                found = true;
-                                break;
+                        if (property.getName().equals(key)) {
+                            Object val = property.parseValue(value).orNull();
+                            Class<T> blockEnumClass = property.getValueClass();
+                            try {
+                                blockState = blockState.withProperty(property, Objects.requireNonNull(blockEnumClass.cast(val)));
+                            } catch (Exception e) {
+                                continue;
                             }
+                            found = true;
+                            break;
                         }
                     }
                     blockClass = blockClass.getSuperclass();
