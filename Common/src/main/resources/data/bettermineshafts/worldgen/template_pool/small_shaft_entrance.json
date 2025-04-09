@@ -1,0 +1,42 @@
+{
+  "name": "bettermineshafts:small_shaft_entrance",
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 5,
+      "element": {
+        "location": "bettermineshafts:small_shaft_entrance/small_shaft_entrance_0",
+        "processors": "bettermineshafts:main",
+        "projection": "rigid",
+        "element_type": "yungsapi:yung_single_element"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "location": "bettermineshafts:small_shaft_entrance/small_shaft_entrance_1",
+        "processors": "bettermineshafts:main",
+        "projection": "rigid",
+        "element_type": "yungsapi:yung_single_element"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "location": "bettermineshafts:small_shaft_entrance/small_shaft_entrance_2",
+        "processors": "bettermineshafts:main",
+        "projection": "rigid",
+        "element_type": "yungsapi:yung_single_element"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "location": "bettermineshafts:small_shaft_entrance/small_shaft_entrance_3",
+        "processors": "bettermineshafts:main",
+        "projection": "rigid",
+        "element_type": "yungsapi:yung_single_element"
+      }
+    }
+  ]
+}

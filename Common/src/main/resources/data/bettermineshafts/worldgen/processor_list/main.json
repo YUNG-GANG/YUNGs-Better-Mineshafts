@@ -1,5 +1,8 @@
 {
   "processors": [
+    {
+      "processor_type": "bettermineshafts:structure_void_processor"
+    },
     // OAK PLANKS
     {
       "processor_type": "minecraft:rule",

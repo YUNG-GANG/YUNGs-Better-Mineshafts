@@ -3,26 +3,71 @@
   "fallback": "minecraft:empty",
   "elements": [
     {
-      "weight": 1,
+      "weight": 5,
       "element": {
         "location": "bettermineshafts:main_shaft_support/main_shaft_support_0",
         "processors": "bettermineshafts:main",
         "projection": "rigid",
-        "enhanced_terrain_adaptation": {
-          "type": "yungsapi:none"
-//          "type": "yungsapi:custom",
-//          "kernel_size": 4,
-//          "kernel_distance": 4,
-//          "top": "carve",
-//          "bottom": "none",
-//          "bottom_offset": 1,
-//          "padding": {
-//            "x": 0,
-//            "top": -2,
-//            "bottom": 0,
-//            "z": 0
-//          }
-        },
+        "element_type": "yungsapi:yung_single_element"
+      }
+    },
+    {
+      "weight": 5,
+      "element": {
+        "location": "bettermineshafts:main_shaft_support/main_shaft_support_1",
+        "processors": "bettermineshafts:main",
+        "projection": "rigid",
+        "element_type": "yungsapi:yung_single_element"
+      }
+    },
+    {
+      "weight": 5,
+      "element": {
+        "location": "bettermineshafts:main_shaft_support/main_shaft_support_2",
+        "processors": "bettermineshafts:main",
+        "projection": "rigid",
+        "element_type": "yungsapi:yung_single_element"
+      }
+    },
+    {
+      "weight": 5,
+      "element": {
+        "location": "bettermineshafts:main_shaft_support/main_shaft_support_3",
+        "processors": "bettermineshafts:main",
+        "projection": "rigid",
+        "element_type": "yungsapi:yung_single_element"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "location": "bettermineshafts:main_shaft_support/main_shaft_support_collapsed_0",
+        "processors": "bettermineshafts:main",
+        "projection": "rigid",
+        "name": "main_shaft_support_collapsed",
+        "max_count": 2,
+        "element_type": "yungsapi:yung_single_element"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "location": "bettermineshafts:main_shaft_support/main_shaft_support_collapsed_1",
+        "processors": "bettermineshafts:main",
+        "projection": "rigid",
+        "name": "main_shaft_support_collapsed",
+        "max_count": 2,
+        "element_type": "yungsapi:yung_single_element"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "location": "bettermineshafts:main_shaft_support/main_shaft_support_collapsed_2",
+        "processors": "bettermineshafts:main",
+        "projection": "rigid",
+        "name": "main_shaft_support_collapsed",
+        "max_count": 2,
         "element_type": "yungsapi:yung_single_element"
       }
     }
