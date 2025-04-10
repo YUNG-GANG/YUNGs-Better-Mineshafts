@@ -164,7 +164,7 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
      * Add decorations specific to a biome variant, such as snow.
      */
     protected void addBiomeDecorations(WorldGenLevel world, BoundingBox box, RandomSource randomSource, int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
-        Registry<ConfiguredFeature<?, ?>> registry = world.registryAccess().registry(Registries.CONFIGURED_FEATURE).get();
+        Registry<ConfiguredFeature<?, ?>> registry = world.registryAccess().lookup(Registries.CONFIGURED_FEATURE).get();
 
         for (int x = minX; x <= maxX; x++) {
             for (int y = minY; y <= maxY; y++) {
@@ -183,17 +183,17 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
                     if (config.decorationChances.lushDecorations) {
                         // Moss & ground plants
                         if (box.isInside(blockPos) && randomSource.nextFloat() < .005f) {
-                            registry.get(CaveFeatures.MOSS_PATCH).place(world, world.getLevel().getChunkSource().getGenerator(), randomSource, blockPos);
+                            registry.get(CaveFeatures.MOSS_PATCH).get().value().place(world, world.getLevel().getChunkSource().getGenerator(), randomSource, blockPos);
                         }
 
                         // Clay, water, dripleaf
                         if (box.isInside(blockPos) && randomSource.nextFloat() < .005f) {
-                            registry.get(CaveFeatures.LUSH_CAVES_CLAY).place(world, world.getLevel().getChunkSource().getGenerator(), randomSource, blockPos);
+                            registry.get(CaveFeatures.LUSH_CAVES_CLAY).get().value().place(world, world.getLevel().getChunkSource().getGenerator(), randomSource, blockPos);
                         }
 
                         // Moss ceiling & cave vines
                         if (box.isInside(blockPos) && randomSource.nextFloat() < .005f) {
-                            registry.get(CaveFeatures.MOSS_PATCH_CEILING).place(world, world.getLevel().getChunkSource().getGenerator(), randomSource, blockPos);
+                            registry.get(CaveFeatures.MOSS_PATCH_CEILING).get().value().place(world, world.getLevel().getChunkSource().getGenerator(), randomSource, blockPos);
                         }
 
                         // Moss layers
@@ -204,11 +204,11 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
 
                     if (config.decorationChances.dripstoneDecorations) {
                         if (box.isInside(blockPos) && randomSource.nextFloat() < .02f) {
-                            registry.get(CaveFeatures.DRIPSTONE_CLUSTER).place(world, world.getLevel().getChunkSource().getGenerator(), randomSource, blockPos);
+                            registry.get(CaveFeatures.DRIPSTONE_CLUSTER).get().value().place(world, world.getLevel().getChunkSource().getGenerator(), randomSource, blockPos);
                         }
 
                         if (box.isInside(blockPos) && randomSource.nextFloat() < .02f) {
-                            registry.get(CaveFeatures.POINTED_DRIPSTONE).place(world, world.getLevel().getChunkSource().getGenerator(), randomSource, blockPos);
+                            registry.get(CaveFeatures.POINTED_DRIPSTONE).get().value().place(world, world.getLevel().getChunkSource().getGenerator(), randomSource, blockPos);
                         }
                     }
 
@@ -249,7 +249,7 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
         BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos(x, -1, z);
         BlockState state = this.getBlock(world, mutable.getX(), mutable.getY(), mutable.getZ(), box);
 
-        while (getWorldY(mutable.getY()) > world.getMinBuildHeight() + 1 && isReplaceableByStructures(state)) {
+        while (getWorldY(mutable.getY()) > world.getMinY() + 1 && isReplaceableByStructures(state)) {
             this.placeBlock(world, selector.get(randomSource), x, mutable.getY(), z, box);
             mutable.move(Direction.DOWN);
             state = this.getBlock(world, mutable.getX(), mutable.getY(), mutable.getZ(), box);
@@ -260,7 +260,7 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
         BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos(x, -1, z);
         BlockState state = this.getBlock(world, mutable.getX(), mutable.getY(), mutable.getZ(), box);
         boolean lavaBelow = false;
-        while (getWorldY(mutable.getY()) > world.getMinBuildHeight() + 1 && isReplaceableByStructures(state)) {
+        while (getWorldY(mutable.getY()) > world.getMinY() + 1 && isReplaceableByStructures(state)) {
             if (state.is(Blocks.LAVA)) {
                 lavaBelow = true;
                 break;
@@ -289,7 +289,7 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
                         fillColumnBetween(world, Blocks.CHAIN.defaultBlockState(), mutable, realChainY + 2, realChainY + length);
                         return false;
                     }
-                    canGenerateChain = length <= 50 && currBlockCanBeReplaced && mutable.getY() < world.getMaxBuildHeight() - 1;
+                    canGenerateChain = length <= 50 && currBlockCanBeReplaced && mutable.getY() < world.getMaxY() - 1;
                 }
                 ++length;
             }
@@ -322,7 +322,7 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
                     fillColumnBetween(world, this.config.blockStates.smallLegBlockState, mutable, realPillarY - length + 1, realPillarY);
                     return;
                 }
-                canGenerateLeg = length <= 20 && currBlockCanBeReplaced && mutable.getY() > world.getMinBuildHeight() + 1;
+                canGenerateLeg = length <= 20 && currBlockCanBeReplaced && mutable.getY() > world.getMinY() + 1;
             }
 
             if (canGenerateChain) {
@@ -334,7 +334,7 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
                     fillColumnBetween(world, Blocks.CHAIN.defaultBlockState(), mutable, realChainY + 2, realChainY + length);
                     return;
                 }
-                canGenerateChain = length <= 50 && currBlockCanBeReplaced && mutable.getY() < world.getMaxBuildHeight() - 1;
+                canGenerateChain = length <= 50 && currBlockCanBeReplaced && mutable.getY() < world.getMaxY() - 1;
             }
             ++length;
         }

@@ -68,7 +68,7 @@ public class BetterMineshaftStructure extends Structure {
                 startingPos,
                 direction,
                 this.config,
-                context.heightAccessor().getMaxBuildHeight()
+                context.heightAccessor().getMaxY()
         );
 
         structurePiecesBuilder.addPiece(entryPoint);

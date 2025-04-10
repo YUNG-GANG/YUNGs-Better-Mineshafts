@@ -298,7 +298,7 @@ public class VerticalEntrance extends BetterMineshaftPiece {
      * in the face of a mountain or hill.
      */
     private void determineDirection(WorldGenLevel world) {
-        int minSurfaceHeight = world.getMaxBuildHeight() - 1;
+        int minSurfaceHeight = world.getMaxY() - 1;
 
         // Set height for this, equal to 2 below the min height in the 5x5 vertical shaft piece
         for (int xOffset = -2; xOffset <= 2; xOffset++) {
@@ -321,7 +321,7 @@ public class VerticalEntrance extends BetterMineshaftPiece {
         }
 
         // Require surface opening to be above sea level
-        if (minSurfaceHeight < 60 || minSurfaceHeight == world.getMaxBuildHeight() - 1) return;
+        if (minSurfaceHeight < 60 || minSurfaceHeight == world.getMaxY() - 1) return;
 
         int ceilingHeight = minSurfaceHeight - 2;
         int floorHeight = ceilingHeight - 4;

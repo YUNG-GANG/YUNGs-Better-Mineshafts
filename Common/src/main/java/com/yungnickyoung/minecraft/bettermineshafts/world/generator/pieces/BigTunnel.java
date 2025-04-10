@@ -16,6 +16,8 @@ import net.minecraft.nbt.IntArrayTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.vehicle.MinecartChest;
 import net.minecraft.world.entity.vehicle.MinecartTNT;
 import net.minecraft.world.level.ChunkPos;
@@ -404,9 +406,12 @@ public class BigTunnel extends BetterMineshaftPiece {
             if (randomSource.nextFloat() < BetterMineshaftsCommon.CONFIG.spawnRates.mainShaftChestMinecartSpawnRate) {
                 BlockPos blockPos = this.getWorldPos(LOCAL_X_END / 2, 1, z);
                 if (box.isInside(blockPos) && !world.getBlockState(blockPos.below()).isAir()) {
-                    MinecartChest chestMinecartEntity = new MinecartChest(world.getLevel(), ((float) blockPos.getX() + 0.5F), ((float) blockPos.getY() + 0.5F), ((float) blockPos.getZ() + 0.5F));
-                    chestMinecartEntity.setLootTable(BuiltInLootTables.ABANDONED_MINESHAFT, randomSource.nextLong());
-                    world.addFreshEntity(chestMinecartEntity);
+                    MinecartChest chestMinecartEntity = EntityType.CHEST_MINECART.create(world.getLevel(), EntitySpawnReason.STRUCTURE);
+                    if (chestMinecartEntity != null) {
+                        chestMinecartEntity.setInitialPos(blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5);
+                        chestMinecartEntity.setLootTable(BuiltInLootTables.ABANDONED_MINESHAFT, randomSource.nextLong());
+                        world.addFreshEntity(chestMinecartEntity);
+                    }
                 }
             }
         }
@@ -417,8 +422,11 @@ public class BigTunnel extends BetterMineshaftPiece {
             if (randomSource.nextFloat() < BetterMineshaftsCommon.CONFIG.spawnRates.mainShaftTntMinecartSpawnRate) {
                 BlockPos blockPos = this.getWorldPos(LOCAL_X_END / 2, 1, z);
                 if (box.isInside(blockPos) && !world.getBlockState(blockPos.below()).isAir()) {
-                    MinecartTNT tntMinecartEntity = new MinecartTNT(world.getLevel(), ((float) blockPos.getX() + 0.5F), ((float) blockPos.getY() + 0.5F), ((float) blockPos.getZ() + 0.5F));
-                    world.addFreshEntity(tntMinecartEntity);
+                    MinecartTNT tntMinecartEntity = EntityType.TNT_MINECART.create(world.getLevel(), EntitySpawnReason.STRUCTURE);
+                    if (tntMinecartEntity != null) {
+                        tntMinecartEntity.setInitialPos(blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5);
+                        world.addFreshEntity(tntMinecartEntity);
+                    }
                 }
             }
         }
