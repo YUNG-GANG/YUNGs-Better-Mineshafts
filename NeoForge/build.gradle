@@ -70,7 +70,7 @@ task publishCurseForgeNeoForge(type: net.darkhax.curseforgegradle.TaskPublishCur
     mainFile.changelogType = 'markdown'
     mainFile.changelog = file("../CHANGELOG.md").exists() ? file("../CHANGELOG.md").text : "No changelog provided"
     mainFile.releaseType = 'release'
-    mainFile.addRequirement('yungs-api-neoforge')
+    mainFile.addRequirement('yungs-api')
     mainFile.addModLoader('neoforge')
     mainFile.displayName = "[${mc_version}] ${mod_full_name} v${rawVersion} (NeoForge)"
     compatibleVersions.each { version ->
