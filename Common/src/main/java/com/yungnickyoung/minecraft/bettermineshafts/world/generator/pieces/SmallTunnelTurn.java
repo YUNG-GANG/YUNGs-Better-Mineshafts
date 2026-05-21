@@ -51,7 +51,7 @@ public class SmallTunnelTurn extends BetterMineshaftPiece {
 
     public SmallTunnelTurn(CompoundTag compoundTag) {
         super(StructurePieceTypeModule.SMALL_TUNNEL_TURN, compoundTag);
-        this.turnDirection = TurnDirection.valueOf(compoundTag.getInt("TurnDirection"));
+        this.turnDirection = TurnDirection.valueOf(compoundTag.getIntOr("TurnDirection", 0));
     }
 
     public SmallTunnelTurn(int chunkPieceLen, RandomSource randomSource, BoundingBox blockBox, Direction direction, BetterMineshaftConfiguration config) {

@@ -65,7 +65,7 @@ public class OreDeposit extends BetterMineshaftPiece {
 
     public OreDeposit(CompoundTag compoundTag) {
         super(StructurePieceTypeModule.ORE_DEPOSIT, compoundTag);
-        this.oreType = OreType.valueOf(compoundTag.getInt("OreType"));
+        this.oreType = OreType.valueOf(compoundTag.getIntOr("OreType", 0));
     }
 
     public OreDeposit(int chunkPieceLen, BoundingBox blockBox, Direction direction, BetterMineshaftConfiguration config) {
