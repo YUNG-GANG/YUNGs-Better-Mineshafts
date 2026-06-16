@@ -8,6 +8,7 @@
         "location": "bettermineshafts:main_shaft_support/main_shaft_support_0",
         "processors": "bettermineshafts:main",
         "projection": "rigid",
+        "deadend_pool": "bettermineshafts:main_shaft_support_terminators",
         "element_type": "yungsapi:yung_single_element"
       }
     },
@@ -17,6 +18,7 @@
         "location": "bettermineshafts:main_shaft_support/main_shaft_support_1",
         "processors": "bettermineshafts:main",
         "projection": "rigid",
+        "deadend_pool": "bettermineshafts:main_shaft_support_terminators",
         "element_type": "yungsapi:yung_single_element"
       }
     },
@@ -26,6 +28,7 @@
         "location": "bettermineshafts:main_shaft_support/main_shaft_support_2",
         "processors": "bettermineshafts:main",
         "projection": "rigid",
+        "deadend_pool": "bettermineshafts:main_shaft_support_terminators",
         "element_type": "yungsapi:yung_single_element"
       }
     },
@@ -35,6 +38,9 @@
         "location": "bettermineshafts:main_shaft_support/main_shaft_support_3",
         "processors": "bettermineshafts:main",
         "projection": "rigid",
+        "name": "main_shaft_support_lowhanging",
+        "max_count": 3,
+        "deadend_pool": "bettermineshafts:main_shaft_support_terminators",
         "element_type": "yungsapi:yung_single_element"
       }
     },
@@ -44,8 +50,26 @@
         "location": "bettermineshafts:main_shaft_support/main_shaft_support_collapsed_0",
         "processors": "bettermineshafts:main",
         "projection": "rigid",
-        "name": "main_shaft_support_collapsed",
-        "max_count": 2,
+        "enhanced_terrain_adaptation": {
+          "type": "yungsapi:custom",
+          "kernel_size": 8,
+          "kernel_distance": 4,
+          "top": "bury",
+          "bottom": "none",
+          "bottom_offset": 1,
+          "padding": {
+            "x": 0,
+            "top": -2,
+            "bottom": 0,
+            "z": 0
+          },
+          "aquifer_override": {
+            "type": "yungsapi:solidify"
+          }
+        },
+        "name": "main_shaft_support_collapsed_0",
+        "max_count": 1,
+        "deadend_pool": "bettermineshafts:main_shaft_support_terminators",
         "element_type": "yungsapi:yung_single_element"
       }
     },
@@ -55,8 +79,26 @@
         "location": "bettermineshafts:main_shaft_support/main_shaft_support_collapsed_1",
         "processors": "bettermineshafts:main",
         "projection": "rigid",
-        "name": "main_shaft_support_collapsed",
-        "max_count": 2,
+        "enhanced_terrain_adaptation": {
+          "type": "yungsapi:custom",
+          "kernel_size": 8,
+          "kernel_distance": 4,
+          "top": "bury",
+          "bottom": "none",
+          "bottom_offset": 1,
+          "padding": {
+            "x": 0,
+            "top": -2,
+            "bottom": 0,
+            "z": 0
+          },
+          "aquifer_override": {
+            "type": "yungsapi:solidify"
+          }
+        },
+        "name": "main_shaft_support_collapsed_1",
+        "max_count": 1,
+        "deadend_pool": "bettermineshafts:main_shaft_support_terminators",
         "element_type": "yungsapi:yung_single_element"
       }
     },
@@ -66,8 +108,26 @@
         "location": "bettermineshafts:main_shaft_support/main_shaft_support_collapsed_2",
         "processors": "bettermineshafts:main",
         "projection": "rigid",
-        "name": "main_shaft_support_collapsed",
-        "max_count": 2,
+        "enhanced_terrain_adaptation": {
+          "type": "yungsapi:custom",
+          "kernel_size": 8,
+          "kernel_distance": 4,
+          "top": "bury",
+          "bottom": "none",
+          "bottom_offset": 1,
+          "padding": {
+            "x": 0,
+            "top": -2,
+            "bottom": 0,
+            "z": 0
+          },
+          "aquifer_override": {
+            "type": "yungsapi:solidify"
+          }
+        },
+        "name": "main_shaft_support_collapsed_2",
+        "max_count": 1,
+        "deadend_pool": "bettermineshafts:main_shaft_support_terminators",
         "element_type": "yungsapi:yung_single_element"
       }
     }

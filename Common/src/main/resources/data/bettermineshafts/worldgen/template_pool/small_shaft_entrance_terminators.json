@@ -1,0 +1,15 @@
+{
+  "name": "bettermineshafts:small_shaft_entrance_terminators",
+  "fallback": "bettermineshafts:small_shaft_entrance_terminators",
+  "elements": [
+    {
+      "weight": 5,
+      "element": {
+        "location": "bettermineshafts:small_shaft_entrance/small_shaft_entrance_0",
+        "processors": "bettermineshafts:main",
+        "projection": "rigid",
+        "element_type": "yungsapi:yung_single_element"
+      }
+    }
+  ]
+}

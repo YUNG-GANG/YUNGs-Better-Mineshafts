@@ -1,0 +1,84 @@
+{
+  "name": "bettermineshafts:main_shaft_terminators",
+  "fallback": "bettermineshafts:main_shaft_support_terminators",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "location": "bettermineshafts:main_shaft_support_end/main_shaft_support_end_gravel",
+        "processors": "bettermineshafts:main_shaft_end",
+        "projection": "rigid",
+        "enhanced_terrain_adaptation": {
+          "type": "yungsapi:custom",
+          "kernel_size": 8,
+          "kernel_distance": 6,
+          "top": "bury",
+          "bottom": "bury",
+          "bottom_offset": 1,
+          "padding": {
+            "x": -2,
+            "top": -2,
+            "bottom": 0,
+            "z": -1
+          },
+          "aquifer_override": {
+            "type": "yungsapi:none"
+          }
+        },
+        "element_type": "yungsapi:yung_single_element"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "location": "bettermineshafts:main_shaft_support_end/main_shaft_support_end_tnt",
+        "processors": "bettermineshafts:main_shaft_end",
+        "projection": "rigid",
+        "enhanced_terrain_adaptation": {
+          "type": "yungsapi:custom",
+          "kernel_size": 8,
+          "kernel_distance": 6,
+          "top": "bury",
+          "bottom": "bury",
+          "bottom_offset": 1,
+          "padding": {
+            "x": -2,
+            "top": -2,
+            "bottom": 0,
+            "z": -1
+          },
+          "aquifer_override": {
+            "type": "yungsapi:none"
+          }
+        },
+        "element_type": "yungsapi:yung_single_element"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "location": "bettermineshafts:main_shaft_support_end/main_shaft_support_end_small",
+        "processors": "bettermineshafts:main_shaft_end",
+        "projection": "rigid",
+        "enhanced_terrain_adaptation": {
+          "type": "yungsapi:custom",
+          "kernel_size": 8,
+          "kernel_distance": 6,
+          "top": "bury",
+          "bottom": "bury",
+          "bottom_offset": 1,
+          "padding": {
+            "x": 0,
+            "top": -2,
+            "bottom": 0,
+            "z": 0
+          },
+          "aquifer_override": {
+            "type": "yungsapi:none"
+          }
+        },
+        "element_type": "yungsapi:yung_single_element"
+      }
+    }
+  ]
+}

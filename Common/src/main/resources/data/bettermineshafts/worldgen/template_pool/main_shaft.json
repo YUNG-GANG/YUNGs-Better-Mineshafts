@@ -11,7 +11,7 @@
         "enhanced_terrain_adaptation": {
           "type": "yungsapi:custom",
           "kernel_size": 8,
-          "kernel_distance": 4,
+          "kernel_distance": 6,
           "top": "carve",
           "bottom": "none",
           "bottom_offset": 1,
@@ -25,6 +25,11 @@
             "type": "yungsapi:none"
           }
         },
+        "condition": {
+          "type": "yungsapi:depth",
+          "max_possible_depth": 40
+        },
+        "deadend_pool": "bettermineshafts:main_shaft_terminators",
         "element_type": "yungsapi:yung_single_element"
       }
     }

@@ -8,6 +8,13 @@
         "location": "bettermineshafts:surface_shaft/surface_shaft_top",
         "processors": "bettermineshafts:main",
         "projection": "rigid",
+        "enhanced_terrain_adaptation": {
+          "type": "yungsapi:custom",
+          "kernel_size": 8,
+          "kernel_distance": 4,
+          "top": "carve",
+          "bottom": "none"
+        },
         "element_type": "yungsapi:yung_single_element"
       }
     }

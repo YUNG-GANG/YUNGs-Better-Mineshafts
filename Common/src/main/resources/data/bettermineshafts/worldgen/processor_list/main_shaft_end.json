@@ -1,0 +1,155 @@
+{
+  "processors": [
+    {
+      "processor_type": "bettermineshafts:structure_void_processor"
+    },
+    {
+      "processor_type": "bettermineshafts:suspicious_block_processor",
+      "target_block": {
+        "Name": "minecraft:gravel"
+      },
+      "output_block": {
+        "Name": "minecraft:suspicious_gravel"
+      },
+      "loot_table": "bettermineshafts:archaeology/suspicious_gravel",
+      "probability": 0.1
+    },
+    // OAK PLANKS
+    {
+      "processor_type": "minecraft:rule",
+      "rules": [
+        // if stone at location -> stay stone
+        {
+          "input_predicate": {
+            "predicate_type": "minecraft:block_match",
+            "block": "minecraft:oak_planks"
+          },
+          "location_predicate": {
+            "predicate_type": "minecraft:block_match",
+            "block": "minecraft:stone"
+          },
+          "output_state": {
+            "Name": "minecraft:stone"
+          }
+        },
+        // if diorite at location -> stay diorite
+        {
+          "input_predicate": {
+            "predicate_type": "minecraft:block_match",
+            "block": "minecraft:oak_planks"
+          },
+          "location_predicate": {
+            "predicate_type": "minecraft:block_match",
+            "block": "minecraft:diorite"
+          },
+          "output_state": {
+            "Name": "minecraft:diorite"
+          }
+        },
+        // if andesite at location -> stay andesite
+        {
+          "input_predicate": {
+            "predicate_type": "minecraft:block_match",
+            "block": "minecraft:oak_planks"
+          },
+          "location_predicate": {
+            "predicate_type": "minecraft:block_match",
+            "block": "minecraft:andesite"
+          },
+          "output_state": {
+            "Name": "minecraft:andesite"
+          }
+        },
+        // if granite at location -> stay granite
+        {
+          "input_predicate": {
+            "predicate_type": "minecraft:block_match",
+            "block": "minecraft:oak_planks"
+          },
+          "location_predicate": {
+            "predicate_type": "minecraft:block_match",
+            "block": "minecraft:granite"
+          },
+          "output_state": {
+            "Name": "minecraft:granite"
+          }
+        }
+      ]
+    },
+    // WHITE STAINED GLASS
+    {
+      "processor_type": "minecraft:rule",
+      "rules": [
+        // 10% chance to become cobwebs
+        {
+          "input_predicate": {
+            "predicate_type": "minecraft:random_block_match",
+            "block": "minecraft:white_stained_glass",
+            "probability": 0.1
+          },
+          "location_predicate": {
+            "predicate_type": "minecraft:always_true"
+          },
+          "output_state": {
+            "Name": "minecraft:cobweb"
+          }
+        },
+        // all other white stained glass becomes air
+        {
+          "input_predicate": {
+            "predicate_type": "minecraft:block_match",
+            "block": "minecraft:white_stained_glass"
+          },
+          "location_predicate": {
+            "predicate_type": "minecraft:always_true"
+          },
+          "output_state": {
+            "Name": "minecraft:air"
+          }
+        }
+      ]
+    },
+    // LANTERNS
+    {
+      "processor_type": "minecraft:rule",
+      "rules": [
+        // 90% chance to become air
+        {
+          "input_predicate": {
+            "predicate_type": "minecraft:random_block_match",
+            "block": "minecraft:lantern",
+            "probability": 0.5
+          },
+          "location_predicate": {
+            "predicate_type": "minecraft:always_true"
+          },
+          "output_state": {
+            "Name": "minecraft:air"
+          }
+        }
+      ]
+    },
+    // REPLACE RED CONRCRETE POWDER WITH TNT
+    {
+      "processor_type": "minecraft:rule",
+      "rules": [
+        // 90% chance to become air
+        {
+          "input_predicate": {
+            "predicate_type": "minecraft:block_match",
+            "block": "minecraft:red_concrete_powder"
+          },
+          "location_predicate": {
+            "predicate_type": "minecraft:always_true"
+          },
+          "output_state": {
+            "Name": "minecraft:tnt",
+            "Properties": {
+              "unstable": false
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

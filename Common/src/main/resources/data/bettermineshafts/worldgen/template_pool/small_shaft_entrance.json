@@ -1,6 +1,6 @@
 {
   "name": "bettermineshafts:small_shaft_entrance",
-  "fallback": "minecraft:empty",
+  "fallback": "bettermineshafts:small_shaft_entrance_terminators",
   "elements": [
     {
       "weight": 5,
