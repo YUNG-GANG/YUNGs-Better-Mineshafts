@@ -11,15 +11,12 @@ import com.yungnickyoung.minecraft.yungsapi.api.world.randomize.BlockStateRandom
 import com.yungnickyoung.minecraft.yungsapi.world.util.BoundingBoxHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.IntArrayTag;
-import net.minecraft.nbt.IntTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.*;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.vehicle.MinecartChest;
-import net.minecraft.world.entity.vehicle.MinecartTNT;
+import net.minecraft.world.entity.vehicle.minecart.MinecartChest;
+import net.minecraft.world.entity.vehicle.minecart.MinecartTNT;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.WorldGenLevel;
@@ -35,6 +32,7 @@ import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSeriali
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 
 import java.util.List;
+import java.util.Optional;
 
 public class BigTunnel extends BetterMineshaftPiece {
     private final List<BlockPos> smallShaftLeftEntrances = Lists.newLinkedList();
@@ -55,37 +53,35 @@ public class BigTunnel extends BetterMineshaftPiece {
     public BigTunnel(CompoundTag compoundTag) {
         super(StructurePieceTypeModule.BIG_TUNNEL, compoundTag);
 
-        ListTag listTag1 = compoundTag.getList("SmallShaftLeftEntrances", 11);
-        ListTag listTag2 = compoundTag.getList("SmallShaftRightEntrances", 11);
-        ListTag listTag3 = compoundTag.getList("SideRoomEntrances", 11);
-        ListTag listTag4 = compoundTag.getList("BigSupports", 3);
-        ListTag listTag5 = compoundTag.getList("SmallSupports", 3);
-        ListTag listTag6 = compoundTag.getList("GravelDeposits", 11);
+        ListTag smallLeftShaftEntrancesTag = compoundTag.getListOrEmpty("SmallShaftLeftEntrances");
+        ListTag smallRightShaftEntrancesTag = compoundTag.getListOrEmpty("SmallShaftRightEntrances");
+        ListTag sideRoomEntrancesTag = compoundTag.getListOrEmpty("SideRoomEntrances");
+        ListTag bigSupportsTag = compoundTag.getListOrEmpty("BigSupports");
+        ListTag smallSupportsTag = compoundTag.getListOrEmpty("SmallSupports");
+        ListTag gravelDepositsTag = compoundTag.getListOrEmpty("GravelDeposits");
 
-        for (int i = 0; i < listTag1.size(); ++i) {
-            this.smallShaftLeftEntrances.add(new BlockPos(listTag1.getIntArray(i)[0], listTag1.getIntArray(i)[1], listTag1.getIntArray(i)[2]));
+        for (Tag input : smallLeftShaftEntrancesTag) {
+            this.smallShaftLeftEntrances.add(readBlockPos(input));
         }
 
-        for (int i = 0; i < listTag2.size(); ++i) {
-            this.smallShaftRightEntrances.add(new BlockPos(listTag2.getIntArray(i)[0], listTag2.getIntArray(i)[1], listTag2.getIntArray(i)[2]));
+        for (Tag input : smallRightShaftEntrancesTag) {
+            this.smallShaftRightEntrances.add(readBlockPos(input));
         }
 
-        for (int i = 0; i < listTag3.size(); ++i) {
-            this.sideRoomEntrances.add(new BoundingBox(listTag3.getIntArray(i)[0], listTag3.getIntArray(i)[1],
-                    listTag3.getIntArray(i)[2], listTag3.getIntArray(i)[3],
-                    listTag3.getIntArray(i)[4], listTag3.getIntArray(i)[5]));
+        for (Tag tag : sideRoomEntrancesTag) {
+            this.sideRoomEntrances.add(readBoundingBox(tag));
         }
 
-        for (int i = 0; i < listTag4.size(); ++i) {
-            this.bigSupports.add(listTag4.getInt(i));
+        for (int i = 0; i < bigSupportsTag.size(); ++i) {
+            this.bigSupports.add(bigSupportsTag.getIntOr(i, 0));
         }
 
-        for (int i = 0; i < listTag5.size(); ++i) {
-            this.smallSupports.add(listTag5.getInt(i));
+        for (int i = 0; i < smallSupportsTag.size(); ++i) {
+            this.smallSupports.add(smallSupportsTag.getIntOr(i, 0));
         }
 
-        for (int i = 0; i < listTag6.size(); ++i) {
-            this.gravelDeposits.add(new Pair<>(listTag6.getIntArray(i)[0], listTag6.getIntArray(i)[1]));
+        for (int i = 0; i < gravelDepositsTag.size(); ++i) {
+            this.gravelDeposits.add(new Pair<>(getIntArrayOrEmpty(gravelDepositsTag, i)[0], getIntArrayOrEmpty(gravelDepositsTag, i)[1]));
         }
     }
 
@@ -204,7 +200,7 @@ public class BigTunnel extends BetterMineshaftPiece {
             for (int i = z; i <= z + 2; i++) {
                 for (int j = x; j <= x + 1; j++) {
                     BlockState blockState = this.getBlock(world, j, y + 3, i, box);
-                    if (!blockState.isAir() && !blockState.is(Blocks.CHAIN)) {
+                    if (!blockState.isAir() && !blockState.is(Blocks.IRON_CHAIN)) {
                         numCovered++;
                     }
                 }
@@ -233,7 +229,7 @@ public class BigTunnel extends BetterMineshaftPiece {
             for (int i = z; i <= z + 2; i++) {
                 for (int j = x; j <= x + 1; j++) {
                     BlockState blockState = this.getBlock(world, j, y + 3, i, box);
-                    if (!blockState.isAir() && !blockState.is(Blocks.CHAIN)) {
+                    if (!blockState.isAir() && !blockState.is(Blocks.IRON_CHAIN)) {
                         numCovered++;
                     }
                 }
@@ -446,7 +442,7 @@ public class BigTunnel extends BetterMineshaftPiece {
             int numCovered = 0; // We require at least 2 blocks to be covered
             for (int x = 2; x <= LOCAL_X_END - 2; x++) {
                 BlockState blockState = this.getBlock(world, x, 7, z, box);
-                if (!blockState.isAir() && !blockState.is(Blocks.CHAIN)) {
+                if (!blockState.isAir() && !blockState.is(Blocks.IRON_CHAIN)) {
                     numCovered++;
                 }
             }
@@ -490,7 +486,7 @@ public class BigTunnel extends BetterMineshaftPiece {
             int numCovered = 0; // We require at least 2 blocks to be covered
             for (int x = 2; x <= LOCAL_X_END - 2; x++) {
                 BlockState blockState = this.getBlock(world, x, 7, z, box);
-                if (!blockState.isAir() && !blockState.is(Blocks.CHAIN)) {
+                if (!blockState.isAir() && !blockState.is(Blocks.IRON_CHAIN)) {
                     numCovered++;
                 }
             }
@@ -786,5 +782,21 @@ public class BigTunnel extends BetterMineshaftPiece {
                 n += randomSource.nextInt(7) + 5;
             }
         }
+    }
+
+    private static BlockPos readBlockPos(Tag input) {
+        return BlockPos.CODEC.parse(NbtOps.INSTANCE, input)
+                .resultOrPartial((error) -> BetterMineshaftsCommon.LOGGER.error("Failed to read block pos ({}): {}", input, error))
+                .orElse(BlockPos.ZERO);
+    }
+
+    private static BoundingBox readBoundingBox(Tag input) {
+        return BoundingBox.CODEC.parse(NbtOps.INSTANCE, input)
+                .resultOrPartial((error) -> BetterMineshaftsCommon.LOGGER.error("Failed to read bounding box ({}): {}", input, error))
+                .orElse(BoundingBox.fromCorners(BlockPos.ZERO, BlockPos.ZERO));
+    }
+
+    private static int[] getIntArrayOrEmpty(ListTag listTag, int i) {
+        return listTag.getIntArray(i).orElse(new int[0]);
     }
 }

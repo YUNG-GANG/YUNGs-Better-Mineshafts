@@ -43,31 +43,31 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
     public BetterMineshaftPiece(StructurePieceType structurePieceType, CompoundTag compoundTag) {
         super(structurePieceType, compoundTag);
         this.config = new BetterMineshaftConfiguration(
-                compoundTag.getFloat("replacementRate"),
-                BetterMineshaftConfiguration.LegVariant.byId(compoundTag.getInt("legVariantIndex")),
+                compoundTag.getFloatOr("replacementRate", 0f),
+                BetterMineshaftConfiguration.LegVariant.byId(compoundTag.getIntOr("legVariantIndex", 0)),
                 new BetterMineshaftConfiguration.MineshaftDecorationChances(
-                        compoundTag.getFloat("vineChance"),
-                        compoundTag.getFloat("snowChance"),
-                        compoundTag.getFloat("cactusChance"),
-                        compoundTag.getFloat("deadBushChance"),
-                        compoundTag.getFloat("mushroomChance"),
-                        compoundTag.getFloat("gravelPileChance"),
-                        compoundTag.getBoolean("lushDecorations"),
-                        compoundTag.getBoolean("dripstoneDecorations")),
+                        compoundTag.getFloatOr("vineChance", 1f),
+                        compoundTag.getFloatOr("snowChance", 1f),
+                        compoundTag.getFloatOr("cactusChance", 1f),
+                        compoundTag.getFloatOr("deadBushChance", 1f),
+                        compoundTag.getFloatOr("mushroomChance", 1f),
+                        compoundTag.getFloatOr("gravelPileChance", 1f),
+                        compoundTag.getBooleanOr("lushDecorations", false),
+                        compoundTag.getBooleanOr("dripstoneDecorations", false)),
                 new BetterMineshaftConfiguration.MineshaftBlockStates(
-                        Block.BLOCK_STATE_REGISTRY.byId(compoundTag.getInt("mainBlockId")),
-                        Block.BLOCK_STATE_REGISTRY.byId(compoundTag.getInt("supportBlockId")),
-                        Block.BLOCK_STATE_REGISTRY.byId(compoundTag.getInt("slabBlockId")),
-                        Block.BLOCK_STATE_REGISTRY.byId(compoundTag.getInt("gravelBlockId")),
-                        Block.BLOCK_STATE_REGISTRY.byId(compoundTag.getInt("stoneWallBlockId")),
-                        Block.BLOCK_STATE_REGISTRY.byId(compoundTag.getInt("stoneSlabBlockId")),
-                        Block.BLOCK_STATE_REGISTRY.byId(compoundTag.getInt("trapdoorBlockId")),
-                        Block.BLOCK_STATE_REGISTRY.byId(compoundTag.getInt("smallLegBlockId"))),
+                        Block.BLOCK_STATE_REGISTRY.byId(compoundTag.getIntOr("mainBlockId", 0)),
+                        Block.BLOCK_STATE_REGISTRY.byId(compoundTag.getIntOr("supportBlockId", 0)),
+                        Block.BLOCK_STATE_REGISTRY.byId(compoundTag.getIntOr("slabBlockId", 0)),
+                        Block.BLOCK_STATE_REGISTRY.byId(compoundTag.getIntOr("gravelBlockId", 0)),
+                        Block.BLOCK_STATE_REGISTRY.byId(compoundTag.getIntOr("stoneWallBlockId", 0)),
+                        Block.BLOCK_STATE_REGISTRY.byId(compoundTag.getIntOr("stoneSlabBlockId", 0)),
+                        Block.BLOCK_STATE_REGISTRY.byId(compoundTag.getIntOr("trapdoorBlockId", 0)),
+                        Block.BLOCK_STATE_REGISTRY.byId(compoundTag.getIntOr("smallLegBlockId", 0))),
                 new BetterMineshaftConfiguration.MineshaftBlockstateRandomizers(
-                        new BlockStateRandomizer(compoundTag.getCompound("mainSelector")),
-                        new BlockStateRandomizer(compoundTag.getCompound("floorSelector")),
-                        new BlockStateRandomizer(compoundTag.getCompound("brickSelector")),
-                        new BlockStateRandomizer(compoundTag.getCompound("legSelector"))));
+                        new BlockStateRandomizer(compoundTag.getCompoundOrEmpty("mainSelector")),
+                        new BlockStateRandomizer(compoundTag.getCompoundOrEmpty("floorSelector")),
+                        new BlockStateRandomizer(compoundTag.getCompoundOrEmpty("brickSelector")),
+                        new BlockStateRandomizer(compoundTag.getCompoundOrEmpty("legSelector"))));
     }
 
     @Override
@@ -286,7 +286,7 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
                     currBlockCanBeReplaced = this.isReplaceableByStructures(currBlock);
                     if (!currBlockCanBeReplaced && this.canHangChainBelow(world, mutable, currBlock)) {
                         world.setBlock(mutable.setY(realChainY + 1), this.config.blockStates.supportBlockState, 2);
-                        fillColumnBetween(world, Blocks.CHAIN.defaultBlockState(), mutable, realChainY + 2, realChainY + length);
+                        fillColumnBetween(world, Blocks.IRON_CHAIN.defaultBlockState(), mutable, realChainY + 2, realChainY + length);
                         return false;
                     }
                     canGenerateChain = length <= 50 && currBlockCanBeReplaced && mutable.getY() < world.getMaxY() - 1;
@@ -331,7 +331,7 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
                 currBlockCanBeReplaced = this.isReplaceableByStructures(currBlock);
                 if (!currBlockCanBeReplaced && this.canHangChainBelow(world, mutable, currBlock)) {
                     world.setBlock(mutable.setY(realChainY + 1), chainBlock, 2);
-                    fillColumnBetween(world, Blocks.CHAIN.defaultBlockState(), mutable, realChainY + 2, realChainY + length);
+                    fillColumnBetween(world, Blocks.IRON_CHAIN.defaultBlockState(), mutable, realChainY + 2, realChainY + length);
                     return;
                 }
                 canGenerateChain = length <= 50 && currBlockCanBeReplaced && mutable.getY() < world.getMaxY() - 1;
@@ -377,7 +377,7 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
             for (int y = minY; y <= maxY; ++y) {
                 for (int z = minZ; z <= maxZ; ++z) {
                     // Don't allow overwriting placed chains
-                    if (this.getBlock(world, x, y, z, boundingBox) == Blocks.CHAIN.defaultBlockState()) continue;
+                    if (this.getBlock(world, x, y, z, boundingBox) == Blocks.IRON_CHAIN.defaultBlockState()) continue;
                     if (blockState.canSurvive(world, this.getWorldPos(x, y, z))) {
                         this.placeBlock(world, blockState, x, y, z, boundingBox);
                     }
@@ -394,7 +394,7 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
             for (int y = minY; y <= maxY; ++y) {
                 for (int z = minZ; z <= maxZ; ++z) {
                     // Don't allow overwriting placed chains
-                    if (this.getBlock(world, x, y, z, boundingBox) == Blocks.CHAIN.defaultBlockState()) continue;
+                    if (this.getBlock(world, x, y, z, boundingBox) == Blocks.IRON_CHAIN.defaultBlockState()) continue;
                     BlockState blockState = selector.get(randomSource);
                     if (blockState.canSurvive(world, this.getWorldPos(x, y, z))) {
                         this.placeBlock(world, blockState, x, y, z, boundingBox);
@@ -412,7 +412,7 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
             for (int y = minY; y <= maxY; ++y) {
                 for (int z = minZ; z <= maxZ; ++z) {
                     BlockState currState = this.getBlockAtFixed(world, x, y, z, boundingBox);
-                    if (currState != null && (currState.isAir() || currState == Blocks.CHAIN.defaultBlockState())) {
+                    if (currState != null && (currState.isAir() || currState == Blocks.IRON_CHAIN.defaultBlockState())) {
                         if (blockState.canSurvive(world, this.getWorldPos(x, y, z))) {
                             this.placeBlock(world, blockState, x, y, z, boundingBox);
                         }
@@ -430,7 +430,7 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
             for (int y = minY; y <= maxY; ++y) {
                 for (int z = minZ; z <= maxZ; ++z) {
                     BlockState currState = this.getBlockAtFixed(world, x, y, z, boundingBox);
-                    if (currState != null && (currState.isAir() || currState == Blocks.CHAIN.defaultBlockState())) {
+                    if (currState != null && (currState.isAir() || currState == Blocks.IRON_CHAIN.defaultBlockState())) {
                         BlockState blockState = selector.get(randomSource);
                         if (blockState.canSurvive(world, this.getWorldPos(x, y, z))) {
                             this.placeBlock(world, blockState, x, y, z, boundingBox);
@@ -514,7 +514,7 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
             for (int y = minY; y <= maxY; ++y) {
                 for (int z = minZ; z <= maxZ; ++z) {
                     BlockState currState = this.getBlockAtFixed(world, x, y, z, boundingBox);
-                    if (currState != null && currState != Blocks.CHAIN.defaultBlockState()) {
+                    if (currState != null && currState != Blocks.IRON_CHAIN.defaultBlockState()) {
                         if (currState.liquid() || (randomSource.nextFloat() < chance && !currState.isAir())) {
                             this.placeBlock(world, blockState, x, y, z, boundingBox);
                         }
@@ -533,7 +533,7 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
             for (int y = minY; y <= maxY; ++y) {
                 for (int z = minZ; z <= maxZ; ++z) {
                     BlockState currState = this.getBlockAtFixed(world, x, y, z, boundingBox);
-                    if (currState != null && currState != Blocks.CHAIN.defaultBlockState()) {
+                    if (currState != null && currState != Blocks.IRON_CHAIN.defaultBlockState()) {
                         if (currState.liquid() || (randomSource.nextFloat() < chance && !currState.isAir())) {
                             // Select random block state
                             BlockState blockState = selector.get(randomSource);
@@ -563,7 +563,7 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
                 for (int z = minZ; z <= maxZ; ++z) {
                     if (randomSource.nextFloat() < chance) {
                         BlockState currState = this.getBlockAtFixed(world, x, y, z, boundingBox);
-                        if (currState != null && currState != Blocks.CHAIN.defaultBlockState() && currState.isSolid()) {
+                        if (currState != null && currState != Blocks.IRON_CHAIN.defaultBlockState() && currState.isSolid()) {
                             this.placeBlock(world, blockState, x, y, z, boundingBox);
                         }
                     }

@@ -44,7 +44,7 @@ public class SideRoom extends BetterMineshaftPiece {
 
     public SideRoom(CompoundTag compoundTag) {
         super(StructurePieceTypeModule.SIDE_ROOM, compoundTag);
-        this.hasDownstairs = compoundTag.getBoolean("hasDownstairs");
+        this.hasDownstairs = compoundTag.getBooleanOr("hasDownstairs", false);
     }
 
     public SideRoom(int pieceChainLen, BoundingBox blockBox, Direction direction, BetterMineshaftConfiguration config) {

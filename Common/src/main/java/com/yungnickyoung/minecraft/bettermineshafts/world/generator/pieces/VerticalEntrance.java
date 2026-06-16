@@ -8,6 +8,7 @@ import com.yungnickyoung.minecraft.yungsapi.world.util.SurfaceHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.server.level.ColumnPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
@@ -39,20 +40,17 @@ public class VerticalEntrance extends BetterMineshaftPiece {
 
     public VerticalEntrance(CompoundTag compoundTag) {
         super(StructurePieceTypeModule.VERTICAL_ENTRANCE, compoundTag);
-        int centerPosX = compoundTag.getIntArray("centerPos")[0];
-        int centerPosY = compoundTag.getIntArray("centerPos")[1];
-        int centerPosZ = compoundTag.getIntArray("centerPos")[2];
-        this.centerPos = new BlockPos(centerPosX, centerPosY, centerPosZ);
+        this.centerPos = compoundTag.read("centerPos", BlockPos.CODEC).orElse(BlockPos.ZERO);
 
-        this.yAxisLen = compoundTag.getInt("yAxisLen");
+        this.yAxisLen = compoundTag.getIntOr("yAxisLen", 0);
         this.localYEnd = this.yAxisLen - 1;
-        this.tunnelLength = compoundTag.getInt("tunnelLen");
-        this.tunnelFloorAltitude = compoundTag.getInt("floorAltitude");
+        this.tunnelLength = compoundTag.getIntOr("tunnelLen", 0);
+        this.tunnelFloorAltitude = compoundTag.getIntOr("floorAltitude", 0);
 
-        int tunnelDirInt = compoundTag.getInt("tunnelDir");
+        int tunnelDirInt = compoundTag.getIntOr("tunnelDir", 0);
         this.tunnelDirection = tunnelDirInt == -1 ? null : Direction.from2DDataValue(tunnelDirInt);
 
-        this.hasTunnel = compoundTag.getBoolean("hasTunnel");
+        this.hasTunnel = compoundTag.getBooleanOr("hasTunnel", false);
     }
 
     public VerticalEntrance(int pieceChainLen, BlockPos.MutableBlockPos centerPos, Direction direction, BetterMineshaftConfiguration config, int maxBuildHeight) {

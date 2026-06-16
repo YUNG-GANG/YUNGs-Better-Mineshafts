@@ -14,8 +14,9 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.vehicle.MinecartChest;
-import net.minecraft.world.entity.vehicle.MinecartTNT;
+import net.minecraft.world.entity.vehicle.minecart.MinecartChest;
+import net.minecraft.world.entity.vehicle.minecart.MinecartChest;
+import net.minecraft.world.entity.vehicle.minecart.MinecartTNT;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.WorldGenLevel;
@@ -47,9 +48,9 @@ public class SmallTunnel extends BetterMineshaftPiece {
 
     public SmallTunnel(CompoundTag compoundTag) {
         super(StructurePieceTypeModule.SMALL_TUNNEL, compoundTag);
-        ListTag listTag1 = compoundTag.getList("Supports", 3);
+        ListTag listTag1 = compoundTag.getListOrEmpty("Supports");
         for (int i = 0; i < listTag1.size(); ++i) {
-            this.supports.add(listTag1.getInt(i));
+            this.supports.add(listTag1.getIntOr(i, 0));
         }
     }
 
@@ -158,7 +159,7 @@ public class SmallTunnel extends BetterMineshaftPiece {
             int numCovered = 0; // We require at least 2 of 3 to be covered
             for (int x = 1; x <= 3; x++) {
                 BlockState blockState = this.getBlock(world, x, 4, z, box);
-                if (!blockState.isAir() && !blockState.is(Blocks.CHAIN)) {
+                if (!blockState.isAir() && !blockState.is(Blocks.IRON_CHAIN)) {
                     numCovered++;
                 }
             }
@@ -246,7 +247,7 @@ public class SmallTunnel extends BetterMineshaftPiece {
     private void replaceExistingChainsWithChainBlock(WorldGenLevel world, BoundingBox box) {
         for (int x = 0; x <= LOCAL_X_END; x++) {
             for (int z = 0; z <= LOCAL_Z_END; z++) {
-                if (this.getBlock(world, x, 1, z, box).is(Blocks.CHAIN)) {
+                if (this.getBlock(world, x, 1, z, box).is(Blocks.IRON_CHAIN)) {
                     this.placeBlock(world, this.config.blockStates.supportBlockState, x, 1, z, box);
                 }
             }

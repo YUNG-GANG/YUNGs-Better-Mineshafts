@@ -55,7 +55,7 @@ public class BetterMineshaftStructure extends Structure {
     private void generatePieces(StructurePiecesBuilder structurePiecesBuilder, Structure.GenerationContext context) {
         // Randomly choose starting direction.
         WorldgenRandom rand = new WorldgenRandom(new LegacyRandomSource(0));
-        rand.setLargeFeatureSeed(context.seed(), context.chunkPos().x, context.chunkPos().z);
+        rand.setLargeFeatureSeed(context.seed(), context.chunkPos().x(), context.chunkPos().z());
         Direction direction = Direction.Plane.HORIZONTAL.getRandomDirection(rand);
 
         // Choose random y
