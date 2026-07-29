@@ -5,9 +5,14 @@ import com.yungnickyoung.minecraft.bettermineshafts.module.StructurePieceTypeMod
 import com.yungnickyoung.minecraft.yungsapi.world.util.BoundingBoxHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntitySpawnRequest;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.WorldGenLevel;
@@ -130,17 +135,17 @@ public class ZombieVillagerRoom extends BetterMineshaftPiece {
         this.fill(world, box, 6, 2, 2, 6, 2, 4, Blocks.IRON_BARS.defaultBlockState());
 
         // Beds
-        this.placeBlock(world, Blocks.BLACK_BED.defaultBlockState().setValue(BedBlock.FACING, Direction.NORTH).setValue(BedBlock.PART, BedPart.FOOT), 1, 1, 4, box);
-        this.placeBlock(world, Blocks.BLACK_BED.defaultBlockState().setValue(BedBlock.FACING, Direction.NORTH).setValue(BedBlock.PART, BedPart.HEAD), 1, 1, 5, box);
-        this.placeBlock(world, Blocks.BLACK_BED.defaultBlockState().setValue(BedBlock.FACING, Direction.NORTH).setValue(BedBlock.PART, BedPart.FOOT), 5, 1, 4, box);
-        this.placeBlock(world, Blocks.BLACK_BED.defaultBlockState().setValue(BedBlock.FACING, Direction.NORTH).setValue(BedBlock.PART, BedPart.HEAD), 5, 1, 5, box);
+        this.placeBlock(world, Blocks.BED.pick(DyeColor.BLACK).defaultBlockState().setValue(BedBlock.FACING, Direction.NORTH).setValue(BedBlock.PART, BedPart.FOOT), 1, 1, 4, box);
+        this.placeBlock(world, Blocks.BED.pick(DyeColor.BLACK).defaultBlockState().setValue(BedBlock.FACING, Direction.NORTH).setValue(BedBlock.PART, BedPart.HEAD), 1, 1, 5, box);
+        this.placeBlock(world, Blocks.BED.pick(DyeColor.BLACK).defaultBlockState().setValue(BedBlock.FACING, Direction.NORTH).setValue(BedBlock.PART, BedPart.FOOT), 5, 1, 4, box);
+        this.placeBlock(world, Blocks.BED.pick(DyeColor.BLACK).defaultBlockState().setValue(BedBlock.FACING, Direction.NORTH).setValue(BedBlock.PART, BedPart.HEAD), 5, 1, 5, box);
 
         // Mob spawner
         BlockPos spawnerPos = this.getWorldPos(3, 0, 3);
         world.setBlock(spawnerPos, Blocks.SPAWNER.defaultBlockState(), 2);
         BlockEntity blockEntity = world.getBlockEntity(spawnerPos);
         if (blockEntity instanceof SpawnerBlockEntity) {
-            ((SpawnerBlockEntity) blockEntity).setEntityId(EntityType.ZOMBIE_VILLAGER, randomSource);
+            ((SpawnerBlockEntity) blockEntity).setEntityId(BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.fromNamespaceAndPath("minecraft", "zombie_villager")), randomSource);
         }
 
         // Wall with redstone torch in corner
