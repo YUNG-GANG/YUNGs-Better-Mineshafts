@@ -224,7 +224,7 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
 
                     // Dead bushes
                     if (config.decorationChances.deadBushChance > 0 && randomSource.nextFloat() < config.decorationChances.deadBushChance) {
-                        if (state.isAir() && (stateBelow.is(Blocks.SAND) || stateBelow.is(Blocks.RED_SAND) || stateBelow.is(Blocks.TERRACOTTA) || stateBelow.is(Blocks.WHITE_TERRACOTTA) || stateBelow.is(Blocks.ORANGE_TERRACOTTA) || stateBelow.is(Blocks.YELLOW_TERRACOTTA) || stateBelow.is(Blocks.BROWN_TERRACOTTA) || stateBelow.is(Blocks.DIRT))) {
+                        if (state.isAir() && (stateBelow.is(Blocks.SAND) || stateBelow.is(Blocks.RED_SAND) || stateBelow.is(Blocks.TERRACOTTA) || stateBelow.is(Blocks.DYED_TERRACOTTA.white()) || stateBelow.is(Blocks.DYED_TERRACOTTA.orange()) || stateBelow.is(Blocks.DYED_TERRACOTTA.yellow()) || stateBelow.is(Blocks.DYED_TERRACOTTA.brown()) || stateBelow.is(Blocks.DIRT))) {
                             this.placeBlock(world, Blocks.DEAD_BUSH.defaultBlockState(), x, y, z, box);
                         }
                     }

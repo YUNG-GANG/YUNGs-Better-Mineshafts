@@ -130,17 +130,17 @@ public class ZombieVillagerRoom extends BetterMineshaftPiece {
         this.fill(world, box, 6, 2, 2, 6, 2, 4, Blocks.IRON_BARS.defaultBlockState());
 
         // Beds
-        this.placeBlock(world, Blocks.BLACK_BED.defaultBlockState().setValue(BedBlock.FACING, Direction.NORTH).setValue(BedBlock.PART, BedPart.FOOT), 1, 1, 4, box);
-        this.placeBlock(world, Blocks.BLACK_BED.defaultBlockState().setValue(BedBlock.FACING, Direction.NORTH).setValue(BedBlock.PART, BedPart.HEAD), 1, 1, 5, box);
-        this.placeBlock(world, Blocks.BLACK_BED.defaultBlockState().setValue(BedBlock.FACING, Direction.NORTH).setValue(BedBlock.PART, BedPart.FOOT), 5, 1, 4, box);
-        this.placeBlock(world, Blocks.BLACK_BED.defaultBlockState().setValue(BedBlock.FACING, Direction.NORTH).setValue(BedBlock.PART, BedPart.HEAD), 5, 1, 5, box);
+        this.placeBlock(world, Blocks.BED.black().defaultBlockState().setValue(BedBlock.FACING, Direction.NORTH).setValue(BedBlock.PART, BedPart.FOOT), 1, 1, 4, box);
+        this.placeBlock(world, Blocks.BED.black().defaultBlockState().setValue(BedBlock.FACING, Direction.NORTH).setValue(BedBlock.PART, BedPart.HEAD), 1, 1, 5, box);
+        this.placeBlock(world, Blocks.BED.black().defaultBlockState().setValue(BedBlock.FACING, Direction.NORTH).setValue(BedBlock.PART, BedPart.FOOT), 5, 1, 4, box);
+        this.placeBlock(world, Blocks.BED.black().defaultBlockState().setValue(BedBlock.FACING, Direction.NORTH).setValue(BedBlock.PART, BedPart.HEAD), 5, 1, 5, box);
 
         // Mob spawner
         BlockPos spawnerPos = this.getWorldPos(3, 0, 3);
         world.setBlock(spawnerPos, Blocks.SPAWNER.defaultBlockState(), 2);
         BlockEntity blockEntity = world.getBlockEntity(spawnerPos);
         if (blockEntity instanceof SpawnerBlockEntity) {
-            ((SpawnerBlockEntity) blockEntity).setEntityId(EntityType.ZOMBIE_VILLAGER, randomSource);
+            ((SpawnerBlockEntity) blockEntity).setEntityId(net.minecraft.world.entity.EntityTypes.ZOMBIE_VILLAGER, randomSource);
         }
 
         // Wall with redstone torch in corner
