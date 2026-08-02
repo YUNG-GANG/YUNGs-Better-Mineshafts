@@ -102,7 +102,7 @@ public class SideRoomDungeon extends BetterMineshaftPiece {
         world.setBlock(spawnerPos, Blocks.SPAWNER.defaultBlockState(), 2);
         BlockEntity blockEntity = world.getBlockEntity(spawnerPos);
         if (blockEntity instanceof SpawnerBlockEntity) {
-            ((SpawnerBlockEntity) blockEntity).setEntityId(EntityType.CAVE_SPIDER, randomSource);
+            ((SpawnerBlockEntity) blockEntity).setEntityId(net.minecraft.world.entity.EntityTypes.CAVE_SPIDER, randomSource);
         }
 
         // Cobwebs immediately surrounding chests
