@@ -7,7 +7,6 @@
     "BlockBehaviourAccessor",
     "BoundingBoxAccessor",
     "DisableVanillaMineshaftsMixin",
-    "LocateVanillaMineshaftCommandMixin",
     "SuppressLogMixin"
   ],
   "injectors": {
