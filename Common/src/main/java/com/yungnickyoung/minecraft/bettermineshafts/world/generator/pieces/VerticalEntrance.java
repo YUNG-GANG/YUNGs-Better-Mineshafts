@@ -104,8 +104,10 @@ public class VerticalEntrance extends BetterMineshaftPiece {
         }
 
         // Only generate vertical entrance if there is valid surrounding terrain
-        if (!this.hasTunnel) {
-            determineDirection(world);
+        if (!this.hasTunnel
+            && chunkPos.x() == centerPos.getX() >> 4
+            && chunkPos.z() == centerPos.getZ() >> 4) {
+            determineDirection(world, chunkPos);
 
             if (BetterMineshaftsCommon.DEBUG_LOG && this.hasTunnel) {
                 BetterMineshaftsCommon.surfaceEntrances.add(this.centerPos.hashCode());
@@ -295,7 +297,7 @@ public class VerticalEntrance extends BetterMineshaftPiece {
      * Tries to find a direction in which there is a drop-off, with the goal of creating an opening
      * in the face of a mountain or hill.
      */
-    private void determineDirection(WorldGenLevel world) {
+    private void determineDirection(WorldGenLevel world, ChunkPos generatingChunkPos) {
         int minSurfaceHeight = world.getMaxY() - 1;
 
         // Set height for this, equal to 2 below the min height in the 5x5 vertical shaft piece
@@ -306,6 +308,9 @@ public class VerticalEntrance extends BetterMineshaftPiece {
                         realZ = centerPos.getZ() + zOffset;
                     int chunkX = realX >> 4,
                         chunkZ = realZ >> 4;
+                    if (Math.max(Math.abs(chunkX - generatingChunkPos.x()), Math.abs(chunkZ - generatingChunkPos.z())) > 1) {
+                        continue;
+                    }
                     int surfaceHeight = SurfaceHelper.getSurfaceHeight(world.getChunk(chunkX, chunkZ), new ColumnPos(realX, realZ));
                     if (surfaceHeight > 1) {
                         minSurfaceHeight = Math.min(minSurfaceHeight, surfaceHeight);
@@ -342,6 +347,12 @@ public class VerticalEntrance extends BetterMineshaftPiece {
 
                 // Check altitude of each individual block along the direction.
                 for (int i = radialDist * radius; i < radialDist * radius + radius; i++) {
+                    int chunkX = mutable.getX() >> 4;
+                    int chunkZ = mutable.getZ() >> 4;
+                    if (Math.max(Math.abs(chunkX - generatingChunkPos.x()), Math.abs(chunkZ - generatingChunkPos.z())) > 1) {
+                        mutable.move(direction);
+                        continue;
+                    }
                     int surfaceHeight = SurfaceHelper.getSurfaceHeight(world.getChunk(mutable), new ColumnPos(mutable.getX(), mutable.getZ()));
 
                     if (surfaceHeight <= floorHeight && surfaceHeight > 1) {

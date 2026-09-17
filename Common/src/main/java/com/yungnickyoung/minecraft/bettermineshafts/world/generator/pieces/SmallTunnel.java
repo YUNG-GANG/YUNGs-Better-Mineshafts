@@ -134,7 +134,7 @@ public class SmallTunnel extends BetterMineshaftPiece {
             if (randomSource.nextFloat() < BetterMineshaftsCommon.CONFIG.spawnRates.smallShaftChestMinecartSpawnRate) {
                 BlockPos blockPos = this.getWorldPos(LOCAL_X_END / 2, 1, z);
                 if (box.isInside(blockPos) && !world.getBlockState(blockPos.below()).isAir()) {
-                    MinecartChest chestMinecartEntity = EntityType.CHEST_MINECART.create(world.getLevel(), EntitySpawnReason.STRUCTURE);
+                    MinecartChest chestMinecartEntity = net.minecraft.world.entity.EntityTypes.CHEST_MINECART.create(world.getLevel(), EntitySpawnReason.STRUCTURE);
                     if (chestMinecartEntity != null) {
                         chestMinecartEntity.setInitialPos(blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5);
                         chestMinecartEntity.setLootTable(BuiltInLootTables.ABANDONED_MINESHAFT, randomSource.nextLong());
@@ -199,7 +199,7 @@ public class SmallTunnel extends BetterMineshaftPiece {
             if (randomSource.nextFloat() < BetterMineshaftsCommon.CONFIG.spawnRates.smallShaftTntMinecartSpawnRate) {
                 BlockPos blockPos = this.getWorldPos(LOCAL_X_END / 2, 1, z);
                 if (box.isInside(blockPos) && !world.getBlockState(blockPos.below()).isAir()) {
-                    MinecartTNT tntMinecartEntity = EntityType.TNT_MINECART.create(world.getLevel(), EntitySpawnReason.STRUCTURE);
+                    MinecartTNT tntMinecartEntity = net.minecraft.world.entity.EntityTypes.TNT_MINECART.create(world.getLevel(), EntitySpawnReason.STRUCTURE);
                     if (tntMinecartEntity != null) {
                         tntMinecartEntity.setInitialPos(blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5);
                         world.addFreshEntity(tntMinecartEntity);
@@ -218,14 +218,16 @@ public class SmallTunnel extends BetterMineshaftPiece {
             if (r < BetterMineshaftsCommon.CONFIG.spawnRates.torchSpawnRate / 2) {
                 BlockPos pos = this.getWorldPos(1, 2, z);
                 BlockPos adjPos = this.getWorldPos(0, 2, z);
-                boolean canPlace = world.getBlockState(pos).isAir() && world.getBlockState(adjPos) != AIR;
+                boolean canPlace = box.isInside(pos) && box.isInside(adjPos)
+                    && world.getBlockState(pos).isAir() && world.getBlockState(adjPos) != AIR;
                 if (canPlace) {
                     this.replaceAirOrChains(world, box, 1, 2, z, 1, 2, z, torchBlock.setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.EAST));
                 }
             } else if (r < BetterMineshaftsCommon.CONFIG.spawnRates.torchSpawnRate) {
                 BlockPos pos = this.getWorldPos(LOCAL_X_END - 1, 2, z);
                 BlockPos adjPos = this.getWorldPos(LOCAL_X_END, 2, z);
-                boolean canPlace = world.getBlockState(pos).isAir() && world.getBlockState(adjPos) != AIR;
+                boolean canPlace = box.isInside(pos) && box.isInside(adjPos)
+                    && world.getBlockState(pos).isAir() && world.getBlockState(adjPos) != AIR;
                 if (canPlace) {
                     this.replaceAirOrChains(world, box, LOCAL_X_END - 1, 2, z, LOCAL_X_END - 1, 2, z, torchBlock.setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.WEST));
                 }
