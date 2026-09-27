@@ -5,7 +5,9 @@ import com.yungnickyoung.minecraft.bettermineshafts.world.config.BetterMineshaft
 import com.yungnickyoung.minecraft.bettermineshafts.module.StructurePieceTypeModule;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.ChunkPos;
@@ -102,7 +104,7 @@ public class SideRoomDungeon extends BetterMineshaftPiece {
         world.setBlock(spawnerPos, Blocks.SPAWNER.defaultBlockState(), 2);
         BlockEntity blockEntity = world.getBlockEntity(spawnerPos);
         if (blockEntity instanceof SpawnerBlockEntity) {
-            ((SpawnerBlockEntity) blockEntity).setEntityId(EntityType.CAVE_SPIDER, randomSource);
+            ((SpawnerBlockEntity) blockEntity).setEntityId(BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.fromNamespaceAndPath("minecraft", "cave_spider")), randomSource);
         }
 
         // Cobwebs immediately surrounding chests
