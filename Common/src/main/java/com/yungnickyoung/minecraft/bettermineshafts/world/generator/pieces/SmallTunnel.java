@@ -14,6 +14,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.vehicle.minecart.MinecartChest;
 import net.minecraft.world.entity.vehicle.minecart.MinecartChest;
 import net.minecraft.world.entity.vehicle.minecart.MinecartTNT;
@@ -28,7 +29,7 @@ import net.minecraft.world.level.block.state.properties.WallSide;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
-import net.minecraft.world.level.levelgen.structure.StructurePieceAccessor;
+import net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilder;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 
@@ -67,7 +68,7 @@ public class SmallTunnel extends BetterMineshaftPiece {
         compoundTag.put("Supports", listTag1);
     }
 
-    public static BoundingBox determineBoxPosition(StructurePieceAccessor structurePieceAccessor, int x, int y, int z, Direction direction) {
+    public static BoundingBox determineBoxPosition(StructurePiecesBuilder structurePieceAccessor, int x, int y, int z, Direction direction) {
         BoundingBox blockBox = BoundingBoxHelper.boxFromCoordsWithRotation(x, y, z, SECONDARY_AXIS_LEN, Y_AXIS_LEN, MAIN_AXIS_LEN, direction);
 
         // The following func call returns null if this new blockbox does not intersect with any pieces in the list.
@@ -79,7 +80,7 @@ public class SmallTunnel extends BetterMineshaftPiece {
     }
 
     @Override
-    public void addChildren(StructurePiece structurePiece, StructurePieceAccessor structurePieceAccessor, RandomSource randomSource) {
+    public void addChildren(StructurePiece structurePiece, StructurePiecesBuilder structurePieceAccessor, RandomSource randomSource) {
         Direction direction = this.getOrientation();
         if (direction == null) {
             return;
@@ -134,7 +135,7 @@ public class SmallTunnel extends BetterMineshaftPiece {
             if (randomSource.nextFloat() < BetterMineshaftsCommon.CONFIG.spawnRates.smallShaftChestMinecartSpawnRate) {
                 BlockPos blockPos = this.getWorldPos(LOCAL_X_END / 2, 1, z);
                 if (box.isInside(blockPos) && !world.getBlockState(blockPos.below()).isAir()) {
-                    MinecartChest chestMinecartEntity = EntityType.CHEST_MINECART.create(world.getLevel(), EntitySpawnReason.STRUCTURE);
+                    MinecartChest chestMinecartEntity = EntityTypes.CHEST_MINECART.create(world.getLevel(), EntitySpawnReason.STRUCTURE);
                     if (chestMinecartEntity != null) {
                         chestMinecartEntity.setInitialPos(blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5);
                         chestMinecartEntity.setLootTable(BuiltInLootTables.ABANDONED_MINESHAFT, randomSource.nextLong());
@@ -199,7 +200,7 @@ public class SmallTunnel extends BetterMineshaftPiece {
             if (randomSource.nextFloat() < BetterMineshaftsCommon.CONFIG.spawnRates.smallShaftTntMinecartSpawnRate) {
                 BlockPos blockPos = this.getWorldPos(LOCAL_X_END / 2, 1, z);
                 if (box.isInside(blockPos) && !world.getBlockState(blockPos.below()).isAir()) {
-                    MinecartTNT tntMinecartEntity = EntityType.TNT_MINECART.create(world.getLevel(), EntitySpawnReason.STRUCTURE);
+                    MinecartTNT tntMinecartEntity = EntityTypes.TNT_MINECART.create(world.getLevel(), EntitySpawnReason.STRUCTURE);
                     if (tntMinecartEntity != null) {
                         tntMinecartEntity.setInitialPos(blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5);
                         world.addFreshEntity(tntMinecartEntity);

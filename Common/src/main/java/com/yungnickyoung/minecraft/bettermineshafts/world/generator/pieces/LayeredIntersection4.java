@@ -19,7 +19,7 @@ import net.minecraft.world.level.block.state.properties.RailShape;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
-import net.minecraft.world.level.levelgen.structure.StructurePieceAccessor;
+import net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilder;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
 
 public class LayeredIntersection4 extends BetterMineshaftPiece {
@@ -46,7 +46,7 @@ public class LayeredIntersection4 extends BetterMineshaftPiece {
         super.addAdditionalSaveData(structurePieceSerializationContext, compoundTag);
     }
 
-    public static BoundingBox determineBoxPosition(StructurePieceAccessor structurePieceAccessor, int x, int y, int z, Direction direction) {
+    public static BoundingBox determineBoxPosition(StructurePiecesBuilder structurePieceAccessor, int x, int y, int z, Direction direction) {
         BoundingBox blockBox = new BoundingBox(x, y - 3, z, x, (y - 3) + Y_AXIS_LEN - 1, z);
         BoundingBoxAccessor blockBoxAccessor = (BoundingBoxAccessor) blockBox;
         switch (direction) {
@@ -81,7 +81,7 @@ public class LayeredIntersection4 extends BetterMineshaftPiece {
     }
 
     @Override
-    public void addChildren(StructurePiece structurePiece, StructurePieceAccessor structurePieceAccessor, RandomSource randomSource) {
+    public void addChildren(StructurePiece structurePiece, StructurePiecesBuilder structurePieceAccessor, RandomSource randomSource) {
         Direction direction = this.getOrientation();
         if (direction == null) {
             return;

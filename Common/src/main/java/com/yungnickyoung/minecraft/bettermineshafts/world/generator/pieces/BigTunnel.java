@@ -15,6 +15,7 @@ import net.minecraft.nbt.*;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.vehicle.minecart.MinecartChest;
 import net.minecraft.world.entity.vehicle.minecart.MinecartTNT;
 import net.minecraft.world.level.ChunkPos;
@@ -27,7 +28,7 @@ import net.minecraft.world.level.block.state.properties.WallSide;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
-import net.minecraft.world.level.levelgen.structure.StructurePieceAccessor;
+import net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilder;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 
@@ -118,7 +119,7 @@ public class BigTunnel extends BetterMineshaftPiece {
     }
 
     @Override
-    public void addChildren(StructurePiece structurePiece, StructurePieceAccessor structurePieceAccessor, RandomSource randomSource) {
+    public void addChildren(StructurePiece structurePiece, StructurePiecesBuilder structurePieceAccessor, RandomSource randomSource) {
         Direction direction = this.getOrientation();
         if (direction == null) {
             return;
@@ -402,7 +403,7 @@ public class BigTunnel extends BetterMineshaftPiece {
             if (randomSource.nextFloat() < BetterMineshaftsCommon.CONFIG.spawnRates.mainShaftChestMinecartSpawnRate) {
                 BlockPos blockPos = this.getWorldPos(LOCAL_X_END / 2, 1, z);
                 if (box.isInside(blockPos) && !world.getBlockState(blockPos.below()).isAir()) {
-                    MinecartChest chestMinecartEntity = EntityType.CHEST_MINECART.create(world.getLevel(), EntitySpawnReason.STRUCTURE);
+                    MinecartChest chestMinecartEntity = EntityTypes.CHEST_MINECART.create(world.getLevel(), EntitySpawnReason.STRUCTURE);
                     if (chestMinecartEntity != null) {
                         chestMinecartEntity.setInitialPos(blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5);
                         chestMinecartEntity.setLootTable(BuiltInLootTables.ABANDONED_MINESHAFT, randomSource.nextLong());
@@ -418,7 +419,7 @@ public class BigTunnel extends BetterMineshaftPiece {
             if (randomSource.nextFloat() < BetterMineshaftsCommon.CONFIG.spawnRates.mainShaftTntMinecartSpawnRate) {
                 BlockPos blockPos = this.getWorldPos(LOCAL_X_END / 2, 1, z);
                 if (box.isInside(blockPos) && !world.getBlockState(blockPos.below()).isAir()) {
-                    MinecartTNT tntMinecartEntity = EntityType.TNT_MINECART.create(world.getLevel(), EntitySpawnReason.STRUCTURE);
+                    MinecartTNT tntMinecartEntity = EntityTypes.TNT_MINECART.create(world.getLevel(), EntitySpawnReason.STRUCTURE);
                     if (tntMinecartEntity != null) {
                         tntMinecartEntity.setInitialPos(blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5);
                         world.addFreshEntity(tntMinecartEntity);
@@ -618,7 +619,7 @@ public class BigTunnel extends BetterMineshaftPiece {
         }
     }
 
-    private void buildSideRoomsLeft(StructurePiece structurePiece, StructurePieceAccessor structurePieceAccessor, RandomSource randomSource, Direction direction, int pieceLen) {
+    private void buildSideRoomsLeft(StructurePiece structurePiece, StructurePiecesBuilder structurePieceAccessor, RandomSource randomSource, Direction direction, int pieceLen) {
         Direction nextPieceDirection;
         StructurePiece newPiece;
         for (int n = 0; n < (pieceLen - 1) - 10; n++) {
@@ -659,7 +660,7 @@ public class BigTunnel extends BetterMineshaftPiece {
         }
     }
 
-    private void buildSideRoomsRight(StructurePiece structurePiece, StructurePieceAccessor structurePieceAccessor, RandomSource randomSource, Direction direction, int pieceLen) {
+    private void buildSideRoomsRight(StructurePiece structurePiece, StructurePiecesBuilder structurePieceAccessor, RandomSource randomSource, Direction direction, int pieceLen) {
         Direction nextPieceDirection;
         StructurePiece newPiece;
         for (int n = 0; n < (pieceLen - 1) - 10; n++) {
@@ -700,7 +701,7 @@ public class BigTunnel extends BetterMineshaftPiece {
         }
     }
 
-    private void buildSmallShaftsLeft(StructurePiece structurePiece, StructurePieceAccessor structurePieceAccessor, RandomSource randomSource, Direction direction, int pieceLen) {
+    private void buildSmallShaftsLeft(StructurePiece structurePiece, StructurePiecesBuilder structurePieceAccessor, RandomSource randomSource, Direction direction, int pieceLen) {
         Direction nextPieceDirection;
         StructurePiece newPiece;
         for (int n = 0; n < (pieceLen - 1) - 4; n++) {
@@ -742,7 +743,7 @@ public class BigTunnel extends BetterMineshaftPiece {
         }
     }
 
-    private void buildSmallShaftsRight(StructurePiece structurePiece, StructurePieceAccessor structurePieceAccessor, RandomSource randomSource, Direction direction, int pieceLen) {
+    private void buildSmallShaftsRight(StructurePiece structurePiece, StructurePiecesBuilder structurePieceAccessor, RandomSource randomSource, Direction direction, int pieceLen) {
         Direction nextPieceDirection;
         StructurePiece newPiece;
         for (int n = 5; n < pieceLen; n++) {

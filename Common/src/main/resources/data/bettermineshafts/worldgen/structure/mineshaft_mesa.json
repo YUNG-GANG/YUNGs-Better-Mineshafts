@@ -18,29 +18,29 @@
     },
     "blockStates": {
       "mainBlockState": {
-        "Name": "minecraft:dark_oak_planks"
+        "id": "minecraft:dark_oak_planks"
       },
       "supportBlockState": {
-        "Name": "minecraft:dark_oak_fence"
+        "id": "minecraft:dark_oak_fence"
       },
       "slabBlockState": {
-        "Name": "minecraft:dark_oak_slab"
+        "id": "minecraft:dark_oak_slab"
       },
       "gravelBlockState": {
-        "Name": "minecraft:gravel"
+        "id": "minecraft:gravel"
       },
       "stoneWallBlockState": {
-        "Name": "minecraft:cobblestone_wall"
+        "id": "minecraft:cobblestone_wall"
       },
       "stoneSlabBlockState": {
-        "Name": "minecraft:cobblestone_slab"
+        "id": "minecraft:cobblestone_slab"
       },
       "trapdoorBlockState": {
-        "Name": "minecraft:dark_oak_trapdoor"
+        "id": "minecraft:dark_oak_trapdoor"
       },
       "smallLegBlockState": {
-        "Name": "minecraft:stripped_dark_oak_log",
-        "Properties": {
+        "id": "minecraft:stripped_dark_oak_log",
+        "properties": {
           "axis": "y"
         }
       }
@@ -48,36 +48,36 @@
     "blockStateRandomizers": {
       "mainRandomizer": {
         "defaultBlockState": {
-          "Name": "minecraft:dark_oak_planks"
+          "id": "minecraft:dark_oak_planks"
         },
         "entries": [
           {
             "blockState": {
-              "Name": "minecraft:brown_terracotta"
+              "id": "minecraft:brown_terracotta"
             },
             "probability": 0.1
           },
           {
             "blockState": {
-              "Name": "minecraft:orange_terracotta"
+              "id": "minecraft:orange_terracotta"
             },
             "probability": 0.1
           },
           {
             "blockState": {
-              "Name": "minecraft:yellow_terracotta"
+              "id": "minecraft:yellow_terracotta"
             },
             "probability": 0.1
           },
           {
             "blockState": {
-              "Name": "minecraft:white_terracotta"
+              "id": "minecraft:white_terracotta"
             },
             "probability": 0.1
           },
           {
             "blockState": {
-              "Name": "minecraft:cave_air"
+              "id": "minecraft:cave_air"
             },
             "probability": 0.2
           }
@@ -85,30 +85,30 @@
       },
       "floorRandomizer": {
         "defaultBlockState": {
-          "Name": "minecraft:dark_oak_planks"
+          "id": "minecraft:dark_oak_planks"
         },
         "entries": [
           {
             "blockState": {
-              "Name": "minecraft:brown_terracotta"
+              "id": "minecraft:brown_terracotta"
             },
             "probability": 0.1
           },
           {
             "blockState": {
-              "Name": "minecraft:orange_terracotta"
+              "id": "minecraft:orange_terracotta"
             },
             "probability": 0.1
           },
           {
             "blockState": {
-              "Name": "minecraft:yellow_terracotta"
+              "id": "minecraft:yellow_terracotta"
             },
             "probability": 0.1
           },
           {
             "blockState": {
-              "Name": "minecraft:white_terracotta"
+              "id": "minecraft:white_terracotta"
             },
             "probability": 0.1
           }
@@ -116,24 +116,24 @@
       },
       "brickRandomizer": {
         "defaultBlockState": {
-          "Name": "minecraft:stone_bricks"
+          "id": "minecraft:stone_bricks"
         },
         "entries": [
           {
             "blockState": {
-              "Name": "minecraft:stone_bricks"
+              "id": "minecraft:stone_bricks"
             },
             "probability": 0.333
           },
           {
             "blockState": {
-              "Name": "minecraft:mossy_stone_bricks"
+              "id": "minecraft:mossy_stone_bricks"
             },
             "probability": 0.333
           },
           {
             "blockState": {
-              "Name": "minecraft:cracked_stone_bricks"
+              "id": "minecraft:cracked_stone_bricks"
             },
             "probability": 0.333
           }
@@ -141,8 +141,8 @@
       },
       "legRandomizer": {
         "defaultBlockState": {
-          "Name": "minecraft:stripped_dark_oak_log",
-          "Properties": {
+          "id": "minecraft:stripped_dark_oak_log",
+          "properties": {
             "axis": "y"
           }
         },

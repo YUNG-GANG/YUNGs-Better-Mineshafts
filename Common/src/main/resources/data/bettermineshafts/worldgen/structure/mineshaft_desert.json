@@ -18,69 +18,69 @@
     },
     "blockStates": {
       "mainBlockState": {
-        "Name": "minecraft:sandstone"
+        "id": "minecraft:sandstone"
       },
       "supportBlockState": {
-        "Name": "minecraft:sandstone_wall"
+        "id": "minecraft:sandstone_wall"
       },
       "slabBlockState": {
-        "Name": "minecraft:sandstone_slab"
+        "id": "minecraft:sandstone_slab"
       },
       "gravelBlockState": {
-        "Name": "minecraft:sand"
+        "id": "minecraft:sand"
       },
       "stoneWallBlockState": {
-        "Name": "minecraft:sandstone_wall"
+        "id": "minecraft:sandstone_wall"
       },
       "stoneSlabBlockState": {
-        "Name": "minecraft:sandstone_slab"
+        "id": "minecraft:sandstone_slab"
       },
       "trapdoorBlockState": {
-        "Name": "minecraft:oak_trapdoor"
+        "id": "minecraft:oak_trapdoor"
       },
       "smallLegBlockState": {
-        "Name": "minecraft:smooth_sandstone"
+        "id": "minecraft:smooth_sandstone"
       }
     },
     "blockStateRandomizers": {
       "mainRandomizer": {
         "defaultBlockState": {
-          "Name": "minecraft:sandstone"
+          "id": "minecraft:sandstone"
         },
         "entries": [
           {
             "blockState": {
-              "Name": "minecraft:chiseled_sandstone"
+              "id": "minecraft:chiseled_sandstone"
             },
             "probability": 0.1
           },
           {
             "blockState": {
-              "Name": "minecraft:cut_sandstone"
+              "id": "minecraft:cut_sandstone"
             },
             "probability": 0.1
           },
           {
             "blockState": {
-              "Name": "minecraft:smooth_sandstone"
+              "id": "minecraft:smooth_sandstone"
             },
             "probability": 0.1
           },
           {
             "blockState": {
-              "Name": "minecraft:stone_bricks"
+              "id": "minecraft:stone_bricks"
             },
             "probability": 0.05
           },
           {
             "blockState": {
-              "Name": "minecraft:cracked_stone_bricks"
+              "id": "minecraft:cracked_stone_bricks"
             },
             "probability": 0.05
           },
           {
             "blockState": {
-              "Name": "minecraft:cave_air"
+              "id": "minecraft:cave_air"
             },
             "probability": 0.2
           }
@@ -88,42 +88,42 @@
       },
       "floorRandomizer": {
         "defaultBlockState": {
-          "Name": "minecraft:sandstone"
+          "id": "minecraft:sandstone"
         },
         "entries": [
           {
             "blockState": {
-              "Name": "minecraft:sand"
+              "id": "minecraft:sand"
             },
             "probability": 0.3
           },
           {
             "blockState": {
-              "Name": "minecraft:chiseled_sandstone"
+              "id": "minecraft:chiseled_sandstone"
             },
             "probability": 0.1
           },
           {
             "blockState": {
-              "Name": "minecraft:cut_sandstone"
+              "id": "minecraft:cut_sandstone"
             },
             "probability": 0.1
           },
           {
             "blockState": {
-              "Name": "minecraft:smooth_sandstone"
+              "id": "minecraft:smooth_sandstone"
             },
             "probability": 0.1
           },
           {
             "blockState": {
-              "Name": "minecraft:stone_bricks"
+              "id": "minecraft:stone_bricks"
             },
             "probability": 0.05
           },
           {
             "blockState": {
-              "Name": "minecraft:cracked_stone_bricks"
+              "id": "minecraft:cracked_stone_bricks"
             },
             "probability": 0.05
           }
@@ -131,24 +131,24 @@
       },
       "brickRandomizer": {
         "defaultBlockState": {
-          "Name": "minecraft:sandstone"
+          "id": "minecraft:sandstone"
         },
         "entries": [
           {
             "blockState": {
-              "Name": "minecraft:chiseled_sandstone"
+              "id": "minecraft:chiseled_sandstone"
             },
             "probability": 0.1
           },
           {
             "blockState": {
-              "Name": "minecraft:cut_sandstone"
+              "id": "minecraft:cut_sandstone"
             },
             "probability": 0.2
           },
           {
             "blockState": {
-              "Name": "minecraft:smooth_sandstone"
+              "id": "minecraft:smooth_sandstone"
             },
             "probability": 0.2
           }
@@ -156,24 +156,24 @@
       },
       "legRandomizer": {
         "defaultBlockState": {
-          "Name": "minecraft:sandstone"
+          "id": "minecraft:sandstone"
         },
         "entries": [
           {
             "blockState": {
-              "Name": "minecraft:chiseled_sandstone"
+              "id": "minecraft:chiseled_sandstone"
             },
             "probability": 0.1
           },
           {
             "blockState": {
-              "Name": "minecraft:cut_sandstone"
+              "id": "minecraft:cut_sandstone"
             },
             "probability": 0.2
           },
           {
             "blockState": {
-              "Name": "minecraft:smooth_sandstone"
+              "id": "minecraft:smooth_sandstone"
             },
             "probability": 0.2
           }
