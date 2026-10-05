@@ -18,29 +18,29 @@
     },
     "blockStates": {
       "mainBlockState": {
-        "Name": "minecraft:spruce_planks"
+        "id": "minecraft:spruce_planks"
       },
       "supportBlockState": {
-        "Name": "minecraft:spruce_fence"
+        "id": "minecraft:spruce_fence"
       },
       "slabBlockState": {
-        "Name": "minecraft:spruce_slab"
+        "id": "minecraft:spruce_slab"
       },
       "gravelBlockState": {
-        "Name": "minecraft:spruce_leaves"
+        "id": "minecraft:spruce_leaves"
       },
       "stoneWallBlockState": {
-        "Name": "minecraft:mossy_cobblestone_wall"
+        "id": "minecraft:mossy_cobblestone_wall"
       },
       "stoneSlabBlockState": {
-        "Name": "minecraft:mossy_cobblestone_slab"
+        "id": "minecraft:mossy_cobblestone_slab"
       },
       "trapdoorBlockState": {
-        "Name": "minecraft:oak_trapdoor"
+        "id": "minecraft:oak_trapdoor"
       },
       "smallLegBlockState": {
-        "Name": "minecraft:oak_log",
-        "Properties": {
+        "id": "minecraft:oak_log",
+        "properties": {
           "axis": "y"
         }
       }
@@ -48,19 +48,19 @@
     "blockStateRandomizers": {
       "mainRandomizer": {
         "defaultBlockState": {
-          "Name": "minecraft:spruce_planks"
+          "id": "minecraft:spruce_planks"
         },
         "entries": [
           {
             "blockState": {
-              "Name": "minecraft:spruce_leaves"
+              "id": "minecraft:spruce_leaves"
             },
             "probability": 0.7
           },
           {
             "blockState": {
-              "Name": "minecraft:oak_log",
-              "Properties": {
+              "id": "minecraft:oak_log",
+              "properties": {
                 "axis": "x"
               }
             },
@@ -68,8 +68,8 @@
           },
           {
             "blockState": {
-              "Name": "minecraft:oak_log",
-              "Properties": {
+              "id": "minecraft:oak_log",
+              "properties": {
                 "axis": "y"
               }
             },
@@ -77,8 +77,8 @@
           },
           {
             "blockState": {
-              "Name": "minecraft:oak_log",
-              "Properties": {
+              "id": "minecraft:oak_log",
+              "properties": {
                 "axis": "z"
               }
             },
@@ -88,19 +88,19 @@
       },
       "floorRandomizer": {
         "defaultBlockState": {
-          "Name": "minecraft:spruce_planks"
+          "id": "minecraft:spruce_planks"
         },
         "entries": [
           {
             "blockState": {
-              "Name": "minecraft:spruce_leaves"
+              "id": "minecraft:spruce_leaves"
             },
             "probability": 0.7
           },
           {
             "blockState": {
-              "Name": "minecraft:oak_log",
-              "Properties": {
+              "id": "minecraft:oak_log",
+              "properties": {
                 "axis": "x"
               }
             },
@@ -108,8 +108,8 @@
           },
           {
             "blockState": {
-              "Name": "minecraft:oak_log",
-              "Properties": {
+              "id": "minecraft:oak_log",
+              "properties": {
                 "axis": "y"
               }
             },
@@ -117,8 +117,8 @@
           },
           {
             "blockState": {
-              "Name": "minecraft:oak_log",
-              "Properties": {
+              "id": "minecraft:oak_log",
+              "properties": {
                 "axis": "z"
               }
             },
@@ -128,12 +128,12 @@
       },
       "brickRandomizer": {
         "defaultBlockState": {
-          "Name": "minecraft:cobblestone"
+          "id": "minecraft:cobblestone"
         },
         "entries": [
           {
             "blockState": {
-              "Name": "minecraft:mossy_cobblestone"
+              "id": "minecraft:mossy_cobblestone"
             },
             "probability": 0.5
           }
@@ -141,8 +141,8 @@
       },
       "legRandomizer": {
         "defaultBlockState": {
-          "Name": "minecraft:oak_log",
-          "Properties": {
+          "id": "minecraft:oak_log",
+          "properties": {
             "axis": "y"
           }
         },

@@ -7,10 +7,10 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
-import net.minecraft.world.level.levelgen.structure.StructurePieceAccessor;
+import net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilder;
 
 public class BetterMineshaftGenerator {
-    public static void generateAndAddBigTunnelPiece(StructurePiece structurePiece, StructurePieceAccessor structurePieceAccessor, RandomSource randomSource, int x, int y, int z, Direction direction, int chainLength) {
+    public static void generateAndAddBigTunnelPiece(StructurePiece structurePiece, StructurePiecesBuilder structurePieceAccessor, RandomSource randomSource, int x, int y, int z, Direction direction, int chainLength) {
         if (chainLength > 3) { // will result in n + 2 max number of segments.
             return;
         }
@@ -26,7 +26,7 @@ public class BetterMineshaftGenerator {
         }
     }
 
-    public static BetterMineshaftPiece generateAndAddSmallTunnelPiece(StructurePiece structurePiece, StructurePieceAccessor structurePieceAccessor, RandomSource randomSource, int x, int y, int z, Direction direction, int chainLength) {
+    public static BetterMineshaftPiece generateAndAddSmallTunnelPiece(StructurePiece structurePiece, StructurePiecesBuilder structurePieceAccessor, RandomSource randomSource, int x, int y, int z, Direction direction, int chainLength) {
         BoundingBox boundingBox;
         int rand = randomSource.nextInt(100);
         BetterMineshaftConfiguration config = ((BetterMineshaftPiece) structurePiece).config;
@@ -105,7 +105,7 @@ public class BetterMineshaftGenerator {
         return null;
     }
 
-    public static BetterMineshaftPiece generateAndAddSideRoomPiece(StructurePiece structurePiece, StructurePieceAccessor structurePieceAccessor, RandomSource randomSource, int x, int y, int z, Direction direction, int chainLength) {
+    public static BetterMineshaftPiece generateAndAddSideRoomPiece(StructurePiece structurePiece, StructurePiecesBuilder structurePieceAccessor, RandomSource randomSource, int x, int y, int z, Direction direction, int chainLength) {
         BetterMineshaftConfiguration config = ((BetterMineshaftPiece) structurePiece).config;
 
         BoundingBox boundingBox = SideRoom.determineBoxPosition(structurePieceAccessor, x, y, z, direction);
@@ -119,7 +119,7 @@ public class BetterMineshaftGenerator {
         return null;
     }
 
-    public static BetterMineshaftPiece generateAndAddSideRoomDungeonPiece(StructurePiece structurePiece, StructurePieceAccessor structurePieceAccessor, RandomSource randomSource, int x, int y, int z, Direction direction, int chainLength) {
+    public static BetterMineshaftPiece generateAndAddSideRoomDungeonPiece(StructurePiece structurePiece, StructurePiecesBuilder structurePieceAccessor, RandomSource randomSource, int x, int y, int z, Direction direction, int chainLength) {
         BetterMineshaftConfiguration config = ((BetterMineshaftPiece) structurePiece).config;
 
         BoundingBox boundingBox = SideRoomDungeon.determineBoxPosition(structurePieceAccessor, x, y, z, direction);

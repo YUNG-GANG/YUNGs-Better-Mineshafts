@@ -11,7 +11,7 @@ import net.neoforged.neoforge.event.level.LevelEvent;
 
 public class ConfigModuleNeoForge {
     public static void init(ModContainer container) {
-        container.registerConfig(ModConfig.Type.COMMON, BMConfigNeoForge.SPEC, "bettermineshafts-neoforge-26_1.toml");
+        container.registerConfig(ModConfig.Type.LOCAL, BMConfigNeoForge.SPEC, "bettermineshafts-neoforge-26_3.toml");
         NeoForge.EVENT_BUS.addListener(ConfigModuleNeoForge::onWorldLoad);
         BetterMineshaftsNeoForge.loadingContextEventBus.addListener(ConfigModuleNeoForge::onConfigChange);
     }

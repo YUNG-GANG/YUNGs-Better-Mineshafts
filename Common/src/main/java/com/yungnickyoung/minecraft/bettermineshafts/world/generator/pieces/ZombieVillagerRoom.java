@@ -3,11 +3,13 @@ package com.yungnickyoung.minecraft.bettermineshafts.world.generator.pieces;
 import com.yungnickyoung.minecraft.bettermineshafts.world.config.BetterMineshaftConfiguration;
 import com.yungnickyoung.minecraft.bettermineshafts.module.StructurePieceTypeModule;
 import com.yungnickyoung.minecraft.yungsapi.world.util.BoundingBoxHelper;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.WorldGenLevel;
@@ -18,7 +20,7 @@ import net.minecraft.world.level.block.state.properties.*;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
-import net.minecraft.world.level.levelgen.structure.StructurePieceAccessor;
+import net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilder;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 
@@ -46,7 +48,7 @@ public class ZombieVillagerRoom extends BetterMineshaftPiece {
         super.addAdditionalSaveData(structurePieceSerializationContext, compoundTag);
     }
 
-    public static BoundingBox determineBoxPosition(StructurePieceAccessor structurePieceAccessor, int x, int y, int z, Direction direction) {
+    public static BoundingBox determineBoxPosition(StructurePiecesBuilder structurePieceAccessor, int x, int y, int z, Direction direction) {
         BoundingBox blockBox = BoundingBoxHelper.boxFromCoordsWithRotation(x, y, z, SECONDARY_AXIS_LEN, Y_AXIS_LEN, MAIN_AXIS_LEN, direction);
 
         // The following func call returns null if this new blockbox does not intersect with any pieces in the list.
@@ -58,7 +60,7 @@ public class ZombieVillagerRoom extends BetterMineshaftPiece {
     }
 
     @Override
-    public void addChildren(StructurePiece structurePiece, StructurePieceAccessor structurePieceAccessor, RandomSource randomSource) {
+    public void addChildren(StructurePiece structurePiece, StructurePiecesBuilder structurePieceAccessor, RandomSource randomSource) {
     }
 
     @Override
@@ -130,17 +132,17 @@ public class ZombieVillagerRoom extends BetterMineshaftPiece {
         this.fill(world, box, 6, 2, 2, 6, 2, 4, Blocks.IRON_BARS.defaultBlockState());
 
         // Beds
-        this.placeBlock(world, Blocks.BLACK_BED.defaultBlockState().setValue(BedBlock.FACING, Direction.NORTH).setValue(BedBlock.PART, BedPart.FOOT), 1, 1, 4, box);
-        this.placeBlock(world, Blocks.BLACK_BED.defaultBlockState().setValue(BedBlock.FACING, Direction.NORTH).setValue(BedBlock.PART, BedPart.HEAD), 1, 1, 5, box);
-        this.placeBlock(world, Blocks.BLACK_BED.defaultBlockState().setValue(BedBlock.FACING, Direction.NORTH).setValue(BedBlock.PART, BedPart.FOOT), 5, 1, 4, box);
-        this.placeBlock(world, Blocks.BLACK_BED.defaultBlockState().setValue(BedBlock.FACING, Direction.NORTH).setValue(BedBlock.PART, BedPart.HEAD), 5, 1, 5, box);
+        this.placeBlock(world, Blocks.BED.pick(DyeColor.BLACK).defaultBlockState().setValue(BedBlock.FACING, Direction.NORTH).setValue(BedBlock.PART, BedPart.FOOT), 1, 1, 4, box);
+        this.placeBlock(world, Blocks.BED.pick(DyeColor.BLACK).defaultBlockState().setValue(BedBlock.FACING, Direction.NORTH).setValue(BedBlock.PART, BedPart.HEAD), 1, 1, 5, box);
+        this.placeBlock(world, Blocks.BED.pick(DyeColor.BLACK).defaultBlockState().setValue(BedBlock.FACING, Direction.NORTH).setValue(BedBlock.PART, BedPart.FOOT), 5, 1, 4, box);
+        this.placeBlock(world, Blocks.BED.pick(DyeColor.BLACK).defaultBlockState().setValue(BedBlock.FACING, Direction.NORTH).setValue(BedBlock.PART, BedPart.HEAD), 5, 1, 5, box);
 
         // Mob spawner
         BlockPos spawnerPos = this.getWorldPos(3, 0, 3);
         world.setBlock(spawnerPos, Blocks.SPAWNER.defaultBlockState(), 2);
         BlockEntity blockEntity = world.getBlockEntity(spawnerPos);
         if (blockEntity instanceof SpawnerBlockEntity) {
-            ((SpawnerBlockEntity) blockEntity).setEntityId(EntityType.ZOMBIE_VILLAGER, randomSource);
+            ((SpawnerBlockEntity) blockEntity).setEntityId(EntityTypes.ZOMBIE_VILLAGER, randomSource);
         }
 
         // Wall with redstone torch in corner

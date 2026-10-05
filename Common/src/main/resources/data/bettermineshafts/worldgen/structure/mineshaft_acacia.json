@@ -18,29 +18,29 @@
     },
     "blockStates": {
       "mainBlockState": {
-        "Name": "minecraft:acacia_planks"
+        "id": "minecraft:acacia_planks"
       },
       "supportBlockState": {
-        "Name": "minecraft:acacia_fence"
+        "id": "minecraft:acacia_fence"
       },
       "slabBlockState": {
-        "Name": "minecraft:acacia_slab"
+        "id": "minecraft:acacia_slab"
       },
       "gravelBlockState": {
-        "Name": "minecraft:gravel"
+        "id": "minecraft:gravel"
       },
       "stoneWallBlockState": {
-        "Name": "minecraft:stone_brick_wall"
+        "id": "minecraft:stone_brick_wall"
       },
       "stoneSlabBlockState": {
-        "Name": "minecraft:stone_brick_slab"
+        "id": "minecraft:stone_brick_slab"
       },
       "trapdoorBlockState": {
-        "Name": "minecraft:acacia_trapdoor"
+        "id": "minecraft:acacia_trapdoor"
       },
       "smallLegBlockState": {
-        "Name": "minecraft:stripped_acacia_log",
-        "Properties": {
+        "id": "minecraft:stripped_acacia_log",
+        "properties": {
           "axis": "y"
         }
       }
@@ -48,36 +48,36 @@
     "blockStateRandomizers": {
       "mainRandomizer": {
         "defaultBlockState": {
-          "Name": "minecraft:acacia_planks"
+          "id": "minecraft:acacia_planks"
         },
         "entries": [
           {
             "blockState": {
-              "Name": "minecraft:cobblestone"
+              "id": "minecraft:cobblestone"
             },
             "probability": 0.1
           },
           {
             "blockState": {
-              "Name": "minecraft:stone_bricks"
+              "id": "minecraft:stone_bricks"
             },
             "probability": 0.1
           },
           {
             "blockState": {
-              "Name": "minecraft:mossy_stone_bricks"
+              "id": "minecraft:mossy_stone_bricks"
             },
             "probability": 0.1
           },
           {
             "blockState": {
-              "Name": "minecraft:cracked_stone_bricks"
+              "id": "minecraft:cracked_stone_bricks"
             },
             "probability": 0.1
           },
           {
             "blockState": {
-              "Name": "minecraft:cave_air"
+              "id": "minecraft:cave_air"
             },
             "probability": 0.2
           }
@@ -85,30 +85,30 @@
       },
       "floorRandomizer": {
         "defaultBlockState": {
-          "Name": "minecraft:acacia_planks"
+          "id": "minecraft:acacia_planks"
         },
         "entries": [
           {
             "blockState": {
-              "Name": "minecraft:cobblestone"
+              "id": "minecraft:cobblestone"
             },
             "probability": 0.1
           },
           {
             "blockState": {
-              "Name": "minecraft:stone_bricks"
+              "id": "minecraft:stone_bricks"
             },
             "probability": 0.1
           },
           {
             "blockState": {
-              "Name": "minecraft:mossy_stone_bricks"
+              "id": "minecraft:mossy_stone_bricks"
             },
             "probability": 0.1
           },
           {
             "blockState": {
-              "Name": "minecraft:cracked_stone_bricks"
+              "id": "minecraft:cracked_stone_bricks"
             },
             "probability": 0.1
           }
@@ -116,24 +116,24 @@
       },
       "brickRandomizer": {
         "defaultBlockState": {
-          "Name": "minecraft:stone_bricks"
+          "id": "minecraft:stone_bricks"
         },
         "entries": [
           {
             "blockState": {
-              "Name": "minecraft:stone_bricks"
+              "id": "minecraft:stone_bricks"
             },
             "probability": 0.333
           },
           {
             "blockState": {
-              "Name": "minecraft:mossy_stone_bricks"
+              "id": "minecraft:mossy_stone_bricks"
             },
             "probability": 0.333
           },
           {
             "blockState": {
-              "Name": "minecraft:cracked_stone_bricks"
+              "id": "minecraft:cracked_stone_bricks"
             },
             "probability": 0.333
           }
@@ -141,8 +141,8 @@
       },
       "legRandomizer": {
         "defaultBlockState": {
-          "Name": "minecraft:stripped_acacia_log",
-          "Properties": {
+          "id": "minecraft:stripped_acacia_log",
+          "properties": {
             "axis": "y"
           }
         },

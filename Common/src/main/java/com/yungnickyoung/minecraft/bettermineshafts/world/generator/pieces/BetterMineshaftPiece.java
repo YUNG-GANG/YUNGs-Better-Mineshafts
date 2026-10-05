@@ -11,6 +11,7 @@ import net.minecraft.data.worldgen.features.CaveFeatures;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.WorldGenLevel;
@@ -22,10 +23,10 @@ import net.minecraft.world.level.block.entity.BarrelBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
-import net.minecraft.world.level.levelgen.structure.StructurePieceAccessor;
+import net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilder;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -102,7 +103,7 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
      * Does not actually place any blocks.
      */
     @Override
-    public void addChildren(StructurePiece structurePiece, StructurePieceAccessor structurePieceAccessor, RandomSource randomSource) {
+    public void addChildren(StructurePiece structurePiece, StructurePiecesBuilder structurePieceAccessor, RandomSource randomSource) {
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -164,7 +165,7 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
      * Add decorations specific to a biome variant, such as snow.
      */
     protected void addBiomeDecorations(WorldGenLevel world, BoundingBox box, RandomSource randomSource, int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
-        Registry<ConfiguredFeature<?, ?>> registry = world.registryAccess().lookup(Registries.CONFIGURED_FEATURE).get();
+        Registry<Feature> registry = world.registryAccess().lookup(Registries.FEATURE).get();
 
         for (int x = minX; x <= maxX; x++) {
             for (int y = minY; y <= maxY; y++) {
@@ -224,7 +225,7 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
 
                     // Dead bushes
                     if (config.decorationChances.deadBushChance > 0 && randomSource.nextFloat() < config.decorationChances.deadBushChance) {
-                        if (state.isAir() && (stateBelow.is(Blocks.SAND) || stateBelow.is(Blocks.RED_SAND) || stateBelow.is(Blocks.TERRACOTTA) || stateBelow.is(Blocks.WHITE_TERRACOTTA) || stateBelow.is(Blocks.ORANGE_TERRACOTTA) || stateBelow.is(Blocks.YELLOW_TERRACOTTA) || stateBelow.is(Blocks.BROWN_TERRACOTTA) || stateBelow.is(Blocks.DIRT))) {
+                        if (state.isAir() && (stateBelow.is(Blocks.SAND) || stateBelow.is(Blocks.RED_SAND) || stateBelow.is(Blocks.TERRACOTTA) || stateBelow.is(Blocks.DYED_TERRACOTTA.pick(DyeColor.WHITE)) || stateBelow.is(Blocks.DYED_TERRACOTTA.pick(DyeColor.ORANGE)) || stateBelow.is(Blocks.DYED_TERRACOTTA.pick(DyeColor.YELLOW)) || stateBelow.is(Blocks.DYED_TERRACOTTA.pick(DyeColor.BROWN)) || stateBelow.is(Blocks.DIRT))) {
                             this.placeBlock(world, Blocks.DEAD_BUSH.defaultBlockState(), x, y, z, box);
                         }
                     }
