@@ -583,8 +583,11 @@ public abstract class BetterMineshaftPiece extends StructurePiece {
     }
 
     protected void chanceReplaceAir(WorldGenLevel world, RandomSource randomSource, float chance, BlockState block, int x, int y, int z, BoundingBox boundingBox) {
-        if (randomSource.nextFloat() < chance && block.canSurvive(world, this.getWorldPos(x, y, z)) && block.is(Blocks.AIR) || block.is(Blocks.CAVE_AIR)) {
-            this.placeBlock(world, block, x, y, z, boundingBox);
+        if (randomSource.nextFloat() < chance) {
+            BlockState currState = this.getBlockAtFixed(world, x, y, z, boundingBox);
+            if (currState != null && currState.isAir() && block.canSurvive(world, this.getWorldPos(x, y, z))) {
+                this.placeBlock(world, block, x, y, z, boundingBox);
+            }
         }
     }
 
